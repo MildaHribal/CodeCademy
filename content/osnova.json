@@ -1,0 +1,7 @@
+{
+  "parts": [
+    { "id": "web-a-css", "title": "Web a CSS", "summary": "HTML, CSS a layout.", "sections": ["css-flexbox"] },
+    { "id": "javascript", "title": "JavaScript", "summary": "Jazyk od základů do hloubky.", "sections": ["js-pole"] },
+    { "id": "framework-a-backend", "title": "Framework a backend", "summary": "Vue, Nuxt, Node, databáze.", "sections": ["node-zaklady"] }
+  ]
+}
