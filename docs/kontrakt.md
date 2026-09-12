@@ -392,9 +392,26 @@ export async function runNodeTests({ files, hints, timeoutMs = 10000, cwd = null
 export async function runNodeFile({ files, main, timeoutMs = 5000, cwd = null }) /* → { code, stdout, stderr, timedOut } */
 ```
 
-Iframy mají `sandbox="allow-scripts allow-modals allow-forms"` (bez `allow-same-origin`
-u uživatelova kódu tam, kde to runner nepotřebuje; pokud to runner kvůli CSSOM nebo
-testům potřebuje, smí použít `allow-same-origin` — běží to lokálně a kód píše sám uživatel).
+### 6.8 Izolace a nekonečné smyčky (povinné)
+
+Uživatel píše kód živě — `while (true)` napůl dopsaný v editoru nesmí zamrazit aplikaci.
+
+- Uživatelův kód **i test** běží uvnitř iframu `sandbox="allow-scripts allow-modals allow-forms"`
+  **bez `allow-same-origin`** (neprůhledný origin, v Chromu mimo hlavní vlákno aplikace).
+  Test se do stránky vloží jako skript a s rodičem komunikuje jen přes `postMessage`
+  (výsledek, konzole, chyby, požadavek na `resize`). Rodič drží watchdog: po `timeoutMs`
+  iframe odstraní a test označí jako selhaný („Test nedoběhl včas — nekonečná smyčka?").
+- **Ochrana smyček**: každý uživatelův JS (inline skripty v HTML, `.js` soubory, moduly)
+  se před spuštěním přepíše přes `acorn` + `acorn-walk`: do těla každého `for`, `for…in`,
+  `for…of`, `while`, `do…while` se vloží kontrola, která vyhodí
+  `Error('Smyčka běží příliš dlouho — nekonečná smyčka? (řádek N)')`, když jedna smyčka
+  běží déle než 1000 ms (v náhledu) nebo `timeoutMs` (v testu). Tělo bez složených
+  závorek se obalí. Když kód nejde naparsovat, spustí se beze změny (prohlížeč sám ohlásí
+  syntaktickou chybu). Čísla řádků v chybách mají odpovídat původnímu kódu.
+- Náhled vue (`/vendor/vue.esm-browser.js`) se z neprůhledného originu načítá přes CORS:
+  server na `/vendor/*` posílá `Access-Control-Allow-Origin: *`. Absolutní URL předává
+  rodič (`location.origin`).
+- Ve verify i v UI se používá **stejný** runner — to, co projde ve verify, projde uživateli.
 
 ---
 
@@ -424,7 +441,7 @@ Všechna těla jsou JSON. Chyby: `{ error: 'česká zpráva' }` se stavem 4xx/5x
 | `POST /api/project/:section/:module/start` | — | zkopíruje `starter/` do `moje-projekty/<section>--<module>/`, pokud tam ještě nic není → `{ dir, created }` |
 | `GET /api/project/:section/:module/files` | — | `{ dir, exists, files: [{ name, lang, content }] }` |
 | `POST /api/project/:section/:module/check` | — | jen `runtime: node`: `runNodeTests` s `cwd` projektu → `RunResult`. U `dom` vrací 400 a klient testuje sám nad `files`. |
-| `GET /vendor/vue.esm-browser.js` | — | `node_modules/vue/dist/vue.esm-browser.js` |
+| `GET /vendor/vue.esm-browser.js` | — | `node_modules/vue/dist/vue.esm-browser.js`, s hlavičkou `Access-Control-Allow-Origin: *` |
 
 Server nikdy nespouští kód mimo `/api/run-node*` a `/api/project/*/check`.
 Poslouchá jen na `127.0.0.1`.
@@ -496,7 +513,7 @@ Výstup: souhrn po modulech, na konci počet chyb a varování. Exit kód 1 při
   `shared/`, `package.json`, cizí modul)? Napiš ji do závěrečné zprávy.
 - **Neinstaluj balíčky** a neměň `package.json`. K dispozici: `vite`, `codemirror`,
   `@codemirror/lang-html`, `@codemirror/lang-css`, `@codemirror/lang-javascript`,
-  `@codemirror/theme-one-dark`, `marked`, `vue`, `playwright` (Chromium headless shell).
+  `@codemirror/theme-one-dark`, `marked`, `vue`, `acorn`, `acorn-walk`, `playwright` (Chromium headless shell).
 - **Nikdy `pkill node` / `killall node`** — zabiješ cizí procesy. Zabíjej jen PID,
   které jsi sám spustil. Používej porty ze svého přiděleného rozsahu.
 - Žádné commity — commituje koordinátor.
