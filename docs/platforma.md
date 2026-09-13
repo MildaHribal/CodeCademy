@@ -172,7 +172,8 @@ Události serveru ve vlně 2b:
 
 | událost | kdo vyvolá | payload | kdo poslouchá |
 |---|---|---|---|
-| `attempts:recorded` | `POST /api/attempts` po uložení (balík 1) | `{ id, body, attempt, previous, firstOk }` — `body` = ověřené tělo, `attempt` = záznam po změně, `previous` = před změnou (`null`, když nebyl), `firstOk` = tímto požadavkem poprvé `ok: true` | balík 3: založení `q:` z první odpovědi, jistota, `step:` při `assisted` / `fails ≥ 3` (kontrakt kap. 12.2–12.4) |
+| `attempts:recorded` | `POST /api/attempts` po uložení (balík 1) | `{ id, body, attempt, previous, firstOk }` — `body` = ověřené tělo, `attempt` = záznam po změně, `previous` = před změnou (`null`, když nebyl), `firstOk` = tímto požadavkem poprvé `ok: true` | `reviews.js`: založení `q:` z první odpovědi, `step:` při `assisted` / `fails ≥ 3`; `confidence.js`: jistota u `q:` (kontrakt kap. 12.2–12.4) |
+| `reviews:answered` | `POST /api/reviews/answer` po uložení (balík 3) | `{ id, ok, confidence, sectionId }` | `confidence.js`: jistota z opakování (do pokusů se odpověď z opakování neposílá, aby se nepočítala dvakrát) |
 
 ---
 
@@ -337,6 +338,11 @@ je v jádře (porovnání s řešením).
 | `lesson:questions-checked` | `{ lesson, id, results: [{ index, correct, question }] }` |
 | `quiz:evaluated` | `{ id, score, passed, results: [{ index, correct, question }] }` |
 | `project:check-result` | `{ id, result, passed }` |
+| `attempts:recorded` | `{ id, attempt }` — pokus uložený přes `attemptsApi.record` (`extensions/attempts/api.js`) |
+| `notes:open` | `{}` — otevře panel poznámek pro aktuální místo (poslouchá `extensions/notes/`) |
+
+`lesson:questions-checked` se vyvolá po **každém** vyhodnocení otázky z `# --questions--`
+(výsledky dosud vyhodnocených otázek), ne jednou za lekci.
 
 Chyba v posluchači se vypíše do konzole a nezastaví ostatní. Nová událost nástroje
 má prefix jména nástroje (`reviews:answered`) a popíše se u nástroje.
@@ -397,7 +403,8 @@ workspaceExtensions.register({
 
 | slot | kde |
 |---|---|
-| `brief-head` | pod nadpisem kroku (štítky druhu kroku, proužek „Pokračuješ autorovým řešením") |
+| `brief-head` | pod nadpisem kroku (štítky druhu kroku, proužek „Pokračuješ autorovým řešením", Než začneš) |
+| `brief-after-description` | pod popisem kroku, nad požadavky (čtyři kroky ladění u `kind: debug`) |
 | `brief-after-hints` | pod seznamem požadavků (tipy, vysvětli vlastními slovy, diff) |
 | `actions` | lišta tlačítek vedle Zkontrolovat a Obnovit |
 | `output-tools` | vedle nadpisu Náhled (dom/vue), Konzole (js) nebo Výstup (node) — šířka náhledu, nová karta |
@@ -449,7 +456,8 @@ registerLessonBlock(memoryBlock);
 `env`: `lesson` (API lekce níž), `index` (pořadí bloku), `number` (pořadí bloku
 stejného kind od 1), `slugger` (pro `renderMarkdown` s kotvami). Blok, který podmiňuje
 splnění (`:::check` bez `pretest`, kontrakt kap. 5.8), zavolá při vykreslení
-`env.lesson.addRequirement({ id, label, isMet: () => vyřešeno })`. Neznámý kind
+`env.lesson.addRequirement({ id, label, isMet: () => vyřešeno, element })` (`element` nepovinný:
+kam tlačítko v hlášce „Ještě vyřeš…" odscrolluje). Neznámý kind
 se ukáže jako upozornění „blok zatím aplikace neumí zobrazit".
 
 Bloky jádra: `md` (`lesson/blocks/md.js`), `live` (`lesson/blocks/live.js`), registrované
@@ -619,8 +627,10 @@ node tools/e2e.js --port <port z rozsahu> # kouřový průchod UI
   `tools/<nástroj>-unit.test.js` (`tools/client-unit.test.js` je jádro, ve vlně 2b ho nikdo nemění). Soubory, které při importu sahají na
   `document`/`window`, v Node nejdou naimportovat — výpočty drž v samostatném modulu.
 - UI testy v prohlížeči: nový soubor `tools/ui-<nástroj>.test.js` podle `tools/ui.test.js`
-  (vlastní fixture obsah v `tools/fixtures/<nástroj>-content/`), do `tools/e2e.js` scénáře
-  nepřidávej (vlastní ho balík 4 a jde o kouřový průchod jádra).
+  (vlastní fixture obsah v `tools/fixtures/<nástroj>-content/`). `tools/e2e.js` je kouřový průchod
+  nad skutečným obsahem: jádro (přehled, lekce, workshop, lab, kvíz, projekt, restart) a od
+  integrace 2b i nástroje (nápověda → porovnání s řešením, opakování, poznámky, tmavý režim);
+  nový scénář jen tehdy, když chrání napojení, které unit a UI testy nevidí.
 - Porty: každý agent jen ze svého přiděleného rozsahu (`--port`, `listen(server, port)`).
   Testy runneru (`tools/lib/test-setup.js`) berou první volný port z 4320–4339, souběh
   víc běhů `npm test` snesou.
@@ -843,7 +853,8 @@ Největší balík. Doporučené pořadí: (a) `answers.js`, `refs.js`, parser v
 - **Ověření:** `node --test shared/parse.test.js shared/content.test.js server/routes/sections.test.js tools/verify-unit.test.js tools/verify.test.js`
   (každý formát z kontraktu: příklad z kontraktu → přesný JSON výstup; každá ParseError věta
   z kontraktu má test; kódy verify S/K/T/A/D/P/X/L/W/E/Q/C nad fixture); zpětná kompatibilita:
-  `npm run overit` nad současným obsahem = 0 chyb (varování A1/T2/E4/S8 se čekají);
+  `npm run overit` nad současným obsahem = 0 chyb (varování A1/T2/E4/S8 a W1/W2/W3 se čekají —
+  opraví je piloti P1–P3);
   `node tools/e2e.js --port 4460`; `npm test`, `npx vite build`.
 
 #### Balík 5 — běžící Node proces a HTTP klient (B10)
@@ -917,7 +928,11 @@ ruční průchod přepracovaných modulů v UI (snímek obrazovky každého nov�
 - Každý z existujících souborů v `server/`, `client/`, `shared/`, `tools/` (179 ke dni
   rozdělení) má právě jednoho vlastníka z 7.3 nebo je v jádru (5.1). Soubor, který
   v seznamech chybí, je jádro.
-- Nové soubory se nepotkají díky prefixům (7.2). Routy se nepotkají díky prefixům cest
+- Nové soubory se nepotkají díky prefixům (7.2). Po sloučení 2b potvrzené i soubory podle
+  prefixu mimo výčet 7.3: balík 4 `tools/lib/verify-course.js`, `tools/lib/verify-rules.js`,
+  `shared/answers.test.js`, `shared/refs.test.js`, `tools/lesson-blocks-unit.test.js`,
+  `tools/ui-lesson-blocks.test.js`, `tools/fixtures/lesson-blocks-content/`; balík 2
+  `shared/runner-assertion.js`; balík 3 `components/questions/flow.js`, `components/quiz-code-set.js`. Routy se nepotkají díky prefixům cest
   (`/api/attempts`, `/api/stats` · `/api/reviews`, `/api/confidence` · `/api/section`,
   `/api/terms` · `/api/dev-process` · `/api/notes`, `/api/settings`); kolizi by start serveru
   ohlásil (1.2).
@@ -926,3 +941,345 @@ ruční průchod přepracovaných modulů v UI (snímek obrazovky každého nov�
 - `docs/kontrakt.md` a `docs/styl-obsahu.md` ve 2b nikdo nemění; nejasnost nebo rozpor
   jde do závěrečné zprávy koordinátorovi.
 
+
+---
+
+## Nástroj: dev-process
+
+Běžící Node proces pro tlačítko **Spustit** u runtime node a HTTP klient (kontrakt kap. 12.7,
+návrh B10). Vždy nejvýš jeden proces na server Akademie.
+
+**Server**
+
+- `server/dev-process.js` — `createDevProcessManager(options)`: `start`, `stop`, `request`,
+  `output(since)`, `process()`, `close()`. Proces běží „detached" jako vedoucí vlastní skupiny;
+  `stop` pošle SIGTERM skupině, po `killGraceMs` (2000) SIGKILL a počká na konec. Po skončení
+  hlavního procesu se zbytek skupiny zabije a dočasný adresář (`akademie-dev-*` v tmp) smaže.
+  Volby (výchozí v `DEV_PROCESS_DEFAULTS`): `idleMs` (10 min), `startWaitMs` (5000),
+  `maxChunks`/`maxOutputBytes` (5000 / 1 MB), `maxBodyBytes` (1 MB), `requestTimeoutMs`,
+  `tempPrefix`, `projectDir(project)`. Výstup má `seq` od 0 pro každý proces.
+  `listening` se hlídá i po odpovědi `start` (server, který začne poslouchat později);
+  poslouchá-li proces jen na `::1`, je `url` `http://[::1]:PORT` a požadavky jdou tam.
+- `server/routes/dev-process.js` — routy `GET /api/dev-process`, `POST …/start|stop|request`,
+  `GET …/output?since=`; `ctx.onClose` proces zabije hned. Testy si routy s jinými limity
+  připojí přes `registerDevProcess(router, ctx, options)` (automaticky načtenou
+  `dev-process.js` z `routeModules` vynechají, jinak kolize rout).
+
+**Klient** (`client/src/extensions/dev-process/`)
+
+| soubor | co dělá |
+|---|---|
+| `api.js` | `devProcessApi` — volání `/api/dev-process/*` (bez DOM) |
+| `session.js` | `createDevProcessSession()` — relace jedné obrazovky: `start`, `stop`, `request`, `markChanged`, `dispose`, `state()`, `on('change' \| 'output')`; stahuje výstup každých 300 ms, dokud proces běží; `dispose` zastaví **vlastní** běžící proces s `keepalive`. `attachSession(element, s)` / `sessionFor(element)` |
+| `run-view.js` | `createRunStatus(session)` (řádek „Poslouchá na …" s odkazem do nové karty), `connectConsole(session, consolePanel)` |
+| `http-format.js` | výpočty HTTP klienta bez DOM: `buildRequest`, `parseHeaderLines`, `describeBody`, `statusGroup`, `formatBytes` |
+| `http-client.js` | `createHttpClient({ session, draftKey })` — formulář (metoda, cesta, hlavičky, tělo; Ctrl+Enter pošle) a odpověď (stav, hlavičky, tělo, čas) |
+| `index.js` | registrace: `workspaceExtensions` (u `ws.isNode` HTTP klient do `output-after`, `files-change` → `markChanged`), `projectExtensions` (u runtime node panel „Vyzkoušej server" ve slotu `after-stories`) |
+
+`client/src/workspace/output-node.js` vytváří relaci pro krok (tlačítka Spustit / Spustit znovu /
+Zastavit, řádek stavu) a připojí ji k `output.element`; rozšíření ji najde přes
+`sessionFor(ws.elements.output)`. Při odchodu z obrazovky (`signal`) a na `pagehide` se vlastní
+proces zastaví. Nové události ani sloty nástroj nepřidává.
+
+**Testy:** `server/dev-process.test.js`, `server/routes/dev-process.test.js`,
+`tools/dev-process-unit.test.js` (relace a HTTP výpočty bez DOM), `tools/ui-dev-process.test.js`
+(fixture `tools/fixtures/dev-process-content/`, port 4480–4499).
+
+---
+
+## Nástroj: pokusy, nápovědy, porovnání s řešením a statistiky
+
+Balík 1 (návrh B1, B2, B8; kontrakt kap. 3.3 a 12.2).
+
+**Sdílený kód**
+
+- `shared/diff.js` — `diffLines(before, after, { ignoreWhitespace })` (řádkový LCS, `\r\n` = `\n`,
+  při shodě délky nejdřív `del`, pak `add`; `text` u `same` je řádek z `after`) a
+  `changeRatio(seedLines, userText)` (kap. 3.4). Normalizace bílých znaků = `normalizeWhitespace`
+  ze `shared/answers.js`.
+
+**Server**
+
+- `server/routes/_attempts-store.js` — logika bez HTTP: `validateAttemptBody` (neznámé pole = 400),
+  `applyAttempt(previous, body, nowIso)` → `{ attempt, firstOk }` (`solutionViewed` se započte před
+  `ok`, takže „řešení i první ok v jednom požadavku" = `assisted`), `attemptTarget(id)` (u `q:`
+  modul přes `itemTarget`), `buildStats(data, content)`.
+- `server/routes/attempts.js` — `POST /api/attempts`, `GET /api/attempts[?prefix=]`, `GET /api/stats`.
+  Id kroku/modulu musí být v `ctx.contentIndex()`, `q:` přes `ctx.resolveItem` (jinak 400).
+  Po uložení `await ctx.emit('attempts:recorded', { id, body, attempt, previous, firstOk })`
+  (`body` = očištěné tělo, `previous` = `null` u prvního záznamu). `ctx.onReset` maže položky,
+  jejichž cíl k id patří. Statistiky vynechají položky, které v obsahu nejsou, a rozbitý modul
+  přeskočí (nespadnou kvůli němu).
+
+**Klient** (`client/src/extensions/`)
+
+| soubor | co dělá |
+|---|---|
+| `attempts/api.js` | `attemptsApi.record(body, { keepalive })` — požadavky na stejné id jdou postupně; po uložení `appEvents` `attempts:recorded` (`{ id, attempt }`). `list(prefix)`, `stats()`, `recordQuietly(body)` (chybu jen vypíše) |
+| `attempts/active-time.js` | `createActiveTimer({ now, idleAfterMs })` — aktivní čas mezi projevy aktivity (pauza nad 60 s se nepočítá), `take()` nejvýš 1 h |
+| `attempts.js` | `workspaceExtensions` a `projectExtensions` (`order: 5`): po každé kontrole `{ id, ok, failed, activeMs }`, při odchodu a `pagehide` zbylý `activeMs` s `keepalive` |
+| `hints/logic.js` | výpočty bez DOM: `failedHintIndexes`, `firstFailedIndex`, `nextFailStreak`, `shouldHighlight` (≥ 2), `focusTipIndex`, `helpButtonState`, `restoredOpenedCount` |
+| `hints/panel.js` | `createHintsUi({ id, item, hintList, onCompare, signal })` → `{ button, panel, checked({ passed, run }) }`; po načtení obnoví `tipsOpened` a `failsSinceOk` z `GET /api/attempts?prefix=<id>` |
+| `hints/see-links.js` | `renderSeeLinks(refs)` — odkazy `refHref` s názvem modulu a nadpisu lekce |
+| `hints.js` | plocha: tlačítko do slotu `actions`, panel do `brief-after-hints`; projekt: blok do `after-stories` |
+| `solution-diff/hunks.js` | bez DOM: `compareFiles(mine, author, { ignoreWhitespace })`, `collapseUnchanged(diff, context = 3)`, `differsFromAuthor`, `plainFiles` |
+| `solution-diff/dialog.js` | `openSolutionDiff({ heading, intro, confirm, load, onViewed, labels })` — `<dialog>` s potvrzením, načtením až po kliknutí, přepínačem „Ignorovat bílé znaky" a sbalenými stejnými řádky |
+| `solution-diff/open.js` | `openWorkspaceSolution(ws)`, `openProjectSolution(project, { passed })` — řešení z `api.moduleWithSolutions`; před splněním s potvrzením, každé zobrazení pošle `solutionViewed: true` |
+| `solution-diff.js` | tlačítko „Jak to napsal autor" po splnění (`actions` / `after-stories`), proužek „Pokračuješ autorovým řešením kroku N" v `brief-head` (když se uložený kód kroku N liší od seedu kroku N+1) |
+| `stats/` | `#/statistiky` (`registerScreen` `stats`, položka menu `statistiky`, `order: 50`), `format.js` bez DOM |
+
+CSS třídy: `.hint-tips*`, `.hint--focus` (zvýrazněný požadavek v seznamu), `.solution-diff*`,
+`.solution-diff-banner*`, `.stats__*`. Barvy jen z tokenů.
+
+Klientská událost `attempts:recorded` (`appEvents`) `{ id, attempt }` — po každém uloženém pokusu
+z tohoto klienta (odeslaném přes `attemptsApi.record`).
+
+**Testy:** `shared/diff.test.js`, `server/routes/attempts.test.js` (otázku `q:` podstrčí přes
+`ctx.resolveItem`, aby nezávisel na klíčích parseru), `tools/hints-unit.test.js`,
+`tools/solution-diff-unit.test.js`, `tools/stats-unit.test.js`, `tools/ui-hints.test.js`
+(fixture `tools/fixtures/hints-content/`, porty 4400–4419).
+
+## Nástroj: opakování, jistota a otázky
+
+Balík 3 (B5, B6, B7, karty v UI, kvíz s `# --code--`). Formáty a API: kontrakt kap. 4, 12.3, 12.4.
+
+**Server**
+
+| soubor | co dělá |
+|---|---|
+| `server/routes/reviews.js` | `GET /api/reviews/summary`, `GET /api/reviews/due`, `POST /api/reviews/answer`, `POST /api/reviews/add`, `POST /api/reviews/remove`; `ctx.onReset` (položky i `removed` podle `itemTarget`) |
+| `server/routes/_reviews-store.js` | Leitner bez HTTP: `itemFromFirstAnswer`, `applyAnswer`, `sortDue`, `interleaveBySection`, `isCardActive`, `estimateSeconds`, `addDays`, `localDate` |
+| `server/routes/confidence.js` | `GET /api/confidence`, `GET /api/confidence/:section` (reset jistotu nemaže) |
+| `server/routes/_confidence-store.js` | `addAnswer`, `sectionConfidence`, `sectionOfItem` |
+
+- Poslouchá `attempts:recorded`: `q:` s `ok` → založí položku z první odpovědi (když není v `items`
+  ani v `removed`) a přičte jistotu; krok nebo lab s `firstOk` a `assisted`/`fails ≥ 3` → `step:<id>`.
+- Vyvolává **`reviews:answered`** `{ id, ok, confidence, sectionId }` po `POST /api/reviews/answer`
+  (poslouchá `confidence.js`; jistota z opakování se do pokusů neposílá, aby se nepočítala dvakrát).
+- `GET …/summary` i `…/due` nejdřív založí aktivní karty (`parseCards` nad `cards.md` z indexu obsahu)
+  a smažou osiřelé položky; položka s rozbitým obsahem (`ParseError`) zůstává, jen se dnes nenabídne.
+- Testy si podstrčí čas a obsah: `register(router, ctx, { now, resolveItem, listCards })`.
+
+**Otázka** (`client/src/components/question.js`) — rozhraní z kap. 7.2 a navíc:
+
+```js
+createQuestion(question, {
+  key, number, total, onChange,
+  itemId,                       // q:… → volba jistoty + POST /api/attempts { id, ok, confidence? } po každém vyhodnocení
+  onEvaluated,                  // ({ correct, solved, confidence, showAnswer, failures })
+  checkButton: false,           // vlastní „Zkontrolovat" (samostatná otázka); po 1. neúspěchu zůstane odemčená
+  pretest: false,               // „Uvidíme za chvíli" + odpověď bez ✗, nic se neposílá
+  askConfidence: Boolean(itemId),
+  recallFirst: false,           // volby až po „Ukaž volby" (opakování)
+  onReveal,                     // uživatel klikl „Ukaž odpověď"
+  label,                        // popisek pole psané odpovědi
+})
+// → { element, isAnswered, isSolved, isCorrect, evaluate, reveal, showAnswer, retry, focus, answer, state }
+```
+
+- Pravidla „neprozradí odpověď" jsou v `components/questions/flow.js` (bez DOM): správná odpověď
+  se ukáže po 2. neúspěchu nebo po „Ukaž odpověď"; `retry()` po zobrazené odpovědi zamíchá volby
+  jiným kolem (`shuffleBy(key + '#kolo-N')`).
+- Typy: `choice` (`questions/choice.js`) a `text` (`questions/text.js`, porovnání jen přes
+  `checkTextAnswer` ze `shared/answers.js`; odpovídá i kartám `output`/`css`). Typ vrací
+  `{ element, isAnswered, focus, grade, answer, showResult, clearResult, reset }`; starší typ jen
+  s `reveal()` funguje dál.
+- `questionItemId(moduleId, question)` → `q:<modul>#<key>` nebo `null`.
+- Panel kódu sady `# --code--`: `createCodeSetPanel(codeSet)` z `components/quiz-code-set.js`.
+
+**Klient — nástroj** (`client/src/extensions/reviews/`, `client/src/extensions/confidence.js`)
+
+- `registerScreen({ name: 'reviews', path: '/opakovani' })`, `registerHeaderItem({ id: 'opakovani', order: 20 })`
+  s odznakem počtu (souhrn nejvýš jednou za 30 s, po odpovědi/splnění/resetu hned — `count.js`).
+- `overviewExtensions` `reviews-summary` (slot `head`): „K opakování: N (asi M min)", jen když N > 0.
+- `workspaceExtensions` `reviews-self` (slot `actions`, order 60): „Nezvládl bych to znovu" po
+  splnění → `POST /api/reviews/add { id: 'step:<id>', reason: 'self' }`.
+- `sectionExtensions` `confidence-calibration` (slot `after-progress`): věta kalibrace od 5 jistých odpovědí.
+- Položky opakování kreslí `items.js` (otázka, karty output/css/free/code, step, explain); kód od seedu
+  (`practice.js`) nic neukládá do postupu.
+
+**Kvíz** (`client/src/screens/quiz.js`): instance otázek žijí po celou dobu obrazovky, souhrn ukáže
+chybné otázky s odkazy `see` a nabídne „Projít jen chybné"; skóre každého průchodu jde do
+`POST /api/attempts { id: <kvíz>, score }` (server drží `firstScore`). `quiz:evaluated` nese výsledky
+všech otázek s posledním vyhodnocením.
+
+**Testy:** `server/routes/reviews.test.js`, `server/routes/confidence.test.js`,
+`tools/reviews-unit.test.js`, `tools/ui-reviews.test.js` (fixture `tools/fixtures/reviews-content/`,
+porty 4440–4459), fixture serveru `server/test-fixtures/reviews/content/`.
+
+## Nástroj: výsledky a chyby česky, lint, runner
+
+Balík 2 (B3, B4, runner části B11). Formáty jsou v kontraktu kap. 6.
+
+### Runner (`client/src/runner/`, `server/node-runner.js`)
+
+- **RunResult** (kontrakt 6.1): selhaný test má `errorName` a u asercí `operator`, `actual`,
+  `expected`, `generatedMessage`, u `deepEqual` `diff` — i s vlastní zprávou autora. Výpočet je
+  jeden pro prohlížeč i Node: `describeAssertion(error, format)` ve `shared/runner-assertion.js`.
+  Vygenerované hlášky jsou česky (`Očekávám 3, ale kód vrátil 4`); v Node je překládá
+  `server/node-harness.js` a vlastní zprávu autora nechá beze změny.
+- **`syntaxError`**: `shared/syntax-check.js` → `findSyntaxError(files, { includeHtml })`,
+  `checkJsSyntax(code)`, `extractInlineScripts(html)`, `syntaxErrorResult(hints, syntaxError)`.
+  `runTests` (dom/js/vue) i `runNodeTests` bez `cwd` kód, který nejde naparsovat, nespustí.
+- **`//# sourceURL=akademie/<soubor>`** na konci každého skriptu náhledu a testu. Inline skript
+  z `index.html` dostane na začátek prázdné řádky a mezery, takže řádek i sloupec sedí na `index.html`.
+  Chyby v konzoli proto hlásí přímo `script.js:3`.
+- **Preview** (`mountPreview`): `setViewport({ width, height } | null)` — iframe v dané velikosti
+  zmenšený na šířku panelu (výpočet `runner/viewport.js`), `setCssVariables({ '--x': 'v' })` —
+  bez znovunačtení, přežije i `update`, `openInNewTab()` → `boolean` (Blob URL, `opener = null`),
+  `onConsole` u nezachycené chyby navíc `file`, `line`, `column`; navíc `viewport()`.
+- **`inspectCss({ runtime, files, declarations, signal })`** (export `runner/index.js`, také
+  `window.akademieRunner.inspectCss`): složí stránku v neviditelném iframu 1024×768 a vrátí
+  neaktivní deklarace `[{ id, property, reason, elements }]` (`runner/frame/inactive-css.js`).
+- **Úložiště v sandboxu** (kontrakt 13, první verze): iframe runneru dostane `localStorage`
+  a `sessionStorage` v paměti, čerstvé pro každý test i každé překreslení náhledu. Nepovinné
+  `RunRequest.storage = { localStorage: { klíč: 'text' }, sessionStorage: {…} }` je naplní před
+  spuštěním kódu uživatele (formát pro obsah zatím kontrakt nemá).
+
+### Výsledky a chyby česky (`client/src/extensions/errors-cs.js`, `…/errors-cs/`)
+
+- `shared/errors-cs.js`: `explainError(text)` → `{ id, title, causes, see, match? }` (46 vzorů,
+  `ERROR_PATTERNS`), `groupUndefinedNames(errors)` sloučí nenapsané funkce do jednoho řádku.
+  Texty smí obsahovat `` `inline kód` ``. `see` míří na nadpisy pilotních sekcí — přejmenování
+  nadpisu v obsahu = upravit `see` tady (verify S4).
+- Registrace: `registerRunTransform('errors-cs')` (u `syntaxError` požadavky „Neověřeno — kód nejde
+  spustit."), `registerHintResultRenderer('errors-cs')` („Očekávám / Tvůj kód vrátil" se
+  zvýrazněným rozdílem, tabulka lišících se klíčů, české vysvětlení a anglický originál; první
+  selhaný požadavek rozbalený), `registerRunSummaryRenderer('errors-cs')` („Kód nejde spustit"
+  a chyby při spuštění s tlačítkem „Skočit na řádek N" přes `ws.editor.revealLine`),
+  `workspaceExtensions('errors-cs')` (jen si pamatuje editor plochy pro souhrn).
+- Výpočty bez DOM: `errors-cs/format.js` (test `tools/errors-cs-unit.test.js`).
+
+### Lint (`client/src/extensions/lint/`)
+
+- `registerEditorExtension('lint')` pro `.js/.mjs/.cjs`, `.html` (inline skripty), `.css`, `.json`:
+  syntaxe JS (chyba), neplatný JSON (chyba), neplatná CSS deklarace přes `CSS.supports` s návrhem
+  opravy (varování), neaktivní CSS jen na pracovní ploše dom/vue (info), chyby za běhu z náhledu
+  na svém řádku (chyba).
+- `workspaceExtensions('lint')` poslouchá `ws.preview.onConsole` a přelintuje editor
+  (`StateEffect` + `needsRefresh`).
+- Čisté moduly (test `tools/lint-unit.test.js`): `css-scan.js` (deklarace s pozicemi),
+  `css-check.js` (neplatné deklarace, návrhy), `diagnostics.js` (nálezy všech druhů).
+- Barvy podtržení a bublin jen přes tokeny editoru a konzole.
+
+### Testy
+
+`node --test shared/syntax-check.test.js shared/errors-cs.test.js server/node-runner.test.js
+tools/runner-unit.test.js tools/errors-cs-unit.test.js tools/lint-unit.test.js tools/runner.test.js
+tools/ui-errors-cs.test.js` (UI test na portech 4420–4439, obsah `tools/fixtures/errors-cs-content/`).
+
+## Nástroj: bloky lekce, druhy kroků a stránka sekce
+
+Balík 4b. Jen klient; data bere z parseru (kontrakt kap. 3, 5) a z `GET /api/section`, `GET /api/terms`.
+
+**Soubory**
+
+| soubor | co dělá |
+|---|---|
+| `client/src/markdown.js` | markdown pro celou aplikaci: rámečky `> [!REMEMBER]` / `[!PITFALL]` / `[!TIP]` / `[!NOTE]`, `==mark==`, `[[pojem\|text]]` s bublinou (načte `GET /api/terms` jednou za běh), odkazy `see:` přes `refHref`; exporty `renderMarkdown`, `markdownToHtml` (Node, testy), `highlightLines`, `loadTermIndex`, `closeTermPopover`, `CALLOUT_TYPES` |
+| `client/src/lesson/blocks/{check,explain,memory,compare,live}.js` | bloky lekce; `check.js` exportuje `createStandaloneQuestion` a `lessonQuestionId`, `explain.js` exportuje `createExplainPanel` (sdílí ho `# --explain--` kroku) |
+| `client/src/lesson/blocks/{live-logic,memory-logic}.js` | výpočty bez DOM (ovládací prvky, rozdělení `:::compare`, změny v `:::memory`) |
+| `client/src/components/live-example.js` | živá ukázka: `controls` (hodnoty přes `preview.setCssVariables?.()`, jinak nové spuštění s `:root { … }` na začátku `styles.css`) a `predict` |
+| `client/src/screens/lesson.js` | splnění lekce (kap. 5.8), skok na `?kotva=` |
+| `client/src/extensions/lesson-blocks.js` | registrace `check`, `explain`, `memory`, `compare` |
+| `client/src/extensions/step-kinds/` | štítky druhů kroků, čtyři kroky ladění, míra změny (`change-ratio.js` nad `shared/diff.js`), plocha Seřaď řádky (`parsons.js`, `parsons-logic.js`), `# --explain--` kroku, jiné přístupy, rubrika, Než začneš |
+| `client/src/extensions/sections/` | Po sekci umíš, tahák (tisk přes `body[data-print="cheatsheet"]`), pojmy sekce |
+| `client/src/styles/{prose,lesson}.css`, `step-kinds.css`, `sections.css` | vzhled; barvy jen tokeny z kap. 5.11 kontraktu |
+
+**Registrace:** `registerLessonBlock` (4×), `registerStepKind({ kind: 'parsons' })`, `workspaceExtensions`
+(`step-kinds-label`, `-debug-change`, `-explain`, `-approaches`, `-review`, `-plan`), `projectExtensions`
+(`step-kinds-project`: Než začneš ve slotu `head`, rubrika v `after-stories`), `sectionExtensions` (`sections`).
+
+**Rozhraní lekce navíc:** `lesson.addRequirement({ id, label, isMet, element? })` — `element` je nepovinný
+prvek, na který tlačítko v hlášce „Ještě vyřeš…" odscrolluje. Událost `lesson:questions-checked` se vyvolá
+po každém vyhodnocení otázky z `# --questions--` (výsledky dosud vyhodnocených otázek).
+
+**Volá cizí API** (přímo přes `apiRequest`): `POST /api/attempts` (otázky přes `createQuestion` s `itemId`,
+`solutionViewed` u přístupů před splněním), `POST /api/notes/:section/append` (`explain`, `plan`),
+`POST /api/reviews/add` (`explain:<id>#<klíč>`), `GET /api/module/…?solution=1` (přístupy labu, řešení
+pro míru změny, když krok nemá oblast `--edit--`).
+
+**Třídy pro testy a rozšíření:** bloky mají `data-block="<kind>"`; `.callout[data-callout]`, `button.term`,
+`.term-popover`, `.see-link`, `.live--predict[data-revealed]`, `.live-controls__css`, `.memory__position`,
+`.parsons__line`, `.kind-label--<kind>`, `.debug-change`, `.plan`, `.review`, `.approach`,
+`.section-outcomes`, `.cheatsheet`, `.section-terms`.
+
+**Ověření:** `node --test tools/lesson-blocks-unit.test.js tools/ui-lesson-blocks.test.js` (UI test: porty
+4470–4479, fixture `tools/fixtures/lesson-blocks-content/`, snímky s `LESSON_BLOCKS_SHOTS=<adresář>`).
+
+## Nástroj: poznámky, nastavení, tmavý režim a orientace (balík 6)
+
+**Server**
+
+| endpoint | soubor | poznámka |
+|---|---|---|
+| `GET /api/notes`, `GET/PUT /api/notes/:section`, `POST /api/notes/:section/append` | `server/routes/notes.js` | kontrakt 12.5; soubory `data/poznamky/<sekce>.md` zapisované atomicky (`.tmp` + `rename`) přes `ctx.dataPath`; „verze" souboru = `mtime` (`updated`), PUT s jiným `baseUpdated` → 409 (`baseUpdated: null` = soubor ještě neexistuje); tělo `append` nad 100 kB → 413 (PUT má limit serveru 5 MB, soubor poznámek časem 100 kB přeroste); reset postupu poznámky nemaže |
+| `GET/PUT /api/settings` | `server/routes/settings.js` | kontrakt 12.6; `data/nastaveni.json` přes `createJsonStore`; neznámý klíč/hodnota → 400, ručně rozbité hodnoty v souboru se nahradí výchozími |
+
+Pomocné čisté funkce (testy): `formatNoteEntry`, `appendEntry`, `validateAppendBody` (notes.js),
+`SETTINGS_SCHEMA`, `normalizeSettings`, `validateSettingsPatch` (settings.js).
+
+**Klient — rozšíření (`client/src/extensions/`)**
+
+| soubor | co dělá | registrace |
+|---|---|---|
+| `theme.js` | `data-theme` (`light`/`dark`, u „system" podle `prefers-color-scheme`) a `data-theme-choice` na `<html>`; přepínač v liště; nápověda `akademie.theme` v localStorage jen proti bliknutí při načtení, pravda je na serveru | `registerHeaderItem({ id: 'theme', order: 90 })` |
+| `settings/client.js`, `settings/logic.js` | `settings.load()/get()/update()/onChange()`; `previewViewport(width)`, `nextTheme`, `resolveTheme` bez DOM | — |
+| `preview-tools.js` | přepínač šířky „Jako testy · 768 · 375 · Panel" (`preview.setViewport`) a „Nová karta" (`preview.openInNewTab`); u runtime js jen nová karta | `workspaceExtensions` (slot `output-tools`) |
+| `lesson-toc.js` | obsah lekce: připnutý panel vpravo (`orientation/aside.js`, když je vedle nejširšího bloku aspoň ~180 px a okno ≥ 1200 px), jinak rozbalovací řádek v `head`; odkazy `?kotva=` přes `replaceState` | `lessonExtensions` (sloty `aside`, `head`) |
+| `notes/` | `#/poznamky[/sekce]`, panel poznámek (`notes/drawer.js`), „Nerozumím" u odstavce nebo označeného textu (`notes/not-understood.js`), tlačítko Poznámka v lekci, na ploše a u projektu | `registerScreen('notes')`, `registerHeaderItem({ id: 'poznamky', order: 30 })`, `lessonExtensions`, `workspaceExtensions` (slot `actions`), `projectExtensions` (slot `head`) |
+| `shortcuts.js` | Alt+←/→ (krok workshopu, jinde modul), `?` přehled zkratek, `N` panel poznámek | `workspaceExtensions`, `appEvents` |
+| `next-on-route.js` | „Další na trase" a u rozšíření „Další sekce jádra" (`orientation/route.js`) | `sectionExtensions` (slot `end`) |
+| `search.js` | prázdná obrazovka `#/hledat` | `registerScreen('search')`, `registerHeaderItem({ id: 'hledat', order: 10 })` |
+| `orientation/` | `route.js` (trasa, Další na trase, `resumeStepId`, `partHref`), `aside.js` (připnutí slotu `aside` lekce), `fold.js` + `fold-ranges.js` (sbalení kódu mimo `--edit--` v kroku workshopu) | `registerEditorExtension({ id: 'fold-outside-edit-region' })` |
+
+**Události:** `notes:open` (`appEvents`, payload `{}`) — otevře panel poznámek pro aktuální místo.
+Kdo chce otevřít poznámky ze svého nástroje, vyvolá tuhle událost; zápis záznamu dělá přímo
+`POST /api/notes/:section/append` (kontrakt 12.5).
+
+**Kostra (vlastní soubory jádra):** stepper má rozbalovací „Krok N z M" se seznamem názvů a ✓
+(`.step-menu`), drobečky část → sekce → modul jsou odkazy (`#/?cast=<id části>` odscrolluje přehled),
+„Pokračovat" vede přes `resumeStepId` na první nesplněný krok od `lastVisited`, runtime js má
+konzoli pod editorem (`.workspace__stack`, 65/35), po splnění kroku se Zkontrolovat schová
+(`brief.setPassed`), přehled má štítek „Rozšíření" a pohled „Doporučená trasa" (volba v localStorage
+`akademie.overview.view`), ligatury jsou vypnuté v `code`, `pre`, editoru i konzoli.
+
+**Barvy:** všechny v `styles/tokens.css`, světlá i tmavá varianta se stejnými jmény (hlídá
+`tools/theme-unit.test.js` i kontrast ≥ 4.5:1 a to, že žádné CSS mimo tokens.css nepíše barvu
+natvrdo). Tokeny výkladu z kontraktu 5.11: `--callout-{remember,pitfall,tip,note}-{bg,border,fg,icon}`,
+`--text-strong-accent`, `--code-inline-bg/fg`, `--term-fg`, `--mark-bg` (+ `--mark-fg`). Navíc:
+`--rule-heavy`, `--shadow-pop`, `--backdrop`, `--preview-stage`, `--code-fold-bg`.
+
+**Ověření:** `node --test server/routes/notes.test.js server/routes/settings.test.js tools/orientation-unit.test.js tools/notes-unit.test.js tools/theme-unit.test.js tools/ui-orientation.test.js tools/ui.test.js`
+(UI testy: porty 4500–4519, fixture `tools/fixtures/orientation-content/`).
+
+## Nástroj: parser obsahu, stránka sekce a verify (balík 4a)
+
+**Sdílené moduly** (formáty podle kontraktu kap. 2–5, exporty kap. 1.1; navíc jen přidané exporty):
+
+| soubor | navíc proti kontraktu |
+|---|---|
+| `shared/parse.js` | `STEP_KINDS`; `assembleParsons(seedFile, lines, { indentUnit, blanks, forms })` a `fillParsonsLine` — skládání souboru z řádků parsons (parser, verify P1 i UI stejně); `applyControlDefaults(files, controls)` a `controlValue(control, value)` — `:root { --x: výchozí }` a hodnota prvku do CSS |
+| `shared/answers.js` | `createKeyAllocator()` — klíče `hashKey` s příponou `-2`, `-3` v jednom souboru |
+| `shared/refs.js` | `findSeeLinks(markdown)` → `[{ ref, text, line, index }]` pro `[text](see:ref)` mimo kód; `findTermRefs` vrací `[{ term, text, raw, line, index }]` |
+| `shared/content.js` | `loadSection` vrací `null`, když sekce není na disku; `sectionOutcomes(sectionJson, sectionId)` |
+
+- `parseStep(…, { fileKind })`: `'step' | 'lab' | 'project'`; `requireSeed` (výchozí jen u kroku) dál vypíná povinný seed a řešení. Lab bez `# --solution--` má `solution: []` (verify K4).
+- Předpověď s výběrem má navíc `question.why` (text `--why--` celé otázky). Chybějící popisek kroku `:::memory` = `''`, jednotka `range` bez jednotky = `''`.
+- Klíče v lekci: `:::check` + `# --questions--` jedna řada, body `:::explain` druhá, předpovědi třetí.
+
+**Routy** (`server/routes/sections.js`): `GET /api/section/:section` (404 mimo disk, 400 neplatný slug, 500 rozbitý soubor), `GET /api/terms`. Test `server/routes/sections.test.js`.
+
+**Verify** (`npm run overit [-- --json | --doporuceni | content/<sekce>]`):
+
+| soubor | co dělá |
+|---|---|
+| `tools/verify.js` | orchestrace: `runVerify` → položky `{ id, type, errors, warnings, notes, advice }`, souhrn `{ modules, errors, warnings, advice }`; typ `section` = soubory sekce |
+| `tools/lib/content-scan.js` | `loadCourse` (celý kurz vždy — kvůli odkazům a pojmům), `scanContent` (výběr podle prefixu) |
+| `tools/lib/content-checks.js` | `planModule(module, context)` (K/T/A/D/P/X/L/W/E/Q + S7, M1, M2), `planCards` (C1–C3) |
+| `tools/lib/verify-course.js` | `createCourseChecks(course)`: S2–S9 napříč kurzem, `planSection`, `checkOsnova`, odkazy `ERROR_PATTERNS` ze `shared/errors-cs.js` (jen nad `content/`) |
+| `tools/lib/verify-rules.js` | textová pravidla bez prohlížeče (T1, A1, W2, M1, E6, sběr markdownu a referencí) |
+
+Každá zpráva začíná kódem pravidla (`[K1] krok 002: …`). `shared/diff.js` (D1) a `shared/errors-cs.js` (S4) se načítají volitelně.
+Tahák se značkami `--x--` nebo `:::` = `[S1]`. Testy: `tools/verify-unit.test.js` (fixture `tools/fixtures/verify-content/`, běhy simulované),
+`tools/verify.test.js` (skutečný runner nad `tools/fixtures/content/`).

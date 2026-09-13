@@ -1,0 +1,67 @@
+/* „Další na trase" na konci stránky sekce. */
+
+.next-on-route {
+  margin-top: 48px;
+  padding-top: 20px;
+  border-top: 2px solid var(--rule-heavy);
+}
+
+.next-on-route__lead {
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+
+.next-on-route__links {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.next-on-route__link {
+  position: relative;
+  display: grid;
+  gap: 2px;
+  padding: 16px 44px 16px 18px;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-large);
+  background: var(--surface);
+  color: var(--ink);
+  text-decoration: none;
+}
+
+/* Šipka jako v rejstříku knihy: kam list otočit. */
+.next-on-route__link::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 18px;
+  width: 9px;
+  height: 9px;
+  border-top: 2px solid var(--accent);
+  border-right: 2px solid var(--accent);
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.next-on-route__link:hover {
+  border-color: var(--accent-muted);
+  color: var(--ink);
+}
+
+.next-on-route__label {
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.next-on-route__title {
+  font-family: var(--font-serif);
+  font-size: 21px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.next-on-route__intro {
+  color: var(--ink-soft);
+  font-size: 14px;
+}

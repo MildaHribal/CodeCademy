@@ -8,6 +8,8 @@
 // 2) Detail nesplněného požadavku (pod textem nápovědy):
 //      registerHintResultRenderer({ id, order, render({ result, hint, index, run, item }) → Element | null })
 //    Použije se první renderer (podle order), který vrátí prvek. Výchozí: rozbalovací „Proč to neprošlo".
+//    `result` nese pole z RunResult (kontrakt kap. 6.1): error, errorName, a u asercí operator,
+//    actual, expected, generatedMessage, diff. České zobrazení je v extensions/errors-cs.js.
 //
 // 3) Souhrn neúspěšné kontroly (v patičce pracovní plochy a u projektu):
 //      registerRunSummaryRenderer({ id, order, render({ run, item, total, passedCount, skipped, context }) → Element[] | Element | null })

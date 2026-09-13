@@ -3,10 +3,14 @@
 //   node tools/verify.js                          celý obsah
 //   node tools/verify.js content/css-flexbox      jen sekce (nebo content/<sekce>/<modul>)
 //   node tools/verify.js --json                   strojový výstup
+//   node tools/verify.js --doporuceni             vypíše i doporučení (jinak jen jejich počet)
 //   node tools/verify.js --content-dir <adresář>  jiný adresář s obsahem (např. testovací)
 //
 // Soběstačné: sestaví runner (Vite) do dočasného adresáře, spustí server (createApp)
 // na volném portu a testy pouští ve stejném runneru jako aplikace, přes Playwright.
+//
+// Úrovně (kontrakt kap. 10): chyba (exit 1), varování, doporučení, poznámka. Každá zpráva
+// začíná kódem pravidla, např. „[K1] krok 002: …".
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -14,6 +18,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { buildRunner, PROJECT_ROOT } from './lib/build-runner.js';
 import { planModule } from './lib/content-checks.js';
 import { scanContent, toIdPrefixes } from './lib/content-scan.js';
+import { createCourseChecks } from './lib/verify-course.js';
 import { closeServer, listen } from './lib/listen.js';
 import { formatEntry, formatSummary } from './lib/report.js';
 import { openRunnerPool } from './lib/runner-pool.js';
@@ -25,7 +30,8 @@ const activeCleanups = new Set();
  * @param {{ contentDir: string, prefixes?: string[], createApp: Function, distDir?: string|null,
  *   concurrency?: number, onEntry?: (entry) => void, onProgress?: (text: string) => void }} options
  *   distDir: už sestavený klient (jinak se sestaví do dočasného adresáře)
- * @returns {Promise<{ ok: boolean, summary: { modules: number, errors: number, warnings: number }, entries: object[] }>}
+ * @returns {Promise<{ ok: boolean, summary: { modules: number, errors: number, warnings: number, advice: number }, entries: object[] }>}
+ *   entries: [{ id, type, errors: [], warnings: [], notes: [], advice: [] }] v pořadí osnovy
  */
 export async function runVerify({ contentDir, prefixes = [], createApp, distDir = null, concurrency = 4, onEntry = () => {}, onProgress = () => {} }) {
   const cleanups = [];
@@ -47,16 +53,11 @@ export async function runVerify({ contentDir, prefixes = [], createApp, distDir 
   activeCleanups.add(cleanup);
 
   try {
-    const { problems, modules } = scanContent(contentDir, prefixes);
-    const entries = [];
-    const emit = (entry) => {
-      entries.push(entry);
-      onEntry(entry);
-    };
-    for (const problem of problems) emit({ ...problem, notes: [] });
-
-    const planned = modules.map((item) => (item.module ? { ...item, plan: planModule(item.module) } : item));
-    const jobCount = planned.reduce((sum, item) => sum + (item.plan?.jobs.length ?? 0), 0);
+    const { problems, modules, sections, course } = scanContent(contentDir, prefixes);
+    // Odkazy ze shared/errors-cs.js míří do skutečného obsahu kurzu, ne do testovacího.
+    const checkErrorPatterns = path.resolve(contentDir) === path.join(PROJECT_ROOT, 'content');
+    const units = await planUnits({ problems, modules, sections, course, prefixes, checkErrorPatterns });
+    const jobCount = units.reduce((sum, unit) => sum + (unit.plan?.jobs.length ?? 0), 0);
 
     let pool = null;
     if (jobCount > 0) {
@@ -84,36 +85,79 @@ export async function runVerify({ contentDir, prefixes = [], createApp, distDir 
     }
 
     // Všechny běhy zařadíme do fronty hned; výsledky vypisujeme v pořadí osnovy.
-    const pending = planned.map((item) => ({
-      item,
-      results: item.plan ? Promise.all(item.plan.jobs.map((request) => pool.run(request))) : Promise.resolve([]),
+    const pending = units.map((unit) => ({
+      unit,
+      results: unit.plan ? Promise.all(unit.plan.jobs.map((request) => pool.run(request))) : Promise.resolve([]),
     }));
 
-    for (const { item, results } of pending) {
-      if (item.error) {
-        emit({ id: item.id, type: null, errors: [item.error], warnings: [], notes: [] });
-        continue;
-      }
-      const outcome = item.plan.evaluate(await results);
-      emit({ id: item.id, type: item.module.type, title: item.module.title, ...outcome });
+    const entries = [];
+    for (const { unit, results } of pending) {
+      const outcome = unit.plan ? unit.plan.evaluate(await results) : unit.outcome;
+      const entry = { id: unit.id, type: unit.type, ...(unit.title ? { title: unit.title } : {}), errors: [], warnings: [], notes: [], advice: [], ...outcome };
+      entries.push(entry);
+      onEntry(entry);
     }
 
-    const summary = {
-      modules: modules.length,
-      errors: entries.reduce((sum, entry) => sum + entry.errors.length, 0),
-      warnings: entries.reduce((sum, entry) => sum + entry.warnings.length, 0),
-    };
+    const count = (key) => entries.reduce((sum, entry) => sum + entry[key].length, 0);
+    const summary = { modules: modules.length, errors: count('errors'), warnings: count('warnings'), advice: count('advice') };
     return { ok: summary.errors === 0, summary, entries };
   } finally {
     await cleanup();
   }
 }
 
+/**
+ * Co se ověří a v jakém pořadí: osnova, pak každá sekce (její soubory, pak její moduly),
+ * nakonec odkazy ze shared/errors-cs.js. Jednotka má buď `plan` (běhy + evaluate), nebo hotový `outcome`.
+ */
+async function planUnits({ problems, modules, sections, course, prefixes, checkErrorPatterns }) {
+  const checks = createCourseChecks(course);
+  // Moduly jiných balíků se načítají volitelně: bez nich se jen přeskočí D1 a odkazy vzorů chyb.
+  const diff = await import('../shared/diff.js').catch(() => null);
+  const errorsCs = checkErrorPatterns ? await import('../shared/errors-cs.js').catch(() => null) : null;
+  const context = {
+    checkModuleLinks: checks.checkModuleLinks,
+    changeRatio: diff?.changeRatio ?? null,
+    earlierSectionInPart: checks.earlierSectionInPart,
+    sectionHasEarlierInPart: checks.sectionHasEarlierInPart,
+  };
+
+  const units = [];
+  const merge = (target, extra) => {
+    for (const key of ['errors', 'warnings', 'advice', 'notes']) target[key] = [...(target[key] ?? []), ...(extra[key] ?? [])];
+    return target;
+  };
+
+  const osnovaProblem = problems.find((problem) => problem.id === 'osnova.json');
+  const osnova = merge({ errors: [], warnings: [], advice: [], notes: [] }, osnovaProblem ?? {});
+  if (prefixes.length === 0) merge(osnova, checks.checkOsnova());
+  if (osnova.errors.length || osnova.warnings.length || osnova.advice.length) units.push({ id: 'osnova.json', type: null, outcome: osnova });
+  for (const problem of problems) {
+    if (problem !== osnovaProblem) units.push({ id: problem.id, type: null, outcome: problem });
+  }
+
+  for (const section of course.sections.values()) {
+    if (sections.includes(section.id)) units.push({ id: section.id, type: 'section', title: section.json.title, plan: checks.planSection(section.id) });
+    for (const item of modules) {
+      if (!item.id.startsWith(`${section.id}/`)) continue;
+      if (item.error) units.push({ id: item.id, type: course.modules.get(item.id)?.type ?? null, outcome: { errors: [`[S1] ${item.error}`] } });
+      else units.push({ id: item.id, type: item.module.type, title: item.module.title, plan: planModule(item.module, context) });
+    }
+  }
+
+  if (Array.isArray(errorsCs?.ERROR_PATTERNS)) {
+    const outcome = checks.checkErrorPatternRefs(errorsCs.ERROR_PATTERNS, { sectionIds: prefixes.length ? sections : null });
+    if (outcome.errors.length) units.push({ id: 'shared/errors-cs.js', type: null, outcome });
+  }
+  return units;
+}
+
 function parseArgs(argv) {
-  const options = { json: false, contentDir: path.join(PROJECT_ROOT, 'content'), paths: [], concurrency: 4, help: false };
+  const options = { json: false, advice: false, contentDir: path.join(PROJECT_ROOT, 'content'), paths: [], concurrency: 4, help: false };
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i];
     if (arg === '--json') options.json = true;
+    else if (arg === '--doporuceni') options.advice = true;
     else if (arg === '--help' || arg === '-h') options.help = true;
     else if (arg === '--content-dir') options.contentDir = path.resolve(argv[++i] ?? '');
     else if (arg.startsWith('--content-dir=')) options.contentDir = path.resolve(arg.slice('--content-dir='.length));
@@ -126,10 +170,11 @@ function parseArgs(argv) {
 
 const HELP = `Ověření obsahu Akademie
 
-Použití: node tools/verify.js [cesty…] [--json] [--content-dir <adresář>] [--concurrency <n>]
+Použití: node tools/verify.js [cesty…] [--json] [--doporuceni] [--content-dir <adresář>] [--concurrency <n>]
 
   cesty            content/<sekce> nebo content/<sekce>/<modul> (bez cest = celý obsah)
   --json           výsledek jako JSON na standardní výstup
+  --doporuceni     vypíše i doporučení (pravidla příručky), jinak jen jejich počet
   --content-dir    adresář s obsahem (výchozí content/)
   --concurrency    počet souběžných stránek prohlížeče (výchozí 4)`;
 
@@ -172,11 +217,11 @@ async function main() {
       concurrency: options.concurrency,
       onProgress: progress,
       onEntry: (entry) => {
-        if (!options.json) console.log(formatEntry(entry));
+        if (!options.json) console.log(formatEntry(entry, { showAdvice: options.advice }));
       },
     });
     if (options.json) console.log(JSON.stringify(report, null, 2));
-    else console.log(formatSummary(report.summary));
+    else console.log(formatSummary(report.summary, { showAdvice: options.advice }));
     return report.ok ? 0 : 1;
   } catch (error) {
     console.error(`Ověření selhalo: ${error.stack ?? error.message}`);

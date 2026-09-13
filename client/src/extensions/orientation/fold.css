@@ -1,0 +1,20 @@
+/* Sbalený kód z předchozích kroků v editoru (orientation/fold.js). Editor je vždy tmavý (One Dark). */
+
+.cm-fold-previous {
+  margin: 2px 0;
+  padding: 1px 10px;
+  border: 1px dashed var(--code-tab-ink);
+  border-radius: 4px;
+  background: var(--code-fold-bg);
+  color: var(--code-tab-ink);
+  font: inherit;
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  cursor: pointer;
+}
+
+.cm-fold-previous:hover,
+.cm-fold-previous:focus-visible {
+  border-color: var(--code-accent);
+  color: var(--code-tab-ink-hover);
+}

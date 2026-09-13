@@ -1,0 +1,43 @@
+/* Bublina lintu v editoru (editor je tmavý — barvy z tokenů editoru a konzole). */
+
+.lint-message {
+  display: grid;
+  gap: 4px;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.lint-message p,
+.lint-message ul {
+  margin: 0;
+}
+
+.lint-message__title {
+  font-weight: 600;
+}
+
+.lint-message__hint {
+  color: var(--console-info);
+}
+
+.lint-message__causes {
+  padding-left: 1.2em;
+  color: var(--code-tab-ink-hover);
+}
+
+.lint-message__original {
+  color: var(--console-muted);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-variant-ligatures: none;
+}
+
+.lint-message code {
+  padding: 0 3px;
+  border-radius: 3px;
+  background: var(--console-rule);
+  color: var(--code-ink);
+  font-family: var(--font-mono);
+  font-variant-ligatures: none;
+}

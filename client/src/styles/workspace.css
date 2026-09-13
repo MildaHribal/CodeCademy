@@ -25,6 +25,119 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* ——— Seznam kroků s názvy (rozbalovací „Krok 3 z 24") ——— */
+
+.step-menu {
+  position: relative;
+  flex: none;
+  min-width: 0;
+  max-width: min(34vw, 26rem);
+}
+
+.step-menu__summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+  padding: 0 8px 0 10px;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  list-style: none;
+  cursor: pointer;
+}
+
+.step-menu__summary::-webkit-details-marker {
+  display: none;
+}
+
+.step-menu__summary:hover,
+.step-menu[open] .step-menu__summary {
+  border-color: var(--rule-strong);
+  background: var(--surface-sunken);
+}
+
+.step-menu__summary .icon {
+  color: var(--ink-faint);
+  transition: transform 120ms ease;
+}
+
+.step-menu[open] .step-menu__summary .icon {
+  transform: rotate(180deg);
+}
+
+.step-menu__current {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--ink-soft);
+  font-size: 14px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.step-menu__panel {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 30;
+  width: min(26rem, calc(100vw - 32px));
+  max-height: min(70vh, 34rem);
+  overflow: auto;
+  padding: 6px;
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius-large);
+  background: var(--surface);
+  box-shadow: var(--shadow-pop);
+}
+
+.step-menu__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.step-menu__link {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr) 16px;
+  align-items: baseline;
+  gap: 6px;
+  padding: 6px 8px;
+  border-radius: var(--radius);
+  color: var(--ink);
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.step-menu__link:hover {
+  background: var(--hover-tint);
+  color: var(--ink);
+}
+
+.step-menu__number {
+  color: var(--ink-faint);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.step-menu__status {
+  align-self: center;
+  color: var(--done);
+}
+
+.step-menu__link[data-done='true'] .step-menu__name {
+  color: var(--ink-soft);
+}
+
+.step-menu__link[aria-current='step'] {
+  background: var(--accent-soft);
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+.step-menu__link[aria-current='step'] .step-menu__name,
+.step-menu__link[aria-current='step'] .step-menu__number {
+  color: var(--accent);
+  font-weight: 600;
+}
+
 /* ——— Navigace mezi kroky ——— */
 
 .stepper {
@@ -462,6 +575,32 @@ span.stepper__arrow {
   color: var(--console-muted);
 }
 
+/* ——— Runtime js: editor nahoře, konzole pod ním (65 / 35) ——— */
+
+.workspace__stack {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Panely v zásobníku nejsou sloupce (.columns__pane), rozložení uvnitř jim dáme sami. */
+.workspace__stack > .pane {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.workspace__stack > .pane--editor {
+  flex: 65 1 0;
+  min-height: 160px;
+}
+
+.workspace__stack > .pane--output {
+  flex: 35 1 0;
+  min-height: 120px;
+  border-top: 1px solid var(--rule);
+}
+
 /* ——— Úzké okno: panely pod sebou, stránka se posouvá ——— */
 
 @media (max-width: 900px) {
@@ -497,5 +636,13 @@ span.stepper__arrow {
 
   .pane--output {
     height: 70vh;
+  }
+
+  .workspace__stack > .pane--output {
+    height: 35vh;
+  }
+
+  .step-menu {
+    max-width: 100%;
   }
 }

@@ -1,0 +1,5 @@
+{
+  "parts": [
+    { "id": "dev", "title": "Testy běžícího procesu", "summary": "Obsah pro testy Spustit a HTTP klienta.", "sections": ["dev"] }
+  ]
+}

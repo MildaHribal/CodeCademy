@@ -1,0 +1,5 @@
+{
+  "parts": [
+    { "id": "opak", "title": "Testy opakování", "summary": "Obsah pro testy kvízu a opakování.", "sections": ["opak"] }
+  ]
+}

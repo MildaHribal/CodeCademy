@@ -1,0 +1,26 @@
+{
+  "title": "Základ",
+  "intro": "Úvod s [[pole]].",
+  "modules": [
+    "lekce",
+    "workshop-dlouhy",
+    "workshop-kratky",
+    "lab",
+    "lab-bez-reseni",
+    "kviz",
+    "rozbity"
+  ],
+  "outcomes": [
+    {
+      "text": "Umíš pole.",
+      "links": [
+        "zaklad/lekce#pole",
+        "zaklad/neni"
+      ]
+    },
+    {
+      "text": "Umíš pole.",
+      "links": []
+    }
+  ]
+}

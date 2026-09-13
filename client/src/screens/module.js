@@ -8,6 +8,7 @@ import { MODULE_TYPE_LABELS } from '../text.js';
 import { errorNotice } from '../components/status.js';
 import { withLoading, showLoadError } from './load.js';
 import { backLink } from './nav.js';
+import { partHref, resumeStepId } from '../extensions/orientation/route.js';
 import { renderWorkspace } from '../workspace/index.js';
 import { renderLesson } from './lesson.js';
 import { renderQuiz } from './quiz.js';
@@ -37,7 +38,13 @@ export async function renderModule(ctx, { sectionId, moduleId, stepKey }) {
       .then((curriculum) => {
         const found = findSection(curriculum, sectionId);
         const title = found?.section.modules.find((m) => m.id === id)?.title ?? moduleId;
-        if (found && !ctx.signal.aborted) ctx.setCrumbs([{ label: found.section.title, href: href.section(sectionId) }, { label: title }]);
+        if (found && !ctx.signal.aborted) {
+          ctx.setCrumbs([
+            { label: found.part.title, href: partHref(found.part.id) },
+            { label: found.section.title, href: href.section(sectionId) },
+            { label: title },
+          ]);
+        }
       })
       .catch(() => {});
     showLoadError(ctx, error, { title, backHref: href.section(sectionId), backLabel: 'Zpět na sekci' });
@@ -54,7 +61,12 @@ export async function renderModule(ctx, { sectionId, moduleId, stepKey }) {
   };
 
   ctx.setTitle(module.title);
-  const crumbs = [{ label: section.title, href: nav.sectionHref }, { label: module.title }];
+  // Drobečky: část → sekce → modul (→ krok). Všechno kromě poslední položky jsou odkazy.
+  const crumbs = [
+    found ? { label: found.part.title, href: partHref(found.part.id) } : null,
+    { label: section.title, href: nav.sectionHref },
+    { label: module.title },
+  ].filter(Boolean);
   ctx.setCrumbs(crumbs);
 
   switch (module.type) {
@@ -80,11 +92,9 @@ function renderWorkshopStep(ctx, module, stepKey, nav, crumbs) {
   const keyOf = (step) => step.id.split('/').pop();
 
   if (!stepKey) {
-    // Bez čísla kroku: naposledy otevřený krok tohoto workshopu, jinak první nesplněný.
-    const last = progress.get().lastVisited;
-    const lastStep = steps.find((s) => s.id === last && !progress.isCompleted(s.id));
-    const target = lastStep ?? steps.find((s) => !progress.isCompleted(s.id)) ?? steps[0];
-    redirect(href.step(target.id));
+    // Bez čísla kroku („Pokračovat"): první nesplněný krok od naposledy otevřeného (kontrakt kap. 8).
+    const targetId = resumeStepId(steps.map((s) => s.id), progress.get().lastVisited, progress.isCompleted);
+    redirect(href.step(targetId));
     return;
   }
 

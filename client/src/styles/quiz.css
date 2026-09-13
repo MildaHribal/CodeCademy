@@ -154,3 +154,184 @@
   grid-column: 1 / -1;
   margin-top: 10px;
 }
+
+/* ——— Souhrn: chybné otázky s odkazy „Zopakuj si" ——— */
+
+.quiz-summary__wrong {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.quiz-summary__wrong-title {
+  margin: 0;
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.quiz-wrong {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.quiz-wrong li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 10px;
+  color: var(--ink-soft);
+}
+
+.quiz-wrong__number {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.quiz-wrong__links {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 2px 10px;
+}
+
+.quiz__review-title {
+  margin: 32px 0 0;
+  font-size: 20px;
+}
+
+/* ——— Sada otázek nad delším kódem (# --code--) ——— */
+
+.quiz-code-group {
+  display: grid;
+  gap: 8px 28px;
+  padding-top: 20px;
+}
+
+@media (min-width: 1000px) {
+  .quiz-code-group {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .quiz-code-group .code-set {
+    position: sticky;
+    top: 16px;
+    max-height: calc(100dvh - 32px);
+  }
+}
+
+.quiz-code-group__questions {
+  min-width: 0;
+}
+
+.quiz-code-group__questions .question:first-child {
+  padding-top: 6px;
+}
+
+.code-set {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+  border-radius: var(--radius-large, 10px);
+  background: var(--code-bg);
+  color: var(--code-ink);
+}
+
+.code-set__head {
+  padding: 10px 14px 8px;
+  background: var(--code-bg-deep);
+}
+
+.code-set__title {
+  margin: 0;
+  color: var(--code-tab-ink-active);
+  font-weight: 700;
+}
+
+.code-set__hint {
+  margin: 2px 0 0;
+  color: var(--code-tab-ink);
+  font-size: 13px;
+}
+
+.code-set__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  padding: 0 8px;
+  background: var(--code-bg-deep);
+}
+
+.code-set__tab {
+  padding: 6px 12px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: var(--code-tab-ink);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.code-set__tab:hover {
+  color: var(--code-tab-ink-hover);
+}
+
+.code-set__tab[aria-selected='true'] {
+  border-bottom-color: var(--code-accent);
+  color: var(--code-tab-ink-active);
+}
+
+.code-set__tab:focus-visible {
+  outline: 2px solid var(--focus-on-dark);
+  outline-offset: -2px;
+}
+
+.code-set__view {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  overflow: auto;
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  font-variant-ligatures: none;
+  line-height: 1.6;
+}
+
+.code-set__view[hidden] {
+  display: none;
+}
+
+.code-set__view:focus-visible {
+  outline: 2px solid var(--focus-on-dark);
+  outline-offset: -2px;
+}
+
+.code-set__gutter,
+.code-set__code pre {
+  margin: 0;
+  padding: 12px 0;
+  font: inherit;
+  line-height: inherit;
+  white-space: pre;
+}
+
+.code-set__gutter {
+  padding-inline: 12px 10px;
+  border-right: 1px solid var(--console-rule);
+  color: var(--tok-comment);
+  text-align: right;
+  user-select: none;
+}
+
+.code-set__code pre {
+  padding-inline: 14px;
+  background: transparent;
+  color: var(--code-ink);
+}
+
+.code-set__code code {
+  font: inherit;
+}

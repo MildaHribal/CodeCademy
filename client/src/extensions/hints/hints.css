@@ -1,0 +1,127 @@
+/* Nápovědy (hints.js). Barvy jen přes tokeny z styles/tokens.css. */
+
+/* Tlačítko po 2 neúspěšných kontrolách: nápadné, ale ne poplašné. */
+.hint-tips__button--highlight {
+  border-color: var(--warn-border);
+  background: var(--warn-soft);
+  color: var(--warn);
+  box-shadow: 0 0 0 3px var(--warn-soft);
+}
+
+.hint-tips__button--highlight:hover {
+  border-color: var(--warn);
+  background: var(--warn-soft);
+  color: var(--warn);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hint-tips__button--highlight {
+    animation: hint-tips-nudge 600ms ease-out 1;
+  }
+}
+
+@keyframes hint-tips-nudge {
+  0% {
+    box-shadow: 0 0 0 0 var(--warn-border);
+  }
+  100% {
+    box-shadow: 0 0 0 3px var(--warn-soft);
+  }
+}
+
+/* Požadavek, u kterého se student zasekl (li ze seznamu požadavků). */
+.hint.hint--focus {
+  margin-inline: -10px;
+  padding-inline: 8px;
+  border-left: 2px solid var(--warn-border);
+  background: var(--warn-soft);
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+
+/* Panel s tipy */
+.hint-tips {
+  margin-top: 18px;
+  padding: 12px 14px;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-large);
+  background: var(--surface-sunken);
+}
+
+.hint-tips:focus {
+  outline: none;
+}
+
+.hint-tips__title {
+  margin-bottom: 8px;
+  font-size: 17px;
+}
+
+.hint-tips__list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hint-tips__tip {
+  padding: 10px 12px;
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--accent-muted);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.hint-tips__tip:focus-visible {
+  outline-offset: 1px;
+}
+
+.hint-tips__tip--focus {
+  border-color: var(--warn-border);
+  border-left-color: var(--warn);
+}
+
+.hint-tips__label {
+  margin-bottom: 4px;
+  color: var(--ink-faint);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.hint-tips__text > :last-child {
+  margin-bottom: 0;
+}
+
+.hint-tips__last:not([hidden]) {
+  display: grid;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.hint-tips__list:empty + .hint-tips__last {
+  margin-top: 0;
+}
+
+.hint-tips__last-text {
+  color: var(--ink-soft);
+}
+
+.hint-tips__see {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.hint-tips__see li + li {
+  margin-top: 2px;
+}
+
+.hint-tips__last .actions {
+  margin-top: 2px;
+}
+
+/* Projekt: nápověda jako vlastní blok pod příběhy */
+.hint-tips-project {
+  margin-block: 16px;
+}

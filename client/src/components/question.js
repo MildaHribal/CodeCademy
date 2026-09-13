@@ -1,24 +1,55 @@
-// Otázky — používá je kvíz, kontrolní otázky v lekci a další nástroje (opakování, :::check).
-// Typy otázek jsou v registru; jádro má typ `choice` (volby, kontrakt kap. 4).
-// Nový typ (např. psaná odpověď s `expected`) = nový soubor v components/questions/ a registrace:
+// Otázky — používá je kvíz, otázky v lekci, :::check, předpověď a opakování.
+// Typy otázek jsou v registru: `choice` (volby) a `text` (psaná odpověď, kontrakt kap. 4).
 //
-//   registerQuestionType({
-//     id: 'written',
-//     order: 10,
-//     match: (question) => typeof question.expected === 'string',
-//     create: (question, options) => ({ element, isAnswered, focus, reveal }),
+//   registerQuestionType({ id: 'text', order: 10, match: (q) => q.type === 'text', create: createTextQuestion });
+//
+// ——— Jak otázku použít ———
+//
+//   const q = createQuestion(question, {
+//     key: 'js-pole/kviz#1b4f0e98',   // stabilní klíč pro míchání voleb
+//     number: 1, total: 10,
+//     onChange: () => {},             // uživatel změnil odpověď
+//     itemId: 'q:js-pole/kviz#1b4f0e98' | null,
+//        // s itemId otázka ukáže volbu jistoty a každé vyhodnocení pošle do POST /api/attempts;
+//        // null = nehodnotí se nikam (pretest, předpověď, opakování si odpověď posílá samo)
+//     onEvaluated: ({ correct, solved, confidence, showAnswer, failures }) => {},   // po každém vyhodnocení
+//     checkButton: false,   // vlastní tlačítko „Zkontrolovat" (samostatná otázka: :::check, opakování)
+//     pretest: false,       // otázka předem: po odpovědi „Uvidíme za chvíli" a odpověď bez ✗, nic se neposílá
+//     askConfidence: Boolean(itemId),   // volba jistoty i bez itemId (opakování)
+//     recallFirst: false,   // volby se ukážou až po „Ukaž volby" (opakování)
+//     onReveal: () => {},   // uživatel klikl „Ukaž odpověď"
 //   });
 //
-// Rozhraní vytvořené otázky (to používají kvíz a lekce):
+// Rozhraní vytvořené otázky:
 //   element        — prvek otázky (fieldset)
-//   isAnswered()   — true, když uživatel už odpověděl
-//   focus()        — přesune fokus na první ovládací prvek
-//   reveal()       — vyhodnotí a ukáže výsledek; vrátí true, když je odpověď správná
-//   answer()       — nepovinné: odpověď uživatele pro záznam (opakování, statistiky)
+//   isAnswered()   — uživatel už odpověděl (vybral volbu / něco napsal)
+//   isSolved()     — zodpovězená správně, nebo si odpověď nechal ukázat (kontrakt kap. 4.5)
+//   isCorrect()    — poslední vyhodnocení bylo správně
+//   evaluate()     — vyhodnotí aktuální odpověď → { correct, solved, confidence, showAnswer, failures }
+//   reveal()       — totéž co evaluate(), vrátí jen true/false (starší volající)
+//   showAnswer()   — ukáže správnou odpověď (tlačítko „Ukaž odpověď")
+//   retry()        — další pokus: odemkne a smaže odpověď; když uživatel správnou odpověď viděl, zamíchá volby
+//   focus(), answer()
+//   state()        — { evaluations, failures, correct, answerShown, solved, round }
 //
-// options: { key: string (stabilní klíč pro míchání), number, total?, onChange?() }
+// ——— Pravidla (kontrakt kap. 4.5) ———
+// Po prvním špatném pokusu jen ✗ a vysvětlení zvolené odpovědi (psaná: „Zkus to znovu").
+// Správná odpověď se ukáže po druhém neúspěchu nebo na „Ukaž odpověď". Chyba s jistotou
+// ukáže „Tady ses mýlil s jistotou — zopakuješ si to zítra."
+//
+// ——— Rozhraní typu otázky (create) ———
+// { element, isAnswered(), focus(), grade() → boolean, answer(),
+//   showResult({ correct, showAnswer, pretest, locked }), clearResult(), reset({ reshuffle, round }) }
+// Typ, který umí jen staré { reveal() → boolean }, funguje dál (vyhodnocení pak hned ukáže odpověď).
+import './questions/questions.css';
+import { h, svg } from '../dom.js';
+import { icons } from '../icons.js';
+import { apiRequest } from '../api-request.js';
 import { createRegistry } from '../core/registry.js';
 import { createChoiceQuestion } from './questions/choice.js';
+import { createTextQuestion } from './questions/text.js';
+import { createConfidencePicker } from './questions/confidence.js';
+import { createQuestionFlow } from './questions/flow.js';
 
 const questionTypes = createRegistry('Typ otázky');
 
@@ -32,10 +63,212 @@ export function registerQuestionType(entry) {
 }
 
 registerQuestionType({ id: 'choice', order: 1000, match: (question) => Array.isArray(question.answers), create: createChoiceQuestion });
+// Psaná odpověď: otázka `type: 'text'`, ale i karty `output` a `css` (mají `expected`).
+registerQuestionType({
+  id: 'text',
+  order: 10,
+  match: (question) => question.type === 'text' || (!Array.isArray(question.answers) && typeof question.expected === 'string'),
+  create: createTextQuestion,
+});
+
+/** Id otázky pro opakování a pokusy (kontrakt kap. 2.10), nebo null, když parser klíč nedal. */
+export function questionItemId(moduleId, question) {
+  return moduleId && question?.key ? `q:${moduleId}#${question.key}` : null;
+}
+
+/** Zapíše vyhodnocení do pokusů. Chyba sítě nesmí rozbít otázku — jen se vypíše. */
+function recordAttempt(id, body) {
+  apiRequest('POST', '/api/attempts', { id, ...body }).catch((error) => {
+    console.warn(`Pokus u otázky ${id} se nepodařilo uložit: ${error.message}`);
+  });
+}
 
 /** Vytvoří otázku podle prvního typu (podle order), jehož match() ji přijme. */
-export function createQuestion(question, options) {
+export function createQuestion(question, options = {}) {
   const type = questionTypes.list().find((entry) => entry.match(question));
   if (!type) throw new Error('Neznámý typ otázky (žádný registrovaný typ ji neumí zobrazit)');
-  return type.create(question, options);
+
+  const {
+    itemId = null,
+    pretest = false,
+    checkButton = false,
+    askConfidence = Boolean(itemId) && !pretest,
+    onEvaluated,
+    onReveal,
+    onChange,
+  } = options;
+
+  const flow = createQuestionFlow();
+  let evaluatedAnswerVisible = false; // na otázce je vidět výsledek vyhodnocení
+
+  const body = type.create(question, {
+    ...options,
+    onChange: () => {
+      // Po neúspěchu s odemčenou odpovědí: změna odpovědi smaže staré označení.
+      if (evaluatedAnswerVisible && !locked) clearFeedback();
+      else if (!evaluatedAnswerVisible) feedback.textContent = ''; // „Nejdřív odpověz." už neplatí
+      onChange?.();
+    },
+    onSubmit: checkButton ? () => evaluateFromButton() : undefined,
+  });
+  const legacy = typeof body.grade !== 'function';
+  const element = body.element;
+
+  const confidence = askConfidence ? createConfidencePicker() : null;
+  const verdict = h('p', { class: 'question__verdict', role: 'status' });
+  const feedback = h('p', { class: 'question__feedback' });
+  const actions = h('div', { class: 'question__actions' });
+  const footer = h('div', { class: 'question__footer' }, confidence?.element, verdict, feedback, actions);
+  element.append(footer);
+
+  let locked = false;
+
+  const checkBtn = checkButton
+    ? h('button', { type: 'button', class: 'btn btn--primary btn--small', onclick: () => evaluateFromButton() }, 'Zkontrolovat')
+    : null;
+  const showAnswerBtn = h('button', { type: 'button', class: 'btn btn--quiet btn--small', onclick: () => api.showAnswer() }, svg(icons.eye), 'Ukaž odpověď');
+  const retryBtn = h('button', { type: 'button', class: 'btn btn--small', onclick: () => api.retry({ focus: true }) }, svg(icons.reset), 'Zkusit znovu');
+  renderActions();
+
+  function renderActions() {
+    const { answerShown, evaluations, correct } = flow.state();
+    const buttons = [];
+    if (checkBtn && !locked) buttons.push(checkBtn);
+    // „Ukaž odpověď" až po špatném pokusu (dřív by sváděla přeskočit přemýšlení).
+    if (!pretest && evaluations > 0 && correct === false && !answerShown) buttons.push(showAnswerBtn);
+    if (checkButton && locked && !pretest) buttons.push(retryBtn);
+    actions.replaceChildren(...buttons);
+  }
+
+  function clearFeedback() {
+    evaluatedAnswerVisible = false;
+    delete element.dataset.result;
+    verdict.textContent = '';
+    feedback.textContent = '';
+    feedback.className = 'question__feedback';
+    body.clearResult?.();
+  }
+
+  function setLocked(value) {
+    locked = value;
+    confidence?.setDisabled(value);
+    // Zamčená otázka (vyřešená nebo odhalená) volbu jistoty nepotřebuje — jen by zavazela.
+    if (confidence) confidence.element.hidden = value;
+  }
+
+  function evaluateFromButton() {
+    if (!body.isAnswered()) {
+      verdict.textContent = '';
+      feedback.textContent = 'Nejdřív odpověz.';
+      body.focus();
+      return;
+    }
+    api.evaluate();
+  }
+
+  const api = {
+    element,
+    isAnswered: () => body.isAnswered(),
+    isSolved: () => flow.state().solved,
+    isCorrect: () => flow.state().correct === true,
+    focus: () => body.focus(),
+    answer: () => body.answer?.() ?? null,
+    state: () => flow.state(),
+
+    evaluate() {
+      const chosenConfidence = confidence?.value() ?? null;
+
+      if (legacy) {
+        const correct = body.reveal();
+        const result = flow.record(correct);
+        flow.revealAnswer();
+        setLocked(true);
+        finish({ correct, showAnswer: true, failures: result.failures }, chosenConfidence);
+        return { correct, solved: true, confidence: chosenConfidence, showAnswer: true, failures: result.failures };
+      }
+
+      const correct = body.grade();
+
+      if (pretest) {
+        // Otázka předem se nehodnotí: odpověď se ukáže bez ✗ a nikam se neposílá.
+        flow.record(true);
+        setLocked(true);
+        body.showResult({ correct, showAnswer: true, pretest: true, locked: true });
+        element.dataset.result = 'pretest';
+        verdict.textContent = 'Uvidíme za chvíli.';
+        feedback.textContent = 'Odpověď najdeš ve výkladu níž.';
+        evaluatedAnswerVisible = true;
+        renderActions();
+        const outcome = { correct, solved: true, confidence: null, showAnswer: true, failures: 0 };
+        onEvaluated?.(outcome);
+        return outcome;
+      }
+
+      const { showAnswer, failures } = flow.record(correct);
+      // Samostatná otázka po prvním neúspěchu zůstane odemčená: uživatel rovnou zkusí jinou odpověď.
+      const lock = correct || showAnswer || !checkButton;
+      setLocked(lock);
+      body.showResult({ correct, showAnswer, locked: lock });
+      finish({ correct, showAnswer, failures }, chosenConfidence);
+
+      if (itemId) {
+        recordAttempt(itemId, chosenConfidence ? { ok: correct, confidence: chosenConfidence } : { ok: correct });
+      }
+      const outcome = { correct, solved: flow.state().solved, confidence: chosenConfidence, showAnswer, failures };
+      onEvaluated?.(outcome);
+      return outcome;
+    },
+
+    reveal() {
+      return api.evaluate().correct;
+    },
+
+    showAnswer() {
+      flow.revealAnswer();
+      setLocked(true);
+      const correct = flow.state().correct === true;
+      if (legacy) body.reveal();
+      else body.showResult({ correct, showAnswer: true, locked: true });
+      element.dataset.result = correct ? 'correct' : 'wrong';
+      verdict.textContent = correct ? 'Správně.' : 'Správná odpověď je označená.';
+      evaluatedAnswerVisible = true;
+      renderActions();
+      onReveal?.();
+    },
+
+    retry({ focus = false } = {}) {
+      const { reshuffle, round } = flow.retry();
+      clearFeedback();
+      body.reset?.({ reshuffle, round });
+      confidence?.reset();
+      setLocked(false);
+      renderActions();
+      if (focus) body.focus();
+    },
+  };
+
+  function finish({ correct, showAnswer, failures }, chosenConfidence) {
+    evaluatedAnswerVisible = true;
+    element.dataset.result = correct ? 'correct' : 'wrong';
+    feedback.className = 'question__feedback';
+    feedback.textContent = '';
+
+    if (correct) {
+      verdict.textContent = 'Správně.';
+    } else if (showAnswer) {
+      verdict.textContent = failures >= 2 ? 'Ani napodruhé to nesedí — správná odpověď je označená.' : 'Špatně — správná odpověď je označená.';
+    } else if (question.multiple) {
+      verdict.textContent = 'Nesedí to. Zkus to znovu.';
+    } else {
+      verdict.textContent = 'Špatně. Zkus to znovu.';
+    }
+
+    if (!correct && chosenConfidence === 'sure') {
+      feedback.className = 'question__feedback question__feedback--sure-wrong';
+      feedback.textContent = 'Tady ses mýlil s jistotou — zopakuješ si to zítra.';
+    }
+    renderActions();
+  }
+
+  return api;
 }

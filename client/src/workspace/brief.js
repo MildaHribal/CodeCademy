@@ -7,7 +7,7 @@ import { renderMarkdown } from '../markdown.js';
 
 /**
  * @param {{ item, module, isWorkshop, hintList, slots, onCheck: () => void, onReset: () => void }} options
- * @returns {{ element, result, checkButton, resetButton, setChecking(boolean) }}
+ * @returns {{ element, result, checkButton, resetButton, setChecking(boolean), setPassed(boolean) }}
  */
 export function createBriefPane({ item, module, isWorkshop, hintList, slots, onCheck, onReset }) {
   const result = h('div', { class: 'result', role: 'status', 'aria-live': 'polite' });
@@ -41,6 +41,7 @@ export function createBriefPane({ item, module, isWorkshop, hintList, slots, onC
       h('h1', { class: 'brief__title', id: 'brief-title' }, item.title),
       slots.element('brief-head'),
       renderMarkdown(item.description, { className: 'prose brief__description' }),
+      slots.element('brief-after-description'),
       h('h2', { class: 'brief__subtitle' }, 'Požadavky'),
       hintList.element,
       slots.element('brief-after-hints'),
@@ -56,6 +57,13 @@ export function createBriefPane({ item, module, isWorkshop, hintList, slots, onC
     setChecking(checking) {
       checkButton.disabled = checking;
       checkButton.querySelector('.btn__label').textContent = checking ? 'Kontroluju…' : 'Zkontrolovat';
+    },
+    /**
+     * Po splnění se Zkontrolovat schová — hlavní akcí je pak „Další krok" ve výsledku
+     * (Ctrl+Enter vede tam). Jakmile uživatel kód upraví, tlačítko se vrátí.
+     */
+    setPassed(passed) {
+      checkButton.hidden = passed;
     },
   };
 }

@@ -1,0 +1,121 @@
+/* Obrazovka #/statistiky. Barvy jen přes tokeny z styles/tokens.css. */
+
+.stats__head {
+  margin-bottom: 20px;
+}
+
+.stats__title {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+.stats__lead {
+  max-width: 65ch;
+  color: var(--ink-soft);
+}
+
+.stats__section {
+  margin-block: 28px;
+}
+
+.stats__section-title {
+  margin-bottom: 10px;
+  padding-left: 10px;
+  border-left: 3px solid var(--accent);
+  font-size: 21px;
+}
+
+.stats__list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.stats__item {
+  display: grid;
+  gap: 4px;
+  padding: 12px 16px;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-large);
+  background: var(--surface);
+}
+
+.stats__item-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 12px;
+  font-weight: 600;
+}
+
+.stats__count {
+  padding: 1px 8px;
+  border: 1px solid var(--fail-border);
+  border-radius: 999px;
+  background: var(--fail-soft);
+  color: var(--fail-ink);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.stats__where {
+  color: var(--ink-faint);
+  font-size: 13px;
+}
+
+.stats__text > :last-child {
+  margin-bottom: 0;
+}
+
+.stats__see .hint-tips__see {
+  margin: 2px 0 0;
+  padding-left: 18px;
+}
+
+.stats__empty,
+.stats__note {
+  color: var(--ink-soft);
+}
+
+.stats__note {
+  margin-top: 8px;
+  font-size: 13px;
+}
+
+.stats__table {
+  width: 100%;
+  max-width: 560px;
+  border-collapse: collapse;
+  background: var(--surface);
+}
+
+.stats__table th,
+.stats__table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+}
+
+.stats__table td {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.stats__table thead th {
+  color: var(--ink-faint);
+  font-size: 13px;
+}
+
+.stats__table thead th:last-child {
+  text-align: right;
+}
+
+.stats__table tfoot th,
+.stats__table tfoot td {
+  border-bottom: 0;
+  font-weight: 700;
+}

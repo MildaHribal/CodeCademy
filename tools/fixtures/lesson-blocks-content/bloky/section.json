@@ -1,0 +1,1 @@
+{ "title": "Bloky a druhy kroků", "intro": "Sekce pro testy rozhraní bloků lekce.", "modules": ["lekce", "lekce-parser", "workshop", "lab"] }

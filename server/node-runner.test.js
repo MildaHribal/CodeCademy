@@ -54,10 +54,63 @@ describe('runNodeTests', () => {
     });
     assert.equal(result.ok, false);
     assert.deepEqual(result.results[0], { index: 0, pass: true });
-    assert.equal(result.results[1].pass, false);
-    assert.match(result.results[1].error, /strictly equal/);
-    assert.deepEqual(result.results[2], { index: 2, pass: false, error: 'Chybí funkce multiply' });
+    assert.deepEqual(result.results[1], {
+      index: 1,
+      pass: false,
+      error: 'Očekávám 4, ale kód vrátil 3',
+      errorName: 'AssertionError',
+      operator: 'strictEqual',
+      actual: '3',
+      expected: '4',
+      generatedMessage: true,
+    });
+    assert.deepEqual(result.results[2], { index: 2, pass: false, error: 'Chybí funkce multiply', errorName: 'AssertionError' });
     assert.deepEqual(result.errors, []);
+    assert.equal(result.syntaxError, null);
+  });
+
+  test('actual a expected i s vlastní zprávou, diff u deepEqual, errorName u jiných chyb', async () => {
+    const result = await runNodeTests({
+      files: [{ name: 'cart.js', content: 'export const cart = () => ({ items: [{ price: 5 }], total: 5 });' }],
+      hints: [
+        { text: 'zpráva', test: "assert.equal(2, 3, 'sum([1, 2]) má vrátit 3');" },
+        { text: 'deep', test: "const { cart } = await helpers.importFile('cart.js'); assert.deepEqual(cart(), { items: [{ price: 6 }], total: 5 }, 'košík');" },
+        { text: 'ok', test: 'assert.ok(0);' },
+        { text: 'typeerror', test: 'null.x;' },
+      ],
+    });
+    assert.deepEqual(result.results[0], { index: 0, pass: false, error: 'sum([1, 2]) má vrátit 3', errorName: 'AssertionError', operator: 'strictEqual', actual: '2', expected: '3', generatedMessage: false });
+    assert.deepEqual(result.results[1].diff, [{ path: 'items[0].price', actual: '5', expected: '6' }]);
+    assert.equal(result.results[1].error, 'košík');
+    assert.deepEqual([result.results[2].error, result.results[2].actual, result.results[2].expected], ['Očekávám pravdivou hodnotu, ale kód vrátil 0', '0', 'true']);
+    assert.equal(result.results[3].errorName, 'TypeError');
+    assert.equal(result.results[3].actual, undefined);
+  });
+
+  test('kód, který nejde naparsovat, se nespustí (syntaxError); projekt s cwd se nekontroluje', async () => {
+    const started = Date.now();
+    const result = await runNodeTests({
+      files: [{ name: 'index.js', content: 'ok();' }, { name: 'server.js', content: "import http from 'node:http';\n\nhttp.createServer((req, res) => {\n  res.end('x';\n});" }],
+      hints: [{ text: 'a', test: 'assert.ok(true);' }, { text: 'b', test: 'assert.ok(true);' }],
+    });
+    assert.deepEqual(result, {
+      ok: false,
+      results: [
+        { index: 0, pass: false, skipped: true, error: 'Neověřeno — kód nejde spustit' },
+        { index: 1, pass: false, skipped: true, error: 'Neověřeno — kód nejde spustit' },
+      ],
+      logs: [],
+      errors: ["SyntaxError: Unexpected token ';' (server.js:4)"],
+      syntaxError: { file: 'server.js', line: 4, column: 14, message: "Unexpected token ';'" },
+    });
+    assert.ok(Date.now() - started < 500, 'žádný proces se nemá spouštět');
+
+    const project = path.join(scratch, 'projekt-rozbity');
+    fs.mkdirSync(project);
+    fs.writeFileSync(path.join(project, 'broken.js'), 'const = 1;');
+    const inProject = await runNodeTests({ cwd: project, hints: [{ text: 'a', test: 'assert.ok(true);' }] });
+    assert.equal(inProject.ok, true);
+    assert.equal(inProject.syntaxError, null);
   });
 
   test('všechny testy prošly → ok, globály files a helpers fungují', async () => {

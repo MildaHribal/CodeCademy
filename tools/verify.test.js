@@ -29,21 +29,41 @@ after(() => {
 });
 
 describe('runVerify nad fixture obsahem', () => {
-  test('dobrá sekce projde bez chyb a varování', async () => {
+  test('dobrá sekce se všemi novými formáty projde bez chyb a varování (skutečné běhy runneru)', async () => {
     const report = await runVerify({ contentDir: FIXTURES, prefixes: ['dobra'], createApp, distDir });
     assert.equal(report.ok, true, JSON.stringify(report.entries, null, 2));
-    assert.deepEqual(report.summary, { modules: 4, errors: 0, warnings: 0 });
+    assert.deepEqual({ ...report.summary, advice: undefined }, { modules: 4, errors: 0, warnings: 0, advice: undefined }, JSON.stringify(report.entries, null, 2));
+    assert.deepEqual(report.entries.map((entry) => [entry.id, entry.type]), [
+      ['dobra', 'section'], ['dobra/lekce-flexbox', 'lesson'], ['dobra/workshop-navigace', 'workshop'], ['dobra/lab-soucet', 'lab'], ['dobra/kviz', 'quiz'],
+    ]);
+    for (const entry of report.entries) assert.ok(Array.isArray(entry.advice), 'každá položka má pole advice');
   });
 
-  test('rozbitá sekce selže: seed, který projde, je chyba; krátký kvíz a návaznost varování', async () => {
+  test('rozbitá sekce selže: seed, který projde, špatná předpověď, stejné varianty, rozbité odkazy', async () => {
     const entries = [];
     const report = await runVerify({ contentDir: FIXTURES, prefixes: ['spatna'], createApp, distDir, onEntry: (entry) => entries.push(entry.id) });
     assert.equal(report.ok, false);
-    assert.deepEqual(entries, ['spatna/workshop-rozbity', 'spatna/kviz-kratky']);
-    const [workshop, quiz] = report.entries;
-    assert.deepEqual(workshop.errors, ['krok 002: výchozí kód (seed) projde všemi testy — aspoň jeden test musí selhat']);
-    assert.deepEqual(workshop.warnings, ['krok 002: seed se liší od řešení kroku 001 (styles.css)']);
-    assert.deepEqual(quiz.warnings, ['kvíz má jen 1 otázku (doporučeno aspoň 5)']);
+    assert.deepEqual(entries, ['spatna', 'spatna/workshop-rozbity', 'spatna/lekce-odkazy', 'spatna/kviz-kratky']);
+    const [section, workshop, lesson, quiz] = report.entries;
+    assert.deepEqual(section.warnings, ['[S8] sekce nemá cards.md']);
+    assert.deepEqual(workshop.errors, ['[K1] krok 002: výchozí kód (seed) projde všemi testy — aspoň jeden test musí selhat']);
+    assert.deepEqual(workshop.warnings, [
+      '[A1] krok 001: 1 aserce bez české zprávy (test 1 ř. 1)',
+      '[A1] krok 002: 1 aserce bez české zprávy (test 1 ř. 1)',
+      '[K3] krok 002: seed se liší od řešení kroku 001 (styles.css)',
+      '[T2] krok 002: krok mimo první třetinu nemá # --help--',
+    ]);
+    assert.deepEqual(lesson.errors, [
+      '[E2] živá ukázka 1: předpověď čeká „3", ukázka vypíše „2"',
+      '[E3] :::compare 1: obě varianty mají stejné soubory',
+      '[S4] výklad: odkaz „chybějící modul": reference „spatna/neni-modul": modul spatna/neni-modul v sekci není',
+      '[S5] výklad: pojem [[neexistujici pojem]] neexistuje',
+    ]);
+    assert.deepEqual(lesson.warnings, [
+      '[E4] lekce nemá žádný :::check (bez pretest)',
+      '[M1] výklad: neznámý rámeček > [!WARNING] (povolené: REMEMBER, PITFALL, TIP, NOTE)',
+    ]);
+    assert.deepEqual(quiz.warnings, ['[Q1] kvíz má jen 1 otázku (doporučeno aspoň 5)', '[Q2] 1 špatná odpověď nemá #### --why-- (otázky 1)']);
   });
 });
 
@@ -77,11 +97,10 @@ describe('runVerify nad obsahem s chybami v řešení a ukázkách', () => {
     const report = await runVerify({ contentDir, createApp, distDir });
     assert.equal(report.ok, false);
     const byId = Object.fromEntries(report.entries.map((entry) => [entry.id, entry]));
-    assert.deepEqual(byId['sekce/lekce'].errors, ['živá ukázka 2 hlásí chyby: ReferenceError: neexistuje is not defined (script.js:1)']);
-    assert.deepEqual(byId['sekce/lab'].errors, [
-      'lab: řešení neprojde testem 1 („Vrací dvojnásobek."): Expected values to be strictly equal: 6 !== 4',
-      'lab: řešení hlásí chyby: ReferenceError: chyba is not defined (script.js:2)',
-    ]);
+    assert.deepEqual(byId['sekce/lekce'].errors, ['[E1] živá ukázka 2 hlásí chyby: ReferenceError: neexistuje is not defined (script.js:1)']);
+    assert.equal(byId['sekce/lab'].errors.length, 2, JSON.stringify(byId['sekce/lab'].errors));
+    assert.match(byId['sekce/lab'].errors[0], /^\[K1\] lab: řešení neprojde testem 1 \(„Vrací dvojnásobek\."\): /);
+    assert.equal(byId['sekce/lab'].errors[1], '[K1] lab: řešení hlásí chyby: ReferenceError: chyba is not defined (script.js:2)');
     assert.match(byId['sekce/rozbity-modul'].errors[0], /neplatný JSON v module\.json/);
   });
 });
@@ -104,11 +123,18 @@ describe('příkazová řádka (se skutečným server/app.js)', async () => {
   test('dobrý obsah → exit 0, rozbitý → exit 1', { skip: !serverAvailable && 'server/app.js zatím není' }, async () => {
     const good = await runCli(['--content-dir', FIXTURES, path.join(FIXTURES, 'dobra'), '--json']);
     assert.equal(good.code, 0, good.stderr + good.stdout);
-    assert.deepEqual(JSON.parse(good.stdout).summary, { modules: 4, errors: 0, warnings: 0 });
+    const summary = JSON.parse(good.stdout).summary;
+    assert.deepEqual([summary.modules, summary.errors, summary.warnings], [4, 0, 0]);
+    assert.equal(typeof summary.advice, 'number');
 
     const all = await runCli(['--content-dir', FIXTURES]);
     assert.equal(all.code, 1, all.stderr);
     assert.match(all.stdout, /✘ spatna\/workshop-rozbity/);
-    assert.match(all.stdout, /Souhrn: 6 modulů, 1 chyba, 2 varování/);
+    assert.match(all.stdout, /Souhrn: 7 modulů, 5 chyb, 9 varování, \d+ doporučení/);
+    assert.doesNotMatch(all.stdout, /doporučení: \[/, 'bez --doporuceni jen počet');
+
+    const withAdvice = await runCli(['--content-dir', FIXTURES, path.join(FIXTURES, 'dobra'), '--doporuceni']);
+    assert.equal(withAdvice.code, 0, withAdvice.stderr);
+    assert.match(withAdvice.stdout, /doporučení: \[W4\] workshop má 4 kroky/);
   });
 });

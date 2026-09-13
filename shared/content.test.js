@@ -3,7 +3,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { buildContentIndex, loadCurriculum, loadModule, loadSectionExtras, resolveContentItem } from './content.js';
+import { hashKey } from './answers.js';
+import { buildContentIndex, loadCurriculum, loadModule, loadSection, loadSectionExtras, loadTerms, resolveContentItem } from './content.js';
 import { ParseError } from './parse.js';
 
 /** Vytvoří dočasný adresář s obsahem podle mapy { 'cesta/soubor': 'obsah' }. */
@@ -158,4 +159,77 @@ test('resolveContentItem: krok a lab podle id, neplatné nebo chybějící id �
   assert.equal(resolveContentItem(dir, 'step:../mimo'), null);
   assert.equal(resolveContentItem(dir, 'outcome:sekce#1b4f0e98'), null);
   assert.throws(() => resolveContentItem(dir, 'q:sekce/rozbity#1b4f0e98'), ParseError, 'rozbitý modul není osiřelá položka');
+});
+
+const FENCE = '```';
+
+function richFixture() {
+  return makeContent({
+    'osnova.json': JSON.stringify({ parts: [{ id: 'p', title: 'P', sections: ['sekce', 'druha', { id: 'plan', title: 'Plán', summary: 'Pak.' }] }] }),
+    'sekce/section.json': JSON.stringify({ title: 'Sekce', intro: 'Úvod', modules: ['lekce', 'kviz', 'lab'], outcomes: [{ text: 'Umím to.', links: ['sekce/lekce#pasti'] }] }),
+    'sekce/pojmy.md': '## --term-- pole\n\nlekce: sekce/lekce#pasti\n\nSeznam hodnot.\n',
+    'sekce/cards.md': '## --card-- free\n\nProč?\n\n### --back--\n\nProto.\n',
+    'sekce/tahak.md': '# Tahák\n',
+    'druha/section.json': JSON.stringify({ title: 'Druhá', modules: [] }),
+    'druha/pojmy.md': '## --term-- objekt\n\nlekce: sekce/lekce\n\nKlíče a hodnoty.\n',
+    'sekce/lekce/module.json': JSON.stringify({ type: 'lesson', title: 'Lekce' }),
+    'sekce/lekce/lesson.md': `# Lekce\n\n:::check\nKontrola?\n\n### --expected--\nano\n:::\n\n:::check pretest\nPředem?\n\n### --expected--\nne\n:::\n\n:::explain\nVysvětli.\n\n## --model--\nModel.\n\n## --checklist--\n- Bod jedna.\n- Bod dva.\n:::\n\n## Pasti\n\n# --questions--\n\n## --question--\n\nNa konci?\n\n### --expected--\n\n1\n`,
+    'sekce/kviz/module.json': JSON.stringify({ type: 'quiz', title: 'Kvíz' }),
+    'sekce/kviz/quiz.md': `# --code-- Košík\n\n## --file-- cart.js\n\n${FENCE}js\nconst total = 0;\n${FENCE}\n\n## --question--\n\nCo je total?\n\n### --expected--\n\n0\n`,
+    'sekce/lab/module.json': JSON.stringify({ type: 'lab', title: 'Lab', runtime: 'js' }),
+    'sekce/lab/lab.md': `# --description--\n\nNapiš.\n\n# --hints--\n\nFunguje.\n\n${FENCE}js\nassert.ok(true, 'ok');\n${FENCE}\n\n# --seed--\n\n## --file-- script.js\n\n${FENCE}js\n// seed\n${FENCE}\n\n# --solution--\n\n## --file-- script.js\n\n${FENCE}js\n// řešení\n${FENCE}\n\n# --explain--\n\nProč?\n\n## --model--\n\nProto.\n\n## --checklist--\n\n- Důvod.\n\n# --approaches--\n\n## --approach-- Jinak\n\n### --file-- script.js\n\n${FENCE}js\n// jinak\n${FENCE}\n`,
+  });
+}
+
+test('loadSection: výstupy s klíči, tahák, pojmy a karty; sekce mimo disk → null', (t) => {
+  const dir = richFixture();
+  t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
+  const section = loadSection(dir, 'sekce');
+  assert.equal(section.intro, 'Úvod');
+  assert.deepEqual(section.outcomes, [{ key: hashKey('Umím to.'), text: 'Umím to.', links: ['sekce/lekce#pasti'] }]);
+  assert.equal(section.cheatsheet, '# Tahák\n');
+  assert.deepEqual(section.terms.map((term) => term.id), ['pole']);
+  assert.deepEqual(section.cards.map((card) => card.type), ['free']);
+  assert.deepEqual(loadSection(dir, 'druha').cards, []);
+  assert.equal(loadSection(dir, 'plan'), null);
+  assert.throws(() => loadSection(dir, '../x'), ParseError);
+});
+
+test('loadTerms: pojmy všech dostupných sekcí v pořadí osnovy', (t) => {
+  const dir = richFixture();
+  t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
+  assert.deepEqual(loadTerms(dir).terms.map((term) => [term.term, term.sectionId]), [['pole', 'sekce'], ['objekt', 'druha']]);
+});
+
+test('loadModule bez řešení odstraní solution i approaches, ostatní nechá', (t) => {
+  const dir = richFixture();
+  t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
+  const withoutSolution = loadModule(dir, 'sekce', 'lab', { includeSolutions: false }).lab;
+  assert.equal('solution' in withoutSolution, false);
+  assert.equal('approaches' in withoutSolution, false);
+  assert.equal(withoutSolution.approachesCount, 1, 'počet přístupů zůstane i bez řešení');
+  assert.equal(withoutSolution.explain.checklist.length, 1);
+  assert.equal(loadModule(dir, 'sekce', 'lab').lab.approaches.length, 1);
+});
+
+test('resolveContentItem: q:, card: a explain: podle klíčů z parseru', (t) => {
+  const dir = richFixture();
+  t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
+
+  const check = resolveContentItem(dir, `q:sekce/lekce#${hashKey('Kontrola?')}`);
+  assert.deepEqual([check.type, check.content.expected, check.source.moduleId], ['question', 'ano', 'sekce/lekce']);
+  assert.equal(resolveContentItem(dir, `q:sekce/lekce#${hashKey('Předem?')}`), null, 'pretest se nehodnotí');
+  assert.equal(resolveContentItem(dir, `q:sekce/lekce#${hashKey('Na konci?')}`).content.expected, '1');
+
+  const quiz = resolveContentItem(dir, `q:sekce/kviz#${hashKey('Co je total?')}`);
+  assert.deepEqual(quiz.content.codeSet, { title: 'Košík', files: [{ name: 'cart.js', lang: 'js', content: 'const total = 0;' }] });
+
+  const card = resolveContentItem(dir, `card:sekce#${hashKey('Proč?')}`);
+  assert.deepEqual([card.type, card.content.back, card.source.title], ['card', 'Proto.', 'Sekce']);
+
+  const lessonPoint = resolveContentItem(dir, `explain:sekce/lekce#${hashKey('Bod dva.')}`);
+  assert.deepEqual(lessonPoint.content, { prompt: 'Vysvětli.', point: { key: hashKey('Bod dva.'), text: 'Bod dva.' }, model: 'Model.' });
+  const labPoint = resolveContentItem(dir, `explain:sekce/lab#${hashKey('Důvod.')}`);
+  assert.equal(labPoint.source.title, 'Lab');
+  assert.equal(resolveContentItem(dir, `explain:sekce/lab#${hashKey('Neexistuje.')}`), null);
 });

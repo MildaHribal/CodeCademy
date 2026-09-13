@@ -10,6 +10,7 @@ import fsp from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { readTextTree } from '../shared/content.js';
+import { findSyntaxError, syntaxErrorResult } from '../shared/syntax-check.js';
 import { InputError } from './errors.js';
 
 const HARNESS = path.join(import.meta.dirname, 'node-harness.js');
@@ -107,7 +108,24 @@ function tail(text, max = 2000) {
   return text.length > max ? `…${text.slice(-max)}` : text;
 }
 
-/** Spustí jeden test v novém procesu. → { pass, error?, logs } */
+const DETAIL_FIELDS = ['errorName', 'operator', 'actual', 'expected', 'generatedMessage', 'diff'];
+
+/** Podrobnosti selhaného testu z harnessu (kontrakt kap. 6.1), jen známá pole. */
+function pickDetails(message) {
+  const details = {};
+  for (const field of DETAIL_FIELDS) {
+    if (message[field] === undefined) continue;
+    if (field === 'generatedMessage') details.generatedMessage = Boolean(message.generatedMessage);
+    else if (field === 'diff') {
+      if (Array.isArray(message.diff)) {
+        details.diff = message.diff.slice(0, 10).map((entry) => ({ path: String(entry?.path ?? ''), actual: String(entry?.actual ?? ''), expected: String(entry?.expected ?? '') }));
+      }
+    } else details[field] = String(message[field]);
+  }
+  return details;
+}
+
+/** Spustí jeden test v novém procesu. → { pass, error?, details?, logs } */
 function runSingleTest({ dir, test, files, timeoutMs, signal }) {
   return new Promise((resolve) => {
     const child = spawn(process.execPath, [HARNESS], {
@@ -160,7 +178,7 @@ function runSingleTest({ dir, test, files, timeoutMs, signal }) {
       } else if (message?.type === 'result') {
         settle({
           pass: Boolean(message.pass),
-          ...(message.pass ? {} : { error: String(message.error ?? 'Test selhal') }),
+          ...(message.pass ? {} : { error: String(message.error ?? 'Test selhal'), details: pickDetails(message) }),
           logs: Array.isArray(message.logs) ? message.logs : [],
         });
       }
@@ -189,11 +207,20 @@ function runSingleTest({ dir, test, files, timeoutMs, signal }) {
  * Nepovinný `signal` (AbortSignal) běh zruší: právě běžící test se zabije i se vším, co
  * spustil, a zbylé testy se přeskočí. Server ho předává, když klient spojení zavře
  * (uživatel odešel z obrazovky) — jinak by opuštěná kontrola dál zabírala místo ve frontě.
- * @returns {Promise<{ ok: boolean, results: {index, pass, error?, skipped?}[], logs: {level,text}[], errors: string[] }>}
+ * Bez `cwd` se nejdřív zkontroluje syntaxe JS souborů (kontrakt kap. 6.1): kód, který nejde
+ * naparsovat, se nespouští a všechny požadavky jsou neověřené. Projekt (`cwd`) se předem
+ * nekontroluje — může mít vlastní sestavení a soubory, které se nespouštějí.
+ * @returns {Promise<{ ok: boolean, results: {index, pass, error?, skipped?}[], logs: {level,text}[], errors: string[], syntaxError }>}
  */
 export async function runNodeTests({ files = [], hints = [], timeoutMs = 10000, cwd = null, signal = null } = {}) {
   if (!Array.isArray(hints) || !hints.every((h) => h && typeof h.test === 'string')) {
     throw new InputError('Pole "hints" musí obsahovat objekty s textem testu v "test"');
+  }
+  if (!cwd) {
+    checkFiles(files);
+    // Node HTML soubory nespouští, jejich inline skripty se proto nekontrolují.
+    const syntaxError = findSyntaxError(files, { includeHtml: false });
+    if (syntaxError) return syntaxErrorResult(hints, syntaxError);
   }
   const workspace = await prepareWorkspace(files, cwd);
   try {
@@ -209,11 +236,11 @@ export async function runNodeTests({ files = [], hints = [], timeoutMs = 10000, 
         continue;
       }
       const outcome = await runSingleTest({ dir: workspace.dir, test: hint.test, files: fileMap, timeoutMs, signal });
-      results.push(outcome.pass ? { index, pass: true } : { index, pass: false, error: outcome.error });
+      results.push(outcome.pass ? { index, pass: true } : { index, pass: false, error: outcome.error, ...outcome.details });
       // Logy bereme z prvního testu, který uživatelův kód opravdu spustil (jinak by se opakovaly).
       if (logs.length === 0 && outcome.logs.length > 0) logs = outcome.logs;
     }
-    return { ok: results.every((r) => r.pass), results, logs, errors: [] };
+    return { ok: results.every((r) => r.pass), results, logs, errors: [], syntaxError: null };
   } finally {
     await workspace.cleanup();
   }

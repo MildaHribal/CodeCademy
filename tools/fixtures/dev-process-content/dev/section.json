@@ -1,0 +1,1 @@
+{ "title": "Sekce pro testy běžícího procesu", "intro": "Node kroky a projekt se serverem.", "modules": ["workshop-server", "projekt-server"] }

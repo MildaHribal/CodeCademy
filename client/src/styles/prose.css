@@ -19,6 +19,15 @@
 .prose h2 {
   font-size: 26px;
   margin-top: 1.8em;
+  /* Akcentní proužek vlevo (kontrakt kap. 5.11) — ve výkladu lekce visí do okraje, text zůstává zarovnaný. */
+  padding-left: 14px;
+  border-left: 4px solid var(--accent);
+}
+
+@media (min-width: 760px) {
+  .lesson__text h2 {
+    margin-left: -18px;
+  }
 }
 
 .prose h3 {
@@ -53,7 +62,8 @@
 }
 
 .prose strong {
-  font-weight: 700;
+  font-weight: 650;
+  color: var(--text-strong-accent);
 }
 
 .prose em {
@@ -93,12 +103,22 @@
   border-bottom-color: var(--rule-strong);
 }
 
-.prose :not(pre) > code {
-  padding: 0.08em 0.25em;
+/* `.prose > code`: markdown vykreslený inline přímo do prvku .prose (body checklistu, výstupy sekce). */
+.prose :not(pre) > code,
+.prose > code {
+  padding: 0.1em 0.32em;
   border-radius: 4px;
-  background: var(--surface-sunken);
-  color: var(--inline-code-ink);
-  font-size: 0.88em;
+  background: var(--code-inline-bg);
+  color: var(--code-inline-fg);
+  font-size: 0.86em;
+  font-variant-ligatures: none;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* Tučný inline kód převezme barvu kódu, ne akcentu tučného textu. */
+.prose strong code {
+  color: var(--code-inline-fg);
 }
 
 .prose pre {
@@ -171,4 +191,169 @@
 }
 .tok-emphasis {
   font-style: italic;
+}
+
+/* ——— Zvýraznění ve výkladu (kontrakt kap. 5.11) ——— */
+
+/* ==zvýraznění==: tah zvýrazňovače přes spodní dvě třetiny řádku. */
+.prose mark,
+.mark {
+  padding: 0 0.12em;
+  border-radius: 3px;
+  background: linear-gradient(to bottom, transparent 32%, var(--mark-bg) 32%, var(--mark-bg) 92%, transparent 92%);
+  color: var(--mark-fg);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* Rámečky > [!REMEMBER] / [!PITFALL] / [!TIP] / [!NOTE] */
+.callout {
+  --callout-bg: var(--callout-note-bg);
+  --callout-border: var(--callout-note-border);
+  --callout-fg: var(--callout-note-fg);
+  --callout-icon: var(--callout-note-icon);
+  margin-inline: 0;
+  padding: 12px 18px 14px 16px;
+  border-left: 4px solid var(--callout-border);
+  border-radius: 2px var(--radius) var(--radius) 2px;
+  background: var(--callout-bg);
+  color: var(--callout-fg);
+}
+
+.callout--remember {
+  --callout-bg: var(--callout-remember-bg);
+  --callout-border: var(--callout-remember-border);
+  --callout-fg: var(--callout-remember-fg);
+  --callout-icon: var(--callout-remember-icon);
+}
+
+.callout--pitfall {
+  --callout-bg: var(--callout-pitfall-bg);
+  --callout-border: var(--callout-pitfall-border);
+  --callout-fg: var(--callout-pitfall-fg);
+  --callout-icon: var(--callout-pitfall-icon);
+}
+
+.callout--tip {
+  --callout-bg: var(--callout-tip-bg);
+  --callout-border: var(--callout-tip-border);
+  --callout-fg: var(--callout-tip-fg);
+  --callout-icon: var(--callout-tip-icon);
+}
+
+.callout__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 4px;
+  color: var(--callout-icon);
+  font-size: 0.86em;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.callout__icon {
+  flex: none;
+}
+
+.callout__body > * + * {
+  margin-top: 0.6em;
+}
+
+/* Uvnitř rámečku drží text barvu rámečku; tučné je jen silnější, ne jinak barevné. */
+.callout .callout__body strong {
+  color: inherit;
+  font-weight: 700;
+}
+
+.callout .callout__body pre {
+  font-size: 13.5px;
+}
+
+.prose > .callout {
+  margin-block: 1.3em;
+}
+
+/* Pojem [[pojem|text]]: tečkované podtržení, bublina s definicí na kliknutí nebo najetí. */
+.term {
+  display: inline;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--term-fg);
+  font: inherit;
+  text-align: inherit;
+  text-decoration: underline dotted;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 0.2em;
+  cursor: help;
+}
+
+button.term:hover,
+button.term[aria-expanded='true'] {
+  text-decoration-style: solid;
+}
+
+span.term {
+  /* Než se pojmy načtou (nebo když pojem neexistuje), je to obyčejný text. */
+  color: inherit;
+  text-decoration: none;
+  cursor: auto;
+}
+
+.term-popover {
+  position: absolute;
+  z-index: 60;
+  width: min(360px, calc(100vw - 24px));
+  padding: 14px 16px 12px;
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius-large);
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: var(--shadow-pop);
+}
+
+.term-popover:focus {
+  outline: none;
+}
+
+.term-popover:focus-visible {
+  outline: 3px solid var(--accent);
+}
+
+.term-popover__title {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.term-popover__en {
+  margin: 2px 0 0;
+  color: var(--ink-faint);
+  font-size: 14px;
+  font-style: italic;
+}
+
+.term-popover__definition {
+  margin-top: 8px;
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.term-popover__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin: 10px 0 0;
+  padding-top: 8px;
+  border-top: 1px solid var(--rule);
+  font-size: 14px;
+}
+
+/* Odkaz see: na výklad v jiné lekci */
+.see-link--broken {
+  color: inherit;
 }

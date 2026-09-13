@@ -13,6 +13,8 @@ import fs from 'node:fs';
 import net from 'node:net';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
+import util from 'node:util';
+import { describeAssertion } from '../shared/runner-assertion.js';
 import { normalize, stripComments } from './text-helpers.js';
 
 const MAX_LOG_ENTRIES = 1000;
@@ -292,9 +294,89 @@ function createHelpers({ dir, logs }) {
   };
 }
 
+// Pozice argumentu se zprávou u asercí, které porovnávají hodnoty.
+const MESSAGE_ARGUMENT = {
+  ok: 1, equal: 2, notEqual: 2, strictEqual: 2, notStrictEqual: 2, deepEqual: 2, notDeepEqual: 2,
+  deepStrictEqual: 2, notDeepStrictEqual: 2, match: 2, doesNotMatch: 2,
+};
+
+/**
+ * `node:assert/strict`, u kterého vlastní zpráva autora zůstane přesně taková, jak ji napsal.
+ * Novější Node za ni připojuje vlastní rozdíl hodnot (`zpráva\n\n2 !== 3`) — ten ale výsledek
+ * nese zvlášť v `actual`/`expected` a UI ho ukáže česky.
+ */
+function createTestAssert(base) {
+  const keepAuthorMessage = (error, message) => {
+    if (error?.code === 'ERR_ASSERTION' && typeof message === 'string' && !error.generatedMessage) error.message = message;
+    return error;
+  };
+  const wrap = (name, messageIndex) => (...args) => {
+    try {
+      return base[name](...args);
+    } catch (error) {
+      throw keepAuthorMessage(error, args[messageIndex]);
+    }
+  };
+  const testAssert = wrap('ok', 1);
+  for (const name of Object.keys(base)) testAssert[name] = base[name];
+  for (const [name, index] of Object.entries(MESSAGE_ARGUMENT)) testAssert[name] = wrap(name, index);
+  testAssert.strict = testAssert;
+  testAssert.AssertionError = base.AssertionError;
+  return testAssert;
+}
+
+const testAssert = createTestAssert(assert);
+
+/** Hodnota jako text pro hlášky — stejný tvar jako formatValue v prohlížeči. */
+function formatValue(value) {
+  return util.inspect(value, { depth: 2, breakLength: 72, maxArrayLength: 100 });
+}
+
+/**
+ * Hláška chyby testu. Aserce s vlastní zprávou ji nechá; vygenerované hlášky node:assert
+ * přeloží do češtiny stejně jako prohlížečový assert (kontrakt kap. 6.1).
+ */
 function describeError(err) {
-  if (err instanceof Error) return err.message || err.name;
-  return String(err);
+  if (!(err instanceof Error)) return String(err);
+  if (err.name !== 'AssertionError' || !err.generatedMessage) return err.message || err.name;
+  return czechAssertionMessage(err) ?? err.message;
+}
+
+function czechAssertionMessage(err) {
+  const actual = () => formatValue(err.actual);
+  const expected = () => formatValue(err.expected);
+  const errorText = (value) => (value instanceof Error ? value.message : String(value));
+  switch (err.operator) {
+    case 'strictEqual':
+    case 'deepStrictEqual':
+      return `Očekávám ${expected()}, ale kód vrátil ${actual()}`;
+    case 'notStrictEqual':
+      return `Hodnota se nemá rovnat ${expected()}, ale kód vrátil právě ji`;
+    case 'notDeepStrictEqual':
+      return `Hodnota se nemá rovnat ${expected()}, ale kód vrátil právě takovou`;
+    case '==':
+    case 'ok':
+      return `Očekávám pravdivou hodnotu, ale kód vrátil ${actual()}`;
+    case 'match':
+      return typeof err.actual === 'string'
+        ? `Text ${actual()} neodpovídá regulárnímu výrazu ${err.expected}`
+        : `Očekávám text, ale kód vrátil ${typeof err.actual} ${actual()}`;
+    case 'doesNotMatch':
+      return typeof err.actual === 'string'
+        ? `Text ${actual()} nemá odpovídat regulárnímu výrazu ${err.expected}`
+        : `Očekávám text, ale kód vrátil ${typeof err.actual} ${actual()}`;
+    case 'throws':
+      return err.actual === undefined ? 'Očekávám, že kód vyhodí výjimku, ale žádnou nevyhodil' : null;
+    case 'rejects':
+      return err.actual === undefined ? 'Očekávám, že Promise skončí chybou, ale splnila se' : null;
+    case 'doesNotThrow':
+    case 'doesNotReject':
+      return `Kód neměl vyhodit výjimku, ale vyhodil: ${errorText(err.actual)}`;
+    case 'fail':
+      return 'Test selhal';
+    default:
+      return null;
+  }
 }
 
 function finish(pass, error, logs) {
@@ -305,7 +387,7 @@ function finish(pass, error, logs) {
     if (child.pid) killTree(child.pid);
   }
   const message = { type: 'result', pass, logs };
-  if (!pass) message.error = describeError(error);
+  if (!pass) Object.assign(message, { error: describeError(error) }, describeAssertion(error, formatValue));
   process.send(message, () => process.exit(0));
 }
 
@@ -328,7 +410,7 @@ process.once('message', async ({ test, files, dir }) => {
   // její odeslání a rodič by nevěděl, že test už běží.
   await new Promise((resolve) => process.send({ type: 'started' }, resolve));
   try {
-    await body(assert, files, logs, errors, helpers);
+    await body(testAssert, files, logs, errors, helpers);
     finish(true, null, logs);
   } catch (err) {
     finish(false, err, logs);

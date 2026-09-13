@@ -1,0 +1,211 @@
+/* Porovnání s řešením (solution-diff.js). Barvy jen přes tokeny z styles/tokens.css. */
+
+.solution-diff {
+  width: min(1100px, calc(100vw - 32px));
+  max-height: calc(100dvh - 48px);
+  padding: 0;
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius-large);
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: var(--shadow-pop);
+}
+
+.solution-diff[open] {
+  display: flex;
+  flex-direction: column;
+}
+
+.solution-diff::backdrop {
+  background: var(--backdrop);
+}
+
+.solution-diff__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.solution-diff__title {
+  font-size: 20px;
+}
+
+.solution-diff__body {
+  display: grid;
+  gap: 12px;
+  padding: 16px 20px 20px;
+  overflow: auto;
+}
+
+.solution-diff__confirm {
+  display: grid;
+  gap: 10px;
+  max-width: 60ch;
+}
+
+.solution-diff__confirm-title {
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.solution-diff__intro {
+  color: var(--ink-soft);
+}
+
+.solution-diff__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+}
+
+.solution-diff__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.solution-diff__legend {
+  display: flex;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+.solution-diff__legend-item {
+  padding: 1px 8px;
+  border-radius: var(--radius);
+}
+
+.solution-diff__legend-item--del {
+  background: var(--fail-soft);
+  color: var(--fail-ink);
+}
+
+.solution-diff__legend-item--add {
+  background: var(--done-soft);
+  color: var(--done-ink);
+}
+
+.solution-diff__files {
+  display: grid;
+  gap: 16px;
+}
+
+.solution-diff__file-name {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 6px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+}
+
+.solution-diff__file-summary {
+  color: var(--ink-faint);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.solution-diff__scroll {
+  overflow-x: auto;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.solution-diff__code {
+  display: grid;
+  min-width: max-content;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.55;
+  font-variant-ligatures: none;
+}
+
+.solution-diff__line {
+  display: grid;
+  grid-template-columns: 3.5ch 3.5ch 2ch minmax(0, 1fr);
+}
+
+.solution-diff__num {
+  padding-right: 6px;
+  color: var(--ink-faint);
+  text-align: right;
+  user-select: none;
+}
+
+.solution-diff__sign {
+  text-align: center;
+  user-select: none;
+}
+
+.solution-diff__text {
+  padding-right: 16px;
+  white-space: pre;
+}
+
+.solution-diff__line--add {
+  background: var(--done-soft);
+  color: var(--done-ink);
+}
+
+.solution-diff__line--del {
+  background: var(--fail-soft);
+  color: var(--fail-ink);
+}
+
+.solution-diff__line--add .solution-diff__num,
+.solution-diff__line--del .solution-diff__num {
+  color: inherit;
+}
+
+.solution-diff__skip {
+  padding: 2px 12px;
+  border: 0;
+  border-block: 1px dashed var(--rule);
+  background: var(--surface-sunken);
+  color: var(--ink-soft);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.solution-diff__skip:hover {
+  color: var(--ink);
+  background: var(--hover-tint);
+}
+
+.solution-diff__unchanged,
+.solution-diff__same-all {
+  color: var(--ink-soft);
+}
+
+/* Proužek na začátku kroku: pokračuješ autorovým řešením předchozího kroku. */
+.solution-diff-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+  margin-block: 10px 14px;
+  padding: 8px 12px;
+  border: 1px solid var(--callout-note-border);
+  border-radius: var(--radius);
+  background: var(--callout-note-bg);
+  color: var(--callout-note-fg);
+}
+
+.solution-diff-banner__text {
+  flex: 1 1 16ch;
+}
+
+.solution-diff-project:not([hidden]) {
+  margin-block: 12px;
+}

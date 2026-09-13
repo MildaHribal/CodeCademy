@@ -22,6 +22,14 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 
+/* Přechod barev jen ve chvíli, kdy uživatel motiv přepne (extensions/theme.js nastaví
+   data-theme-switching) a jen na hlavních plochách. Při načtení stránky se nic neanimuje. */
+:root[data-theme-switching] body,
+:root[data-theme-switching] .app-bar,
+:root[data-theme-switching] .pane {
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
 body {
   margin: 0;
   min-height: 100dvh;
@@ -57,8 +65,21 @@ a:hover {
 
 code,
 kbd,
-pre {
+pre,
+samp {
   font-family: var(--font-mono);
+  /* Bez ligatur: `===`, `!=` a `=>` musí vypadat přesně tak, jak se píšou, ne jako ≡ nebo ⇒. */
+  font-variant-ligatures: none;
+  font-feature-settings: 'liga' 0, 'calt' 0;
+}
+
+/* Editor (CodeMirror) a konzole používají vlastní prvky, ligatury se vypínají i tam. */
+.cm-editor,
+.cm-scroller,
+.cm-content,
+.console {
+  font-variant-ligatures: none;
+  font-feature-settings: 'liga' 0, 'calt' 0;
 }
 
 img,

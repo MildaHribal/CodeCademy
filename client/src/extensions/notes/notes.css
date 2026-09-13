@@ -1,0 +1,428 @@
+/* Poznámky: panel vpravo, otazník „Nerozumím", obrazovka #/poznamky. */
+
+/* ——— Tlačítko Poznámka v lekci ——— */
+
+/* Plave vpravo, takže sedí na stejném řádku jako „Obsah lekce" (extensions/lesson-toc.css). */
+.notes-inline {
+  float: right;
+  margin: -14px 0 8px 16px;
+}
+
+.notes-inline + * {
+  min-height: 30px;
+}
+
+body.has-lesson-aside .notes-inline {
+  display: none;
+}
+
+.notes-aside {
+  display: grid;
+  gap: 8px;
+  justify-items: start;
+  padding-top: 16px;
+  border-top: 1px solid var(--rule);
+}
+
+.notes-aside__hint {
+  color: var(--ink-faint);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+/* ——— Otazník „Nerozumím" u odstavce ——— */
+
+.not-understood {
+  position: absolute;
+  z-index: 15;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  justify-content: center;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink-faint);
+  cursor: pointer;
+  box-shadow: var(--shadow-pop);
+}
+
+.not-understood:hover,
+.not-understood:focus-visible {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.not-understood__label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* U označeného textu je vidět i popisek — je jasné, co se stane. */
+.not-understood--selection {
+  width: auto;
+  padding: 0 10px 0 7px;
+  color: var(--accent);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.not-understood--selection .not-understood__label {
+  position: static;
+  width: auto;
+  height: auto;
+  clip: auto;
+}
+
+/* ——— Panel poznámek ——— */
+
+.notes-drawer {
+  position: fixed;
+  top: var(--bar-height);
+  right: 0;
+  bottom: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  width: min(27rem, 100vw);
+  border-left: 1px solid var(--rule-strong);
+  background: var(--surface);
+  box-shadow: var(--shadow-pop);
+  animation: notes-drawer-in 160ms ease-out;
+}
+
+@keyframes notes-drawer-in {
+  from {
+    transform: translateX(24px);
+    opacity: 0;
+  }
+}
+
+.notes-drawer__head {
+  flex: none;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 16px 12px 20px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.notes-drawer__title {
+  font-size: 22px;
+}
+
+.notes-drawer__section {
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+
+.notes-drawer__body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 16px 20px 20px;
+  overflow: hidden;
+}
+
+.notes-drawer__form {
+  flex: none;
+  display: grid;
+  gap: 12px;
+}
+
+.notes-drawer__quote-label {
+  color: var(--ink-soft);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.notes-drawer__quote {
+  margin: 4px 0 0;
+  max-height: 9.5em;
+  overflow: auto;
+  padding: 8px 12px;
+  border-left: 3px solid var(--callout-note-border);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  background: var(--callout-note-bg);
+  color: var(--callout-note-fg);
+  font-size: 14px;
+  line-height: 1.5;
+  white-space: pre-line;
+}
+
+.notes-drawer__status {
+  min-height: 1.4em;
+  color: var(--ink-soft);
+  font-size: 13.5px;
+}
+
+.notes-drawer__recent {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--rule);
+  padding-top: 12px;
+}
+
+.notes-drawer__recent-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.notes-drawer__recent-head h3 {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.notes-drawer__all {
+  font-size: 13px;
+}
+
+.notes-drawer__existing {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+.notes-drawer__empty {
+  color: var(--ink-faint);
+  font-size: 14px;
+}
+
+/* ——— Pole formulářů ——— */
+
+.notes-field {
+  display: grid;
+  gap: 4px;
+}
+
+.notes-field__label {
+  color: var(--ink-soft);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.notes-field__input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-size: 15px;
+}
+
+.notes-field__input:focus-visible {
+  outline-offset: 0;
+  border-color: var(--accent);
+}
+
+.notes-field__textarea {
+  resize: vertical;
+  min-height: 7em;
+  line-height: 1.5;
+}
+
+/* ——— Text poznámek ——— */
+
+.notes-prose h2 {
+  margin-top: 1.4em;
+  padding-top: 0.9em;
+  border-top: 1px solid var(--rule);
+  font-size: 21px;
+}
+
+.notes-prose > h2:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+
+.notes-prose--compact {
+  font-size: 14.5px;
+  line-height: 1.55;
+}
+
+.notes-prose--compact h2 {
+  font-size: 16px;
+}
+
+.notes-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+  margin-top: 0.3em !important;
+  color: var(--ink-faint);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.notes-meta__kind {
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--surface-sunken);
+  color: var(--ink-soft);
+  font-weight: 600;
+}
+
+/* ——— Obrazovka #/poznamky ——— */
+
+.notes-page__head {
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.notes-page__title {
+  font-size: clamp(32px, 4.5vw, 44px);
+  letter-spacing: -0.01em;
+}
+
+.notes-page__lead {
+  margin-top: 10px;
+  max-width: 62ch;
+  color: var(--ink-soft);
+}
+
+.notes-page__layout {
+  display: grid;
+  grid-template-columns: minmax(12rem, 16rem) minmax(0, 1fr);
+  gap: 40px;
+  margin-top: 28px;
+}
+
+.notes-page__list {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.notes-page__link {
+  display: grid;
+  padding: 8px 12px;
+  border-radius: var(--radius);
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.notes-page__link:hover {
+  background: var(--hover-tint);
+  color: var(--ink);
+}
+
+.notes-page__link[aria-current='page'] {
+  background: var(--accent-soft);
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+.notes-page__link[aria-current='page'] .notes-page__link-title {
+  color: var(--accent);
+}
+
+.notes-page__link-title {
+  font-weight: 600;
+}
+
+.notes-page__link-meta {
+  color: var(--ink-faint);
+  font-size: 13px;
+}
+
+.notes-page__picker {
+  display: grid;
+  gap: 4px;
+  margin-top: 18px;
+  color: var(--ink-soft);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.notes-file__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.notes-file__title {
+  font-size: 28px;
+}
+
+.notes-file__meta {
+  margin-top: 4px;
+  color: var(--ink-faint);
+  font-size: 14px;
+}
+
+.notes-file__empty {
+  display: grid;
+  gap: 8px;
+  padding: 24px;
+  border: 1px dashed var(--rule-strong);
+  border-radius: var(--radius-large);
+  color: var(--ink-soft);
+}
+
+.notes-file__editor {
+  min-height: 60vh;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.6;
+  resize: vertical;
+  tab-size: 2;
+}
+
+.notes-file__status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+
+@media (max-width: 760px) {
+  .notes-page__layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+  }
+}
+
+@media print {
+  .app-bar,
+  .notes-page__nav,
+  .notes-page__head,
+  .notes-file__head .actions,
+  .not-understood,
+  .notes-drawer {
+    display: none !important;
+  }
+
+  .notes-page__layout {
+    display: block;
+    margin: 0;
+  }
+}

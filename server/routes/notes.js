@@ -1,0 +1,193 @@
+// Poznámky v data/poznamky/<sekce>.md (kontrakt kap. 12.5).
+//
+// Jeden obyčejný markdown soubor na sekci, `obecne.md` pro poznámky mimo sekci. Uživatel si ho
+// smí upravit i ručně v editoru, proto se nic neukládá do JSON a „verze" souboru je čas jeho
+// poslední změny (mtime). PUT s `baseUpdated` tak pozná, že se soubor mezitím změnil jinde.
+//
+//   GET  /api/notes                     → { notes: [{ section, title, updated, size }] }
+//   GET  /api/notes/:section            → { section, content, updated }
+//   PUT  /api/notes/:section            { content, baseUpdated? } → { ok, updated } (409 při změně)
+//   POST /api/notes/:section/append     { kind, source, title, text, quote? } → { ok, updated }
+//
+// Zápis je atomický: nejdřív <soubor>.tmp, pak rename přes původní soubor. Zapisuje se
+// synchronně, takže dva požadavky se v jednom procesu nikdy nepromíchají.
+import fs from 'node:fs';
+import path from 'node:path';
+
+export const GENERAL_NOTES = 'obecne';
+export const GENERAL_TITLE = 'Obecné poznámky';
+export const NOTE_KINDS = ['note', 'quote', 'explain', 'plan'];
+/** Největší tělo připsaného záznamu (kontrakt kap. 12.5). */
+export const APPEND_LIMIT_BYTES = 100 * 1024;
+
+// Reference na výklad (kontrakt kap. 2.9): sekce/modul[/krok][#kotva].
+const SLUG = '[a-z0-9]+(?:-[a-z0-9]+)*';
+const REF_PATTERN = new RegExp(`^${SLUG}/${SLUG}(?:/\\d{3})?(?:#${SLUG})?$`);
+
+/**
+ * Text připsaného záznamu přesně podle kontraktu:
+ *
+ *   (prázdný řádek)
+ *   ## {title}
+ *
+ *   <!-- zdroj: {source} · {čas} · {kind} -->
+ *
+ *   > {citace, každý řádek s "> "}      ← jen když je citace
+ *
+ *   {text}
+ */
+export function formatNoteEntry({ kind, source, title, text, quote = '' }, time) {
+  const lines = ['', `## ${title}`, '', `<!-- zdroj: ${source} · ${time} · ${kind} -->`, ''];
+  if (quote) {
+    lines.push(...quote.split('\n').map((line) => `> ${line}`), '');
+  }
+  if (text) lines.push(text);
+  else lines.pop(); // bez textu nekončí záznam dvěma prázdnými řádky
+  return `${lines.join('\n')}\n`;
+}
+
+/** Připojí záznam k dosavadnímu obsahu souboru (obsah bez koncového \n ho dostane). */
+export function appendEntry(content, entry) {
+  if (content && !content.endsWith('\n')) return `${content}\n${entry}`;
+  return content + entry;
+}
+
+const normalizeNewlines = (value) => value.replace(/\r\n?/g, '\n');
+
+/** Ověří a upraví tělo append. Vyhodí InputError s českou zprávou. */
+export function validateAppendBody(body, InputError) {
+  const { kind, source, title, text = '', quote } = body;
+  if (!NOTE_KINDS.includes(kind)) {
+    throw new InputError(`"kind" musí být jedno z: ${NOTE_KINDS.join(', ')}`);
+  }
+  if (typeof source !== 'string' || !REF_PATTERN.test(source)) {
+    throw new InputError('"source" musí být odkaz na výklad, třeba "js-pole/co-je-pole#kopie-pole"');
+  }
+  if (typeof title !== 'string' || !title.trim()) throw new InputError('"title" musí být neprázdný text');
+  if (typeof text !== 'string') throw new InputError('"text" musí být text');
+  if (quote !== undefined && quote !== null && typeof quote !== 'string') throw new InputError('"quote" musí být text');
+
+  const cleanQuote = normalizeNewlines(quote ?? '').trim();
+  const cleanText = normalizeNewlines(text).trim();
+  if (kind === 'quote' && !cleanQuote) throw new InputError('Záznam „Nerozumím" potřebuje citovaný text v "quote"');
+  if (!cleanText && !cleanQuote) throw new InputError('Poznámka je prázdná');
+
+  return {
+    kind,
+    source,
+    // Nadpis musí zůstat na jednom řádku, jinak by rozbil markdown souboru.
+    title: title.replace(/\s+/g, ' ').trim(),
+    text: cleanText,
+    quote: cleanQuote,
+  };
+}
+
+export function register(router, ctx) {
+  // ctx.dataPath hlídá, že cesta nevede ven z data/ (slug sekce je ověřený i tak).
+  const notesDir = () => path.dirname(ctx.dataPath(`poznamky/${GENERAL_NOTES}.md`));
+  const fileOf = (section) => ctx.dataPath(`poznamky/${section}.md`);
+
+  /** Dostupné sekce v pořadí osnovy: [{ id, title }]. */
+  function availableSections() {
+    return ctx
+      .loadCurriculum()
+      .parts.flatMap((part) => part.sections)
+      .filter((section) => section.available)
+      .map(({ id, title }) => ({ id, title }));
+  }
+
+  /** `:section` = slug dostupné sekce nebo `obecne`, jinak 400. Vrací titulek. */
+  function checkSection(section) {
+    if (section === GENERAL_NOTES) return GENERAL_TITLE;
+    ctx.checkSlugs(section);
+    const found = availableSections().find((s) => s.id === section);
+    if (!found) throw new ctx.InputError(`Sekce "${section}" v osnově není (poznámky mimo sekci patří do "${GENERAL_NOTES}")`);
+    return found.title;
+  }
+
+  /** { content, updated } — prázdný obsah a updated null, když soubor není. */
+  function readNotes(section) {
+    const file = fileOf(section);
+    try {
+      const content = fs.readFileSync(file, 'utf8');
+      return { content, updated: fs.statSync(file).mtime.toISOString() };
+    } catch (error) {
+      if (error.code === 'ENOENT') return { content: '', updated: null };
+      throw error;
+    }
+  }
+
+  function writeNotes(section, content) {
+    const file = fileOf(section);
+    fs.mkdirSync(path.dirname(file), { recursive: true });
+    const tmp = `${file}.tmp`;
+    fs.writeFileSync(tmp, content);
+    fs.renameSync(tmp, file);
+    return fs.statSync(file).mtime.toISOString();
+  }
+
+  function bodySize(req, body) {
+    const declared = Number(req.headers['content-length']);
+    return Number.isFinite(declared) && declared > 0 ? declared : Buffer.byteLength(JSON.stringify(body));
+  }
+
+  router.get('/api/notes', () => {
+    let names = [];
+    try {
+      names = fs.readdirSync(notesDir()).filter((name) => name.endsWith('.md'));
+    } catch (error) {
+      if (error.code !== 'ENOENT') throw error;
+    }
+    const existing = new Set(names.map((name) => name.slice(0, -'.md'.length)));
+    const ordered = [
+      { id: GENERAL_NOTES, title: GENERAL_TITLE },
+      ...availableSections(),
+      // Soubory sekcí, které z osnovy zmizely, se neztratí — jsou na konci.
+      ...[...existing].sort().map((id) => ({ id, title: id })),
+    ];
+    const seen = new Set();
+    const notes = [];
+    for (const { id, title } of ordered) {
+      if (!existing.has(id) || seen.has(id)) continue;
+      seen.add(id);
+      const stat = fs.statSync(fileOf(id));
+      notes.push({ section: id, title, updated: stat.mtime.toISOString(), size: stat.size });
+    }
+    return { notes };
+  });
+
+  router.get('/api/notes/:section', ({ params }) => {
+    checkSection(params.section);
+    return { section: params.section, ...readNotes(params.section) };
+  });
+
+  router.put('/api/notes/:section', async ({ params, readBody }) => {
+    checkSection(params.section);
+    const { content, baseUpdated } = await readBody();
+    if (typeof content !== 'string') throw new ctx.InputError('"content" musí být text');
+    if (baseUpdated !== undefined && baseUpdated !== null && typeof baseUpdated !== 'string') {
+      throw new ctx.InputError('"baseUpdated" musí být čas ve formátu ISO nebo null');
+    }
+    if (baseUpdated !== undefined) {
+      const { updated } = readNotes(params.section);
+      if (updated !== baseUpdated) {
+        throw new ctx.HttpError(409, 'Poznámky se mezitím změnily (jiné okno nebo ruční úprava). Načti je znovu a úpravu zopakuj.');
+      }
+    }
+    const normalized = normalizeNewlines(content);
+    const updated = writeNotes(params.section, normalized && !normalized.endsWith('\n') ? `${normalized}\n` : normalized);
+    return { ok: true, updated };
+  });
+
+  router.post('/api/notes/:section/append', async ({ req, params, readBody }) => {
+    checkSection(params.section);
+    const body = await readBody();
+    if (bodySize(req, body) > APPEND_LIMIT_BYTES) {
+      throw new ctx.HttpError(413, 'Záznam je příliš dlouhý (limit 100 kB)');
+    }
+    const entry = formatNoteEntry(validateAppendBody(body, ctx.InputError), new Date().toISOString());
+    const { content } = readNotes(params.section);
+    const updated = writeNotes(params.section, appendEntry(content, entry));
+    return { ok: true, updated };
+  });
+}

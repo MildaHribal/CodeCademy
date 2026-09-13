@@ -1,0 +1,160 @@
+/* Společné části otázek, které přidává question.js a psaná odpověď (text.js).
+   Základní vzhled otázky a voleb je v styles/lesson.css. */
+
+.question__footer {
+  display: grid;
+  gap: 8px;
+}
+
+.question__footer:empty {
+  display: none;
+}
+
+.question__feedback:empty {
+  display: none;
+}
+
+.question__feedback {
+  margin: 0;
+  color: var(--ink-soft);
+}
+
+.question__feedback--sure-wrong {
+  padding: 8px 12px;
+  border-left: 3px solid var(--warn-border);
+  border-radius: 4px;
+  background: var(--warn-soft);
+  color: var(--ink);
+}
+
+.question__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.question__actions:empty {
+  display: none;
+}
+
+.question[data-result='pretest'] .question__verdict {
+  color: var(--accent);
+}
+
+/* ——— Psaná odpověď ——— */
+
+.text-answer {
+  display: grid;
+  gap: 6px;
+  margin-top: 16px;
+}
+
+.text-answer__label {
+  color: var(--ink-soft);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.text-answer__input {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid var(--rule-strong);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-size: 15px;
+  font-variant-ligatures: none;
+  line-height: 1.5;
+}
+
+textarea.text-answer__input {
+  min-height: 6.5em;
+  resize: vertical;
+}
+
+.text-answer__input:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 1px;
+  border-color: var(--accent);
+}
+
+.text-answer__input:disabled {
+  background: var(--surface-sunken);
+  color: var(--ink-soft);
+}
+
+.text-answer[data-state='correct'] .text-answer__input {
+  border-color: var(--done-border-strong);
+  background: var(--done-soft);
+  color: var(--ink);
+}
+
+.text-answer[data-state='wrong'] .text-answer__input {
+  border-color: var(--fail-border-strong);
+  background: var(--fail-soft);
+  color: var(--ink);
+}
+
+.text-answer__solution:empty {
+  display: none;
+}
+
+.text-answer__solution {
+  display: grid;
+  gap: 6px;
+  margin-top: 6px;
+  padding: 12px 14px;
+  border: 1px solid var(--done-border);
+  border-radius: 8px;
+  background: var(--done-soft);
+}
+
+.text-answer__solution-title {
+  margin: 0;
+  color: var(--done-ink);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.text-answer__expected {
+  margin: 0;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: var(--code-bg);
+  color: var(--code-ink);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  font-variant-ligatures: none;
+  white-space: pre-wrap;
+  overflow-x: auto;
+}
+
+.text-answer__accept {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+
+.text-answer__why {
+  font-size: 15px;
+  color: var(--ink-soft);
+}
+
+/* ——— Opakování: volby až na požádání ——— */
+
+.answers-recall {
+  display: grid;
+  justify-items: start;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 12px 14px;
+  border: 1px dashed var(--rule-strong);
+  border-radius: 8px;
+  color: var(--ink-soft);
+}
+
+.answers-recall p {
+  margin: 0;
+}

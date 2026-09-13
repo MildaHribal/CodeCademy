@@ -1,5 +1,9 @@
 {
   "title": "Dobrý obsah",
-  "intro": "Všechno tady má projít ověřením bez chyb i varování.",
-  "modules": ["lekce-flexbox", "workshop-navigace", "lab-soucet", "kviz"]
+  "intro": "Všechno tady má projít ověřením bez chyb i varování. Naučíš se [[flex kontejner]].",
+  "modules": ["lekce-flexbox", "workshop-navigace", "lab-soucet", "kviz"],
+  "outcomes": [
+    { "text": "Z prvku uděláš [[flex kontejner]] a víš, co to udělá s dětmi.", "links": ["dobra/lekce-flexbox#flex-kontejner", "dobra/workshop-navigace/002"] },
+    { "text": "Sečteš čísla v poli dvěma způsoby.", "links": ["dobra/lab-soucet"] }
+  ]
 }

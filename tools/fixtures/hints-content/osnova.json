@@ -1,0 +1,5 @@
+{
+  "parts": [
+    { "id": "napovedy", "title": "Testy nápověd", "summary": "Obsah pro testy nápověd, porovnání s řešením a statistik.", "sections": ["napovedy"] }
+  ]
+}

@@ -71,14 +71,15 @@ Parser, UI i verify musí používat **tytéž** funkce, aby se nerozcházely.
 
 | soubor | exporty |
 |---|---|
-| `parse.js` | `ParseError`, `RUNTIMES`, `langOf`, `extractRegion`, `mergeFiles`, `parseStep`, `parseQuiz`, `parseLesson`, `parseCards`, `parseTerms` |
-| `content.js` | `MODULE_TYPES`, `SECTION_LEVELS`, `SECTION_EXTRAS`, `readTextTree`, `loadCurriculum`, `listModules`, `loadModule`, `loadSection`, `loadTerms`, `loadSectionExtras`, `buildContentIndex`, `resolveContentItem` (kap. 2.1, 2.7, 12.8) |
+| `parse.js` | `ParseError`, `RUNTIMES`, `STEP_KINDS`, `langOf`, `extractRegion`, `mergeFiles`, `parseStep`, `parseQuiz`, `parseLesson`, `parseCards`, `parseTerms`; skládání parsons `assembleParsons`, `fillParsonsLine` (parser, verify P1 i UI); ovládací prvky `applyControlDefaults`, `controlValue` (kap. 5.2) |
+| `content.js` | `MODULE_TYPES`, `SECTION_LEVELS`, `SECTION_EXTRAS`, `readTextTree`, `loadCurriculum`, `listModules`, `loadModule`, `loadSection`, `loadTerms`, `loadSectionExtras`, `sectionOutcomes`, `buildContentIndex`, `resolveContentItem` (kap. 2.1, 2.7, 12.8) |
 | `anchors.js` | `headingAnchor`, `createSlugger`, `collectHeadings`, `anchoredHeadings` — **jediná implementace** kotev (kap. 2.8) |
-| `answers.js` | `normalizeWhitespace`, `normalizeAnswer`, `normalizeCss`, `checkTextAnswer`, `hashKey` (kap. 4.2, 2.8) |
-| `refs.js` | `headingAnchor`, `collectHeadings` (re-export z `anchors.js`), `parseRef`, `refHref`, `termLookupKey`, `findTermRefs`, `parseItemId`, `itemTarget` (kap. 2.8–2.10) |
+| `answers.js` | `normalizeWhitespace`, `normalizeAnswer`, `normalizeCss`, `checkTextAnswer`, `hashKey`, `createKeyAllocator` (klíče s příponou `-2` v jednom souboru) (kap. 4.2, 2.8) |
+| `refs.js` | `headingAnchor`, `collectHeadings` (re-export z `anchors.js`), `parseRef`, `refHref`, `termLookupKey`, `findTermRefs`, `parseItemId`, `itemTarget`, `findSeeLinks` (odkazy `](see:…)` mimo kód) (kap. 2.8–2.10) |
 | `diff.js` | `diffLines`, `changeRatio` — řádkový LCS diff (porovnání s řešením B2, míra změny kap. 3.4) |
-| `errors-cs.js` | `explainError` (kap. 6.9) |
-| `syntax-check.js` | `findSyntaxError` — kontrola „kód nejde spustit" pro prohlížeč i node (kap. 6.1) |
+| `errors-cs.js` | `explainError`, `ERROR_PATTERNS` (vzory s `see` pro verify S4), `groupUndefinedNames` (kap. 6.9) |
+| `syntax-check.js` | `findSyntaxError(files, { includeHtml = true })` — kontrola „kód nejde spustit" pro prohlížeč i node (node volá s `includeHtml: false`), `checkJsSyntax`, `extractInlineScripts`, `syntaxErrorResult`, `SYNTAX_SKIPPED_MESSAGE` (kap. 6.1) |
+| `runner-assertion.js` | `describeAssertion(error, format)` — `operator`/`actual`/`expected`/`diff` a česká vygenerovaná zpráva, společné pro prohlížeč i Node (kap. 6.1) |
 
 Kdo který soubor ve vlně 2b píše, určuje `docs/platforma.md`, kap. 7. Rozhraní `diff.js`
 a `syntax-check.js` je tamtéž.
@@ -374,6 +375,8 @@ sekce a v tiskovém stylu. Chybějící soubor = doporučení.
 }
 ```
 
+Když sekce na disku není (není `section.json`), `loadSection` vrátí `null` (routa z toho dělá 404).
+
 `loadTerms(contentDir)` → `{ terms: Term[] }` ze všech dostupných sekcí v pořadí osnovy.
 
 ### 2.8 Klíče, normalizace a kotvy
@@ -554,8 +557,8 @@ nav { display: flex; }
 | `# --description--` | povinná | povinná | povinná |
 | `# --hints--` | povinná | povinná | povinná |
 | `# --help--` | nepovinná (kap. 3.3) | nepovinná | nepovinná |
-| `# --seed--` | povinná | nepovinná | nepoužívá se (bere `starter/`), verify varuje |
-| `# --solution--` | povinná; u `kind: parsons` **zakázaná** | nepovinná (verify bez ní hlásí chybu) | nepoužívá se (bere `solution/`) |
+| `# --seed--` | povinná | nepovinná | nepatří sem (ParseError; bere `starter/`) |
+| `# --solution--` | povinná; u `kind: parsons` **zakázaná** | nepovinná (verify bez ní hlásí chybu) | nepatří sem (ParseError; bere `solution/`) |
 | `# --explain--` | nepovinná (kap. 3.7) | nepovinná | — |
 | `# --parsons--` | jen a povinně u `kind: parsons` | — | — |
 | `# --approaches--` | — | nepovinná (kap. 3.8) | — |
@@ -612,6 +615,8 @@ Prázdná oblast má `end === start - 1` (kurzor jde na řádek `start`).
 
 `loadModule(…, { includeSolutions: false })` z kroku, labu i projektu odstraní
 `solution` a `approaches`. Všechno ostatní (včetně `help`, `explain`, `parsons`) zůstává.
+Lab bez řešení navíc nese `approachesCount` (počet přístupů), aby UI vědělo, jestli
+nabídnout „Jiné přístupy", a obsah načetlo přes `?solution=1` až po kliknutí.
 
 ### 3.3 Odstupňované nápovědy `# --help--`
 
@@ -1109,6 +1114,9 @@ Co vrátí `cartTotal(items)` na řádku 34, když je košík prázdný?
 `key = hashKey(text)` s příponou `-2`… při shodě v souboru (kap. 2.8). Id otázky pro
 opakování a pokusy: `q:<id modulu>#<key>`.
 
+Otázka s výběrem z předpovědi (kap. 5.3) má navíc `why` (text `--why--` celé otázky,
+`''` když chybí); `why` jednotlivých odpovědí tam zůstává `''`.
+
 ### 4.5 Chování UI, které ovlivňuje obsah
 
 - **Jistota:** u každé hodnocené otázky volí uživatel před odesláním „Jsem si jistý"
@@ -1116,7 +1124,8 @@ opakování a pokusy: `q:<id modulu>#<key>`.
 - **Otázka s výběrem neprozradí odpověď:** po prvním špatném pokusu jen ✗ a `why`
   **zvolené** odpovědi. Správná odpověď se ukáže po druhém neúspěchu nebo na kliknutí
   „Ukaž odpověď"; potom se volby znovu zamíchají. Proto `why` špatné odpovědi nesmí
-  prozradit správnou.
+  prozradit správnou. Po ukázání správné odpovědi je otázka zamčená; další pokus
+  (`retry()`, v kvízu „Projít jen chybné") ji otevře a volby zamíchá jiným klíčem.
 - **Psaná otázka:** po špatném pokusu ✗ „Zkus to znovu"; `expected` a `why` se ukážou
   po správné odpovědi, po druhém neúspěchu nebo na kliknutí. Pole je jednořádkové,
   když `expected` nemá nový řádek, jinak víceřádkové.
@@ -1221,7 +1230,7 @@ Každý neprázdný řádek je jeden prvek:
 - `--jméno` odpovídá `/^--[a-z][a-z0-9-]*$/`, v bloku jedinečné.
 - Hodnoty `select`/`toggle` jsou holé (bez `,` `(` `)` `"`) nebo v uvozovkách `"repeat(3, 1fr)"`.
   `select` aspoň 2 hodnoty, `toggle` přesně 2.
-- `range`: čísla `min < max`, `krok > 0`, jednotka nepovinná (`px`, `rem`, `%`, `fr`…).
+- `range`: čísla `min < max`, `krok > 0`, jednotka nepovinná (`px`, `rem`, `%`, `fr`…; bez jednotky `unit: ''`).
 - Výchozí hodnota: u `select`/`toggle` první hodnota, u `range` `min`. Výchozí mimo
   povolené hodnoty nebo rozsah = ParseError. Popisek chybí → popisek = jméno bez `--`.
 - CSS ukázky používá `var(--jméno)`. Hodnota prvku se nastaví jako custom property na
@@ -1294,7 +1303,9 @@ B
   `--accept--`, `--why--`, `--option--`, `--option*--`, `--output--` nebo `--see--`.
   Obsah značky = zbytek řádku + následující řádky až po další značku nebo `:::`
   (smí obsahovat bloky kódu). Text před první značkou mimo bloky souborů = ParseError.
-  Blok souboru za první značkou = ParseError. `controls` s `predict` = ParseError.
+  Blok `html`/`css`/`js`/`controls` v obsahu `--expected--`, `--accept--`, `--output--`
+  nebo `--see--` = ParseError; v `--question--`, `--why--` a `--option--` je to obyčejný
+  markdown (ukázka kódu v textu). `controls` s `predict` = ParseError.
 - `--question--` povinná, jednou. `--option--`/`--option*--` (hvězdička = správná):
   otázka s výběrem (aspoň 2, aspoň jedna správná). Jinak psaná otázka:
   `--expected--` (obsah jako v 4.2: jeden blok kódu, nebo text), `--accept--` (každý
@@ -1399,6 +1410,7 @@ b -> @arr
 
 - První obsah bloku je **přesně jeden** blok kódu (ukázka jen ke čtení).
 - Pak kroky `--step-- N [| popisek]`: stav **po** provedení řádku N (1-based, v rozsahu kódu).
+  Bez popisku je `label: ''`.
   Aspoň jeden krok, jinak ParseError.
 - Řádky kroku:
   - `jméno = hodnota` — proměnná s primitivní hodnotou (`count = 3`, `name = 'Ema'`),
@@ -1557,6 +1569,7 @@ Tokeny jsou v `client/src/styles/tokens.css` ve světlé i tmavé variantě
   hints: [{ text, test }],
   timeoutMs: 5000,         // na jeden test; výchozí dom/js/vue 5000, node 10000; frontmatter timeoutMs přebíjí
   signal,                  // nepovinné, jen v prohlížeči: AbortSignal zruší kontrolu
+  storage,                 // nepovinné, jen dom/js/vue: { localStorage: { klíč: 'text' }, sessionStorage: {…} } — naplní úložiště v paměti před spuštěním kódu (kap. 13)
 }
 
 // RunResult
@@ -1704,10 +1717,15 @@ export function mountPreview(container /* HTMLElement */, { runtime, files, view
   setCssVariables(vars /* { '--justify': 'center' } */),
   //   nastaví custom properties na :root stránky bez znovunačtení (kap. 5.2)
   openInNewTab(),
-  //   otevře stránku v nové kartě (Blob URL) se stejným skládáním a ochranou smyček, pro skutečné DevTools
+  //   otevře stránku v nové kartě (Blob URL) se stejným skládáním a ochranou smyček, pro skutečné DevTools; → false, když ji prohlížeč zablokoval
+  viewport(),
+  //   → aktuální { width, height } | null (poslední setViewport)
 }
 
-// client/runner.html — stránka bez UI, vystaví: window.akademieRunner = { runTests, mountPreview }
+export async function inspectCss({ runtime, files, declarations, signal }) /* → [{ id, property, reason, elements }] */
+//   složí stránku v neviditelném iframu 1024×768 a vrátí neaktivní deklarace (lint „neaktivní CSS")
+
+// client/runner.html — stránka bez UI, vystaví: window.akademieRunner = { runTests, mountPreview, inspectCss }
 
 // server/node-runner.js  (Node)
 export async function runNodeTests({ files, hints, timeoutMs = 10000, cwd = null, signal }) /* → RunResult */
@@ -1880,8 +1898,9 @@ souhrny, např. počet kroků).
 
 | # | kontrola | úroveň |
 |---|---|---|
-| S1 | `osnova.json`, `section.json`, `module.json`, všechny `.md` (i `cards.md`, `pojmy.md`) jdou naparsovat | chyba |
+| S1 | `osnova.json`, `section.json`, `module.json`, všechny `.md` (i `cards.md`, `pojmy.md`) jdou naparsovat; `tahak.md` bez značek `--x--` a `:::` (kap. 2.7) | chyba |
 | S2 | `doporucenaTrasa`: neznámý slug, duplicita / `uroven` neplatná / plánovaná sekce bez `title`/`summary` | chyba |
+| S2 | sekce na disku (má `section.json`), která není v `osnova.json` | varování |
 | S3 | sekce `jadro` chybí v trase (když trasa existuje) | varování |
 | S4 | reference `see`, `### --see--`, `--see--`, `lekce:`, `links`, odkazy `](see:…)`, `see` v `errors-cs.js` na neexistující sekci/modul/krok/kotvu, kotva u nelekce | chyba |
 | S5 | `[[pojem]]` neexistuje; kolize pojmu/aliasu mezi sekcemi | chyba |
@@ -1931,7 +1950,7 @@ Třetina kroku `i` (0-based) z `n` = `Math.floor(i * 3 / n)` (0, 1, 2).
 | E3 | varianty `:::compare` shodné | chyba |
 | E4 | lekce bez `:::check` (bez `pretest`) | varování |
 | E5 | `:::check pretest` za prvním `##`; `controls` proměnná nepoužitá v CSS | varování |
-| E6 | část `##` bez `:::check`; md text mezi dvěma interaktivními bloky (`live`, `check`, `explain`, `memory`, `compare`) delší než 400 slov (mimo bloky kódu); lekce bez předpovědi; bez pretestu; v `# --questions--` méně než polovina psaných; chybí nadpis `## Kde to najdeš v MDN` | doporučení |
+| E6 | část `##` bez `:::check` (i `pretest`; kromě části `## Kde to najdeš v MDN`); md text mezi dvěma interaktivními bloky (`live`, `check`, `explain`, `memory`, `compare`) delší než 400 slov (mimo bloky kódu); lekce bez předpovědi; bez pretestu; v `# --questions--` méně než polovina psaných; chybí nadpis `## Kde to najdeš v MDN` | doporučení |
 
 ### 10.5 Kvíz a karty
 
@@ -1951,7 +1970,7 @@ Výstup: souhrn po modulech (a sekcích pro `cards.md`/`pojmy.md`), na konci po�
 varování a doporučení. Exit kód 1 při chybě.
 
 **Další nástroje:** `node tools/e2e.js [--port N]` — kouřový průchod UI v Playwrightu
-(vlastní dočasná data, snímky do `.e2e/`).
+(vlastní dočasná data, snímky do `.e2e/`): jádro a nástroje — nápověda → porovnání s řešením, opakování, poznámky, tmavý režim.
 
 ---
 
@@ -2028,6 +2047,9 @@ nápovědám (B1), statistikám (B8) a zakládání položek opakování.
 
 → `{ ok: true, attempt: Attempt }`
 
+Validace těla: neznámé pole = 400 („Neznámé pole …"); `failed` a `confidence` jen spolu
+s `ok` (jinak 400); `confidence` jen u id `q:` (jinak 400), `null` = bez jistoty.
+
 ```js
 // data/pokusy.json
 {
@@ -2053,7 +2075,8 @@ nápovědám (B1), statistikám (B8) a zakládání položek opakování.
 
 Pravidla na serveru:
 
-- `solutionViewed: true` při `firstOkAt === null` nastaví `assisted: true`.
+- `solutionViewed: true` při `firstOkAt === null` nastaví `assisted: true`. V jednom požadavku
+  se `solutionViewed` započte **před** `ok` — `solutionViewed: true` spolu s prvním `ok: true` = `assisted`.
 - První `ok: true` u **kroku workshopu nebo labu** (typ ověří server z obsahu), když
   `assisted` nebo `fails ≥ 3` → `reviews.add('step:<id>')` (kap. 12.3).
 - `ok` u id `q:…` → pokud položka v opakování ještě není, založí ji podle první
@@ -2129,7 +2152,7 @@ jeden řádek „K opakování: 12 (asi 8 min)", žádné série).
 {
   date: '2026-09-13',
   total: 31,            // všechny splatné (due ≤ dnes)
-  answeredToday: 8,     // položek zodpovězených dnes v opakování
+  answeredToday: 8,     // položek, jejichž lastAnswered (nastavuje jen POST /api/reviews/answer) je dnešní místní datum
   limit: 20,            // denní strop
   estimateMinutes: 8,
   items: [ReviewItem],  // max limit − answeredToday
@@ -2165,11 +2188,11 @@ jeden řádek „K opakování: 12 (asi 8 min)", žádné série).
 
 `POST /api/reviews/add { id, reason }` (`reason` ∈ `assisted | fails | self | explain | outcome`)
 → založí položku (`box 1`, `due = dnes + 1`); když už existuje, nastaví `box 1`,
-`due = dnes + 1`. Smaže id z `removed`. → `{ ok: true, item, created: boolean }`.
+`due = dnes + 1` (`reason`, `added` a `history` zůstanou). Smaže id z `removed`. → `{ ok: true, item, created: boolean }`.
 Id, které v obsahu neexistuje = 400.
 
 `POST /api/reviews/remove { id }` → „Už to umím, nezobrazovat": smaže položku a zapíše
-id do `removed` → `{ ok: true, removed: boolean }`. Pozdější první odpověď na otázku ani
+id do `removed` (vždy) → `{ ok: true, removed: boolean }` (`true`, když položka ve `items` byla). Pozdější první odpověď na otázku ani
 aktivace karty ji znovu nezaloží; jen `add`.
 
 Reset (kap. 8) maže položky i záznamy v `removed`, jejichž `itemTarget` k id patří.
@@ -2209,7 +2232,10 @@ rezervované jméno). Soubor je obyčejný markdown, který si uživatel smí up
 `:section` = slug dostupné sekce nebo `obecne`, jinak 400. `kind`: `note` (poznámka
 z panelu), `quote` („Nerozumím" u odstavce, `quote` = citovaný text), `explain`
 (kap. 3.7, 5.5), `plan` („Než začneš", kap. 3.8). `source` = reference (kap. 2.9),
-u „Nerozumím" s kotvou nejbližšího nadpisu. Tělo nad 100 kB = 413.
+u „Nerozumím" s kotvou nejbližšího nadpisu. Tělo `append` nad 100 kB = 413; `PUT` celého
+souboru má limit serveru 5 MB (soubor poznámek sekce časem 100 kB přeroste). Protože `source`
+je vždy reference, `append` do `obecne` přijde jen z lekce nebo kroku; mimo ně se `obecne.md`
+upravuje přes `PUT` (obrazovka `#/poznamky/obecne`).
 
 Formát připsaného záznamu (přesně):
 
@@ -2262,7 +2288,7 @@ nekonečnou smyčku.
   (po zastavení se smaže); `project` běží v `moje-projekty/<section>--<module>/`
   (409, když projekt nezačal).
 - Spustí se `node <main>` v novém procesu (vlastní skupina procesů), `PORT` = volný port
-  (přebije `env`), `NODE_ENV=development`.
+  (přebije `env`), `NODE_ENV=development` (tohle `env` přebít smí).
 - Odpověď přijde, jakmile port přijímá spojení, proces skončí, nebo po 5000 ms —
   **nic z toho není chyba**:
 
@@ -2309,7 +2335,8 @@ s kódem 1", „Zastaveno po 10 minutách nečinnosti". Při novém `id` začín
 
 - `method` ∈ `GET POST PUT PATCH DELETE HEAD OPTIONS`; `path` musí začínat `/`
   (žádná absolutní URL); hlavičky `host` a `content-length` doplní server; `timeoutMs`
-  výchozí 10000, max 30000. Požadavek jde vždy na `127.0.0.1:<port>` běžícího procesu.
+  výchozí 10000, max 30000. Požadavek jde vždy na `127.0.0.1:<port>` běžícího procesu
+  (na `[::1]:<port>`, když proces poslouchá jen na IPv6 — pak i `url` je `http://[::1]:PORT`).
   Proces neběží = 409.
 - Odpověď (vždy 200, když se požadavek pokusil odejít):
 
@@ -2371,8 +2398,10 @@ používat, parser je odmítá, dokud je kontrakt nedoplní.
 - Poznámky analyzátoru k řešení (`feedback:`). Vlna 5.
 - **Úložiště v sandboxovaném iframu** (runtime `dom`, `js`, `vue`, `react`): iframe bez
   `allow-same-origin` vyhazuje `SecurityError` u `localStorage`, `sessionStorage`,
-  IndexedDB a cookies. Runner dostane in-memory náhradu `localStorage`/`sessionStorage`
-  (čerstvou pro každý test) a helper pro její naplnění v testu. Vlna 3, nejpozději před
+  IndexedDB a cookies. **Hotové (vlna 2b):** runner má in-memory `localStorage`/`sessionStorage`
+  (čerstvé pro každý test i každé překreslení náhledu) a `RunRequest.storage` (kap. 6.1); test
+  může úložiště naplnit i sám přes `localStorage.setItem` a pak zavolat funkce stránky.
+  **Chybí:** zápis počátečního úložiště v obsahu (frontmatter kroku?) a IndexedDB/cookies. Vlna 3, nejpozději před
   `js-dom` (`prohlizecova-api`, `workshop-filtr-produktu`, `projekt-kanban`),
   `nastroje-testovani/projekt-rozpoctovac` a hookem `useLocalStorage` v Reactu.
 - **Obrázky v obsahu** (snímky návrhu z Figmy v `css-design/cteni-navrhu`): kde leží

@@ -1,0 +1,375 @@
+/* Nástroj dev-process: stav běžícího procesu, HTTP klient, panel projektu.
+   Barvy jen přes tokeny z styles/tokens.css (funguje i v tmavém režimu). */
+
+/* ——— Řádek stavu procesu ——— */
+
+.dev-status {
+  flex: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 8px;
+  margin: 0;
+  padding: 6px 14px;
+  border-bottom: 1px solid var(--rule);
+  background: var(--surface);
+  color: var(--ink-soft);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.dev-status__dot {
+  flex: none;
+  align-self: center;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ink-faint);
+}
+
+.dev-status[data-tone='running'] .dev-status__dot {
+  background: var(--done);
+}
+
+.dev-status[data-tone='busy'] .dev-status__dot {
+  background: var(--accent);
+}
+
+.dev-status[data-tone='stopped'] .dev-status__dot {
+  background: var(--warn);
+}
+
+.dev-status[data-tone='error'] .dev-status__dot {
+  background: var(--fail);
+}
+
+.dev-status__text {
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.dev-status__text a {
+  font-family: var(--font-mono);
+  font-variant-ligatures: none;
+}
+
+.dev-status__note:empty {
+  display: none;
+}
+
+.dev-status__note {
+  flex-basis: 100%;
+  color: var(--warn);
+  font-weight: 600;
+}
+
+.dev-status[data-tone='error'] .dev-status__note {
+  color: var(--fail);
+}
+
+/* ——— HTTP klient ——— */
+
+.dev-http {
+  flex: none;
+  max-height: 60%;
+  overflow: auto;
+  border-top: 1px solid var(--rule-strong);
+  background: var(--surface);
+  font-size: 13px;
+}
+
+.dev-http:not([open]) {
+  overflow: visible;
+}
+
+.dev-http__summary {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 4px 14px;
+  border-bottom: 1px solid var(--rule);
+  background: var(--surface);
+  cursor: pointer;
+  user-select: none;
+}
+
+.dev-http__summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Šipka rozbalení (display: flex skryje výchozí značku summary). */
+.dev-http__summary::before {
+  content: '';
+  width: 0;
+  height: 0;
+  margin-right: 8px;
+  border-block: 4px solid transparent;
+  border-left: 6px solid var(--ink-faint);
+  transition: transform 120ms ease;
+}
+
+.dev-http[open] > .dev-http__summary::before {
+  transform: rotate(90deg);
+}
+
+.dev-http:not([open]) > .dev-http__summary {
+  border-bottom: 0;
+}
+
+.dev-http__title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.dev-http__body {
+  display: grid;
+  gap: 10px;
+  padding: 10px 14px 14px;
+}
+
+.dev-http__form {
+  display: grid;
+  gap: 8px;
+}
+
+.dev-http__line {
+  display: flex;
+  gap: 6px;
+  min-width: 0;
+}
+
+.dev-http__method,
+.dev-http__path,
+.dev-http__textarea {
+  min-width: 0;
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-variant-ligatures: none;
+  font-size: 13px;
+}
+
+.dev-http__method {
+  flex: none;
+  padding: 0 6px;
+  min-height: 30px;
+}
+
+.dev-http__path {
+  flex: 1;
+  padding: 0 8px;
+  min-height: 30px;
+}
+
+.dev-http__textarea {
+  display: block;
+  width: 100%;
+  padding: 6px 8px;
+  resize: vertical;
+}
+
+.dev-http__textarea:disabled {
+  background: var(--surface-sunken);
+  color: var(--ink-faint);
+}
+
+.dev-http__method:focus-visible,
+.dev-http__path:focus-visible,
+.dev-http__textarea:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.dev-http__send {
+  flex: none;
+}
+
+.dev-http__extra > summary,
+.dev-http__headers > summary {
+  width: fit-content;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
+.dev-http__extra[open] {
+  display: grid;
+  gap: 4px;
+}
+
+.dev-http__label {
+  margin-top: 6px;
+  color: var(--ink-soft);
+  font-weight: 600;
+}
+
+.dev-http__hint {
+  margin: 0;
+  color: var(--ink-faint);
+  font-weight: 400;
+}
+
+.dev-http__idle {
+  color: var(--ink-soft);
+}
+
+.dev-http__result:empty {
+  display: none;
+}
+
+.dev-http__result {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.dev-http__status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+  margin: 0;
+  padding: 6px 10px;
+  border-left: 3px solid var(--rule-strong);
+  border-radius: 4px;
+  background: var(--surface-sunken);
+  color: var(--ink);
+}
+
+.dev-http__status strong {
+  font-family: var(--font-mono);
+  font-variant-ligatures: none;
+}
+
+.dev-http__status[data-tone='ok'] {
+  border-left-color: var(--done);
+  background: var(--done-soft);
+  color: var(--done-ink);
+}
+
+.dev-http__status[data-tone='redirect'] {
+  border-left-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.dev-http__status[data-tone='client'] {
+  border-left-color: var(--warn);
+  background: var(--warn-soft);
+  color: var(--warn);
+}
+
+.dev-http__status[data-tone='server'],
+.dev-http__status[data-tone='error'] {
+  border-left-color: var(--fail);
+  background: var(--fail-soft);
+  color: var(--fail-ink);
+}
+
+.dev-http__group {
+  font-weight: 600;
+}
+
+.dev-http__meta {
+  margin-left: auto;
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+.dev-http__error {
+  margin: 0;
+  color: var(--fail-ink);
+  overflow-wrap: anywhere;
+}
+
+.dev-http__problems,
+.dev-http__notes {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.dev-http__problems {
+  color: var(--fail-ink);
+}
+
+.dev-http__notes {
+  color: var(--ink-soft);
+}
+
+.dev-http__headers dl {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 2px 12px;
+  margin: 6px 0 0;
+  font-family: var(--font-mono);
+  font-variant-ligatures: none;
+  font-size: 12px;
+}
+
+.dev-http__headers dt {
+  color: var(--ink-soft);
+}
+
+.dev-http__headers dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+.dev-http__response {
+  margin: 0;
+  max-height: 320px;
+  overflow: auto;
+  padding: 8px 10px;
+  border-radius: var(--radius);
+  background: var(--console-bg);
+  color: var(--code-ink);
+  font-family: var(--font-mono);
+  font-variant-ligatures: none;
+  font-size: 12.5px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.dev-http__response--binary {
+  color: var(--console-muted);
+  font-style: italic;
+}
+
+/* ——— Panel projektu ——— */
+
+.dev-project .dev-status {
+  margin-top: 12px;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+
+.dev-project__output {
+  margin-top: 12px;
+  border: 1px solid var(--rule-strong);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.dev-project .dev-status:not([hidden]) + .dev-project__output {
+  margin-top: 0;
+  border-top: 0;
+  border-radius: 0 0 8px 8px;
+}
+
+.dev-project__output .console {
+  min-height: 80px;
+  max-height: 240px;
+}
+
+.dev-project .dev-http {
+  max-height: none;
+  margin-top: 12px;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+}

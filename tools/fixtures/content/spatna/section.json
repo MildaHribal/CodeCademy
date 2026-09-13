@@ -1,5 +1,5 @@
 {
   "title": "Rozbitý obsah",
-  "intro": "Tady má ověření najít chybu i varování.",
-  "modules": ["workshop-rozbity", "kviz-kratky"]
+  "intro": "Tady má ověření najít chyby i varování.",
+  "modules": ["workshop-rozbity", "lekce-odkazy", "kviz-kratky"]
 }

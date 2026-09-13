@@ -62,7 +62,8 @@ export function refreshHeader() {
         const attrs = {
           class: 'app-menu__item',
           'aria-current': active ? 'page' : null,
-          title: item.shortcut ? `${item.label} (${item.shortcut})` : null,
+          // title vždy: na úzkém okně je vidět jen ikona a popisek zmizí.
+          title: item.shortcut ? `${item.label} (${item.shortcut})` : item.label,
           dataset: { item: item.id },
         };
         const control = item.onClick && !item.href

@@ -1,0 +1,5 @@
+{
+  "parts": [
+    { "id": "bloky", "title": "Bloky lekce", "summary": "Obsah pro testy bloků lekce a druhů kroků.", "sections": ["bloky"] }
+  ]
+}

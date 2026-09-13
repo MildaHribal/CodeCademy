@@ -16,10 +16,14 @@ export const FRAME_CANCELLED_MESSAGE = 'Kontrola byla zrušena.';
  * @param {{ runtime: 'dom'|'js'|'vue', files: Array<{name: string, content: string}>,
  *   test: string|null, timeoutMs: number, signal?: AbortSignal|null }} options
  *   test = null → jen načíst stránku; signal → zrušení (iframe se hned odstraní)
- * @returns {Promise<{ pass: boolean, error?: string, phase?: 'load'|'test', logs: Array<{level, text}>, errors: string[] }>}
+ *   inspect = deklarace CSS → po načtení najde neaktivní (výsledek v `inspect`)
+ *   storage = počáteční obsah náhradního localStorage/sessionStorage ({ localStorage: { klíč: text } })
+ * @returns {Promise<{ pass: boolean, error?: string, phase?: 'load'|'test', details?: object,
+ *   logs: Array<{level, text}>, errors: string[] }>}
  *   phase (jen u selhání): 'load' = stránka se zasekla ještě před spuštěním testu
+ *   details (jen u selhání): errorName, u asercí operator/actual/expected/generatedMessage/diff
  */
-export function runInFrame({ runtime, files, test, timeoutMs, signal = null }) {
+export function runInFrame({ runtime, files, test, timeoutMs, signal = null, inspect = null, storage = null }) {
   return new Promise((resolve) => {
     if (signal?.aborted) {
       resolve({ pass: false, error: FRAME_CANCELLED_MESSAGE, phase: 'test', logs: [], errors: [] });
@@ -36,7 +40,7 @@ export function runInFrame({ runtime, files, test, timeoutMs, signal = null }) {
       files,
       loopLimitMs: timeoutMs,
       origin: location.origin,
-      frame: { runId, mode: test === null ? 'page' : 'test', test, timeoutMs },
+      frame: { runId, mode: inspect ? 'inspect' : test === null ? 'page' : 'test', test, timeoutMs, inspect, storage },
     });
 
     let testStarted = false;
@@ -65,10 +69,13 @@ export function runInFrame({ runtime, files, test, timeoutMs, signal = null }) {
           watchdog.restart(timeoutMs + TEST_GRACE_MS);
           break;
         case 'result':
-          finish(message.pass ? { pass: true } : { pass: false, error: String(message.error), phase: message.phase === 'load' ? 'load' : 'test' });
+          finish(message.pass ? { pass: true } : { pass: false, error: String(message.error), phase: message.phase === 'load' ? 'load' : 'test', details: pickDetails(message) });
           break;
         case 'done':
           finish({ pass: true });
+          break;
+        case 'inspect-result':
+          finish({ pass: true, inspect: Array.isArray(message.items) ? message.items : [] });
           break;
       }
     });
@@ -89,4 +96,22 @@ export function runInFrame({ runtime, files, test, timeoutMs, signal = null }) {
     frame.srcdoc = html;
     document.body.appendChild(frame);
   });
+}
+
+const DETAIL_FIELDS = ['errorName', 'operator', 'actual', 'expected', 'generatedMessage', 'diff'];
+
+/** Z výsledku iframu vezme jen známá pole (iframe spouští cizí kód, nevěříme mu). */
+function pickDetails(message) {
+  const details = {};
+  for (const field of DETAIL_FIELDS) {
+    if (message[field] === undefined) continue;
+    if (field === 'generatedMessage') details[field] = Boolean(message[field]);
+    else if (field === 'diff') details[field] = Array.isArray(message.diff) ? message.diff.slice(0, 10).map(pickDiffEntry) : undefined;
+    else details[field] = String(message[field]);
+  }
+  return details;
+}
+
+function pickDiffEntry(entry) {
+  return { path: String(entry?.path ?? ''), actual: String(entry?.actual ?? ''), expected: String(entry?.expected ?? '') };
 }

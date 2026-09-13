@@ -1,0 +1,259 @@
+/* Opakování: obrazovka #/opakovani, řádek na přehledu, tlačítko na ploše. */
+
+.reviews-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 0 8px;
+  padding: 8px 14px;
+  border: 1px solid var(--accent-muted);
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent-hover);
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.reviews-line:hover {
+  border-color: var(--accent);
+}
+
+.reviews-line:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.reviews__position {
+  margin: 8px 0 0;
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+
+.reviews__stage {
+  margin-top: 12px;
+}
+
+.reviews-item {
+  padding: 18px 22px 20px;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-large);
+  background: var(--surface);
+}
+
+.reviews-item__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--rule);
+  font-size: 14px;
+}
+
+.reviews-item__kind {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.reviews-item__source {
+  color: var(--ink-soft);
+}
+
+.reviews-item__box {
+  margin-left: auto;
+  color: var(--ink-faint);
+}
+
+.reviews-item .question {
+  padding-top: 16px;
+  border-bottom: 0;
+}
+
+.reviews-item__label {
+  margin: 12px 0 4px;
+  color: var(--ink-soft);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.reviews-item__hint {
+  margin: 12px 0;
+  color: var(--ink-soft);
+}
+
+.reviews-item__foot {
+  display: grid;
+  gap: 8px;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--rule);
+}
+
+.reviews-item__foot .actions {
+  justify-content: space-between;
+}
+
+.reviews__save:empty {
+  display: none;
+}
+
+.reviews__save {
+  margin: 0;
+  color: var(--ink-soft);
+}
+
+.reviews-item__question .code-set {
+  margin-top: 14px;
+  max-height: 60vh;
+}
+
+.reviews-free,
+.reviews-explain {
+  padding-top: 16px;
+}
+
+.reviews-free__back,
+.reviews-explain__reveal {
+  margin-top: 12px;
+  padding: 4px 16px 14px;
+  border: 1px solid var(--done-border);
+  border-radius: 8px;
+  background: var(--done-soft);
+}
+
+.reviews-free__verdict,
+.reviews-explain .actions {
+  margin-top: 12px;
+}
+
+.reviews-explain .text-answer__label {
+  display: grid;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.reviews-explain__point {
+  font-weight: 600;
+}
+
+/* ——— Kód od seedu (krok, karta code) ——— */
+
+.reviews-practice {
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.reviews-practice__label {
+  margin: 0 0 4px;
+  color: var(--ink-soft);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.reviews-practice__work {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+}
+
+.reviews-practice__editor {
+  /* .editor uvnitř roste přes flex: 1 — bez flex rodiče by zůstal jen tak vysoký jako kód. */
+  display: flex;
+  flex-direction: column;
+  min-height: 220px;
+  height: 320px;
+  overflow: hidden;
+  border-radius: 8px;
+  background: var(--code-bg);
+}
+
+.reviews-practice__output {
+  display: grid;
+  min-width: 0;
+}
+
+.reviews-practice__preview {
+  height: 240px;
+  overflow: hidden;
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  background: var(--preview-bg);
+}
+
+.reviews-practice__console {
+  max-height: 180px;
+  overflow: auto;
+  border-radius: 8px;
+}
+
+.reviews-practice__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.reviews-practice__kbd {
+  color: var(--ink-faint);
+  font-size: 13px;
+}
+
+.reviews-practice__status:empty {
+  display: none;
+}
+
+.reviews-practice__status {
+  margin: 0;
+  font-weight: 600;
+}
+
+.reviews-practice[data-state='pass'] .reviews-practice__status {
+  color: var(--done);
+}
+
+.reviews-practice__file {
+  margin: 8px 0 2px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+.reviews-practice__code {
+  margin: 0;
+  padding: 10px 12px;
+  overflow-x: auto;
+  border-radius: 8px;
+  background: var(--code-bg);
+  color: var(--code-ink);
+  font-family: var(--font-mono);
+  font-size: 13.5px;
+  font-variant-ligatures: none;
+}
+
+@media (min-width: 900px) {
+  .reviews-practice__work:has(.reviews-practice__output) {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  }
+
+  .reviews-practice__preview,
+  .reviews-practice__editor {
+    height: 360px;
+  }
+
+  /* Konzole u js stojí vedle editoru — ať je stejně vysoká. */
+  .reviews-practice__console {
+    max-height: 360px;
+  }
+}
+
+/* ——— Stránka sekce: věta kalibrace jistoty (extensions/confidence.js) ——— */
+
+.confidence-line {
+  margin: 4px 0 0;
+  color: var(--ink-soft);
+}
+
+/* Vysvětlení vlastními slovy je prosa, ne kód. */
+.reviews-explain__input {
+  font-family: var(--font-sans);
+}

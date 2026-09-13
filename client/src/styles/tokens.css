@@ -1,12 +1,16 @@
 /* Design tokeny: všechny barvy aplikace na jednom místě.
    Ostatní styly barvy nepíšou natvrdo, jen přes var(--…).
 
-   Tmavý režim: atribut data-theme na <html> (`<html data-theme="dark">`).
-   Stačí doplnit blok :root[data-theme='dark'] níž se stejnými jmény proměnných —
-   přepínač a uložení volby jsou věc nástroje, který tmavý režim zavede.
+   Tmavý režim: atribut data-theme na <html> (`<html data-theme="dark">`). Nastavuje ho
+   rozšíření extensions/theme.js podle volby v nastavení (světlý / tmavý / podle systému).
+   Oba bloky níž mají STEJNÁ jména proměnných — nový token vždy přidej do obou.
 
    Pojmenování: --<role>[-<varianta>] (ink = text, surface = plocha, rule = čára,
-   on-<plocha> = text na dané ploše, code-* = tmavý editor a bloky kódu, console-* = konzole). */
+   on-<plocha> = text na dané ploše, code-* = tmavý editor a bloky kódu, console-* = konzole,
+   callout-<typ>-* = rámečky ve výkladu, kontrakt kap. 5.11).
+
+   Kontrast: text vůči své ploše aspoň 4.5:1 (ověřeno pro obě varianty,
+   tools/ui-orientation.test.js to hlídá u rámečků a základního textu). */
 
 :root,
 :root[data-theme='light'] {
@@ -23,8 +27,11 @@
   --on-ink: #fff;
   --rule: #d9dee5;
   --rule-strong: #b6bfcb;
+  --rule-heavy: #18212e; /* silná linka pod nadpisem části (jako v obsahu knihy) */
   --hover-tint: rgba(24, 33, 46, 0.06);
   --segment-empty: #e0e5eb;
+  --shadow-pop: 0 6px 24px rgba(24, 33, 46, 0.14), 0 1px 3px rgba(24, 33, 46, 0.12);
+  --backdrop: rgba(24, 33, 46, 0.35);
 
   /* Akcent (školní modrý inkoust) */
   --accent: #2b50a8;
@@ -52,8 +59,36 @@
   --result-pre-bg: rgba(255, 255, 255, 0.7);
   --inline-code-ink: #1d2a44;
 
+  /* Zvýraznění ve výkladu (kontrakt kap. 5.11): tučné, inline kód, pojmy, ==mark== */
+  --text-strong-accent: #1f3c85;
+  --code-inline-bg: #ecebf5;
+  --code-inline-fg: #3b2f73;
+  --term-fg: #0f6466;
+  --mark-bg: #fbe7a1;
+  --mark-fg: #18212e;
+
+  /* Rámečky > [!REMEMBER] / [!PITFALL] / [!TIP] / [!NOTE]
+     bg = plocha, border = proužek a rámeček, fg = text uvnitř, icon = ikona a nadpis */
+  --callout-remember-bg: #edf2fc;
+  --callout-remember-border: #7f9ddb;
+  --callout-remember-fg: #1b2a4d;
+  --callout-remember-icon: #2b50a8;
+  --callout-pitfall-bg: #fdf1e6;
+  --callout-pitfall-border: #e0a36a;
+  --callout-pitfall-fg: #4a2a0f;
+  --callout-pitfall-icon: #a4520e;
+  --callout-tip-bg: #eaf6ef;
+  --callout-tip-border: #86c39f;
+  --callout-tip-fg: #173a27;
+  --callout-tip-icon: #1f7a4d;
+  --callout-note-bg: #f1f3f6;
+  --callout-note-border: #b6bfcb;
+  --callout-note-fg: #2a3340;
+  --callout-note-icon: #4a5566;
+
   /* Náhled uživatelovy stránky — stránka má vlastní barvy, podklad zůstává bílý i v tmavém režimu */
   --preview-bg: #fff;
+  --preview-stage: #dfe4ea; /* plocha kolem zmenšeného náhledu (přepínač šířky) */
 
   /* Editor a bloky kódu (One Dark) */
   --code-bg: #282c34;
@@ -66,6 +101,7 @@
   --code-accent: #7aa2ff;
   --code-region-bg: rgba(122, 162, 255, 0.1);
   --code-focus-ring: rgba(155, 184, 255, 0.35);
+  --code-fold-bg: rgba(255, 255, 255, 0.06);
   --tok-keyword: #c678dd;
   --tok-string: #98c379;
   --tok-atom: #d19a66;
@@ -88,7 +124,116 @@
   --console-error-bg: rgba(224, 108, 117, 0.12);
 }
 
-/* :root[data-theme='dark'] {
-     color-scheme: dark;
-     --paper: …; --surface: …; …
-   } */
+/* Tmavý režim: „učebnice večer". Není to převrácená světlá varianta — plochy mají
+   modrošedý odstín editoru One Dark (editor a stránka tak splývají v jedno prostředí),
+   text je teplý papírový, akcent je světlejší modrý inkoust a stavy jsou tlumené,
+   aby na tmavé ploše nesvítily. Nejtmavší je stránka, panely jsou o stupeň světlejší. */
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  /* Plochy a text */
+  --paper: #161a21;
+  --surface: #1c2129;
+  --surface-sunken: #13161c;
+  --footer-bg: #191d24;
+  --ink: #e2e0d9;
+  --ink-soft: #b3b7bf;
+  --ink-faint: #9097a2;
+  --on-ink: #161a21;
+  --rule: #2b313b;
+  --rule-strong: #434b57;
+  --rule-heavy: #5b6371;
+  --hover-tint: rgba(226, 224, 217, 0.07);
+  --segment-empty: #2c323c;
+  --shadow-pop: 0 8px 28px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(0, 0, 0, 0.4);
+  --backdrop: rgba(5, 7, 10, 0.55);
+
+  /* Akcent */
+  --accent: #8fabf2;
+  --accent-hover: #b1c5f7;
+  --accent-soft: #232d42;
+  --accent-muted: #4d5f8c;
+  --on-accent: #0f1522;
+  --kbd-on-accent: rgba(15, 21, 34, 0.14);
+
+  /* Stavy */
+  --done: #6cc795;
+  --done-soft: #16291f;
+  --done-ink: #a6e3c0;
+  --done-border: #2f5a43;
+  --done-border-strong: #3d7356;
+  --fail: #ff8a80;
+  --fail-soft: #2f1a1a;
+  --fail-ink: #ffc2bb;
+  --fail-ink-deep: #ffd3cd;
+  --fail-border: #6b3430;
+  --fail-border-strong: #874440;
+  --warn: #e9c46a;
+  --warn-soft: #2b2415;
+  --warn-border: #5c4a22;
+  --result-pre-bg: rgba(0, 0, 0, 0.25);
+  --inline-code-ink: #dfe6f5;
+
+  /* Zvýraznění ve výkladu */
+  --text-strong-accent: #b7c9f5;
+  --code-inline-bg: #262838;
+  --code-inline-fg: #cfc6f5;
+  --term-fg: #7fd0cf;
+  --mark-bg: #4f4222;
+  --mark-fg: #f1ece0;
+
+  /* Rámečky */
+  --callout-remember-bg: #1c2538;
+  --callout-remember-border: #4c6aa8;
+  --callout-remember-fg: #dfe6f7;
+  --callout-remember-icon: #9db6f5;
+  --callout-pitfall-bg: #2c2118;
+  --callout-pitfall-border: #9a6232;
+  --callout-pitfall-fg: #f3e2d2;
+  --callout-pitfall-icon: #f0a868;
+  --callout-tip-bg: #17291f;
+  --callout-tip-border: #3c7a56;
+  --callout-tip-fg: #d9efe2;
+  --callout-tip-icon: #7fd3a3;
+  --callout-note-bg: #20252d;
+  --callout-note-border: #4a525e;
+  --callout-note-fg: #dde1e7;
+  --callout-note-icon: #aab2bd;
+
+  /* Náhled: stránka uživatele zůstává na bílém podkladu */
+  --preview-bg: #fff;
+  --preview-stage: #101318;
+
+  /* Editor a bloky kódu: stejné One Dark jako ve světlé variantě */
+  --code-bg: #282c34;
+  --code-bg-deep: #21252b;
+  --code-ink: #d7dae0;
+  --focus-on-dark: #9bb8ff;
+  --code-tab-ink: #9da5b4;
+  --code-tab-ink-hover: #e6e9ef;
+  --code-tab-ink-active: #fff;
+  --code-accent: #7aa2ff;
+  --code-region-bg: rgba(122, 162, 255, 0.1);
+  --code-focus-ring: rgba(155, 184, 255, 0.35);
+  --code-fold-bg: rgba(255, 255, 255, 0.06);
+  --tok-keyword: #c678dd;
+  --tok-string: #98c379;
+  --tok-atom: #d19a66;
+  --tok-comment: #8b929e;
+  --tok-type: #e5c07b;
+  --tok-property: #e06c75;
+  --tok-definition: #61afef;
+  --tok-operator: #56b6c2;
+  --tok-punctuation: #abb2bf;
+  --tok-invalid: #ff7b72;
+
+  /* Konzole: o stupeň tmavší než panely */
+  --console-bg: #121519;
+  --console-muted: #8b929e;
+  --console-rule: rgba(255, 255, 255, 0.05);
+  --console-info: #9bc7ff;
+  --console-warn: #f0cf8a;
+  --console-warn-bg: rgba(229, 192, 123, 0.08);
+  --console-error: #ff9e97;
+  --console-error-bg: rgba(224, 108, 117, 0.12);
+}

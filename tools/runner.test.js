@@ -59,7 +59,70 @@ describe('runtime dom', () => {
     });
     assert.equal(result.ok, false);
     assert.deepEqual(result.results.map((r) => r.pass), [true, false, true, true]);
-    assert.match(result.results[1].error, /Expected values to be strictly equal:\n\n'flex' !== 'grid'/);
+    assert.deepEqual(result.results[1], {
+      index: 1,
+      pass: false,
+      error: "Očekávám 'grid', ale kód vrátil 'flex'",
+      errorName: 'AssertionError',
+      operator: 'strictEqual',
+      actual: "'flex'",
+      expected: "'grid'",
+      generatedMessage: true,
+    });
+    assert.equal(result.syntaxError, null);
+  });
+
+  test('actual a expected i u aserce s vlastní zprávou, diff u deepEqual, errorName u jiných chyb', async () => {
+    const result = await run({
+      runtime: 'js',
+      files: [{ name: 'script.js', content: "function sum(items) { return items.length; }\nfunction cart() { return { items: [{ price: 5 }], total: 5 }; }" }],
+      hints: [
+        { text: 'vlastní zpráva', test: "assert.equal(sum([1, 2]), 3, 'sum([1, 2]) má vrátit 3');" },
+        { text: 'deepEqual', test: "assert.deepEqual(cart(), { items: [{ price: 6 }], total: 6 }, 'košík');" },
+        { text: 'TypeError', test: 'null.x;' },
+        { text: 'ok', test: "assert.ok(document.querySelector('nic'), 'prvek má existovat');" },
+      ],
+    });
+    assert.deepEqual(result.results[0], { index: 0, pass: false, error: 'sum([1, 2]) má vrátit 3', errorName: 'AssertionError', operator: 'strictEqual', actual: '2', expected: '3', generatedMessage: false });
+    assert.deepEqual(result.results[1].diff, [{ path: 'items[0].price', actual: '5', expected: '6' }, { path: 'total', actual: '5', expected: '6' }]);
+    assert.equal(result.results[2].errorName, 'TypeError');
+    assert.match(result.results[2].error, /^TypeError: Cannot read properties of null/);
+    assert.equal(result.results[2].actual, undefined);
+    assert.deepEqual([result.results[3].operator, result.results[3].actual, result.results[3].expected], ['==', 'null', 'true']);
+  });
+
+  test('kód, který nejde naparsovat: testy se nespustí, syntaxError míří na řádek v index.html', async () => {
+    const started = Date.now();
+    const result = await run({
+      runtime: 'dom',
+      files: [
+        { name: 'index.html', content: html('<p>x</p>\n<script type="module">\nconst a = 1;\nconsole.log(a));\n</script>', '') },
+        { name: 'script.js', content: 'const b = 2;' },
+      ],
+      hints: [{ text: 'a', test: 'assert.ok(true);' }, { text: 'b', test: 'assert.ok(true);' }],
+    });
+    assert.deepEqual(result, {
+      ok: false,
+      results: [
+        { index: 0, pass: false, skipped: true, error: 'Neověřeno — kód nejde spustit' },
+        { index: 1, pass: false, skipped: true, error: 'Neověřeno — kód nejde spustit' },
+      ],
+      logs: [],
+      errors: ["SyntaxError: Unexpected token ')' (index.html:11)"],
+      syntaxError: { file: 'index.html', line: 11, column: 15, message: "Unexpected token ')'" },
+    });
+    assert.ok(Date.now() - started < 1000, 'nic se nemá spouštět');
+  });
+
+  test('syntaxError u skriptu i modulu; soubor jen pro modul chybu nemá', async () => {
+    const script = await run({ runtime: 'js', files: [{ name: 'script.js', content: 'function f() {\n  return [1, 2;\n}' }], hints: [{ text: 'x', test: '' }] });
+    assert.deepEqual(script.syntaxError, { file: 'script.js', line: 2, column: 15, message: "Unexpected token ';'" });
+    const module = await run({ runtime: 'dom', files: [{ name: 'app.js', content: "import { x } from './x.js';\nexport const y = ;" }, { name: 'x.js', content: 'export const x = 1;' }], hints: [{ text: 'x', test: '' }] });
+    assert.equal(module.syntaxError.file, 'app.js');
+    assert.equal(module.syntaxError.line, 2);
+    const fine = await run({ runtime: 'dom', files: [{ name: 'x.js', content: 'export const x = await Promise.resolve(1);' }], hints: [{ text: 'x', test: '' }] });
+    assert.equal(fine.syntaxError, null);
+    assert.equal(fine.ok, true);
   });
 
   test('helpers.cssRule vrací styl pravidla bez podmínek', async () => {
@@ -490,6 +553,70 @@ createApp({ setup() { return { count: ref(0) }; } }).mount('#app');
   });
 });
 
+describe('úložiště v sandboxu', () => {
+  test('localStorage a sessionStorage fungují v paměti, čerstvé pro každý test, naplnitelné z požadavku', async () => {
+    const result = await run({
+      runtime: 'dom',
+      storage: { localStorage: { theme: 'dark' } },
+      files: [
+        { name: 'index.html', content: '<p id="out"></p>' },
+        { name: 'script.js', content: "document.querySelector('#out').textContent = localStorage.getItem('theme');\nlocalStorage.setItem('visits', '1');\nsessionStorage.tab = 'a';" },
+      ],
+      hints: [
+        {
+          text: 'první test',
+          test: `
+            assert.equal(document.querySelector('#out').textContent, 'dark');
+            assert.equal(localStorage.getItem('visits'), '1');
+            assert.equal(localStorage.length, 2);
+            assert.deepEqual(Object.keys(localStorage).sort(), ['theme', 'visits']);
+            assert.equal(sessionStorage.getItem('tab'), 'a');
+            localStorage.setItem('jen-v-testu', 'x');
+            localStorage.removeItem('theme');
+            assert.equal(localStorage.theme, undefined);
+          `,
+        },
+        { text: 'další test má čerstvé úložiště', test: "assert.equal(localStorage.getItem('jen-v-testu'), null); assert.equal(localStorage.getItem('theme'), 'dark');" },
+      ],
+    });
+    assert.deepEqual(result.results, [{ index: 0, pass: true }, { index: 1, pass: true }]);
+    assert.deepEqual(result.errors, []);
+  });
+});
+
+describe('inspectCss (neaktivní CSS pro lint)', () => {
+  test('najde deklarace, které na svých prvcích nic nedělají', async () => {
+    const items = await page.evaluate(() => window.akademieRunner.inspectCss({
+      runtime: 'dom',
+      files: [
+        { name: 'index.html', content: '<div class="row"><span class="item">a</span></div><ul class="list"><li>x</li></ul><nav class="flex"><a class="link">b</a><img class="pic" alt=""></nav>' },
+        { name: 'styles.css', content: '.flex { display: flex; }\n.link { z-index: 2; }' },
+        { name: 'script.js', content: "document.querySelector('.list').style.display = 'grid';" },
+      ],
+      declarations: [
+        { id: 0, property: 'justify-content', selector: '.row' },
+        { id: 1, property: 'justify-content', selector: '.flex' },
+        { id: 2, property: 'flex-grow', selector: '.item' },
+        { id: 3, property: 'flex-grow', selector: '.link' },
+        { id: 4, property: 'top', selector: '.row' },
+        { id: 5, property: 'z-index', selector: '.link' },
+        { id: 6, property: 'width', selector: '.item' },
+        { id: 7, property: 'width', selector: '.pic' },
+        { id: 8, property: 'gap', selector: '.list' },
+        { id: 9, property: 'gap', selector: '.nic' },
+        { id: 10, property: 'color', selector: '.row' },
+        { id: 11, property: 'gap', selector: 'a::before' },
+      ],
+    }));
+    assert.deepEqual(items, [
+      { id: 0, property: 'justify-content', reason: 'container', elements: 1 },
+      { id: 2, property: 'flex-grow', reason: 'flex-parent', elements: 1 },
+      { id: 4, property: 'top', reason: 'static', elements: 1 },
+      { id: 6, property: 'width', reason: 'inline', elements: 1 },
+    ]);
+  });
+});
+
 describe('mountPreview', () => {
   test('dom náhled ukáže stránku a posílá konzoli; update a destroy', async () => {
     const outcome = await page.evaluate(async () => {
@@ -518,6 +645,126 @@ describe('mountPreview', () => {
       'clear',
       'druhý',
     ]);
+  });
+
+  test('onConsole u nezachycené chyby nese soubor, řádek a sloupec (i u inline skriptu)', async () => {
+    const entries = await page.evaluate(async () => {
+      const container = document.createElement('div');
+      container.style.cssText = 'width: 400px; height: 300px';
+      document.body.append(container);
+      const received = [];
+      const preview = window.akademieRunner.mountPreview(container, {
+        runtime: 'dom',
+        files: [
+          { name: 'index.html', content: '<!DOCTYPE html>\n<html>\n<body>\n<p>x</p>\n  <script>let a = 1; nope();</script>\n<script src="script.js"></script>\n</body>\n</html>' },
+          { name: 'script.js', content: '\n\n  missing();' },
+        ],
+      });
+      preview.onConsole((entry) => received.push(entry));
+      for (let i = 0; i < 200 && received.filter((e) => e.uncaught).length < 2; i++) await new Promise((r) => setTimeout(r, 20));
+      preview.destroy();
+      return received.filter((entry) => entry.uncaught);
+    });
+    assert.deepEqual(entries, [
+      { level: 'error', text: 'ReferenceError: nope is not defined (index.html:5)', uncaught: true, file: 'index.html', line: 5, column: 22 },
+      { level: 'error', text: 'ReferenceError: missing is not defined (script.js:3)', uncaught: true, file: 'script.js', line: 3, column: 3 },
+    ]);
+  });
+
+  test('setCssVariables a setViewport změní náhled bez znovunačtení stránky', async () => {
+    const handle = await page.evaluateHandle(async () => {
+      const container = document.createElement('div');
+      container.style.cssText = 'width: 512px; height: 300px';
+      document.body.append(container);
+      const preview = window.akademieRunner.mountPreview(container, {
+        runtime: 'dom',
+        files: [
+          { name: 'index.html', content: '<div class="box">box</div>' },
+          { name: 'styles.css', content: ':root { --w: 100px; }\n.box { width: var(--w); }' },
+          { name: 'script.js', content: 'window.loads = (window.loads ?? 0) + 1; console.log("načteno");' },
+        ],
+      });
+      await new Promise((resolve) => preview.onConsole((entry) => entry.text === 'načteno' && resolve()));
+      return { preview, container, frame: container.querySelector('iframe') };
+    });
+    try {
+      const frameOf = async () => {
+        for (let i = 0; i < 100; i++) {
+          const found = page.frames().find((f) => f !== page.mainFrame());
+          if (found && (await found.evaluate(() => Boolean(document.querySelector('.box'))).catch(() => false))) return found;
+          await new Promise((r) => setTimeout(r, 20));
+        }
+        throw new Error('iframe náhledu nenalezen');
+      };
+      const frame = await frameOf();
+      assert.equal(await frame.evaluate(() => getComputedStyle(document.querySelector('.box')).width), '100px');
+      await frame.evaluate(() => { window.marker = 'stejná stránka'; });
+
+      await handle.evaluate(({ preview }) => preview.setCssVariables({ '--w': '240px' }));
+      await frame.waitForFunction(() => getComputedStyle(document.querySelector('.box')).width === '240px');
+
+      await handle.evaluate(({ preview }) => preview.setViewport({ width: 1024, height: 768 }));
+      await frame.waitForFunction(() => innerWidth === 1024 && innerHeight === 768);
+      const scaled = await handle.evaluate(({ container, frame: iframe }) => ({
+        same: container.querySelector('iframe') === iframe,
+        transform: iframe.style.transform,
+        box: Math.round(iframe.getBoundingClientRect().width),
+      }));
+      assert.deepEqual(scaled, { same: true, transform: 'scale(0.5)', box: 512 });
+
+      await handle.evaluate(({ preview }) => preview.setViewport({ width: 375, height: 667 }));
+      await frame.waitForFunction(() => innerWidth === 375 && matchMedia('(max-width: 400px)').matches);
+      await handle.evaluate(({ preview }) => preview.setViewport(null));
+      await frame.waitForFunction(() => innerWidth === 512);
+
+      assert.deepEqual(await frame.evaluate(() => [window.marker, window.loads]), ['stejná stránka', 1]);
+    } finally {
+      await handle.evaluate(({ preview, container }) => { preview.destroy(); container.remove(); });
+    }
+  });
+
+  test('proměnné nastavené hned po připojení a po update přežijí nové složení stránky', async () => {
+    const widths = await page.evaluate(async () => {
+      const container = document.createElement('div');
+      container.style.cssText = 'width: 400px; height: 300px';
+      document.body.append(container);
+      const files = (text) => [
+        { name: 'index.html', content: '<div class="box"></div>' },
+        { name: 'styles.css', content: '.box { width: var(--w, 10px); }' },
+        { name: 'script.js', content: `setTimeout(() => console.log('${text}:' + getComputedStyle(document.querySelector('.box')).width), 50);` },
+      ];
+      const preview = window.akademieRunner.mountPreview(container, { runtime: 'dom', files: files('první') });
+      preview.setCssVariables({ '--w': '33px' });
+      const seen = [];
+      preview.onConsole((entry) => entry.text && seen.push(entry.text));
+      for (let i = 0; i < 100 && seen.length < 1; i++) await new Promise((r) => setTimeout(r, 20));
+      preview.update({ files: files('druhý') });
+      for (let i = 0; i < 100 && seen.length < 2; i++) await new Promise((r) => setTimeout(r, 20));
+      preview.destroy();
+      return seen;
+    });
+    assert.deepEqual(widths, ['první:33px', 'druhý:33px']);
+  });
+
+  test('openInNewTab otevře stránku v nové kartě se stejným obsahem', async () => {
+    const [tab] = await Promise.all([
+      page.context().waitForEvent('page'),
+      page.evaluate(() => {
+        const container = document.createElement('div');
+        document.body.append(container);
+        const preview = window.akademieRunner.mountPreview(container, {
+          runtime: 'dom',
+          files: [{ name: 'index.html', content: '<h1>V nové kartě</h1>' }, { name: 'script.js', content: "document.body.dataset.ok = 'ano';" }],
+        });
+        window.openedTab = preview.openInNewTab();
+        preview.destroy();
+      }),
+    ]);
+    await tab.waitForFunction(() => document.body?.dataset.ok === 'ano');
+    assert.equal(await tab.evaluate(() => document.querySelector('h1').textContent), 'V nové kartě');
+    assert.equal(await page.evaluate(() => window.openedTab), true);
+    assert.equal(await tab.evaluate(() => window.opener), null);
+    await tab.close();
   });
 
   test('js náhled vypisuje do panelu konzole', async () => {

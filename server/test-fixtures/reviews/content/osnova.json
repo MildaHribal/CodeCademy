@@ -1,0 +1,10 @@
+{
+  "parts": [
+    {
+      "id": "cast",
+      "title": "Část pro testy opakování",
+      "summary": "Dvě sekce, ať jde ověřit proložení po sekcích.",
+      "sections": ["alfa", "beta"]
+    }
+  ]
+}

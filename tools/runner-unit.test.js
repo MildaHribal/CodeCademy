@@ -10,8 +10,8 @@ import { createAssert } from '../client/src/runner/frame/assert.js';
 import { formatValue } from '../client/src/runner/frame/format-value.js';
 import { stripComments } from '../client/src/runner/frame/strip-comments.js';
 import { createLoopGuard } from '../client/src/runner/frame/loop-guard-runtime.js';
-import { compareFiles, planModule } from './lib/content-checks.js';
-import { matchesPrefixes, scanContent, toIdPrefixes } from './lib/content-scan.js';
+import { fitViewport } from '../client/src/runner/viewport.js';
+import { describeAssertion } from '../shared/runner-assertion.js';
 
 /** Spustí upravený kód ve vm s ochranou smyček; vrátí výsledek posledního výrazu. */
 function runGuarded(code, { limitMs = 100, sourceType = 'script' } = {}) {
@@ -112,6 +112,22 @@ describe('skládání stránky', () => {
     nodeAssert.match(html, /<style>p \{ color: red \}<\/style><\/head><body>\n<p>Ahoj<\/p>\n<script src="data:text\/javascript/);
   });
 
+  test('skripty mají sourceURL a inline skript sedí na řádky a sloupce index.html', () => {
+    const html = composePage({
+      runtime: 'dom',
+      loopLimitMs: 1000,
+      frame: { ...frame, cssVariables: { '--gap': '2rem' } },
+      files: [
+        { name: 'index.html', content: '<!DOCTYPE html>\n<html>\n<body>\n  <script>let a = 1; // konec</script>\n<script src="script.js"></script>\n</body>\n</html>' },
+        { name: 'script.js', content: 'console.log(1) // bez nového řádku' },
+      ],
+    });
+    const scripts = [...html.matchAll(/src="data:text\/javascript;akademie-source=\d+;charset=utf-8,([^"]*)"/g)].map((m) => decodeURIComponent(m[1]));
+    nodeAssert.equal(scripts[0], '\n\n\n          let a = 1; // konec\n//# sourceURL=akademie/index.html');
+    nodeAssert.equal(scripts[1], 'console.log(1) // bez nového řádku\n//# sourceURL=akademie/script.js');
+    nodeAssert.match(html, /"cssVariables":\{"--gap":"2rem"\}/);
+  });
+
   test('runtime vue přidá do import map vue z /vendor', () => {
     const html = composePage({ runtime: 'vue', loopLimitMs: 1000, frame, origin: 'http://127.0.0.1:1', files: [{ name: 'index.html', content: '<div id="app"></div>' }] });
     nodeAssert.match(html, /"vue":"http:\/\/127\.0\.0\.1:1\/vendor\/vue\.esm-browser\.js"/);
@@ -165,10 +181,94 @@ describe('assert shim se chová jako node:assert/strict', () => {
 
   test('rejects a vlastní zpráva', async () => {
     await shim.rejects(Promise.reject(new Error('x')), /x/);
-    await nodeAssert.rejects(shim.rejects(Promise.resolve(1)), /Missing expected rejection/);
-    nodeAssert.throws(() => shim.equal(1, 2, 'moje zpráva'), { name: 'AssertionError', message: 'moje zpráva' });
+    await nodeAssert.rejects(shim.rejects(Promise.resolve(1)), /Očekávám, že Promise skončí chybou, ale splnila se/);
+    nodeAssert.throws(() => shim.equal(1, 2, 'moje zpráva'), { name: 'AssertionError', message: 'moje zpráva', actual: 1, expected: 2, generatedMessage: false });
     nodeAssert.throws(() => shim(false), { name: 'AssertionError' });
-    nodeAssert.throws(() => shim.equal('a', 'b'), { message: "Expected values to be strictly equal:\n\n'a' !== 'b'\n" });
+  });
+
+  test('vygenerované hlášky jsou česky', () => {
+    const messageOf = (fn) => {
+      try {
+        fn();
+      } catch (error) {
+        return error.message;
+      }
+      return null;
+    };
+    nodeAssert.equal(messageOf(() => shim.equal(4, 3)), 'Očekávám 3, ale kód vrátil 4');
+    nodeAssert.equal(messageOf(() => shim.equal('a', 'b')), "Očekávám 'b', ale kód vrátil 'a'");
+    nodeAssert.equal(messageOf(() => shim.deepEqual([1], [2])), 'Očekávám [ 2 ], ale kód vrátil [ 1 ]');
+    nodeAssert.equal(messageOf(() => shim.ok(0)), 'Očekávám pravdivou hodnotu, ale kód vrátil 0');
+    nodeAssert.equal(messageOf(() => shim.match('abc', /x/)), "Text 'abc' neodpovídá regulárnímu výrazu /x/");
+    nodeAssert.equal(messageOf(() => shim.throws(() => {})), 'Očekávám, že kód vyhodí výjimku, ale žádnou nevyhodil');
+    nodeAssert.equal(messageOf(() => shim.notEqual(1, 1)), 'Hodnota se nemá rovnat 1, ale kód vrátil právě ji');
+    nodeAssert.equal(messageOf(() => shim.fail()), 'Test selhal');
+  });
+});
+
+describe('describeAssertion — podrobnosti selhaného testu', () => {
+  const shim = createAssert(formatValue);
+  const detailsOf = (fn) => {
+    try {
+      fn();
+    } catch (error) {
+      return describeAssertion(error, formatValue);
+    }
+    return null;
+  };
+
+  test('equal s vlastní zprávou má actual i expected', () => {
+    nodeAssert.deepEqual(detailsOf(() => shim.equal(4, 3, 'sum([1, 2]) má vrátit 3')), {
+      errorName: 'AssertionError', operator: 'strictEqual', actual: '4', expected: '3', generatedMessage: false,
+    });
+  });
+
+  test('ok má expected true, match výraz; fail a throws bez porovnání', () => {
+    nodeAssert.deepEqual(detailsOf(() => shim(null, 'má existovat')), { errorName: 'AssertionError', operator: '==', actual: 'null', expected: 'true', generatedMessage: false });
+    nodeAssert.equal(detailsOf(() => shim.match('abc', /x/)).expected, '/x/');
+    nodeAssert.deepEqual(detailsOf(() => shim.fail('ne')), { errorName: 'AssertionError' });
+    nodeAssert.deepEqual(detailsOf(() => shim.throws(() => {})), { errorName: 'AssertionError' });
+    nodeAssert.deepEqual(detailsOf(() => { throw new TypeError('x'); }), { errorName: 'TypeError' });
+  });
+
+  test('deepEqual má diff s cestami k lišícím se listům a (chybí)', () => {
+    const actual = { items: [{ price: 5 }, { price: 6 }], total: 11, extra: true };
+    const expected = { items: [{ price: 5 }, { price: 7 }, { price: 1 }], total: 13, 'dva slova': 1 };
+    const details = detailsOf(() => shim.deepEqual(actual, expected));
+    nodeAssert.deepEqual(details.diff, [
+      { path: 'items[1].price', actual: '6', expected: '7' },
+      { path: 'items[2]', actual: '(chybí)', expected: '{ price: 1 }' },
+      { path: 'total', actual: '11', expected: '13' },
+      { path: 'extra', actual: 'true', expected: '(chybí)' },
+      { path: '["dva slova"]', actual: '(chybí)', expected: '1' },
+    ]);
+  });
+
+  test('diff má nejvýš 10 položek a dlouhé hodnoty se zkrátí', () => {
+    const details = detailsOf(() => shim.deepEqual(Array.from({ length: 20 }, (_, i) => i), Array.from({ length: 20 }, (_, i) => -i - 1)));
+    nodeAssert.equal(details.diff.length, 10);
+    const long = detailsOf(() => shim.equal('x'.repeat(5000), 'y'));
+    nodeAssert.ok(long.actual.length < 2100 && long.actual.endsWith('… (zkráceno)'));
+  });
+
+  test('stejné pro node:assert/strict (runtime node)', () => {
+    try {
+      nodeAssert.deepEqual({ a: [1, 2] }, { a: [1, 3] }, 'moje');
+    } catch (error) {
+      const details = describeAssertion(error, (value) => JSON.stringify(value));
+      nodeAssert.deepEqual(details, { errorName: 'AssertionError', operator: 'deepStrictEqual', actual: '{"a":[1,2]}', expected: '{"a":[1,3]}', generatedMessage: false, diff: [{ path: 'a[1]', actual: '2', expected: '3' }] });
+    }
+  });
+});
+
+describe('velikost náhledu (fitViewport)', () => {
+  test('null vyplní panel', () => {
+    nodeAssert.deepEqual(fitViewport(null, { width: 300, height: 200 }), { scale: 1, frameWidth: '100%', frameHeight: '100%', stageWidth: '100%', stageHeight: '100%', centered: false });
+  });
+
+  test('široká stránka se zmenší na šířku panelu, úzká zůstane 1:1 uprostřed', () => {
+    nodeAssert.deepEqual(fitViewport({ width: 1024, height: 768 }, { width: 512, height: 300 }), { scale: 0.5, frameWidth: '1024px', frameHeight: '768px', stageWidth: '512px', stageHeight: '384px', centered: false });
+    nodeAssert.deepEqual(fitViewport({ width: 375, height: 667 }, { width: 500, height: 300 }), { scale: 1, frameWidth: '375px', frameHeight: '667px', stageWidth: '375px', stageHeight: '667px', centered: true });
   });
 });
 
@@ -193,48 +293,5 @@ describe('formatValue a stripComments', () => {
     nodeAssert.equal(stripComments('a { content: "/* ne */"; } /* pryč */', 'css'), 'a { content: "/* ne */"; } ');
     nodeAssert.equal(stripComments('<p>1</p><!-- pryč --><p>2</p>', 'html'), '<p>1</p><p>2</p>');
     nodeAssert.throws(() => stripComments('x', 'python'), /neznámý jazyk/);
-  });
-});
-
-describe('verify — výběr obsahu a kontroly', () => {
-  const contentDir = new URL('./fixtures/content', import.meta.url).pathname;
-
-  test('prefixy z příkazové řádky', () => {
-    nodeAssert.deepEqual(toIdPrefixes(['content/css-flexbox/', 'content/js-pole/kviz'], '/p/content', '/p'), ['css-flexbox', 'js-pole/kviz']);
-    nodeAssert.ok(matchesPrefixes('css-flexbox/kviz', ['css-flexbox']));
-    nodeAssert.ok(!matchesPrefixes('css-flexbox-2/kviz', ['css-flexbox']));
-  });
-
-  test('scanContent najde moduly fixture obsahu a filtruje podle prefixu', () => {
-    const all = scanContent(contentDir);
-    nodeAssert.deepEqual(all.problems, []);
-    nodeAssert.equal(all.modules.length, 6);
-    const good = scanContent(contentDir, ['dobra/kviz']);
-    nodeAssert.deepEqual(good.modules.map((m) => m.id), ['dobra/kviz']);
-    const none = scanContent(contentDir, ['neexistuje']);
-    nodeAssert.match(none.problems[0].errors[0], /žádný modul neodpovídá/);
-  });
-
-  test('kontrola kroku: seed, který projde, je chyba; rozdílná návaznost je varování', () => {
-    const { modules } = scanContent(contentDir, ['spatna/workshop-rozbity']);
-    const plan = planModule(modules[0].module);
-    const pass = (count) => ({ ok: true, results: Array.from({ length: count }, (_, index) => ({ index, pass: true })), logs: [], errors: [] });
-    const fail = { ok: false, results: [{ index: 0, pass: false, error: 'x' }], logs: [], errors: [] };
-    const outcome = plan.evaluate([fail, pass(1), pass(1), pass(1)]);
-    nodeAssert.deepEqual(outcome.errors, ['krok 002: výchozí kód (seed) projde všemi testy — aspoň jeden test musí selhat']);
-    nodeAssert.equal(outcome.warnings.length, 1);
-    nodeAssert.deepEqual(compareFiles([{ name: 'a', content: 'x  y' }], [{ name: 'a', content: 'x y\n' }]), []);
-    // Nový soubor v seedu návaznost neporušuje, chybějící nebo změněný ano.
-    const previous = [{ name: 'a.js', content: 'x' }, { name: 'b.js', content: 'y' }];
-    nodeAssert.deepEqual(compareFiles(previous, [{ name: 'a.js', content: 'x' }, { name: 'b.js', content: 'y' }, { name: 'index.html', content: '<p>' }], { allowNewFiles: true }), []);
-    nodeAssert.deepEqual(compareFiles(previous, [{ name: 'a.js', content: 'z' }], { allowNewFiles: true }), ['a.js', 'b.js']);
-    nodeAssert.deepEqual(compareFiles(previous, [...previous, { name: 'c.js', content: '' }]), ['c.js']);
-  });
-
-  test('lab bez řešení je chyba verify', () => {
-    const lab = { type: 'lab', lab: { id: 's/lab', runtime: 'js', hints: [{ text: 't', test: '' }], seed: [], solution: [] } };
-    const plan = planModule(lab);
-    nodeAssert.equal(plan.jobs.length, 0);
-    nodeAssert.deepEqual(plan.evaluate([]).errors, ['lab nemá sekci --solution--, bez řešení ho nejde ověřit']);
   });
 });

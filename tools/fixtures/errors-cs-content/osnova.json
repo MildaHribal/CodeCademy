@@ -1,0 +1,5 @@
+{
+  "parts": [
+    { "id": "chyby", "title": "Testy chyb a lintu", "summary": "Obsah pro testy českých chyb a lintu v editoru.", "sections": ["chyby"] }
+  ]
+}

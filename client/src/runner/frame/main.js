@@ -5,12 +5,14 @@
 // nic mimo své tělo. Všechno potřebné dostane v `config` a `parts`.
 
 /**
- * @param {{ channel: string, runId: string, mode: 'test'|'page'|'preview', runtime: string,
+ * @param {{ channel: string, runId: string, mode: 'test'|'page'|'preview'|'inspect', runtime: string,
  *   files: Record<string, string>, test: string|null, timeoutMs: number, loopLimitMs: number,
  *   sources: Array<{ name: string, lineOffset: number }>, moduleFiles: string[],
- *   filePrefix: string, guardGlobal: string, settleMs: number }} config
- * @param {{ formatValue, createAssert, stripComments, findCssRules, createHelpers, createLoopGuard,
- *   importModule }} parts
+ *   filePrefix: string, guardGlobal: string, settleMs: number, cssVariables: Record<string, string>,
+ *   inspect?: Array<{ id, property, selector }>,
+ *   storage?: { localStorage?: Record<string, string>, sessionStorage?: Record<string, string> } }} config
+ * @param {{ formatValue, createAssert, describeAssertion, stripComments, findCssRules, createHelpers,
+ *   createLoopGuard, findInactiveDeclarations, importModule }} parts
  */
 export function frameMain(config, parts) {
   const parentWindow = window.parent;
@@ -50,11 +52,12 @@ export function frameMain(config, parts) {
     send('console', entry);
   }
 
-  function addError(text) {
+  /** where = { file, line, column } nebo null — kvůli označení řádku v editoru. */
+  function addError(text, where = null) {
     if (!hasRoom()) return;
     const limited = limitText(text);
     errors.push(limited);
-    send('error', { text: limited });
+    send('error', Object.assign({ text: limited }, where ?? {}));
   }
 
   /** console.log('%s má %d let', 'Eva', 30) → "Eva má 30 let" */
@@ -92,12 +95,37 @@ export function frameMain(config, parts) {
     if (typeof originalAssert === 'function') originalAssert.call(console, condition, ...args);
   };
 
-  /** Kde chyba vznikla: data: URL skriptu nese číslo zdroje, podle něj najdeme soubor a řádek. */
-  function describeLocation(filename, lineno) {
-    const match = /^data:text\/javascript;akademie-source=(\d+)/.exec(String(filename ?? ''));
+  const SOURCE_URL_PREFIX = 'akademie/';
+
+  /**
+   * Kde chyba vznikla. Skripty mají `//# sourceURL=akademie/<soubor>`, takže prohlížeč hlásí
+   * přímo jméno souboru; data: URL s číslem zdroje je záloha.
+   * @returns {{ file: string, line?: number, column?: number } | null}
+   */
+  function locate(filename, lineno, colno) {
+    const name = String(filename ?? '');
+    const position = (offset = 0) => Object.assign(
+      {},
+      lineno > 0 ? { line: lineno + offset } : {},
+      colno > 0 ? { column: colno } : {},
+    );
+    if (name.startsWith(SOURCE_URL_PREFIX)) return Object.assign({ file: name.slice(SOURCE_URL_PREFIX.length) }, position());
+    const match = /^data:text\/javascript;akademie-source=(\d+)/.exec(name);
     const source = match ? config.sources[Number(match[1])] : null;
-    if (source) return `${source.name}:${lineno + source.lineOffset}`;
-    return config.runtime === 'js' ? '' : 'index.html';
+    if (source) return Object.assign({ file: source.name }, position(source.lineOffset));
+    return config.runtime === 'js' ? null : { file: 'index.html' };
+  }
+
+  /** První místo v uživatelově souboru ze zásobníku volání (u chyb v Promise nic jiného nemáme). */
+  function locateFromStack(error) {
+    const stack = typeof error?.stack === 'string' ? error.stack : '';
+    const match = /akademie\/([^\s:()]+):(\d+):(\d+)/.exec(stack);
+    return match ? { file: match[1], line: Number(match[2]), column: Number(match[3]) } : null;
+  }
+
+  function describeWhere(where) {
+    if (!where) return '';
+    return where.line ? `${where.file}:${where.line}` : where.file;
   }
 
   function describeError(error) {
@@ -118,13 +146,85 @@ export function frameMain(config, parts) {
     const message = event.error !== undefined && event.error !== null
       ? describeError(event.error)
       : String(event.message).replace(/^Uncaught /, '');
-    const where = describeLocation(event.filename, event.lineno);
-    addError(where ? `${message} (${where})` : message);
+    const where = locate(event.filename, event.lineno, event.colno);
+    addError(where ? `${message} (${describeWhere(where)})` : message, where);
   });
 
   window.addEventListener('unhandledrejection', (event) => {
-    addError(`${describeError(event.reason)} (neošetřená chyba v Promise)`);
+    addError(`${describeError(event.reason)} (neošetřená chyba v Promise)`, locateFromStack(event.reason));
   });
+
+  // --- Úložiště v sandboxu (localStorage, sessionStorage) -------------------------
+  //
+  // Iframe bez allow-same-origin při čtení localStorage vyhodí SecurityError. Kód uživatele
+  // (seznam úkolů, nastavení) by pak spadl ještě před testem. Proto dostane náhradu v paměti,
+  // čerstvou pro každý běh a naplněnou z `config.storage` (RunRequest.storage).
+
+  function createMemoryStorage(initial) {
+    const data = new Map(Object.entries(initial ?? {}).map(([key, value]) => [String(key), String(value)]));
+    const methods = {
+      key: (index) => [...data.keys()][Number(index)] ?? null,
+      getItem: (key) => (data.has(String(key)) ? data.get(String(key)) : null),
+      setItem: (key, value) => {
+        data.set(String(key), String(value));
+      },
+      removeItem: (key) => {
+        data.delete(String(key));
+      },
+      clear: () => data.clear(),
+    };
+    // Proxy, aby fungoval i zápis `localStorage.theme = 'dark'` a `Object.keys(localStorage)`.
+    return new Proxy(methods, {
+      get: (target, property) => {
+        if (property === 'length') return data.size;
+        if (Object.prototype.hasOwnProperty.call(target, property)) return target[property];
+        return typeof property === 'string' && data.has(property) ? data.get(property) : undefined;
+      },
+      set: (target, property, value) => {
+        if (property === 'length' || Object.prototype.hasOwnProperty.call(target, property)) return true;
+        data.set(String(property), String(value));
+        return true;
+      },
+      has: (target, property) => property === 'length' || property in target || data.has(String(property)),
+      deleteProperty: (target, property) => {
+        data.delete(String(property));
+        return true;
+      },
+      ownKeys: () => [...data.keys()],
+      getOwnPropertyDescriptor: (target, property) => (data.has(String(property))
+        ? { value: data.get(String(property)), writable: true, enumerable: true, configurable: true }
+        : undefined),
+    });
+  }
+
+  for (const name of ['localStorage', 'sessionStorage']) {
+    let available = true;
+    try {
+      void window[name];
+    } catch {
+      available = false;
+    }
+    if (available) continue; // stránka v nové kartě má skutečné úložiště
+    const storage = createMemoryStorage(config.storage?.[name]);
+    try {
+      Object.defineProperty(window, name, { configurable: true, enumerable: true, get: () => storage });
+    } catch {
+      // prohlížeč vlastnost přepsat nedovolí — kód uživatele dostane původní chybu
+    }
+  }
+
+  // --- Custom properties z ovládacích prvků (Preview.setCssVariables) ------------
+
+  function applyCssVariables(vars) {
+    const style = document.documentElement?.style;
+    if (!style) return;
+    for (const [name, value] of Object.entries(vars ?? {})) {
+      if (!/^--[\w-]+$/.test(name)) continue;
+      if (value === null || value === undefined) style.removeProperty(name);
+      else style.setProperty(name, String(value));
+    }
+  }
+  applyCssVariables(config.cssVariables);
 
   // --- Ochrana smyček ----------------------------------------------------------
 
@@ -167,8 +267,12 @@ export function frameMain(config, parts) {
     if (data.type === 'resized' && pendingRequests.has(data.requestId)) {
       pendingRequests.get(data.requestId)();
       pendingRequests.delete(data.requestId);
+    } else if (data.type === 'set-vars') {
+      applyCssVariables(data.vars);
     }
   });
+  // Rodič teď může posílat zprávy (dřívější zprávy by šly ještě do prázdné stránky).
+  if (config.mode === 'preview') send('ready');
 
   function requestResize(width, height) {
     return new Promise((resolve) => {
@@ -190,11 +294,14 @@ export function frameMain(config, parts) {
 
   let finished = false;
 
-  /** phase: 'load', když test selhal ještě před svým spuštěním (smyčka při načítání stránky). */
-  function finishTest(pass, error, phase = 'test') {
+  /**
+   * phase: 'load', když test selhal ještě před svým spuštěním (smyčka při načítání stránky).
+   * details: errorName a u asercí actual/expected/operator/generatedMessage/diff (describeAssertion).
+   */
+  function finishTest(pass, error, phase = 'test', details = null) {
     if (finished) return;
     finished = true;
-    send('result', pass ? { pass: true } : { pass: false, error: String(error), phase });
+    send('result', pass ? { pass: true } : Object.assign({ pass: false, error: String(error), phase }, details ?? {}));
   }
 
   function whenPageLoaded(callback) {
@@ -301,7 +408,8 @@ export function frameMain(config, parts) {
       await testFunction(assert, files, logs, errors, helpers);
       finishTest(!loopError, loopError);
     } catch (error) {
-      finishTest(false, loopError ?? (error?.name === 'AssertionError' ? error.message : describeError(error)));
+      if (loopError) finishTest(false, loopError, 'test', { errorName: 'Error' });
+      else finishTest(false, error?.name === 'AssertionError' ? error.message : describeError(error), 'test', parts.describeAssertion(error, parts.formatValue));
     } finally {
       clearTimer(timer);
     }
@@ -312,5 +420,18 @@ export function frameMain(config, parts) {
   } else if (config.mode === 'page') {
     // Jen načíst stránku a posbírat výpisy (živé ukázky ve verify).
     whenPageLoaded(() => setTimer(() => send('done'), config.settleMs));
+  } else if (config.mode === 'inspect') {
+    // Lint: které CSS deklarace na vykreslené stránce nic nedělají.
+    whenPageLoaded(async () => {
+      await waitForLayout();
+      await new Promise((resolve) => setTimer(resolve, config.settleMs));
+      let items = [];
+      try {
+        items = parts.findInactiveDeclarations(document, config.inspect ?? []);
+      } catch {
+        items = [];
+      }
+      send('inspect-result', { items });
+    });
   }
 }

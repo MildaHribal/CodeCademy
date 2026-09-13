@@ -1,0 +1,451 @@
+/* Druhy kroků, Než začneš, jiné přístupy, rubrika a plocha Seřaď řádky. Barvy jen přes tokeny. */
+
+/* ——— Štítek druhu kroku ——— */
+
+.kind-label {
+  margin: 6px 0 14px;
+  padding: 8px 12px 9px;
+  border-left: 3px solid var(--accent);
+  border-radius: 2px var(--radius) var(--radius) 2px;
+  background: var(--accent-soft);
+}
+
+.kind-label--debug {
+  border-left-color: var(--callout-pitfall-border);
+  background: var(--callout-pitfall-bg);
+}
+
+.kind-label__title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.kind-label--debug .kind-label__title {
+  color: var(--callout-pitfall-icon);
+}
+
+.kind-label__text {
+  margin: 2px 0 0;
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.kind-label--debug .kind-label__text {
+  color: var(--callout-pitfall-fg);
+}
+
+/* ——— Čtyři kroky ladění ——— */
+
+.debug-steps {
+  margin: 12px 0 16px;
+  font-size: 14.5px;
+}
+
+.debug-steps__summary {
+  color: var(--ink-soft);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.debug-steps__list {
+  margin: 6px 0 0;
+  padding-left: 1.5em;
+}
+
+.debug-steps__list li + li {
+  margin-top: 2px;
+}
+
+.debug-change {
+  margin: 14px 0 0;
+  padding: 8px 12px;
+  border-left: 3px solid var(--warn-border);
+  border-radius: 2px var(--radius) var(--radius) 2px;
+  background: var(--warn-soft);
+  color: var(--ink);
+  font-size: 14.5px;
+}
+
+/* ——— Vysvětli vlastními slovy v kroku ——— */
+
+.step-explain__lead,
+.approaches__lead {
+  margin: 0 0 8px;
+  color: var(--ink-soft);
+  font-size: 14.5px;
+}
+
+.step-explain .explain__prompt {
+  font-size: 16px;
+}
+
+/* ——— Než začneš ——— */
+
+.plan {
+  margin: 4px 0 18px;
+  border: 1px dashed var(--rule-strong);
+  border-radius: var(--radius-large);
+  background: var(--surface);
+}
+
+.plan__summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 10px;
+  padding: 10px 14px;
+  cursor: pointer;
+}
+
+.plan__title {
+  font-weight: 700;
+}
+
+.plan__optional {
+  color: var(--ink-faint);
+  font-size: 13px;
+}
+
+.plan__body {
+  display: grid;
+  gap: 12px;
+  padding: 0 14px 14px;
+}
+
+.plan__lead {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 14.5px;
+}
+
+.plan__field {
+  display: grid;
+  gap: 4px;
+}
+
+.plan__label {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.plan__hint {
+  color: var(--ink-faint);
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.plan__input {
+  width: 100%;
+  padding: 7px 10px;
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  font: 15px/1.5 var(--font-sans);
+  resize: vertical;
+}
+
+.plan__input:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.plan__status:empty {
+  display: none;
+}
+
+.plan__status {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+
+.project .plan {
+  margin-block: 20px 28px;
+}
+
+/* ——— Jiné přístupy ——— */
+
+.approach {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--rule);
+}
+
+.approach__title {
+  margin: 0;
+  font-size: 16px;
+}
+
+.approach__description {
+  margin-top: 4px;
+  font-size: 15px;
+}
+
+.approach__file-name {
+  margin: 10px 0 4px;
+  color: var(--ink-faint);
+  font: 12.5px var(--font-mono);
+}
+
+.approach__code pre {
+  font-size: 13px;
+}
+
+/* ——— Rubrika ——— */
+
+.review {
+  margin-top: 26px;
+  padding: 14px 16px 16px;
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius-large);
+  background: var(--surface);
+}
+
+.review.is-highlighted {
+  border-color: var(--done-border-strong);
+  box-shadow: 0 0 0 3px var(--done-soft);
+}
+
+.review__title {
+  margin: 0;
+  font-size: 18px;
+}
+
+.review__passed {
+  margin: 4px 0 0;
+  color: var(--done-ink);
+  font-weight: 600;
+}
+
+.review__intro {
+  margin-top: 6px;
+  font-size: 15.5px;
+}
+
+.review__rubric {
+  display: grid;
+  gap: 6px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.review__point {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+  font-size: 15.5px;
+  line-height: 1.5;
+  cursor: pointer;
+}
+
+.review__point .prose {
+  font-size: inherit;
+}
+
+.review__check {
+  width: 17px;
+  height: 17px;
+  margin: 3px 0 0;
+  accent-color: var(--done);
+}
+
+.review__point:has(.review__check:checked) {
+  color: var(--ink-soft);
+}
+
+.review__extensions {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--rule);
+}
+
+.review__subtitle {
+  margin: 0 0 4px;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.review__extensions .prose {
+  font-size: 15.5px;
+}
+
+/* ——— Seřaď řádky ——— */
+
+.parsons {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+}
+
+.parsons__keys {
+  margin: 0;
+  color: var(--ink-faint);
+  font-size: 12.5px;
+}
+
+.parsons__columns {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-rows: minmax(0, auto) minmax(0, 1fr);
+  overflow: auto;
+}
+
+.parsons__column {
+  min-width: 0;
+  padding: 10px 12px 14px;
+}
+
+.parsons__column--solution {
+  border-top: 1px solid var(--rule);
+  background: var(--surface-sunken);
+}
+
+.parsons__title {
+  margin: 0 0 8px;
+  color: var(--ink-soft);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.parsons__list {
+  display: grid;
+  gap: 6px;
+  min-height: 44px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.parsons__list--solution {
+  min-height: 88px;
+  padding: 6px;
+  border: 1px dashed var(--rule-strong);
+  border-radius: var(--radius);
+}
+
+.parsons__empty {
+  align-self: center;
+  color: var(--ink-faint);
+  font-size: 13.5px;
+  text-align: center;
+}
+
+.parsons__line {
+  --indent: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+  margin-left: calc(var(--indent) * 2.2ch);
+  padding: 4px 6px 4px 4px;
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius);
+  background: var(--code-bg);
+  color: var(--code-ink);
+  cursor: grab;
+  transition: margin-left 120ms ease;
+}
+
+.parsons__line:hover {
+  border-color: var(--accent);
+}
+
+.parsons__line:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.parsons__line.is-dragging {
+  opacity: 0.5;
+}
+
+.parsons__line.is-indent-wrong {
+  border-color: var(--callout-pitfall-border);
+  box-shadow: inset 3px 0 0 var(--callout-pitfall-border);
+}
+
+.parsons__grip {
+  flex: none;
+  width: 6px;
+  height: 16px;
+  border-inline: 2px dotted var(--code-tab-ink);
+  opacity: 0.6;
+}
+
+.parsons__code {
+  flex: 1;
+  min-width: 0;
+  font: 13.5px/1.5 var(--font-mono);
+  font-variant-ligatures: none;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.parsons__blank {
+  min-width: 3ch;
+  margin: 0 2px;
+  padding: 1px 4px;
+  border: 1px solid var(--code-accent);
+  border-radius: 4px;
+  background: var(--code-bg-deep);
+  color: var(--code-ink);
+  font: inherit;
+}
+
+.parsons__blank:focus-visible {
+  outline: 2px solid var(--focus-on-dark);
+  outline-offset: 1px;
+}
+
+.parsons__indent {
+  flex: none;
+  display: flex;
+  gap: 2px;
+}
+
+.parsons__indent-btn {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--code-tab-ink);
+  cursor: pointer;
+}
+
+.parsons__indent-btn:hover {
+  background: var(--code-fold-bg);
+  color: var(--code-tab-ink-hover);
+}
+
+.parsons__context {
+  margin: 0;
+  padding: 6px 10px;
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--ink-faint);
+  font: 13px/1.5 var(--font-mono);
+  font-variant-ligatures: none;
+  white-space: pre-wrap;
+}

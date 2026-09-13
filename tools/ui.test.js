@@ -9,7 +9,7 @@ import path from 'node:path';
 import { chromium } from 'playwright';
 import { createApp } from '../server/app.js';
 import { buildClient } from './lib/build-runner.js';
-import { closeServer, listen } from './lib/listen.js';
+import { closeServer, listenInRange } from './lib/listen.js';
 import { BROWSER_ARGS } from './lib/runner-pool.js';
 
 const CONTENT_DIR = path.join(import.meta.dirname, 'fixtures', 'ui-content');
@@ -30,7 +30,8 @@ describe('rozhraní aplikace', () => {
       projectsDir: path.join(workDir, 'moje-projekty'),
       distDir,
     });
-    baseUrl = `http://127.0.0.1:${await listen(server, 0)}`;
+    // Porty balíku 6 (docs/platforma.md, kap. 7.1); ui-orientation.test.js bere 4510–4519.
+    baseUrl = `http://127.0.0.1:${await listenInRange(server, { from: 4500, to: 4509 })}`;
     browser = await chromium.launch({ args: BROWSER_ARGS });
   });
 

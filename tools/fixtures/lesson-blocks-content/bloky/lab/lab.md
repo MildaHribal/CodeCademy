@@ -1,0 +1,29 @@
+# --description--
+
+Lab posílá test přímo (page.route), soubor slouží jen osnově.
+
+# --hints--
+
+Funkce `add` sčítá.
+
+```js
+assert.equal(add(1, 2), 3, 'add(1, 2) má vrátit 3');
+```
+
+# --seed--
+
+## --file-- script.js
+
+```js
+--edit--
+
+--edit--
+```
+
+# --solution--
+
+## --file-- script.js
+
+```js
+function add(a, b) { return a + b; }
+```

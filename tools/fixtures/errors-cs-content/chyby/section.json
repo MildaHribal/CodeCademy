@@ -1,0 +1,1 @@
+{ "title": "Chyby česky", "intro": "Kroky pro testy výsledků, chyb a lintu.", "modules": ["workshop-js", "workshop-dom"] }

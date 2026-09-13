@@ -1,0 +1,170 @@
+/* Výsledky testů a chyby česky. Barvy jen přes tokeny z styles/tokens.css. */
+
+.test-failure > summary + * {
+  margin-top: 6px;
+}
+
+.test-failure__message {
+  margin: 6px 0 0;
+  color: var(--fail-ink-deep);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* ——— Očekávám / Tvůj kód vrátil ——— */
+
+.test-values {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 4px 10px;
+  margin: 8px 0 0;
+  font-size: 13px;
+}
+
+.test-values dt {
+  color: var(--ink-soft);
+  font-weight: 600;
+}
+
+.test-values dd {
+  margin: 0;
+  min-width: 0;
+}
+
+.test-values__value {
+  display: inline-block;
+  max-width: 100%;
+  max-height: 160px;
+  overflow: auto;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: var(--code-inline-bg);
+  color: var(--code-inline-fg);
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  font-variant-ligatures: none;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.test-values__changed {
+  border-radius: 2px;
+  background: var(--mark-bg);
+  color: var(--mark-fg);
+  box-shadow: 0 0 0 1px var(--fail-border-strong);
+}
+
+table.test-values--diff {
+  display: table;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.test-values--diff caption {
+  padding-bottom: 4px;
+  color: var(--ink-soft);
+  font-weight: 600;
+  text-align: left;
+}
+
+.test-values--diff th,
+.test-values--diff td {
+  padding: 3px 6px;
+  border-top: 1px solid var(--rule);
+  text-align: left;
+  vertical-align: top;
+}
+
+.test-values--diff thead th {
+  border-top: 0;
+  color: var(--ink-soft);
+  font-weight: 600;
+}
+
+/* ——— České vysvětlení chyby ——— */
+
+.error-explain {
+  display: grid;
+  gap: 4px;
+  margin-top: 8px;
+  padding: 8px 10px;
+  border-left: 3px solid var(--fail-border-strong);
+  border-radius: 0 4px 4px 0;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 13px;
+}
+
+.error-explain p,
+.error-explain ul {
+  margin: 0;
+}
+
+.error-explain__title {
+  font-weight: 650;
+}
+
+.error-explain__label {
+  color: var(--ink-soft);
+}
+
+.error-explain__causes {
+  padding-left: 1.2em;
+}
+
+.error-explain code {
+  padding: 0 4px;
+  border-radius: 3px;
+  background: var(--code-inline-bg);
+  color: var(--code-inline-fg);
+  font-family: var(--font-mono);
+  font-variant-ligatures: none;
+}
+
+.error-explain__see a {
+  color: var(--accent);
+}
+
+.error-explain__original {
+  margin: 4px 0 0;
+  padding: 6px 8px;
+  max-height: 120px;
+  overflow: auto;
+  border-radius: 4px;
+  background: var(--fail-soft);
+  color: var(--fail-ink-deep);
+  font-size: 12px;
+  font-variant-ligatures: none;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* ——— Souhrn: chyby při spuštění ——— */
+
+.run-errors {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.run-errors__item {
+  display: grid;
+  gap: 6px;
+  justify-items: start;
+}
+
+.run-errors__item .error-explain {
+  justify-self: stretch;
+  margin-top: 0;
+}
+
+.run-errors__file {
+  font-weight: 400;
+  opacity: 0.8;
+}
+
+.run-errors__jump {
+  justify-self: start;
+}

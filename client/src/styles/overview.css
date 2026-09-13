@@ -74,6 +74,92 @@
 
 /* ——— Obsah ——— */
 
+.toc-wrap {
+  margin-top: 36px;
+}
+
+.toc-wrap > .toc {
+  margin-top: 28px;
+}
+
+/* Přepínač pohledu: po částech / doporučená trasa */
+.toc-view {
+  display: inline-flex;
+  padding: 3px;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-large);
+  background: var(--surface);
+}
+
+.toc-view__option {
+  min-height: 32px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--ink-soft);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.toc-view__option:hover {
+  color: var(--ink);
+}
+
+.toc-view__option[aria-pressed='true'] {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.toc-part__head.toc-part__head--route {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* Štítky u sekce: rozšíření a (v pohledu trasy) část osnovy */
+.toc-row__tags {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-right: 8px;
+  vertical-align: 1px;
+}
+
+.toc-row__tag {
+  display: inline-block;
+  padding: 0 7px;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  color: var(--ink-soft);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 18px;
+  white-space: nowrap;
+}
+
+.toc-row__tag--extension {
+  border-color: var(--accent-muted);
+  border-style: dashed;
+  color: var(--accent);
+}
+
+/* Rozšíření mají tečkovanou vodicí linku slabší — nepovinná odbočka. */
+.toc-row[data-uroven='rozsireni'] .toc-row__title::after {
+  border-bottom-style: dashed;
+  border-bottom-width: 1px;
+}
+
+.section-page__level {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+
 .toc {
   display: grid;
   gap: 44px;
@@ -86,7 +172,7 @@
   align-items: baseline;
   column-gap: 0;
   padding-bottom: 12px;
-  border-bottom: 2px solid var(--ink);
+  border-bottom: 2px solid var(--rule-heavy);
 }
 
 .toc-part__number {
@@ -283,7 +369,7 @@ a.toc-row__title:hover::after {
   margin: 24px 0 0;
   padding: 0;
   list-style: none;
-  border-top: 2px solid var(--ink);
+  border-top: 2px solid var(--rule-heavy);
 }
 
 .module-row {

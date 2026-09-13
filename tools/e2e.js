@@ -13,6 +13,7 @@
 // Scénáře (na sobě závisí, běží v tomto pořadí):
 //   přehled → sekce → lekce (živá ukázka, otázky) → workshop (červené/zelené testy,
 //   další krok, kód přežije reload) → lab (řešení, nekonečná smyčka) → kvíz →
+//   nástroje: nápověda → porovnání s řešením, opakování, poznámky, tmavý režim →
 //   projekt ve VS Code (start, řešení na disk, kontrola) → restart serveru (postup, Pokračovat)
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
@@ -20,10 +21,10 @@ import os from 'node:os';
 import path from 'node:path';
 import { chromium } from 'playwright';
 import { createApp } from '../server/app.js';
-import { shuffleBy } from '../client/src/shuffle.js';
 import { buildClient, PROJECT_ROOT } from './lib/build-runner.js';
 import { closeServer, listen } from './lib/listen.js';
 import { BROWSER_ARGS } from './lib/runner-pool.js';
+import { loadModule } from '../shared/content.js';
 
 const CONTENT_DIR = path.join(PROJECT_ROOT, 'content');
 const VIEWPORT = { width: 1440, height: 900 };
@@ -35,6 +36,9 @@ const LAB = 'js-pole/lab-statistika-znamek';
 const QUIZ = 'css-flexbox/kviz';
 const PROJECT = 'node-zaklady/projekt-api-poznamek';
 const RESUME_STEP = 'js-pole/workshop-nakupni-seznam/003';
+// Nástroje: krok pro nápovědu a porovnání s řešením (jiný než RESUME_STEP) a položky opakování.
+const HINT_STEP = 'js-pole/workshop-nakupni-seznam/002';
+const REVIEW_STEP = 'js-pole/workshop-nakupni-seznam/001';
 
 // ---------------------------------------------------------------------------
 // Příkazová řádka
@@ -124,7 +128,8 @@ const scenarios = [
     assert.equal(await page.locator('.resume__action').textContent(), 'Začít', 'nový uživatel má tlačítko Začít');
     await shot('01-prehled');
 
-    await page.locator('a.toc-row__title', { hasText: 'CSS Flexbox' }).click();
+    // Sekce může být v přehledu víckrát (po částech i v doporučené trase) — stačí první odkaz.
+    await page.locator('a.toc-row__title', { hasText: 'CSS Flexbox' }).first().click();
     await page.locator('.module-list .module-row').first().waitFor();
     assert.match(page.url(), /#\/sekce\/css-flexbox$/);
     assert.equal(await page.locator('.module-row').count(), 5);
@@ -162,14 +167,17 @@ const scenarios = [
     await live.getByRole('button', { name: 'Obnovit' }).click();
     await waitUntil(async () => (await layout()).display === 'block', { message: 'Obnovit nevrátilo ukázku' });
 
-    // Kontrolní otázky: správné odpovědi podle obsahu, pořadí stejné jako v UI.
+    // Kontrolní otázky (kontrakt kap. 5.8): každá se zkontroluje zvlášť, pak „Mám přečteno".
     const module = await api.module(LESSON);
     const questions = page.locator('.lesson__finish .question');
     assert.equal(await questions.count(), module.lesson.questions.length);
-    await chooseAnswers(questions, module.lesson.questions, LESSON, 'correct');
-    await page.getByRole('button', { name: 'Zkontrolovat odpovědi' }).click();
-    await page.locator('.lesson__status', { hasText: 'Lekce je splněná.' }).waitFor();
-    await page.locator('.lesson__status').scrollIntoViewIfNeeded();
+    for (const [index, question] of module.lesson.questions.entries()) {
+      await chooseAnswers(questions.nth(index), question, 'correct');
+      await questions.nth(index).getByRole('button', { name: 'Zkontrolovat' }).click();
+    }
+    await page.getByRole('button', { name: 'Mám přečteno' }).click();
+    await page.locator('.lesson__finish', { hasText: 'Lekce je splněná.' }).waitFor();
+    await page.locator('.lesson__finish').scrollIntoViewIfNeeded();
     await shot('03b-lekce-otazky');
     assert.ok((await api.progress()).completed[LESSON], 'lekce je v postupu splněná');
   }],
@@ -270,7 +278,7 @@ const scenarios = [
     return `kontrola se smyčkou trvala ${seconds} s`;
   }],
 
-  ['kvíz: špatně → nesplněno s vysvětlením, správně → splněno', async ({ page, api, baseUrl, shot }) => {
+  ['kvíz: špatně → nesplněno s vysvětlením, chybné znovu → splněno', async ({ page, api, baseUrl, shot }) => {
     await page.goto(`${baseUrl}/#/modul/${QUIZ}`);
     await page.locator('.quiz .question').first().waitFor();
     await page.locator('.segmented__option', { hasText: 'Všechny najednou' }).click();
@@ -278,22 +286,135 @@ const scenarios = [
     const questions = page.locator('.quiz__body .question');
     await waitUntil(async () => (await questions.count()) === quiz.questions.length, { message: 'kvíz neukázal všechny otázky' });
 
-    await chooseAnswers(questions, quiz.questions, QUIZ, 'wrong');
+    for (const [index, question] of quiz.questions.entries()) await chooseAnswers(questions.nth(index), question, 'wrong');
     await page.getByRole('button', { name: 'Vyhodnotit' }).click();
     await page.locator('.quiz-summary--fail').waitFor();
     assert.equal(await page.locator('.quiz-summary__score').textContent(), `0 z ${quiz.questions.length}`);
-    assert.ok((await page.locator('.answer__why-text').count()) > 0, 'po vyhodnocení je vidět vysvětlení (why)');
+    const whyTexts = await page.locator('.answer__why').evaluateAll((items) => items.filter((item) => item.textContent.trim()).length);
+    assert.ok(whyTexts > 0, 'po vyhodnocení je vidět vysvětlení (why) zvolené odpovědi');
     await shot('05a-kviz-nesplneno');
     assert.equal((await api.progress()).completed[QUIZ], undefined);
 
-    await page.getByRole('button', { name: 'Zkusit znovu' }).click();
-    await page.locator('.quiz__body .question:not([data-result])').first().waitFor();
-    await chooseAnswers(questions, quiz.questions, QUIZ, 'correct');
+    // Druhý průchod jen chybnými otázkami (B7): odpovědi se mohly zamíchat, vybíráme podle textu.
+    await page.getByRole('button', { name: /Projít jen chybné/ }).click();
+    await waitUntil(async () => (await questions.count()) === quiz.questions.length, { message: 'druhý průchod neukázal chybné otázky' });
+    for (const [index, question] of quiz.questions.entries()) await chooseAnswers(questions.nth(index), question, 'correct');
     await page.getByRole('button', { name: 'Vyhodnotit' }).click();
     await page.locator('.quiz-summary--pass').waitFor();
     await waitUntil(async () => (await api.progress()).completed[QUIZ], { message: 'splněný kvíz se neuložil' });
     assert.equal((await api.progress()).scores[QUIZ], 1);
     await shot('05-kviz');
+  }],
+
+  ['nápověda: po dvou neúspěších zvýrazněná, poslední stupeň je porovnání s řešením', async ({ page, api, baseUrl, shot }) => {
+    await page.goto(`${baseUrl}/#/modul/${HINT_STEP}`);
+    const brief = page.locator('.pane--brief');
+    const result = brief.locator('.result');
+    await page.locator('.pane--editor .cm-content').waitFor();
+
+    const helpButton = page.locator('.hint-tips__button');
+    await helpButton.waitFor();
+    for (let i = 0; i < 2; i++) {
+      assert.equal(await checkAndWait(page, result, () => brief.getByRole('button', { name: /Zkontrolovat/ }).click()), 'fail');
+    }
+    await waitUntil(() => helpButton.evaluate((el) => el.classList.contains('hint-tips__button--highlight')), {
+      message: 'tlačítko nápovědy se po 2 neúspěších nezvýraznilo',
+    });
+
+    // Tipy po jednom (krok je nemusí mít), až nabídka porovnání s řešením.
+    const compare = page.locator('.hint-tips__compare');
+    for (let i = 0; i < 6 && !(await compare.isVisible()); i++) {
+      if (await helpButton.isEnabled()) await helpButton.click();
+      await new Promise((resolve) => setTimeout(resolve, 200));
+    }
+    await compare.click();
+    const dialog = page.locator('dialog.solution-diff');
+    await dialog.getByRole('button', { name: 'Ukázat řešení' }).click();
+    await dialog.locator('.solution-diff__file').first().waitFor();
+    assert.ok((await dialog.locator('.solution-diff__line--add').count()) > 0, 'porovnání ukazuje řádky, které v kódu chybí');
+    await shot('09-napoveda-porovnani');
+    await dialog.getByRole('button', { name: 'Zavřít' }).click();
+
+    const attempts = await api.get(`/api/attempts?prefix=${encodeURIComponent(HINT_STEP)}`);
+    const record = attempts.items[HINT_STEP];
+    assert.equal(record?.fails, 2, 'pokusy mají 2 neúspěšné kontroly');
+    assert.equal(record?.assisted, true, 'řešení zobrazené před splněním = assisted');
+  }],
+
+  ['opakování: splatné položky jdou projít a odpověď se uloží', async ({ page, api, baseUrl, shot }) => {
+    await page.goto(`${baseUrl}/#/opakovani`);
+    const item = page.locator('.reviews-item');
+    await item.waitFor();
+    const { quiz } = await api.module(QUIZ);
+
+    for (let round = 0; round < 5; round++) {
+      if (!(await item.count())) break;
+      const type = await item.getAttribute('data-type');
+      if (type === 'step') {
+        await item.locator('.cm-content').waitFor();
+        await item.getByRole('button', { name: 'Vzdávám' }).click();
+      } else if (type === 'question') {
+        // Otázka s výběrem se nejdřív ukáže bez voleb („Odpověz v hlavě").
+        const showChoices = item.getByRole('button', { name: 'Ukaž volby' });
+        if (await showChoices.count()) await showChoices.click();
+        const id = await item.getAttribute('data-id');
+        const question = quiz.questions.find((q) => id.endsWith(`#${q.key}`));
+        assert.ok(question, `otázka ${id} je v kvízu`);
+        await chooseAnswers(item.locator('.question'), question, 'correct');
+        await item.getByRole('button', { name: 'Zkontrolovat' }).click();
+      } else {
+        await item.getByRole('button', { name: 'Už to umím, nezobrazovat' }).click();
+      }
+      if (round === 0) await shot('10-opakovani');
+      const next = page.getByRole('button', { name: /Další položka|Dokončit/ });
+      await next.waitFor();
+      await next.click();
+    }
+    await page.locator('.reviews__done').waitFor();
+    const due = await api.get('/api/reviews/due');
+    assert.ok(due.answeredToday >= 2, `dnes zodpovězené položky: ${due.answeredToday}`);
+    assert.equal(due.items.length, 0, 'po průchodu nic dalšího splatného nezbylo');
+  }],
+
+  ['poznámky: poznámka z lekce se zapíše do souboru sekce', async ({ page, api, baseUrl, shot }) => {
+    await page.goto(`${baseUrl}/#/modul/${LESSON}`);
+    await page.locator('.live').first().waitFor();
+    await page.getByRole('button', { name: 'Poznámka' }).first().click();
+    const drawer = page.locator('.notes-drawer').filter({ has: page.locator('#notes-drawer-text') });
+    await drawer.waitFor();
+    const text = 'Flex kontejner řídí jen přímé děti (e2e).';
+    await drawer.locator('#notes-drawer-text').fill(text);
+    await drawer.getByRole('button', { name: /Uložit do poznámek/ }).click();
+    const section = LESSON.split('/')[0];
+    await waitUntil(async () => (await api.get(`/api/notes/${section}`)).content.includes(text), { message: 'poznámka se nezapsala' });
+
+    await page.goto(`${baseUrl}/#/poznamky/${section}`);
+    await page.locator('.notes-page__main', { hasText: text }).waitFor();
+    await shot('11-poznamky');
+  }],
+
+  ['tmavý režim: přepínač motivu obarví aplikaci a volba přežije načtení', async ({ page, api, baseUrl, shot }) => {
+    await page.goto(`${baseUrl}/#/sekce/css-flexbox`);
+    await page.locator('.module-row').first().waitFor();
+    const toggle = page.locator('[data-item="theme"]');
+    const choice = () => page.evaluate(() => document.documentElement.dataset.themeChoice);
+    for (let i = 0; i < 3 && (await choice()) !== 'dark'; i++) await toggle.click();
+    assert.equal(await page.evaluate(() => document.documentElement.dataset.theme), 'dark');
+    await waitUntil(async () => (await api.get('/api/settings')).theme === 'dark', { message: 'motiv se neuložil' });
+
+    await page.reload();
+    await page.locator('.module-row').first().waitFor();
+    const background = await page.evaluate(() => {
+      const [r, g, b] = getComputedStyle(document.body).backgroundColor.match(/\d+/g).map(Number);
+      return (r + g + b) / 3;
+    });
+    assert.equal(await page.evaluate(() => document.documentElement.dataset.theme), 'dark', 'motiv platí i po načtení');
+    assert.ok(background < 80, `pozadí v tmavém režimu je tmavé (průměr kanálů ${background})`);
+    await shot('12-tmavy-rezim');
+
+    // Zbytek průchodu ve světlém režimu (snímky jsou pak srovnatelné).
+    for (let i = 0; i < 3 && (await choice()) !== 'light'; i++) await toggle.click();
+    await waitUntil(async () => (await api.get('/api/settings')).theme === 'light', { message: 'světlý motiv se neuložil' });
   }],
 
   ['projekt: začít, řešení do složky, kontrola projde', async ({ page, baseUrl, projectsDir, shot }) => {
@@ -358,17 +479,33 @@ const scenarios = [
   }],
 ];
 
-/** Zaškrtne u každé otázky správné (`correct`) nebo jen špatné (`wrong`) odpovědi. */
-async function chooseAnswers(questionLocator, questions, keyPrefix, mode) {
-  for (const [index, question] of questions.entries()) {
-    // Stejné míchání jako v components/question.js — klíč je `<id>#<pořadí otázky>`.
-    const order = shuffleBy(`${keyPrefix}#${index}`, question.answers);
-    const labels = questionLocator.nth(index).locator('label.answer');
-    const pick = mode === 'correct'
-      ? order.map((answer, i) => (answer.correct ? i : -1)).filter((i) => i !== -1)
-      : [order.findIndex((answer) => !answer.correct)];
-    for (const i of pick) await labels.nth(i).click();
+/** Text odpovědi bez markdownu, jak ho ukáže UI (pro nalezení volby nezávisle na zamíchání). */
+const plainAnswer = (text) => text.replace(/[`*_]/g, '').replace(/\s+/g, ' ').trim();
+
+/** U jedné otázky zaškrtne správné (`correct`) nebo jednu špatnou (`wrong`) odpověď podle textu volby. */
+async function chooseAnswers(questionLocator, question, mode) {
+  const labels = questionLocator.locator('label.answer');
+  const texts = (await labels.allTextContents()).map(plainAnswer);
+  const wanted = mode === 'correct' ? question.answers.filter((answer) => answer.correct) : [question.answers.find((answer) => !answer.correct)];
+  for (const answer of wanted) {
+    const index = texts.findIndex((text) => text === plainAnswer(answer.text) || text.endsWith(plainAnswer(answer.text)));
+    assert.notEqual(index, -1, `volba „${plainAnswer(answer.text)}" není mezi ${JSON.stringify(texts)}`);
+    await labels.nth(index).click();
   }
+}
+
+/**
+ * Položky opakování splatné dnes (krok od seedu a otázka kvízu), aby scénář opakování měl co
+ * projít. Zapisuje se před prvním startem serveru — úložiště pak čte soubor jen jednou.
+ */
+function seedReviews(dataDir) {
+  const [quizSection, quizModule] = QUIZ.split('/');
+  const question = loadModule(CONTENT_DIR, quizSection, quizModule).quiz.questions.find((q) => Array.isArray(q.answers));
+  const now = new Date();
+  const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+  const item = { box: 1, due: today, added: now.toISOString(), reason: 'self', lastAnswered: null, history: [] };
+  const items = { [`step:${REVIEW_STEP}`]: item, [`q:${QUIZ}#${question.key}`]: item };
+  fs.writeFileSync(path.join(dataDir, 'opakovani.json'), `${JSON.stringify({ version: 1, items, removed: {} }, null, 2)}\n`);
 }
 
 // ---------------------------------------------------------------------------
@@ -392,6 +529,7 @@ async function main() {
     console.log('Sestavuju klienta…');
     await buildClient(distDir);
 
+    seedReviews(dataDir);
     const appOptions = { contentDir: CONTENT_DIR, dataDir, projectsDir, distDir };
     server = createApp(appOptions);
     const port = await listen(server, options.port);

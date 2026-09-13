@@ -292,3 +292,734 @@
 .question[data-result='wrong'] .question__verdict {
   color: var(--fail);
 }
+
+/* ——— Rámeček interaktivního bloku (kontrolní otázka, vysvětli, paměť, porovnání) ——— */
+
+.lesson-block,
+.lesson-check {
+  margin-block: 28px;
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius-large);
+  background: var(--surface);
+  overflow: hidden;
+}
+
+.block-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+  min-height: 42px;
+  padding: 6px 8px 6px 14px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.block-bar__title {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.block-bar__hint {
+  flex: 1;
+  color: var(--ink-faint);
+  font-size: 13px;
+}
+
+.lesson-block__body {
+  padding: 14px 18px 18px;
+}
+
+@media (max-width: 760px) {
+  .block-bar__hint {
+    display: none;
+  }
+}
+
+@media (min-width: 1180px) {
+  /* Paměť a porovnání potřebují šířku jako živá ukázka. */
+  .lesson-block.memory,
+  .lesson-block.compare {
+    margin-inline: -7rem;
+  }
+}
+
+/* Kontrolní otázka a otázka předem. Přerušovaný rámeček = nehodnotí se. */
+.lesson-check--pretest {
+  border-style: dashed;
+  background: transparent;
+}
+
+.lesson-check .question {
+  padding: 14px 18px 16px;
+  border-bottom: 0;
+}
+
+.lesson-check .question__number {
+  display: none;
+}
+
+/* Skok na nadpis z adresy ?kotva= */
+.prose .is-target {
+  animation: lesson-target 2.4s ease-out;
+}
+
+.prose .is-target:focus {
+  outline: none;
+}
+
+@keyframes lesson-target {
+  0%,
+  35% {
+    background-color: var(--mark-bg);
+    color: var(--mark-fg);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .prose .is-target {
+    animation: none;
+  }
+}
+
+/* Konec lekce */
+.lesson__done-title {
+  margin-top: 36px;
+  font-size: 20px;
+}
+
+.lesson__unmet > * + * {
+  margin-top: 6px;
+}
+
+.lesson__jumps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+}
+
+.lesson__jump {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--accent);
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  cursor: pointer;
+}
+
+.lesson__jump:hover {
+  color: var(--accent-hover);
+}
+
+/* ——— Ovládací prvky živé ukázky ——— */
+
+.live-controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 14px 24px;
+  padding: 12px 14px 14px;
+  border-top: 1px solid var(--rule);
+}
+
+.live-controls__inputs {
+  display: grid;
+  gap: 10px;
+  align-content: start;
+}
+
+.live-control {
+  display: grid;
+  grid-template-columns: minmax(8rem, auto) minmax(0, 1fr);
+  align-items: center;
+  gap: 6px 12px;
+}
+
+.live-control__label {
+  display: grid;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.live-control__name {
+  color: var(--ink-faint);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 400;
+  font-variant-ligatures: none;
+}
+
+.live-control__input {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.live-control__range {
+  flex: 1;
+  min-width: 0;
+  accent-color: var(--accent);
+}
+
+.live-control__toggle {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--accent);
+}
+
+.live-control__select {
+  min-width: 0;
+  max-width: 100%;
+  padding: 4px 8px;
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  font: 13.5px var(--font-mono);
+}
+
+.live-control__value {
+  min-width: 4.5em;
+  color: var(--ink-soft);
+  font: 13px var(--font-mono);
+  font-variant-ligatures: none;
+}
+
+.live-controls__caption {
+  margin: 0 0 6px;
+  color: var(--ink-faint);
+  font-size: 13px;
+}
+
+.live-controls__css {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  background: var(--code-bg);
+  color: var(--code-ink);
+  font: 13px/1.6 var(--font-mono);
+  font-variant-ligatures: none;
+  white-space: pre-wrap;
+}
+
+.live-controls__selector {
+  color: var(--tok-type);
+}
+
+.live-controls__resolved {
+  color: var(--tok-string);
+  font-weight: 700;
+}
+
+@media (max-width: 760px) {
+  .live-controls {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ——— Předpověď ——— */
+
+.live__editor--static {
+  overflow: auto;
+  background: var(--code-bg);
+}
+
+.live__static {
+  flex: 1;
+  min-width: 0;
+}
+
+.live__static-name {
+  margin: 0;
+  padding: 8px 14px 0;
+  color: var(--code-tab-ink);
+  font: 12.5px var(--font-mono);
+}
+
+.live__static-code pre {
+  margin: 0;
+  border-radius: 0;
+  font-size: 13.5px;
+}
+
+.live__output--hidden {
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-sunken);
+}
+
+.live__placeholder {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 16px;
+  color: var(--ink-faint);
+  font-size: 14px;
+}
+
+.live__output-title {
+  margin: 0;
+  padding: 8px 12px 4px;
+  color: var(--ink-faint);
+  font-size: 13px;
+}
+
+.live__node-output {
+  flex: 1;
+  margin: 0;
+  padding: 8px 14px;
+  background: var(--console-bg);
+  color: var(--code-ink);
+  font: 13.5px/1.55 var(--font-mono);
+  font-variant-ligatures: none;
+  overflow: auto;
+}
+
+.live__predict {
+  padding: 0 16px 16px;
+  border-top: 1px solid var(--rule);
+}
+
+.live__predict .question {
+  padding: 14px 0 0;
+  border-bottom: 0;
+}
+
+.live__predict-actions {
+  margin-top: 10px;
+}
+
+.live__tip {
+  margin-top: 14px;
+  padding: 10px 14px;
+  border-left: 3px solid var(--accent);
+  border-radius: 2px var(--radius) var(--radius) 2px;
+  background: var(--accent-soft);
+}
+
+.live__tip-title {
+  margin: 0;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.live__tip-text .prose {
+  font-size: 16px;
+}
+
+.live__tip-text--none,
+.live__tip-compare {
+  margin: 4px 0 0;
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+
+/* ——— Stavy paměti ——— */
+
+.memory:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.memory__body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+  min-height: 220px;
+}
+
+.memory__code-wrap {
+  overflow: auto;
+  background: var(--code-bg);
+}
+
+.memory__code {
+  margin: 0;
+  padding: 10px 0;
+  list-style: none;
+  color: var(--code-ink);
+  font: 13.5px/1.7 var(--font-mono);
+  font-variant-ligatures: none;
+}
+
+.memory__line {
+  display: grid;
+  grid-template-columns: 2.4em minmax(0, 1fr);
+  padding-right: 12px;
+  border-left: 3px solid transparent;
+  white-space: pre;
+}
+
+.memory__line-number {
+  padding-right: 10px;
+  color: var(--code-tab-ink);
+  text-align: right;
+  user-select: none;
+}
+
+.memory__line.is-current {
+  border-left-color: var(--code-accent);
+  background: var(--code-region-bg);
+}
+
+.memory__line.is-current .memory__line-number {
+  color: var(--code-tab-ink-active);
+}
+
+.memory__state {
+  min-width: 0;
+  padding: 12px 16px 16px;
+}
+
+.memory__caption {
+  margin: 0 0 12px;
+  font-size: 15px;
+}
+
+.memory__caption-line {
+  font-weight: 700;
+}
+
+.memory__diagram {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, auto) minmax(0, 1fr);
+  gap: 0 64px;
+  align-items: start;
+}
+
+.memory__heading {
+  margin: 0 0 6px;
+  color: var(--ink-faint);
+  font-size: 13px;
+}
+
+.memory__vars,
+.memory__heap {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.memory__binding {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.memory__name {
+  font: 14px var(--font-mono);
+  font-variant-ligatures: none;
+}
+
+.memory__slot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 30px;
+  padding: 0 8px;
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+  font: 13.5px var(--font-mono);
+  font-variant-ligatures: none;
+}
+
+.memory__dot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.memory__object {
+  position: relative;
+  padding: 6px 10px 8px;
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius);
+  background: var(--surface-sunken);
+}
+
+.memory__object-id {
+  display: block;
+  color: var(--ink-faint);
+  font: 11.5px var(--font-mono);
+}
+
+.memory__object-text {
+  font: 14px var(--font-mono);
+  font-variant-ligatures: none;
+  overflow-wrap: anywhere;
+}
+
+.memory__inline-ref {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 3px;
+}
+
+/* Co se v tomhle kroku změnilo: stejné podbarvení jako ==zvýraznění== ve výkladu. */
+.memory__binding.is-changed .memory__slot,
+.memory__object.is-changed {
+  background: var(--mark-bg);
+  color: var(--mark-fg);
+}
+
+.memory__arrows {
+  position: absolute;
+  inset: 0;
+  overflow: visible;
+  color: var(--accent);
+  pointer-events: none;
+}
+
+.memory__controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 12px;
+  border-top: 1px solid var(--rule);
+}
+
+.memory__position {
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+
+@media (max-width: 760px) {
+  .memory__body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .memory__diagram {
+    gap: 0 44px;
+  }
+}
+
+/* ——— Porovnání dvou variant ——— */
+
+.compare__common {
+  border-bottom: 1px solid var(--rule);
+}
+
+.compare__common-title,
+.compare__own-title {
+  margin: 0;
+  padding: 8px 14px 4px;
+  color: var(--ink-faint);
+  font-size: 13px;
+}
+
+.compare__editor {
+  display: flex;
+  height: 150px;
+}
+
+.compare__variants {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+.compare__variant {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  margin: 0;
+}
+
+.compare__variant + .compare__variant {
+  border-left: 1px solid var(--rule);
+}
+
+.compare__label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px 0;
+  font-weight: 700;
+}
+
+.compare__letter {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 12px;
+}
+
+.compare__own {
+  min-height: 0;
+}
+
+.compare__own--empty {
+  margin: 0;
+  padding: 8px 14px;
+  color: var(--ink-faint);
+  font-size: 13px;
+}
+
+.compare__code {
+  padding: 0 14px 10px;
+}
+
+.compare__code pre {
+  font-size: 13px;
+  padding: 8px 12px;
+}
+
+.compare__preview {
+  position: relative;
+  flex: 1;
+  min-height: 220px;
+  margin-top: auto;
+  border-top: 1px solid var(--rule);
+  background: var(--preview-bg);
+}
+
+.compare__preview iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+@media (max-width: 760px) {
+  .compare__variants {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .compare__variant + .compare__variant {
+    border-left: 0;
+    border-top: 1px solid var(--rule);
+  }
+}
+
+/* ——— Vysvětli vlastními slovy (lekce i krok) ——— */
+
+.explain__label {
+  display: block;
+  margin: 14px 0 6px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.explain__input {
+  display: block;
+  width: 100%;
+  min-height: 7em;
+  padding: 10px 12px;
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  font: 16px/1.55 var(--font-sans);
+  resize: vertical;
+}
+
+.explain__input:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.explain__actions {
+  margin-top: 10px;
+}
+
+.explain__status:empty {
+  display: none;
+}
+
+.explain__status {
+  display: grid;
+  gap: 4px;
+  margin: 8px 0 0;
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+
+.explain__problem {
+  color: var(--fail);
+}
+
+.explain__review {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--rule);
+}
+
+.explain__subtitle {
+  margin: 0 0 6px;
+  padding: 0;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.explain__model {
+  padding: 10px 14px;
+  border-radius: var(--radius);
+  background: var(--surface-sunken);
+  font-size: 16px;
+}
+
+.explain__checklist {
+  min-width: 0;
+  margin: 16px 0 0;
+  padding: 0;
+  border: 0;
+}
+
+.explain__checklist ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.explain__point {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+  font-size: 15.5px;
+  line-height: 1.5;
+  cursor: pointer;
+}
+
+.explain__point .prose {
+  font-size: inherit;
+}
+
+.explain__check {
+  width: 17px;
+  height: 17px;
+  margin: 3px 0 0;
+  accent-color: var(--accent);
+}
+
+.explain__lead {
+  margin: 12px 0 0;
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+
+.explain__lead + .actions {
+  margin-top: 10px;
+}

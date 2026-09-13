@@ -21,6 +21,7 @@ export async function runNodeTestsRemote({ files, hints, timeoutMs, signal = nul
       results: hints.map((_, index) => ({ index, pass: false, error: message })),
       logs: [],
       errors: [],
+      syntaxError: null,
       runnerError: message, // navíc oproti RunResult: selhal runner, ne kód uživatele
     };
   }

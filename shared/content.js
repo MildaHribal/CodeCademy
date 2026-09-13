@@ -1,10 +1,9 @@
 // Načítání osnovy a modulů z disku (jen Node). Formát je v docs/kontrakt.md.
 import fs from 'node:fs';
 import path from 'node:path';
-import { parseStep, parseQuiz, parseLesson, ParseError, langOf, RUNTIMES } from './parse.js';
-// parseCards přibude v parseru ve vlně 2b — přes jmenný prostor, aby chybějící export nerozbil import.
-import * as parser from './parse.js';
-import { collectHeadings } from './anchors.js';
+import { parseStep, parseQuiz, parseLesson, parseCards, parseTerms, ParseError, langOf, RUNTIMES } from './parse.js';
+import { createKeyAllocator } from './answers.js';
+import { parseItemId } from './refs.js';
 
 export const MODULE_TYPES = ['lesson', 'workshop', 'lab', 'quiz', 'project'];
 /** Úroveň sekce v osnově: jádro kurzu, nebo nepovinné rozšíření. */
@@ -160,6 +159,59 @@ export function loadSectionExtras(contentDir, sectionId) {
   return out;
 }
 
+/**
+ * Stránka sekce: výstupy s klíči, tahák, pojmy a karty (kontrakt kap. 2.7).
+ * @returns {null | { id, title, intro, outcomes: { key, text, links }[], cheatsheet: string|null, terms: Term[], cards: Card[] }}
+ *   null = sekce na disku není (routa vrátí 404). Rozbitý soubor sekce vyhodí ParseError.
+ */
+export function loadSection(contentDir, sectionId) {
+  const extras = loadSectionExtras(contentDir, sectionId);
+  const section = readSection(contentDir, sectionId);
+  if (!section) return null;
+  return {
+    id: sectionId,
+    title: section.title,
+    intro: section.intro ?? '',
+    outcomes: sectionOutcomes(section, sectionId),
+    cheatsheet: extras.tahak,
+    terms: extras.pojmy === null ? [] : parseTerms(extras.pojmy, { id: sectionId }).terms,
+    cards: extras.cards === null ? [] : parseCards(extras.cards, { id: sectionId }).cards,
+  };
+}
+
+/**
+ * Výstupy „Po sekci umíš" ze section.json s klíči `hashKey(text)` (kontrakt kap. 2.2).
+ * @param {object} section  obsah section.json
+ */
+export function sectionOutcomes(section, sectionId) {
+  if (section.outcomes === undefined) return [];
+  if (!Array.isArray(section.outcomes)) throw new ParseError('"outcomes" v section.json musí být pole', { id: sectionId });
+  const nextKey = createKeyAllocator();
+  return section.outcomes.map((outcome, index) => {
+    if (typeof outcome?.text !== 'string' || !outcome.text.trim()) {
+      throw new ParseError(`výstup ${index + 1} v section.json potřebuje "text"`, { id: sectionId });
+    }
+    const links = outcome.links ?? [];
+    if (!Array.isArray(links) || !links.every((link) => typeof link === 'string')) {
+      throw new ParseError(`výstup ${index + 1} v section.json: "links" musí být pole referencí`, { id: sectionId });
+    }
+    return { key: nextKey(outcome.text), text: outcome.text, links: [...links] };
+  });
+}
+
+/** Pojmy všech dostupných sekcí v pořadí osnovy (kontrakt kap. 2.7): { terms: Term[] }. */
+export function loadTerms(contentDir) {
+  const terms = [];
+  for (const part of loadCurriculum(contentDir).parts) {
+    for (const section of part.sections) {
+      if (!section.available) continue;
+      const { pojmy } = loadSectionExtras(contentDir, section.id);
+      if (pojmy !== null) terms.push(...parseTerms(pojmy, { id: section.id }).terms);
+    }
+  }
+  return { terms };
+}
+
 /** Všechny existující moduly: [{ sectionId, moduleId }] v pořadí osnovy. */
 export function listModules(contentDir) {
   return loadCurriculum(contentDir).parts.flatMap((p) =>
@@ -169,9 +221,10 @@ export function listModules(contentDir) {
     })));
 }
 
+/** Krok, lab nebo projekt bez řešení a jiných přístupů (API je bez `?solution=1` neposílá). */
 function stripSolution(item) {
   if (!item) return item;
-  const { solution, ...rest } = item;
+  const { solution, approaches, ...rest } = item;
   return rest;
 }
 
@@ -200,19 +253,22 @@ export function loadModule(contentDir, sectionId, moduleId, { includeSolutions =
       const files = stepFiles(contentDir, sectionId, moduleId);
       if (files.length === 0) throw new ParseError('workshop nemá žádné kroky v steps/NNN.md', { id });
       const steps = files.map((f, i) => keep(parseStep(read(`steps/${f}`), {
-        id: `${id}/${f.slice(0, 3)}`, defaultRuntime: base.runtime, defaultTitle: `Krok ${i + 1}`,
+        id: `${id}/${f.slice(0, 3)}`, defaultRuntime: base.runtime, defaultTitle: `Krok ${i + 1}`, fileKind: 'step',
       })));
       return { ...base, steps };
     }
-    case 'lab':
+    case 'lab': {
       // Lab smí seed i řešení vynechat (kontrakt kap. 3) — uživatel pak začíná s prázdnými soubory.
-      return { ...base, lab: keep(parseStep(read('lab.md'), { id, defaultRuntime: base.runtime, defaultTitle: m.title, requireSeed: false })) };
+      const lab = parseStep(read('lab.md'), { id, defaultRuntime: base.runtime, defaultTitle: m.title, fileKind: 'lab' });
+      // Bez řešení zůstane aspoň počet přístupů, aby UI vědělo, jestli nabídnout „Jiné přístupy" (kap. 3.8).
+      return { ...base, lab: includeSolutions ? lab : { ...stripSolution(lab), approachesCount: lab.approaches.length } };
+    }
     case 'quiz':
       return { ...base, quiz: parseQuiz(read('quiz.md'), { id }) };
     case 'lesson':
       return { ...base, lesson: parseLesson(read('lesson.md'), { id }) };
     case 'project': {
-      const p = parseStep(read('project.md'), { id, defaultRuntime: base.runtime, defaultTitle: m.title, requireSeed: false });
+      const p = parseStep(read('project.md'), { id, defaultRuntime: base.runtime, defaultTitle: m.title, fileKind: 'project' });
       const seed = readTextTree(path.join(dir, 'starter')).map((f) => ({ ...f, region: null }));
       const solution = readTextTree(path.join(dir, 'solution'));
       if (solution.length === 0) throw new ParseError('projekt nemá složku solution/', { id });
@@ -224,8 +280,6 @@ export function loadModule(contentDir, sectionId, moduleId, { includeSolutions =
 // ---------------------------------------------------------------------------
 // Převod id položky opakování a pokusů na obsah (kontrakt kap. 2.10, 12.3)
 // ---------------------------------------------------------------------------
-
-const ITEM_ID = /^(q|card|step|explain|outcome):([a-z0-9]+(?:-[a-z0-9]+)*(?:\/[a-z0-9]+(?:-[a-z0-9]+)*)?(?:\/\d{3})?)(?:#([0-9a-f]{8}(?:-[0-9]+)?))?$/;
 
 /** Načte modul, nebo vrátí null, když na disku není. Rozbitý obsah vyhodí ParseError. */
 function moduleOrNull(contentDir, target) {
@@ -266,12 +320,11 @@ function lessonQuestions(lesson) {
  * }}
  * null = id je neplatné, nebo položka v obsahu není (osiřelá). Rozbitý soubor obsahu vyhodí ParseError,
  * aby volající položku omylem nesmazal. `outcome:` je plánované (vlna 3) → null.
- * Klíče otázek, karet a bodů checklistu počítá parser (`key`); dokud je nemá, `q:`/`card:`/`explain:` → null.
  */
 export function resolveContentItem(contentDir, id) {
-  const match = typeof id === 'string' ? id.match(ITEM_ID) : null;
-  if (!match) return null;
-  const [, type, target, key] = match;
+  const parsed = parseItemId(id);
+  if (!parsed) return null;
+  const { type, target, key } = parsed;
   const sectionId = target.split('/')[0];
   const depth = target.split('/').length;
 
@@ -297,8 +350,8 @@ export function resolveContentItem(contentDir, id) {
   if (type === 'card' && key && depth === 1) {
     const section = readSection(contentDir, sectionId);
     const file = path.join(contentDir, sectionId, SECTION_EXTRAS.cards);
-    if (!section || !fs.existsSync(file) || typeof parser.parseCards !== 'function') return null;
-    const card = parser.parseCards(fs.readFileSync(file, 'utf8'), { id: sectionId }).cards.find((c) => c.key === key);
+    if (!section || !fs.existsSync(file)) return null;
+    const card = parseCards(fs.readFileSync(file, 'utf8'), { id: sectionId }).cards.find((c) => c.key === key);
     if (!card) return null;
     return { id, type: 'card', source: { sectionId, moduleId: null, title: section.title, see: card.see ?? [] }, content: card };
   }
@@ -503,10 +556,7 @@ function indexModule(cache, contentDir, sectionId, moduleId, collected, signatur
   }
 
   if (m.type === 'lesson') {
-    const lesson = readCached(cache, path.join(dir, 'lesson.md'), (text) => {
-      const { blocks } = parseLesson(text, { id });
-      return collectHeadings(blocks.filter((block) => block.kind === 'md').map((block) => block.text));
-    }, signature);
+    const lesson = readCached(cache, path.join(dir, 'lesson.md'), (text) => parseLesson(text, { id }).headings, signature);
     if (lesson.missing) fail(id, new ParseError('chybí lesson.md'));
     else if (lesson.error) fail(id, lesson.error);
     for (const heading of lesson.value ?? []) collected.headings.push({ moduleId: id, ...heading });

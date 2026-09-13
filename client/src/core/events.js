@@ -19,6 +19,10 @@
 //   lesson:complete           ({ lesson, id })
 //   quiz:evaluated            ({ id, score, passed, results: [{ index, correct, question }] })
 //   project:check-result      ({ id, result, passed })
+//
+// Události nástrojů (popis v docs/platforma.md, kap. 3.5):
+//   attempts:recorded         ({ id, attempt })                 — pokus uložen na serveru (attempts/api.js)
+//   notes:open                ({})                              — otevři panel poznámek pro aktuální místo
 import { createEmitter } from './registry.js';
 
 export const appEvents = createEmitter();

@@ -30,7 +30,7 @@ import { initialFiles } from './files.js';
 
 export { findMainFile } from './files.js';
 
-const SLOT_NAMES = ['brief-head', 'brief-after-hints', 'actions', 'output-tools', 'output-after', 'bar'];
+const SLOT_NAMES = ['brief-head', 'brief-after-description', 'brief-after-hints', 'actions', 'output-tools', 'output-after', 'bar'];
 
 /**
  * @param ctx  kontext obrazovky (main.js)
@@ -91,18 +91,29 @@ export function renderWorkspace(ctx, { module, item, nav, steps = null, stepInde
 
   // ——— Poskládání obrazovky ———
 
-  const columns = createColumns(
-    [
-      { element: brief.element, min: 240, share: 0.3, label: 'zadání' },
-      { element: editorPane, min: 280, share: 0.4, label: 'editoru' },
-      { element: output.element, min: 220, share: 0.3, label: 'náhledu' },
-    ],
-    'akademie.columns.workspace',
-  );
+  // Runtime js nemá stránku, jen konzoli: ta patří pod editor (35 % výšky), ať kód a výpis
+  // jsou pod sebou jako v terminálu a editor dostane víc šířky. Ostatní runtime mají tři sloupce.
+  const consoleBelowEditor = runtime === 'js';
+  const columns = consoleBelowEditor
+    ? createColumns(
+        [
+          { element: brief.element, min: 240, share: 0.34, label: 'zadání' },
+          { element: h('div', { class: 'workspace__stack' }, editorPane, output.element), min: 360, share: 0.66, label: 'editoru a konzole' },
+        ],
+        'akademie.columns.workspace-js',
+      )
+    : createColumns(
+        [
+          { element: brief.element, min: 240, share: 0.3, label: 'zadání' },
+          { element: editorPane, min: 280, share: 0.4, label: 'editoru' },
+          { element: output.element, min: 220, share: 0.3, label: 'náhledu' },
+        ],
+        'akademie.columns.workspace',
+      );
 
   const root = h(
     'div',
-    { class: 'workspace' },
+    { class: `workspace workspace--${runtime}` },
     // Lišta s kroky jen u workshopu; lab je jediné zadání.
     isWorkshop ? createStepperBar({ steps, stepIndex, slot: slots.element('bar') }) : null,
     columns,
@@ -157,7 +168,10 @@ export function renderWorkspace(ctx, { module, item, nav, steps = null, stepInde
       const current = editor.getFiles();
       if (save) progress.saveCode(item.id, current);
       preview?.update({ runtime, files: current });
-      if (passed) changedSincePass = true;
+      if (passed) {
+        changedSincePass = true;
+        brief.setPassed(false);
+      }
     },
     check: () => check(),
     focusEditor: () => editor.focus(),
@@ -183,7 +197,10 @@ export function renderWorkspace(ctx, { module, item, nav, steps = null, stepInde
     progress.saveCode(item.id, files);
     // Náhled se obnoví sám se zpožděním; konzoli před novým spuštěním vyčistí signál 'clear'.
     preview?.update({ runtime, files });
-    if (passed) changedSincePass = true;
+    if (passed) {
+      changedSincePass = true;
+      brief.setPassed(false);
+    }
     emit('files-change', { files });
   }
 
@@ -240,6 +257,8 @@ export function renderWorkspace(ctx, { module, item, nav, steps = null, stepInde
       }
       if (ctx.signal.aborted) return;
       markStepperDone(ctx.root, { stepIndex, title: item.title });
+      // Kód upravený během kontroly se musí zkontrolovat znovu — pak tlačítko zůstává.
+      brief.setPassed(!changedSincePass);
       showResult(result, 'pass', {
         item,
         saveError,
@@ -288,6 +307,7 @@ export function renderWorkspace(ctx, { module, item, nav, steps = null, stepInde
     const files = editor.getFiles();
     progress.saveCode(item.id, files);
     passed = false;
+    brief.setPassed(false);
     hintList.reset();
     clearResult(result);
     consolePanel.clear();

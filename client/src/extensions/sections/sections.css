@@ -1,0 +1,191 @@
+/* Stránka sekce: Po sekci umíš, tahák (i tisk) a pojmy. Barvy jen přes tokeny. */
+
+/* ——— Po sekci umíš ——— */
+
+.section-outcomes {
+  margin-top: 28px;
+}
+
+.section-outcomes__title,
+.cheatsheet__title,
+.section-terms__title {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.section-outcomes__list {
+  display: grid;
+  gap: 10px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.section-outcomes__item {
+  position: relative;
+  padding-left: 26px;
+}
+
+/* Zaškrtávátko jako značka „tohle budeš umět", ne jako stav. */
+.section-outcomes__item::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 0.45em;
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--accent);
+  border-radius: 3px;
+}
+
+.section-outcomes__text {
+  margin: 0;
+  font-size: 16.5px;
+  line-height: 1.5;
+}
+
+.section-outcomes__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 12px;
+  margin: 2px 0 0;
+  font-size: 14px;
+}
+
+.section-outcomes__where {
+  color: var(--ink-faint);
+}
+
+/* ——— Tahák a pojmy (rozbalovací) ——— */
+
+.cheatsheet,
+.section-terms {
+  margin-top: 28px;
+  border-top: 1px solid var(--rule-strong);
+}
+
+.cheatsheet + .section-terms {
+  margin-top: 0;
+}
+
+.cheatsheet__summary,
+.section-terms__summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 14px;
+  padding: 16px 0;
+  cursor: pointer;
+}
+
+.cheatsheet__lead,
+.section-terms__count {
+  color: var(--ink-faint);
+  font-size: 14px;
+}
+
+.cheatsheet__body {
+  padding-bottom: 24px;
+}
+
+.cheatsheet__actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.cheatsheet__print-title {
+  display: none;
+}
+
+.cheatsheet__content {
+  margin-top: 8px;
+}
+
+.section-terms__list {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding-bottom: 24px;
+}
+
+.section-terms__term {
+  margin-top: 12px;
+  font-family: var(--font-serif);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.section-terms__en {
+  margin-left: 10px;
+  color: var(--ink-faint);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-style: italic;
+  font-weight: 400;
+}
+
+.section-terms__definition {
+  margin: 0;
+}
+
+.section-terms__definition .prose {
+  font-size: 16px;
+}
+
+.section-terms__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 14px;
+  margin: 4px 0 0;
+  font-size: 14px;
+}
+
+/* ——— Tisk taháku ——— */
+
+@media print {
+  body[data-print='cheatsheet'] * {
+    visibility: hidden;
+  }
+
+  body[data-print='cheatsheet'] .cheatsheet__body,
+  body[data-print='cheatsheet'] .cheatsheet__body * {
+    visibility: visible;
+  }
+
+  body[data-print='cheatsheet'] .cheatsheet__body {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+
+  body[data-print='cheatsheet'] .cheatsheet__actions {
+    display: none;
+  }
+
+  body[data-print='cheatsheet'] .cheatsheet__print-title {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 20pt;
+  }
+
+  body[data-print='cheatsheet'] .cheatsheet__content {
+    font-size: 10.5pt;
+    line-height: 1.45;
+  }
+
+  body[data-print='cheatsheet'] .cheatsheet__content pre {
+    font-size: 9pt;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+    break-inside: avoid;
+  }
+
+  body[data-print='cheatsheet'] .cheatsheet__content table,
+  body[data-print='cheatsheet'] .cheatsheet__content .callout {
+    break-inside: avoid;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+}

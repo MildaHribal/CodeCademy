@@ -2,13 +2,15 @@
 import { frameMain } from './frame/main.js';
 import { formatValue } from './frame/format-value.js';
 import { createAssert } from './frame/assert.js';
+import { describeAssertion } from '../../../shared/runner-assertion.js';
 import { stripComments } from './frame/strip-comments.js';
 import { findCssRules } from './frame/css-rules.js';
 import { createHelpers } from './frame/helpers.js';
 import { createLoopGuard } from './frame/loop-guard-runtime.js';
+import { findInactiveDeclarations } from './frame/inactive-css.js';
 
 // Funkce, které se do iframu přenesou jako text. Každá musí být soběstačná.
-const FRAME_PARTS = { formatValue, createAssert, stripComments, findCssRules, createHelpers, createLoopGuard };
+const FRAME_PARTS = { formatValue, createAssert, describeAssertion, stripComments, findCssRules, createHelpers, createLoopGuard, findInactiveDeclarations };
 
 /** JSON bezpečný uvnitř <script> (žádné `</script>` ani `<!--`). */
 export function toInlineJson(value) {

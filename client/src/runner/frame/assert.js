@@ -1,5 +1,6 @@
 // Podmnožina `node:assert/strict` pro testy v prohlížeči.
-// Hlášky napodobují Node, aby testy vypadaly stejně ve všech runtimech.
+// Chování (co projde a co selže) je stejné jako v Node. Vygenerované hlášky jsou česky
+// (kontrakt kap. 6.1) — stejné texty dává node-harness.js pro runtime node.
 //
 // POZOR: funkce se do iframu vkládá jako text, nesmí používat nic mimo své tělo.
 
@@ -81,14 +82,14 @@ export function createAssert(formatValue) {
     if (typeof expected === 'function') {
       if (expected.prototype !== undefined && error instanceof expected) return;
       if (Error.isPrototypeOf(expected) || expected === Error) {
-        fail({ message, generated: `The error is expected to be an instance of "${expected.name}". Received "${error?.constructor?.name ?? typeof error}"\n\nError message:\n\n${error?.message ?? String(error)}`, actual: error, expected, operator: operatorName });
+        fail({ message, generated: `Očekávám výjimku typu ${expected.name}, ale kód vyhodil ${error?.constructor?.name ?? typeof error}: ${error?.message ?? String(error)}`, actual: error, expected, operator: operatorName });
       }
       if (expected.call({}, error) === true) return;
-      fail({ message, generated: `The ${operatorName} validation function is expected to return "true". Received ${show(error)}`, actual: error, expected, operator: operatorName });
+      fail({ message, generated: `Vyhozená výjimka neprošla ověřovací funkcí: ${show(error)}`, actual: error, expected, operator: operatorName });
     }
     if (expected instanceof RegExp) {
       if (expected.test(String(error))) return;
-      fail({ message, generated: `The input did not match the regular expression ${expected}. Input:\n\n${show(String(error))}\n`, actual: error, expected, operator: operatorName });
+      fail({ message, generated: `Vyhozená výjimka ${show(String(error))} neodpovídá regulárnímu výrazu ${expected}`, actual: error, expected, operator: operatorName });
     }
     if (typeof expected === 'object' && expected !== null) {
       for (const key of Object.keys(expected)) {
@@ -96,7 +97,7 @@ export function createAssert(formatValue) {
         const got = error?.[key];
         const ok = want instanceof RegExp && typeof got === 'string' ? want.test(got) : isDeepStrictEqual(got, want);
         if (!ok) {
-          fail({ message, generated: `Expected values to be strictly deep-equal:\n+ actual - expected\n\n  Comparison {\n+   ${key}: ${show(got)}\n-   ${key}: ${show(want)}\n  }`, actual: error, expected, operator: operatorName });
+          fail({ message, generated: `Vyhozená výjimka má ${key}: ${show(got)}, očekávám ${show(want)}`, actual: error, expected, operator: operatorName });
         }
       }
       return;
@@ -113,51 +114,51 @@ export function createAssert(formatValue) {
 
     ok(value, message) {
       if (!value) {
-        fail({ message, generated: `The expression evaluated to a falsy value:\n\n  assert.ok(${show(value)})\n`, actual: value, expected: true, operator: '==' });
+        fail({ message, generated: `Očekávám pravdivou hodnotu, ale kód vrátil ${show(value)}`, actual: value, expected: true, operator: '==' });
       }
     },
 
     equal(actual, expected, message) {
       if (!Object.is(actual, expected)) {
-        fail({ message, generated: `Expected values to be strictly equal:\n\n${show(actual)} !== ${show(expected)}\n`, actual, expected, operator: 'strictEqual' });
+        fail({ message, generated: `Očekávám ${show(expected)}, ale kód vrátil ${show(actual)}`, actual, expected, operator: 'strictEqual' });
       }
     },
 
     notEqual(actual, expected, message) {
       if (Object.is(actual, expected)) {
-        fail({ message, generated: `Expected "actual" to be strictly unequal to: ${show(expected)}`, actual, expected, operator: 'notStrictEqual' });
+        fail({ message, generated: `Hodnota se nemá rovnat ${show(expected)}, ale kód vrátil právě ji`, actual, expected, operator: 'notStrictEqual' });
       }
     },
 
     deepEqual(actual, expected, message) {
       if (!isDeepStrictEqual(actual, expected)) {
-        fail({ message, generated: `Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ ${show(actual)}\n- ${show(expected)}`, actual, expected, operator: 'deepStrictEqual' });
+        fail({ message, generated: `Očekávám ${show(expected)}, ale kód vrátil ${show(actual)}`, actual, expected, operator: 'deepStrictEqual' });
       }
     },
 
     notDeepEqual(actual, expected, message) {
       if (isDeepStrictEqual(actual, expected)) {
-        fail({ message, generated: `Expected "actual" not to be strictly deep-equal to: ${show(expected)}`, actual, expected, operator: 'notDeepStrictEqual' });
+        fail({ message, generated: `Hodnota se nemá rovnat ${show(expected)}, ale kód vrátil právě takovou`, actual, expected, operator: 'notDeepStrictEqual' });
       }
     },
 
     match(string, regexp, message) {
       if (!(regexp instanceof RegExp)) throw new TypeError('The "regexp" argument must be an instance of RegExp.');
       if (typeof string !== 'string') {
-        fail({ message, generated: `The "string" argument must be of type string. Received type ${typeof string} (${show(string)})`, actual: string, expected: regexp, operator: 'match' });
+        fail({ message, generated: `Očekávám text, ale kód vrátil ${typeof string} ${show(string)}`, actual: string, expected: regexp, operator: 'match' });
       }
       if (!regexp.test(string)) {
-        fail({ message, generated: `The input did not match the regular expression ${regexp}. Input:\n\n${show(string)}\n`, actual: string, expected: regexp, operator: 'match' });
+        fail({ message, generated: `Text ${show(string)} neodpovídá regulárnímu výrazu ${regexp}`, actual: string, expected: regexp, operator: 'match' });
       }
     },
 
     doesNotMatch(string, regexp, message) {
       if (!(regexp instanceof RegExp)) throw new TypeError('The "regexp" argument must be an instance of RegExp.');
       if (typeof string !== 'string') {
-        fail({ message, generated: `The "string" argument must be of type string. Received type ${typeof string} (${show(string)})`, actual: string, expected: regexp, operator: 'doesNotMatch' });
+        fail({ message, generated: `Očekávám text, ale kód vrátil ${typeof string} ${show(string)}`, actual: string, expected: regexp, operator: 'doesNotMatch' });
       }
       if (regexp.test(string)) {
-        fail({ message, generated: `The input was expected to not match the regular expression ${regexp}. Input:\n\n${show(string)}\n`, actual: string, expected: regexp, operator: 'doesNotMatch' });
+        fail({ message, generated: `Text ${show(string)} nemá odpovídat regulárnímu výrazu ${regexp}`, actual: string, expected: regexp, operator: 'doesNotMatch' });
       }
     },
 
@@ -173,7 +174,7 @@ export function createAssert(formatValue) {
         error = caught;
       }
       if (!thrown) {
-        fail({ message, generated: `Missing expected exception${expected?.name ? ` (${expected.name})` : ''}.`, actual: undefined, expected, operator: 'throws' });
+        fail({ message, generated: `Očekávám, že kód vyhodí výjimku${expected?.name ? ` ${expected.name}` : ''}, ale žádnou nevyhodil`, actual: undefined, expected, operator: 'throws' });
       }
       matchesExpected(error, expected, 'throws', message);
     },
@@ -182,7 +183,7 @@ export function createAssert(formatValue) {
       try {
         fn();
       } catch (error) {
-        fail({ message: typeof message === 'string' ? `Got unwanted exception: ${message}` : undefined, generated: `Got unwanted exception.\nActual message: "${error?.message ?? String(error)}"`, actual: error, operator: 'doesNotThrow' });
+        fail({ message: typeof message === 'string' ? `${message}: ${error?.message ?? String(error)}` : undefined, generated: `Kód neměl vyhodit výjimku, ale vyhodil: ${error?.message ?? String(error)}`, actual: error, operator: 'doesNotThrow' });
       }
     },
 
@@ -204,13 +205,13 @@ export function createAssert(formatValue) {
         error = caught;
       }
       if (!rejected) {
-        fail({ message, generated: `Missing expected rejection${expected?.name ? ` (${expected.name})` : ''}.`, actual: undefined, expected, operator: 'rejects' });
+        fail({ message, generated: `Očekávám, že Promise skončí chybou${expected?.name ? ` ${expected.name}` : ''}, ale splnila se`, actual: undefined, expected, operator: 'rejects' });
       }
       matchesExpected(error, expected, 'rejects', message);
     },
 
-    fail(message = 'Failed') {
-      fail({ message, generated: 'Failed', operator: 'fail' });
+    fail(message = 'Test selhal') {
+      fail({ message, generated: 'Test selhal', operator: 'fail' });
     },
   });
 

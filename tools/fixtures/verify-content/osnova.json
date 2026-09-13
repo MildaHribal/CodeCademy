@@ -1,0 +1,17 @@
+{
+  "doporucenaTrasa": [
+    "zaklad",
+    "pokrocile"
+  ],
+  "parts": [
+    {
+      "id": "cast",
+      "title": "Část",
+      "summary": "Testovací.",
+      "sections": [
+        "zaklad",
+        "pokrocile"
+      ]
+    }
+  ]
+}

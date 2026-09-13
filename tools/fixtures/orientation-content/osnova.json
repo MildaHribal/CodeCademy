@@ -1,0 +1,7 @@
+{
+  "doporucenaTrasa": ["zaklady", "druha"],
+  "parts": [
+    { "id": "prvni-cast", "title": "První část", "summary": "Obsah pro testy orientace.", "sections": ["zaklady", { "id": "navic", "uroven": "rozsireni" }] },
+    { "id": "druha-cast", "title": "Druhá část", "summary": "Druhá část osnovy.", "sections": ["druha", { "id": "planovana", "title": "Plánovaná sekce", "summary": "Připravuje se." }] }
+  ]
+}

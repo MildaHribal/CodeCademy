@@ -1,0 +1,62 @@
+/* Přepínač šířky náhledu a tlačítko nové karty (extensions/preview-tools.js). */
+
+.preview-width {
+  display: inline-flex;
+  padding: 2px;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--surface-sunken);
+}
+
+.preview-width__option {
+  min-height: 24px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--ink-soft);
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+
+.preview-width__option:hover:not(:disabled) {
+  color: var(--ink);
+}
+
+.preview-width__option[aria-pressed='true'] {
+  background: var(--surface);
+  color: var(--accent);
+  box-shadow: 0 0 0 1px var(--rule-strong);
+}
+
+.preview-width__option:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.preview-new-tab__wrap {
+  display: inline-flex;
+}
+
+/* Zmenšený náhled (Jako testy, 768, 375) leží na tlumené ploše, ať je vidět okraj stránky. */
+.output__preview[data-width]:not([data-width='panel']) {
+  background: var(--preview-stage);
+}
+
+.output__preview[data-width]:not([data-width='panel']) .output__frame {
+  overflow: auto;
+}
+
+@media (max-width: 1100px) {
+  .preview-new-tab__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+}

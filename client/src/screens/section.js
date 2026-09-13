@@ -11,6 +11,7 @@ import { segmentedProgress, statusBadge, errorNotice } from '../components/statu
 import { createExtensionPoint } from '../core/registry.js';
 import { createSlots } from '../core/slots.js';
 import { withLoading, showLoadError } from './load.js';
+import { partHref } from '../extensions/orientation/route.js';
 
 /**
  * Rozšíření stránky sekce (kalibrace jistoty, tahák, „Po sekci umíš", „Další na trase"…):
@@ -52,7 +53,7 @@ export async function renderSection(ctx, { sectionId }) {
   const partNumber = curriculum.parts.indexOf(part) + 1;
   const sectionNumber = `${partNumber}.${part.sections.indexOf(section) + 1}`;
   ctx.setTitle(section.title);
-  ctx.setCrumbs([{ label: part.title }, { label: section.title }]);
+  ctx.setCrumbs([{ label: part.title, href: partHref(part.id) }, { label: section.title }]);
 
   const page = h('div', { class: 'page section-page' });
   ctx.root.append(page);
@@ -68,6 +69,9 @@ export async function renderSection(ctx, { sectionId }) {
         ' ',
         section.title,
       ),
+      section.uroven === 'rozsireni'
+        ? h('p', { class: 'section-page__level' }, h('span', { class: 'toc-row__tag toc-row__tag--extension' }, 'Rozšíření'), 'Nepovinná sekce navíc — jádro kurzu na ní nestaví.')
+        : null,
     ),
   );
 

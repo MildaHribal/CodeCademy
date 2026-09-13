@@ -1,9 +1,11 @@
 // Skládání stránky pro iframe z uživatelových souborů (kontrakt kap. 6.3–6.5).
 //
 // - CSS soubory odkázané přes <link rel="stylesheet"> se vloží jako <style>.
-// - JS soubory i inline skripty se spustí z data: URL — tak si prohlížeč pamatuje
-//   čísla řádků v původním souboru a `defer`/`async` fungují jako u skutečného souboru.
-//   Každá data: URL nese `akademie-source=N`, podle kterého iframe pozná, odkud chyba je.
+// - JS soubory i inline skripty se spustí z data: URL — `defer`/`async` tak fungují jako
+//   u skutečného souboru. Každý skript končí `//# sourceURL=akademie/<soubor>`, takže ho
+//   DevTools i chybové hlášky ukazují pod jeho jménem.
+// - Inline skript z index.html dostane na začátek tolik prázdných řádků (a mezer), kolik
+//   je před ním v index.html — čísla řádků a sloupců pak sedí na index.html.
 // - Všechny .js/.json soubory jsou navíc v import map pod `@akademie/files/…`, takže
 //   fungují importy mezi soubory i helpers.importFile().
 import { FILE_SPECIFIER_PREFIX, isModuleFile, normalizeFileName, resolveFileReference, resolveModuleSpecifier } from './file-names.js';
@@ -15,11 +17,14 @@ import { CHANNEL } from './protocol.js';
 
 const CLASSIC_SCRIPT_TYPE = /^(text|application)\/(x-)?(javascript|ecmascript)$/i;
 const PAGE_SETTLE_MS = 150;
+export const SOURCE_URL_PREFIX = 'akademie/';
 
 /**
  * @param {{ runtime: 'dom'|'js'|'vue', files: Array<{ name: string, content: string }>,
  *   loopLimitMs: number, origin?: string,
- *   frame: { runId: string, mode: 'test'|'page'|'preview', test?: string|null, timeoutMs?: number } }} options
+ *   frame: { runId: string, mode: 'test'|'page'|'preview'|'inspect', test?: string|null, timeoutMs?: number,
+ *     cssVariables?: Record<string, string>, inspect?: Array<{ id, property, selector }>,
+ *     storage?: { localStorage?: object, sessionStorage?: object } } }} options
  * @returns {string} HTML pro `iframe.srcdoc`
  */
 export function composePage({ runtime, files, loopLimitMs, origin = '', frame }) {
@@ -27,8 +32,8 @@ export function composePage({ runtime, files, loopLimitMs, origin = '', frame })
   const sources = []; // index = číslo zdroje v data: URL
   const moduleUrls = new Map();
 
-  function registerSource(name, lineOffset) {
-    sources.push({ name, lineOffset });
+  function registerSource(name) {
+    sources.push({ name, lineOffset: 0 });
     return sources.length - 1;
   }
 
@@ -37,13 +42,13 @@ export function composePage({ runtime, files, loopLimitMs, origin = '', frame })
     return `data:${mime}${parameter};charset=utf-8,${encodeURIComponent(code)}`;
   }
 
-  function scriptUrl(code, { name, sourceType, lineOffset = 0 }) {
-    const transformed = transformJs(code, {
+  function scriptUrl(code, { name, sourceType, lineOffset = 0, columnOffset = 0 }) {
+    const padded = '\n'.repeat(lineOffset) + ' '.repeat(columnOffset) + code;
+    const transformed = transformJs(padded, {
       sourceType,
-      lineOffset,
       resolveSpecifier: (specifier) => resolveModuleSpecifier(name, specifier, fileMap),
     });
-    return dataUrl('text/javascript', transformed, registerSource(name, lineOffset));
+    return dataUrl('text/javascript', withSourceUrl(transformed, name), registerSource(name));
   }
 
   /** Modul souboru kroku — pro stejný soubor vždy stejná URL, aby stránka i test sdílely jednu instanci. */
@@ -80,6 +85,9 @@ export function composePage({ runtime, files, loopLimitMs, origin = '', frame })
     filePrefix: FILE_SPECIFIER_PREFIX,
     guardGlobal: GUARD_GLOBAL,
     settleMs: PAGE_SETTLE_MS,
+    cssVariables: frame.cssVariables ?? {},
+    inspect: frame.inspect ?? null,
+    storage: frame.storage ?? null,
   };
   const head =
     `<script>${buildFrameScript(config)}</script>` +
@@ -154,9 +162,10 @@ function composeDomPage({ fileMap, scriptUrl, moduleUrl }) {
       return `<script${serializeAttributes(token.attributes, ['src', 'integrity', 'crossorigin'])} src="${url}"></script>`;
     }
 
-    // Inline skript: řádky se počítají od místa, kde v index.html začíná.
+    // Inline skript: řádky a sloupce se počítají od místa, kde v index.html začíná.
     const lineOffset = lineAt(source, token.contentStart) - 1;
-    const url = scriptUrl(token.content, { name: 'index.html', sourceType: isModule ? 'module' : 'script', lineOffset });
+    const columnOffset = token.contentStart - (source.lastIndexOf('\n', token.contentStart - 1) + 1);
+    const url = scriptUrl(token.content, { name: 'index.html', sourceType: isModule ? 'module' : 'script', lineOffset, columnOffset });
     // U inline skriptu prohlížeč `defer`/`async` ignoruje — se src by začaly platit, proto pryč.
     const skip = isModule ? [] : ['defer', 'async'];
     return `<script${serializeAttributes(token.attributes, skip)} src="${url}"></script>`;
@@ -181,6 +190,12 @@ function composeDomPage({ fileMap, scriptUrl, moduleUrl }) {
   const start = '<!DOCTYPE html><html lang="cs"><head><meta charset="utf-8">';
   const html = `${start}${styles}</head><body>\n${output}\n${scripts}</body></html>`;
   return { html, headAt: start.length };
+}
+
+/** Jméno skriptu pro DevTools a chybové hlášky. Nový řádek před komentářem kvůli `// …` na konci kódu. */
+export function withSourceUrl(code, name) {
+  const safeName = String(name).replace(/[\s]+/g, '_');
+  return `${code}\n//# sourceURL=${SOURCE_URL_PREFIX}${safeName}`;
 }
 
 function escapeStyle(css) {
