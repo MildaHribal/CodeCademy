@@ -1,5 +1,72 @@
 {
   "title": "Node.js základy",
-  "intro": "JavaScript umíš v prohlížeči. Tady ho pustíš na počítači jako program: přečteš soubor, vezmeš si nastavení z prostředí a postavíš HTTP server, který odpovídá v JSON.\n\nPo sekci umíš:\n\n- vysvětlit, co je Node a čím se liší od prohlížeče,\n- spustit soubor v Node a používat vestavěné moduly přes `node:` (`fs`, `http`, `process`),\n- napsat HTTP server bez frameworku: routování podle adresy a metody, stavové kódy, JSON, tělo požadavku,\n- postavit malé REST API, které si data ukládá do souboru.\n\nPředpoklad: JavaScript včetně `async`/`await` a modulů `import`/`export`. Frameworky jako Express nebo Nuxt dělají pod kapotou přesně tohle — po sekci budeš vědět, co za tebe řeší.",
-  "modules": ["co-je-node", "workshop-http-server", "projekt-api-poznamek", "kviz"]
+  "intro": "JavaScript umíš v prohlížeči. Tady ho pustíš na počítači jako program: přečteš soubor, vezmeš si nastavení z prostředí a postavíš HTTP server, který odpovídá v JSON, přijímá data a nespadne na špatném požadavku.\n\nPředpoklad: JavaScript včetně `async`/`await` a modulů `import`/`export`. Frameworky jako Express nebo Next.js dělají pod kapotou přesně tohle — po sekci budeš vědět, co za tebe řeší.",
+  "modules": [
+    "co-je-node",
+    "http-v-node",
+    "workshop-http-server",
+    "lab-api-receptu",
+    "projekt-api-poznamek",
+    "kviz"
+  ],
+  "outcomes": [
+    {
+      "text": "Vysvětlíš, co je Node.js, čím se liší od prohlížeče a proč jedna chyba nebo blokující kód na serveru zdrží všechny uživatele.",
+      "links": [
+        "node-zaklady/co-je-node#stejny-jazyk-jine-prostredi",
+        "node-zaklady/co-je-node#skript-a-server"
+      ]
+    },
+    {
+      "text": "Spustíš soubor v Node, načteš vestavěné moduly přes `node:` a vezmeš nastavení z proměnných prostředí se správným typem.",
+      "links": [
+        "node-zaklady/co-je-node#moduly-v-node",
+        "node-zaklady/co-je-node#process-program-a-svet-kolem-nej"
+      ]
+    },
+    {
+      "text": "Přečteš a zapíšeš JSON soubor cestou, která funguje odkudkoli.",
+      "links": [
+        "node-zaklady/co-je-node#soubory-node-fs-promises",
+        "node-zaklady/workshop-http-server/014"
+      ]
+    },
+    {
+      "text": "Napíšeš HTTP server bez frameworku, který routuje podle cesty, parametru cesty, query stringu a metody.",
+      "links": [
+        "node-zaklady/http-v-node#adresa-req-url-cesta-a-query-string",
+        "node-zaklady/workshop-http-server/013",
+        "node-zaklady/lab-api-receptu"
+      ]
+    },
+    {
+      "text": "Ke každé situaci vybereš stavový kód (200, 201, 204, 400, 404, 405, 500) a zdůvodníš proč.",
+      "links": [
+        "node-zaklady/http-v-node#stavove-kody",
+        "node-zaklady/workshop-http-server/013"
+      ]
+    },
+    {
+      "text": "Přečteš tělo požadavku jako proud, ověříš ho a na vadný vstup odpovíš 400, aniž by server spadl.",
+      "links": [
+        "node-zaklady/http-v-node#telo-pozadavku-je-proud",
+        "node-zaklady/workshop-http-server/018",
+        "node-zaklady/workshop-http-server/019"
+      ]
+    },
+    {
+      "text": "Podle hlášky poznáš a opravíš typické chyby Node: `ERR_HTTP_HEADERS_SENT`, `EADDRINUSE`, `ENOENT`, `ERR_MODULE_NOT_FOUND`.",
+      "links": [
+        "node-zaklady/http-v-node#typicke-chyby-a-pasti",
+        "node-zaklady/co-je-node#typicke-chyby-a-pasti",
+        "node-zaklady/workshop-http-server/012"
+      ]
+    },
+    {
+      "text": "Samostatně postavíš malé REST API s ukládáním do souboru a zkontroluješ jeho kvalitu podle rubriky.",
+      "links": [
+        "node-zaklady/projekt-api-poznamek"
+      ]
+    }
+  ]
 }

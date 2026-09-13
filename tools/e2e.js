@@ -169,6 +169,14 @@ const scenarios = [
 
     // Kontrolní otázky (kontrakt kap. 5.8): každá se zkontroluje zvlášť, pak „Mám přečteno".
     const module = await api.module(LESSON);
+    // Kontrolní otázky :::check (bez pretestu) se do splnění lekce počítají taky (kontrakt kap. 5.8).
+    const checks = module.lesson.blocks.filter((block) => block.kind === 'check' && !block.pretest);
+    const checkElements = page.locator('[data-block="check"]:not(.lesson-check--pretest)');
+    assert.equal(await checkElements.count(), checks.length);
+    for (const [index, block] of checks.entries()) {
+      await chooseAnswers(checkElements.nth(index).locator('.question'), block.question, 'correct');
+      await checkElements.nth(index).getByRole('button', { name: 'Zkontrolovat' }).click();
+    }
     const questions = page.locator('.lesson__finish .question');
     assert.equal(await questions.count(), module.lesson.questions.length);
     for (const [index, question] of module.lesson.questions.entries()) {
@@ -203,10 +211,13 @@ const scenarios = [
     assert.equal(onSolution, 'pass', `řešení má projít, požadavky: ${await hintStatuses(brief)}`);
     assert.ok((await hintStatuses(brief)).every((status) => status === 'pass'));
     await waitUntil(async () => (await api.progress()).completed[step.id], { message: 'krok se neuložil jako splněný' });
-    // Živý náhled ukazuje upravený kód: hlavička je flex kontejner.
+    // Živý náhled ukazuje upravený kód: ve stylech stránky je řádek, který přidalo řešení.
     const previewFrame = page.locator('.pane--output .output__preview iframe');
+    const changed = step.solution.find((file) => file.content !== step.seed.find((s) => s.name === file.name)?.content);
+    const seedLines = new Set(step.seed.find((s) => s.name === changed.name).content.split('\n').map((line) => line.trim()));
+    const addedLine = changed.content.split('\n').map((line) => line.trim()).find((line) => line && !seedLines.has(line));
     await waitUntil(
-      () => evaluateInFrame(previewFrame, () => getComputedStyle(document.querySelector('.site-header')).display === 'flex'),
+      () => evaluateInFrame(previewFrame, (text) => document.documentElement.outerHTML.includes(text), addedLine),
       { message: 'náhled neukazuje kód z editoru' },
     );
     await shot('04-workshop-krok');
@@ -347,8 +358,10 @@ const scenarios = [
     await item.waitFor();
     const { quiz } = await api.module(QUIZ);
 
-    for (let round = 0; round < 5; round++) {
+    // Splatné jsou i karty sekce, jejichž modul už je splněný (kontrakt kap. 12.3), proto víc kol.
+    for (let round = 0; round < 60; round++) {
       if (!(await item.count())) break;
+      const itemId = await item.getAttribute('data-id');
       const type = await item.getAttribute('data-type');
       if (type === 'step') {
         await item.locator('.cm-content').waitFor();
@@ -357,18 +370,21 @@ const scenarios = [
         // Otázka s výběrem se nejdřív ukáže bez voleb („Odpověz v hlavě").
         const showChoices = item.getByRole('button', { name: 'Ukaž volby' });
         if (await showChoices.count()) await showChoices.click();
-        const id = await item.getAttribute('data-id');
-        const question = quiz.questions.find((q) => id.endsWith(`#${q.key}`));
-        assert.ok(question, `otázka ${id} je v kvízu`);
+        const question = quiz.questions.find((q) => itemId.endsWith(`#${q.key}`));
+        assert.ok(question, `otázka ${itemId} je v kvízu`);
         await chooseAnswers(item.locator('.question'), question, 'correct');
         await item.getByRole('button', { name: 'Zkontrolovat' }).click();
       } else {
+        // „Už to umím" položku odebere a samo přejde na další (tlačítko Další se neukáže).
         await item.getByRole('button', { name: 'Už to umím, nezobrazovat' }).click();
+        await waitUntil(async () => !(await item.count()) || (await item.getAttribute('data-id')) !== itemId, { message: 'po „Už to umím" se neukázala další položka' });
+        continue;
       }
       if (round === 0) await shot('10-opakovani');
       const next = page.getByRole('button', { name: /Další položka|Dokončit/ });
       await next.waitFor();
       await next.click();
+      await waitUntil(async () => !(await item.count()) || (await item.getAttribute('data-id')) !== itemId, { message: 'další položka opakování se neukázala' });
     }
     await page.locator('.reviews__done').waitFor();
     const due = await api.get('/api/reviews/due');
@@ -475,7 +491,8 @@ const scenarios = [
     await page.locator('.module-row').first().waitFor();
     const rows = await page.locator('.module-row').evaluateAll((items) => items.map((item) => `${item.dataset.type}:${item.dataset.done}`));
     assert.deepEqual(rows, ['lesson:true', 'workshop:false', 'lesson:false', 'lab:false', 'quiz:true']);
-    assert.match(await page.locator('.module-row[data-type="workshop"]').textContent(), /1 z 22 kroků/);
+    const { steps: workshopSteps } = await api.module(WORKSHOP);
+    assert.match(await page.locator('.module-row[data-type="workshop"]').textContent(), new RegExp(`1 z ${workshopSteps.length} kroků`));
   }],
 ];
 
@@ -484,6 +501,11 @@ const plainAnswer = (text) => text.replace(/[`*_]/g, '').replace(/\s+/g, ' ').tr
 
 /** U jedné otázky zaškrtne správné (`correct`) nebo jednu špatnou (`wrong`) odpověď podle textu volby. */
 async function chooseAnswers(questionLocator, question, mode) {
+  // Otázka s psanou odpovědí (kontrakt kap. 4.2): vyplní se expected, nebo zjevně špatná odpověď.
+  if (question.type === 'text') {
+    await questionLocator.locator('.text-answer__input').fill(mode === 'correct' ? question.expected : 'určitě špatně');
+    return;
+  }
   const labels = questionLocator.locator('label.answer');
   const texts = (await labels.allTextContents()).map(plainAnswer);
   const wanted = mode === 'correct' ? question.answers.filter((answer) => answer.correct) : [question.answers.find((answer) => !answer.correct)];

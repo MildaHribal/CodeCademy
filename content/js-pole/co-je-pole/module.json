@@ -1,1 +1,1 @@
-{ "type": "lesson", "title": "Co je pole", "summary": "Indexy, délka, reference a kopie — a proč jde měnit pole v const.", "minutes": 15, "runtime": "js" }
+{ "type": "lesson", "title": "Co je pole", "summary": "Indexy, délka, reference a kopie — a proč jde měnit pole v const.", "minutes": 20, "runtime": "js" }

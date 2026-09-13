@@ -157,6 +157,22 @@ describe('verify — textová pravidla', () => {
     const outcome = plan.evaluate([seed, { ok: true, results: [{ index: 0, pass: true }], logs: [], errors: [], syntaxError: null }]);
     assert.deepEqual(outcome.warnings.filter((w) => w.startsWith('[K2]')), ["[K2] krok 001: výchozí kód (seed) nejde spustit: Unexpected token '=' (script.js:1)"]);
   });
+  test('K3: seed kroku kind: debug se od předchozího řešení lišit smí, seed kroku za ním ne', () => {
+    const step = (number, kind, seed, solution) => parseStep(
+      `---\nkind: ${kind}\n---\n\n# --description--\n\n${kind === 'debug' ? '## Hlášení\n\nx\n\n## Úkol\n\ny' : 'x'}\n\n# --hints--\n\nT\n\n\`\`\`js\nassert.ok(true, 'x');\n\`\`\`\n\n`
+      + `# --seed--\n\n## --file-- script.js\n\n\`\`\`js\n${seed}\n\`\`\`\n\n# --solution--\n\n## --file-- script.js\n\n\`\`\`js\n${solution}\n\`\`\`\n`,
+      { id: `s/w/00${number}`, defaultRuntime: 'js' },
+    );
+    const steps = [
+      step(1, 'step', 'const a = 0;', 'const a = 1;'),
+      step(2, 'debug', 'const a = 1;\nconst b = a + "1";', 'const a = 1;\nconst b = a + 1;'),
+      step(3, 'step', 'const a = 1;\nconst b = a + "1";', 'const c = 3;'),
+    ];
+    const plan = planModule({ type: 'workshop', sectionId: 's', steps });
+    const pass = { ok: true, results: [{ index: 0, pass: true }], logs: [], errors: [], syntaxError: null };
+    const outcome = plan.evaluate(plan.jobs.map(() => pass));
+    assert.deepEqual(outcome.warnings.filter((w) => w.startsWith('[K3]')), ['[K3] krok 003: seed se liší od řešení kroku 002 (script.js)']);
+  });
 });
 
 describe('verify — pravidla nad fixture obsahem (tools/fixtures/verify-content)', () => {

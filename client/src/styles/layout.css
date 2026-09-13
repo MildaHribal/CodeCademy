@@ -47,6 +47,12 @@
   min-width: 0;
 }
 
+/* Při nedostatku místa se zkracují nejdřív vzdálenější drobečky, aktuální místo zůstane celé. */
+.app-bar__crumbs li:last-child {
+  flex-shrink: 0;
+  max-width: 60%;
+}
+
 .app-bar__crumbs li + li::before {
   content: '/';
   margin-inline: 10px;

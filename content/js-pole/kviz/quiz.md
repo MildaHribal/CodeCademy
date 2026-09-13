@@ -2,9 +2,11 @@
 pass: 0.8
 ---
 
+# --questions--
+
 ## --question--
 
-Co vypíše tento kód?
+Co vypíše poslední řádek?
 
 ```js
 function markAllBought(items) {
@@ -19,65 +21,41 @@ const result = markAllBought(list);
 console.log(list[0].bought, result === list);
 ```
 
-### --answer--
+### --expected--
 
-`false false`
+true false
 
-#### --why--
+### --why--
 
-`map` sice vrací nové pole, ale callback dostává tytéž objekty, které jsou v `list`, a přímo jim přepisuje `bought`. Nové je jen pole, ne položky.
+`map` vrací nové pole (`result === list` je `false`), ale callback dostává tytéž objekty, které jsou v `list`, a přímo jim přepisuje `bought`. Nové je jen pole, ne položky. Bez mutace by callback vracel `({ ...item, bought: true })`.
 
-### --correct--
+### --see--
 
-`true false`
-
-#### --why--
-
-Výsledek je nové pole (`result !== list`), ale callback zmutoval původní objekty. Bez mutace by vracel nový objekt: `({ ...item, bought: true })`.
-
-### --answer--
-
-`true true`
-
-#### --why--
-
-`map` vždycky vytvoří nové pole, takže `result === list` je `false`. Pravdu máš jen v tom, že se původní položka změnila.
+js-pole/metody-pole-do-hloubky#mutace-uvnitr-map
 
 ## --question--
 
-Co vypíše tento kód?
+Co vypíše tenhle kód?
 
 ```js
-console.log([10, 9, 1].sort());
+console.log([25, 100, 9].sort());
 ```
 
-### --answer--
+### --expected--
 
-`[1, 9, 10]`
+[100, 25, 9]
 
-#### --why--
+### --why--
 
-Tak by to seřadil comparator `(a, b) => a - b`. Bez něj `sort` převede čísla na text a řadí abecedně.
+Bez porovnávací funkce `sort` převede čísla na text a řadí je znak po znaku: `'100'` < `'25'` < `'9'`. Čísla seřadí `sort((a, b) => a - b)`.
 
-### --correct--
+### --see--
 
-`[1, 10, 9]`
-
-#### --why--
-
-Jako texty se porovnává znak po znaku: `'1'` < `'10'` (kratší s tímže začátkem je dřív) < `'9'`, protože `'1'` je před `'9'`.
-
-### --answer--
-
-`[10, 9, 1]`
-
-#### --why--
-
-`sort` pole opravdu přerovná, jen podle textového pořadí, ne číselného.
+js-pole/metody-pole-do-hloubky#sort-bez-porovnavaci-funkce
 
 ## --question--
 
-Co vypíše tento kód?
+Co vypíše tenhle kód?
 
 ```js
 const prices = [30, 10, 20];
@@ -99,7 +77,7 @@ console.log(prices, sorted);
 
 #### --why--
 
-Takhle by to dopadlo se `sort`, který řadí na místě. `toSorted` původní pole nemění.
+Takhle by to dopadlo se `sort`, který řadí na místě. Který z nich vrací kopii?
 
 ### --answer--
 
@@ -107,135 +85,52 @@ Takhle by to dopadlo se `sort`, který řadí na místě. `toSorted` původní p
 
 #### --why--
 
-`a - b` řadí vzestupně. Sestupně by bylo `b - a`.
+Rozmysli si, co vrací `a - b`, když je `a` menší: záporné číslo znamená „`a` patří dopředu".
+
+### --see--
+
+js-pole/metody-pole-do-hloubky#razeni-a-porovnavaci-funkce
 
 ## --question--
 
-Co vypíše tento kód?
-
-```js
-const doubled = [1, 2, 3].map((n) => { n * 2 });
-console.log(doubled);
-```
-
-### --answer--
-
-`[2, 4, 6]`
-
-#### --why--
-
-Složené závorky za šipkou jsou tělo funkce. Bez `return` callback nic nevrací.
-
-### --correct--
-
-`[undefined, undefined, undefined]`
-
-#### --why--
-
-Každé volání callbacku vrátí `undefined` a `map` z těch výsledků poskládá pole stejné délky.
-
-### --answer--
-
-`[]`
-
-#### --why--
-
-Prázdné pole by vrátil `filter`, kterému callback vrací nepravdu. `map` vrací vždycky pole stejné délky jako původní.
-
-## --question--
-
-Co vypíše tento kód?
-
-```js
-const fruits = ['jablko', 'hruška'];
-
-if (fruits.indexOf('jablko')) {
-  console.log('mám jablko');
-} else {
-  console.log('nemám jablko');
-}
-```
-
-### --answer--
-
-`mám jablko`
-
-#### --why--
-
-`indexOf` nevrací `true`/`false`, ale index. Jablko je na indexu `0`, a nula je v podmínce nepravda.
-
-### --correct--
-
-`nemám jablko`
-
-#### --why--
-
-`indexOf` vrátí `0`, podmínka je nepravdivá a spustí se `else`. Na otázku ano/ne patří `includes`, nebo porovnání `indexOf(…) !== -1`.
-
-## --question--
-
-Co vypíše tento kód?
-
-```js
-console.log([].some((n) => n > 5), [].every((n) => n > 5));
-```
-
-### --answer--
-
-`false false`
-
-#### --why--
-
-`every` nad prázdným polem vrací `true`: není tam žádná položka, která by podmínku porušila.
-
-### --answer--
-
-`true true`
-
-#### --why--
-
-`some` nad prázdným polem vrací `false`: není tam žádná položka, která by podmínku splnila.
-
-### --correct--
-
-`false true`
-
-#### --why--
-
-`some` hledá aspoň jednu vyhovující položku (žádná není), `every` hledá aspoň jednu nevyhovující (taky žádná není).
-
-## --question--
-
-Co vypíše tento kód?
+Co vypíše tenhle kód?
 
 ```js
 const users = [{ id: 1 }, { id: 2 }];
 console.log(users.find((u) => u.id === 3), users.findIndex((u) => u.id === 3));
 ```
 
-### --correct--
+### --expected--
 
-`undefined -1`
+undefined -1
 
-#### --why--
+### --why--
 
-Nenalezený `find` vrací `undefined`, nenalezený `findIndex` vrací `-1`.
+Nenalezený `find` vrací `undefined`, nenalezený `findIndex` vrací `-1`. Proto se výsledek `findIndex` porovnává s `-1`, ne dosazuje do `if`.
 
-### --answer--
+### --see--
 
-`null -1`
+js-pole/metody-pole-do-hloubky#co-ktera-metoda-vraci
 
-#### --why--
+## --question--
 
-`find` nikdy nevrací `null`. Když nic nenajde, vrátí `undefined`.
+Co vypíše tenhle kód?
 
-### --answer--
+```js
+console.log([].some((n) => n > 5), [].every((n) => n > 5));
+```
 
-`undefined undefined`
+### --expected--
 
-#### --why--
+false true
 
-`findIndex` vrací číslo i v případě, že nic nenajde — konkrétně `-1`.
+### --why--
+
+`some` hledá aspoň jednu vyhovující položku — žádná není, takže `false`. `every` hledá aspoň jednu nevyhovující — taky žádná není, takže `true`.
+
+### --see--
+
+js-pole/metody-pole-do-hloubky#co-ktera-metoda-vraci
 
 ## --question--
 
@@ -252,7 +147,7 @@ Vypíše `0`.
 
 #### --why--
 
-`0` by vyšla jen s počáteční hodnotou: `reduce((sum, n) => sum + n, 0)`. Bez ní nemá `reduce` s čím začít.
+Odkud by se nula vzala? Bez druhého argumentu `reduce` žádnou počáteční hodnotu nemá.
 
 ### --answer--
 
@@ -260,7 +155,7 @@ Vypíše `undefined`.
 
 #### --why--
 
-`reduce` bez počáteční hodnoty nad prázdným polem nic nevrací — rovnou vyhodí chybu.
+Nad prázdným polem bez počáteční hodnoty `reduce` k vrácení výsledku vůbec nedojde.
 
 ### --correct--
 
@@ -270,9 +165,13 @@ Vyhodí `TypeError: Reduce of empty array with no initial value`.
 
 Bez počáteční hodnoty bere `reduce` jako akumulátor první položku. Prázdné pole žádnou nemá, a tak skončí chybou.
 
+### --see--
+
+js-pole/metody-pole-do-hloubky#reduce-bez-pocatecni-hodnoty
+
 ## --question--
 
-Co vypíše tento kód?
+Co vypíše tenhle kód?
 
 ```js
 const numbers = [1, 2, 3, 4, 5];
@@ -280,33 +179,21 @@ const removed = numbers.splice(1, 2);
 console.log(numbers, removed);
 ```
 
-### --answer--
+### --expected--
 
-`[1, 2, 3, 4, 5] [2, 3]`
+[1, 4, 5] [2, 3]
 
-#### --why--
+### --why--
 
-Tak by se choval `slice(1, 3)`. `splice` položky z původního pole vyřízne.
+`splice(1, 2)` odebere od indexu 1 dvě položky, vrátí je v novém poli a původní pole zkrátí. Index 1 je druhá položka a druhý argument je počet, ne koncový index.
 
-### --correct--
+### --see--
 
-`[1, 4, 5] [2, 3]`
-
-#### --why--
-
-`splice(1, 2)` odebere od indexu 1 dvě položky, vrátí je v novém poli a původní pole zkrátí.
-
-### --answer--
-
-`[1, 2, 5] [3, 4]`
-
-#### --why--
-
-Index 1 je druhá položka (číslo `2`), protože indexy se počítají od nuly. A druhý argument `splice` je počet položek, ne koncový index.
+js-pole/co-je-pole#slice-a-splice
 
 ## --question--
 
-Co vypíše tento kód?
+Co vypíše tenhle kód?
 
 ```js
 console.log([1, 2] === [1, 2], [1, 2].includes(2));
@@ -318,7 +205,7 @@ console.log([1, 2] === [1, 2], [1, 2].includes(2));
 
 #### --why--
 
-`===` u polí neporovnává obsah. Ptá se, jestli jde o totéž pole, a tady vznikla dvě různá.
+`===` u polí neporovnává obsah. Ptá se, jestli jde o totéž pole.
 
 ### --correct--
 
@@ -334,140 +221,88 @@ Dvě pole zapsaná zvlášť jsou dva různé objekty, i když mají stejný obs
 
 #### --why--
 
-`includes(2)` hledá hodnotu `2` mezi položkami a ta v poli je.
+`includes(2)` hledá hodnotu `2` mezi položkami přes `===` — a čísla se přes `===` porovnávají hodnotou.
+
+### --see--
+
+js-pole/co-je-pole#porovnani-dvou-poli
 
 ## --question--
 
-Co vypíše tento kód?
+Co vypíše tenhle kód?
 
 ```js
-const cart = [{ name: 'Káva', quantity: 1 }];
-const copy = [...cart];
-copy[0].quantity = 3;
-console.log(cart[0].quantity);
+const settings = { theme: 'light', fontSize: 16 };
+const draft = { ...settings };
+draft.theme = 'dark';
+console.log(settings.theme);
 ```
 
-### --answer--
+### --expected--
 
-`1`
+light
 
-#### --why--
+### --accept--
 
-`[...cart]` je mělká kopie. Nové je jen pole, objekt v něm je v obou polích tentýž.
+'light'
 
-### --correct--
+### --why--
 
-`3`
+`{ ...settings }` vytvoří nový objekt se zkopírovanými klíči. Přepsání `draft.theme` se originálu netýká. Sdílené by zůstaly jen objekty uvnitř (mělká kopie) — tady jsou všechny hodnoty primitivní.
 
-#### --why--
+### --see--
 
-`copy[0]` a `cart[0]` jsou jeden a tentýž objekt. Aby se původní položka nezměnila, musel bys vytvořit nový objekt: `{ ...copy[0], quantity: 3 }`.
+js-pole/co-je-pole#melka-kopie
 
 ## --question--
 
-Co vypíše tento kód?
+Co vypíše tenhle kód?
 
 ```js
 const result = [1, 2, 3].forEach((n) => n * 2);
 console.log(result);
 ```
 
-### --answer--
+### --expected--
 
-`[2, 4, 6]`
+undefined
 
-#### --why--
+### --why--
 
-Tohle by vrátil `map`. `forEach` hodnoty z callbacku zahazuje.
+`forEach` hodnoty z callbacku zahazuje a sám nevrací nic. Nové pole by vrátil `map`.
 
-### --answer--
+### --see--
 
-`[1, 2, 3]`
-
-#### --why--
-
-`forEach` nevrací ani původní pole.
-
-### --correct--
-
-`undefined`
-
-#### --why--
-
-`forEach` nevrací nic. Slouží k tomu, abys s každou položkou něco udělal, ne abys z pole něco vyrobil.
+js-pole/metody-pole-do-hloubky#co-ktera-metoda-vraci
 
 ## --question--
 
-Co vypíše tento kód?
+Co vypíše tenhle kód?
 
 ```js
 const letters = ['a', 'b', 'c'];
 console.log(letters[3], letters.at(-1), letters.length);
 ```
 
-### --correct--
+### --expected--
 
-`undefined c 3`
+undefined c 3
 
-#### --why--
+### --accept--
 
-Index `3` neexistuje (poslední je `2`), takže `undefined`. `at(-1)` počítá od konce a vrátí `'c'`.
+undefined 'c' 3
 
-### --answer--
+### --why--
 
-`c c 3`
+Index `3` neexistuje (poslední je `2`), takže `undefined` — čtení mimo pole nespadne. `at(-1)` počítá od konce a vrátí `'c'`.
 
-#### --why--
+### --see--
 
-Indexy začínají nulou, `'c'` je na indexu `2`. Index `3` je už mimo pole.
-
-### --answer--
-
-Vyhodí chybu, protože index `3` je mimo pole.
-
-#### --why--
-
-Čtení mimo rozsah pole chybu nevyhodí, vrátí `undefined`. Proto se takové chyby hledají tak špatně.
+js-pole/co-je-pole#pole-je-ocislovany-seznam-hodnot
 
 ## --question--
 
-Co vypíše tento kód?
-
-```js
-const words = ['kočka', 'pes', 'slon'];
-const result = words
-  .filter((word) => word.length > 3)
-  .map((word) => word.toUpperCase());
-console.log(result, words);
-```
-
-### --answer--
-
-`['KOČKA', 'SLON'] ['KOČKA', 'SLON']`
-
-#### --why--
-
-`filter` ani `map` původní pole nemění. `words` zůstane, jak bylo.
-
-### --correct--
-
-`['KOČKA', 'SLON'] ['kočka', 'pes', 'slon']`
-
-#### --why--
-
-`filter` vybere slova delší než tři znaky, `map` je převede na velká písmena. Obě metody vracejí nová pole.
-
-### --answer--
-
-`['KOČKA', 'PES', 'SLON'] ['kočka', 'pes', 'slon']`
-
-#### --why--
-
-`'pes'` má přesně tři znaky a podmínka je `> 3`, takže ho `filter` nepropustí.
-
-## --question--
-
-Co vypíše tento kód?
+Co vypíše tenhle kód?
 
 ```js
 const votes = ['ano', 'ne', 'ano', 'ano'];
@@ -484,7 +319,7 @@ console.log(counts);
 
 #### --why--
 
-Akumulátor začíná jako prázdný objekt `{}` a callback do něj jen přidává klíče, takže `reduce` vrátí objekt, ne číslo.
+Akumulátor začíná jako prázdný objekt a callback do něj jen přidává klíče. Jakého typu pak bude výsledek?
 
 ### --answer--
 
@@ -492,7 +327,7 @@ Akumulátor začíná jako prázdný objekt `{}` a callback do něj jen přidáv
 
 #### --why--
 
-`NaN` by vyšlo bez `?? 0`: poprvé je `result[vote]` `undefined` a `undefined + 1` je `NaN`. Tady ale `?? 0` z `undefined` udělá nulu.
+`NaN` by vyšlo bez `?? 0`. Co s `undefined` udělá `?? 0` při prvním hlasu?
 
 ### --correct--
 
@@ -500,4 +335,221 @@ Akumulátor začíná jako prázdný objekt `{}` a callback do něj jen přidáv
 
 #### --why--
 
-Při prvním hlasu pro nějakou možnost je klíč `undefined`, `?? 0` z něj udělá `0` a přičte se `1`. Callback akumulátor vrací, takže ho další volání dostane i s dosavadními počty.
+Při prvním hlasu pro možnost je klíč `undefined`, `?? 0` z něj udělá `0` a přičte se `1`. Callback akumulátor vrací, takže ho další volání dostane i s dosavadními počty.
+
+### --see--
+
+js-pole/metody-pole-do-hloubky#akumulator-nemusi-byt-cislo
+
+## --question--
+
+Najdi v anglické dokumentaci MDN stránku **Array.prototype.flat()**. Jaká je výchozí hodnota jejího parametru `depth`? Napiš jen číslo.
+
+### --expected--
+
+1
+
+### --why--
+
+V části *Parameters* stojí u `depth`: „Defaults to 1". `[1, [2, [3]]].flat()` proto rozbalí jen jednu úroveň a vrátí `[1, 2, [3]]`. Stejně rychle najdeš v MDN u každé metody, co vrací (*Return value*) a jestli mění původní pole.
+
+### --see--
+
+js-pole/co-je-pole#kde-to-najdes-v-mdn
+
+# --code-- Sklad e-shopu s čajem
+
+## --file-- sklad.js
+
+```js
+// Sklad e-shopu s čajem: kód, název, kusy na skladě, cena.
+let products = [
+  { code: 'C1', title: 'Zelený čaj', stock: 12, price: 129 },
+  { code: 'C2', title: 'Černý čaj', stock: 3, price: 99 },
+  { code: 'C3', title: 'Rooibos', stock: 0, price: 149 },
+  { code: 'C4', title: 'Maté', stock: 7, price: 179 },
+  { code: 'C5', title: 'Heřmánek', stock: 2, price: 59 },
+];
+
+function lowStockTitles(list, limit) {
+  let titles = [];
+  for (let i = 0; i < list.length; i++) {
+    if (list[i].stock <= limit) {
+      titles.push(list[i].title);
+    }
+  }
+  return titles;
+}
+
+function stockValue(list) {
+  let total = 0;
+  for (let i = 0; i <= list.length - 1; i++) {
+    total = total + list[i].stock * list[i].price;
+  }
+  return total;
+}
+
+function cheapestFirst(list) {
+  return list.sort(function (a, b) {
+    return a.price - b.price;
+  });
+}
+
+function findByCode(list, code) {
+  for (let i = 0; i < list.length; i++) {
+    if (list[i].code === code) {
+      return list[i];
+    }
+  }
+}
+
+function sell(list, code, amount) {
+  let product = findByCode(list, code);
+  if (product === undefined) {
+    return false;
+  }
+  if (product.stock < amount) {
+    return false;
+  }
+  product.stock = product.stock - amount;
+  return true;
+}
+
+function restock(list, code, amount) {
+  let result = [];
+  for (let i = 0; i < list.length; i++) {
+    let item = list[i];
+    if (item.code === code) {
+      item = { ...item, stock: item.stock + amount };
+    }
+    result.push(item);
+  }
+  return result;
+}
+
+function lastProduct(list) {
+  return list[list.length];
+}
+
+let before = products[0];
+let sorted = cheapestFirst(products);
+console.log(products[0].title, before === products[0]);
+console.log(lowStockTitles(products, 3));
+console.log(stockValue(products));
+console.log(sell(products, 'C4', 2), findByCode(products, 'C4').stock);
+let restocked = restock(products, 'C3', 10);
+console.log(products === restocked, findByCode(products, 'C3').stock);
+console.log(lastProduct(products));
+```
+
+## --question--
+
+Co vypíše řádek 72?
+
+### --expected--
+
+Heřmánek false
+
+### --why--
+
+`cheapestFirst` na řádku 29 volá `sort` přímo na poli z parametru, takže přerovná `products`. Na indexu 0 je pak nejlevnější Heřmánek, zatímco `before` pořád ukazuje na Zelený čaj — proto `false`.
+
+### --see--
+
+js-pole/co-je-pole#mutace-pole-z-parametru
+
+## --question--
+
+Co vypíše řádek 73? Napiš pole tak, jak ho vypíše konzole.
+
+### --expected--
+
+['Heřmánek', 'Černý čaj', 'Rooibos']
+
+### --why--
+
+`lowStockTitles` prochází pole v aktuálním pořadí — a to už řádek 71 přerovnal podle ceny (Heřmánek 59, Černý čaj 99, Zelený čaj 129, Rooibos 149, Maté 179). Z nich mají nejvýš 3 kusy Heřmánek, Černý čaj a Rooibos.
+
+### --see--
+
+js-pole/co-je-pole#mutace-pole-z-parametru
+
+## --question--
+
+Funkce `sell` na řádku 50 přepíše `product.stock`. Změní se tím i pole `products`?
+
+### --answer--
+
+Ne, `findByCode` vrací kopii produktu.
+
+#### --why--
+
+Podívej se na řádek 37: vrací se `list[i]`, ne nový objekt.
+
+### --correct--
+
+Ano, `findByCode` vrací tentýž objekt, který leží v poli.
+
+#### --why--
+
+`return list[i]` vrací odkaz na objekt v `products`. Zápis do `product.stock` proto mění produkt přímo ve skladu — řádek 75 vypíše `true 5`.
+
+### --answer--
+
+Ne, protože `product` je deklarovaný přes `let`.
+
+#### --why--
+
+`let` ani `const` neurčují, jestli je objekt kopie. Rozhoduje, odkud se objekt vzal.
+
+### --see--
+
+js-pole/co-je-pole#promenna-neobsahuje-pole-ale-odkaz-na-nej
+
+## --question--
+
+Co vypíše řádek 77?
+
+### --expected--
+
+false 0
+
+### --why--
+
+`restock` skládá nové pole `result` (řádek 55), takže `products === restocked` je `false`. Rooibos v něm dostane nový objekt se zásobou 10 (řádek 59), ale `findByCode(products, …)` hledá v původním poli, kde má Rooibos pořád `0`.
+
+### --see--
+
+js-pole/co-je-pole#melka-kopie
+
+## --question--
+
+Funkce `lastProduct` na řádku 67 vždycky vrátí `undefined`. Proč?
+
+### --answer--
+
+Pole `products` je deklarované přes `let`, a proto nemá poslední položku.
+
+#### --why--
+
+Způsob deklarace proměnné na obsah pole nemá vliv. Podívej se na index v hranatých závorkách.
+
+### --correct--
+
+Index `list.length` je za koncem pole; poslední položka má index `list.length - 1`.
+
+#### --why--
+
+Indexy začínají nulou, takže u pěti produktů je poslední na indexu `4`. Oprava je `list[list.length - 1]` nebo `list.at(-1)`.
+
+### --answer--
+
+`sort` na řádku 71 poslední položku z pole odebral.
+
+#### --why--
+
+`sort` pořadí mění, ale počet položek ne. Co vrací čtení na indexu, který v poli není?
+
+### --see--
+
+js-pole/co-je-pole#pole-je-ocislovany-seznam-hodnot

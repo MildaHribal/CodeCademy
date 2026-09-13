@@ -628,8 +628,10 @@ describe('rozhraní bloků lekce a druhů kroků', () => {
     try {
       const outcomes = page.locator('.section-outcomes');
       await outcomes.waitFor();
+      // Odkaz s kotvou dostane po načtení lekce i text nadpisu (dva odkazy do jedné lekce se tak liší).
+      await outcomes.locator('.section-outcomes__links a', { hasText: '›' }).waitFor();
       assert.deepEqual(await outcomes.locator('.section-outcomes__links a').evaluateAll((els) => els.map((a) => [a.textContent, a.getAttribute('href')])), [
-        ['Pole a odkazy', '#/modul/bloky/lekce?kotva=kopie-pole'],
+        ['Pole a odkazy › Kopie pole', '#/modul/bloky/lekce?kotva=kopie-pole'],
         ['Druhy kroků, krok 2', '#/modul/bloky/workshop/002'],
       ]);
       await page.locator('.cheatsheet summary').click();

@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "HTTP požadavek a odpověď v Node", "summary": "Co přijde v req, co pošleš přes res: stavové kódy, hlavičky, adresa, tělo jako proud a pravidlo jedné odpovědi.", "minutes": 20 }

@@ -232,8 +232,8 @@ export function createCodeEditor(parent, { files, onChange, onSubmit, label = 'E
     currentFiles = nextFiles;
     states.clear();
     for (const file of nextFiles) states.set(file.name, buildState(file));
-    // Začneme souborem, kde má uživatel psát; jinak prvním.
-    const start = nextFiles.find((f) => f.region) ?? nextFiles[0];
+    // Začneme souborem, kde má uživatel psát; jinak hlavním souborem kroku (meta.main u node), jinak prvním.
+    const start = nextFiles.find((f) => f.region) ?? nextFiles.find((f) => f.name === item?.meta?.main) ?? nextFiles[0];
     activeName = null;
     if (start) select(start.name, { scrollToRegion: true });
   }

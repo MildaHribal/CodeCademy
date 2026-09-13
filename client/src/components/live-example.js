@@ -226,7 +226,12 @@ function createPredictExample(host, block, { number, key }) {
       number,
       itemId: null,
       checkButton: true,
-      onEvaluated: () => reveal({ gaveUp: false }),
+      // Předpověď nemá smysl zkoušet znovu: skutečnost je po tipu vidět hned vedle, takže
+      // u špatného tipu rovnou ukážeme správnou odpověď i s vysvětlením mechanismu.
+      onEvaluated: ({ correct, showAnswer }) => {
+        if (!correct && !showAnswer) question.showAnswer?.();
+        reveal({ gaveUp: false });
+      },
     });
     questionHost.append(question.element);
   } catch (error) {

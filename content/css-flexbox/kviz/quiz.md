@@ -2,6 +2,8 @@
 pass: 0.8
 ---
 
+# --questions--
+
 ## --question--
 
 Máš tenhle kód a v prohlížeči jsou položky seznamu pořád pod sebou. Proč?
@@ -25,7 +27,7 @@ Protože `<li>` jsou blokové prvky a ty flexbox do řádku nepostaví.
 
 #### --why--
 
-Flexbox postaví do řádku blokové i řádkové prvky. Podmínkou je jen to, že jsou přímými potomky flex kontejneru.
+Myslíš si, že flexbox rozlišuje blokové a řádkové prvky? Postaví do řádku oboje. Podmínkou je jen to, kde prvky v HTML leží.
 
 ### --correct--
 
@@ -41,11 +43,15 @@ Protože chybí `flex-direction: row`.
 
 #### --why--
 
-`row` je výchozí hodnota. Chyba je v tom, na kterém prvku je `display: flex`.
+`row` je výchozí hodnota, psát ji nemusíš. Chyba je jinde než ve směru osy.
+
+### --see--
+
+css-flexbox/uvod-do-flexboxu#flex-kontejner-a-flex-polozky
 
 ## --question--
 
-Kontejner má `display: flex; align-items: center;`, ale jeho položky nejsou svisle uprostřed stránky, jen nahoře. Kontejner nemá nastavenou výšku. Proč?
+Kontejner má `display: flex; align-items: center;`, ale jeho položky nejsou svisle uprostřed obrazovky, jen nahoře. Kontejner nemá nastavenou výšku. Proč?
 
 ### --correct--
 
@@ -53,7 +59,7 @@ Kontejner je vysoký přesně jako jeho nejvyšší položka, takže na vedlejš
 
 #### --why--
 
-`align-items: center` centruje v rámci výšky kontejneru. Blokový kontejner bez nastavené výšky je vysoký podle obsahu. Když ho chceš mít doprostřed obrazovky, musí mít kontejner výšku, třeba `min-height: 100vh`.
+`align-items: center` centruje v rámci výšky kontejneru. Kontejner bez nastavené výšky je vysoký podle obsahu. Když ho chceš mít doprostřed obrazovky, musí mít výšku, třeba `min-height: 100vh`.
 
 ### --answer--
 
@@ -61,7 +67,7 @@ Svislé centrování dělá `justify-content: center`, ne `align-items`.
 
 #### --why--
 
-V řádku (výchozí `flex-direction: row`) vede hlavní osa vodorovně, takže `justify-content` centruje vodorovně. Svisle centruje `align-items` — potřebuje ale místo.
+Myslíš si, že `justify-content` je „svislé" zarovnání? V řádku vede hlavní osa vodorovně, takže `justify-content` pracuje vodorovně.
 
 ### --answer--
 
@@ -69,7 +75,11 @@ V řádku (výchozí `flex-direction: row`) vede hlavní osa vodorovně, takže 
 
 #### --why--
 
-`align-items` funguje i bez zalamování. Problémem je chybějící výška kontejneru.
+`align-items` zarovnává položky i v jediném řádku, zalamování nepotřebuje. Hledej, jestli má kontejner na vedlejší ose vůbec kam položky posunout.
+
+### --see--
+
+css-flexbox/uvod-do-flexboxu#typicke-chyby-a-pasti
 
 ## --question--
 
@@ -106,91 +116,95 @@ Položky budou pod sebou, každá vodorovně vycentrovaná a jen tak široká ja
 
 #### --why--
 
-Vodorovně ve sloupci zarovnává `align-items`, které má výchozí hodnotu `stretch` — položky budou přes celou šířku.
+Myslíš si, že `justify-content` pracuje vždycky vodorovně? Ve sloupci ne. Vodorovně tu rozhoduje jiná vlastnost a její výchozí hodnota položky roztahuje.
+
+### --see--
+
+css-flexbox/uvod-do-flexboxu#hlavni-a-vedlejsi-osa
 
 ## --question--
 
-V řádku je `<img>` s atributy `width="80" height="80"` a vedle něj dlouhý odstavec. Kontejner má jen `display: flex; gap: 1rem;` a ve stylech webu je `img { height: auto; }`. Proč je obrázek vysoký a zdeformovaný?
+Kontejner má `display: flex; flex-direction: column;` a všechny jeho položky jsou přes celou šířku. Jedna položka má být jen tak široká jako její obsah a stát u pravého okraje, ostatní se nemají změnit. Napiš deklaraci, kterou dáš té jedné položce.
 
-### --answer--
+### --expected--
 
-Protože `gap` přidává místo i nad a pod položky.
+align-self: flex-end
 
-#### --why--
+### --accept--
 
-`gap` dělá mezery mezi položkami, na jejich výšku vliv nemá.
+align-self: end
+margin-inline-start: auto
+margin-left: auto
 
-### --answer--
+### --why--
 
-Protože obrázek má `flex-shrink: 1` a zmenšuje se.
+`align-self` přepíše zarovnání na vedlejší ose jen pro jednu položku; ve sloupci je vedlejší osa vodorovná, takže `flex-end` znamená vpravo. Automatický margin na začátku řádku udělá totéž.
 
-#### --why--
+### --see--
 
-Zmenšování by obrázek zúžilo, ne prodloužilo. Deformaci na výšku způsobuje zarovnání na vedlejší ose.
-
-### --correct--
-
-Protože výchozí `align-items: stretch` roztáhne položku s výškou `auto` na výšku celého řádku, tedy na výšku odstavce.
-
-#### --why--
-
-Položky s automatickou výškou se v řádku natahují na výšku nejvyšší položky. Pomůže `align-items: flex-start` na kontejneru nebo `align-self: flex-start` na obrázku.
+css-flexbox/uvod-do-flexboxu#align-items-zarovnani-na-vedlejsi-ose
 
 ## --question--
 
-Kontejner je široký 500 px, bez mezer. Položka A má `flex: 1 1 100px`, položka B má `flex: 4 1 100px`. Jak široké budou?
+Kontejner je široký 500 px, bez mezer. Položka A má `flex: 1 1 100px`, položka B má `flex: 4 1 100px`. Jak široká bude B?
 
-### --answer--
+### --expected--
 
-A 100 px, B 400 px.
+340
 
-#### --why--
+### --accept--
 
-Tak by to vyšlo, kdyby se v poměru 1 : 4 dělila celá šířka. `flex-grow` ale dělí jen volné místo.
+340 px
+340px
 
-### --correct--
+### --why--
 
-A 160 px, B 340 px.
+Součet výchozích velikostí je 200 px, volné místo 300 px, dílů 5, jeden díl 60 px. B = 100 + 4 × 60 = 340 px, A = 160 px. Kdo napsal 400 px, dělil v poměru 1 : 4 celou šířku.
 
-#### --why--
+### --see--
 
-Součet výchozích velikostí je 200 px, volné místo 300 px, podílů 5, jeden podíl 60 px. A = 100 + 60 = 160 px, B = 100 + 240 = 340 px.
-
-### --answer--
-
-Obě 250 px.
-
-#### --why--
-
-Stejně široké by byly jen se stejným `flex-grow`. B má čtyřnásobný podíl na volném místě.
+css-flexbox/flex-do-hloubky#rust-v-cislech
 
 ## --question--
 
-Dvě tlačítka mají `flex: 1`. Na jednom je „OK", na druhém „Zrušit objednávku". Jak budou široká a proč?
+Kontejner je široký 300 px, bez mezer. Položka A má `flex: 0 1 200px`, položka B má `flex: 0 3 200px`, obě s krátkým textem. Jak široká bude B?
 
-### --correct--
+### --expected--
 
-Stejně široká, protože `flex: 1` znamená `1 1 0%` — obě vycházejí z nulové šířky a volné místo si dělí napůl.
+125
 
-#### --why--
+### --accept--
 
-S výchozí velikostí nula je volné místo celá šířka kontejneru a rovné podíly znamenají rovné šířky. Kdyby měla tlačítka `flex: auto`, vycházela by z šířky textu a delší text by měl širší tlačítko.
+125 px
+125px
 
-### --answer--
+### --why--
 
-Tlačítko s delším textem bude širší, protože `flex: 1` znamená `1 1 auto`.
+Chybí 100 px. Váhy jsou `flex-shrink` × basis: A = 1 × 200 = 200, B = 3 × 200 = 600. B nese 600/800 = tři čtvrtiny ztráty, tedy 75 px, a bude 125 px široká; A ztratí 25 px (175 px).
 
-#### --why--
+### --see--
 
-`1 1 auto` je zkratka `flex: auto`. Samotné `flex: 1` nastavuje `flex-basis` na `0%`.
+css-flexbox/flex-do-hloubky#zmensovani-v-cislech
 
-### --answer--
+## --question--
 
-Obě budou jen tak široká jako jejich text, protože `flex: 1` zakazuje růst.
+Rozepiš `flex: none` do tří hodnot v pořadí grow, shrink, basis.
 
-#### --why--
+### --expected--
 
-Číslo `1` v `flex: 1` je právě `flex-grow`, růst tedy povoluje.
+0 0 auto
+
+### --accept--
+
+flex: 0 0 auto
+
+### --why--
+
+`none` znamená: neroste (`0`), nezmenšuje se (`0`) a velikost bere z obsahu nebo `width` (`auto`). Hodí se pro ikonu nebo cenu, která se nikdy nemá deformovat.
+
+### --see--
+
+css-flexbox/flex-do-hloubky#zkratka-flex-a-jeji-vychozi-hodnoty
 
 ## --question--
 
@@ -202,7 +216,7 @@ Dát kartě `flex-shrink: 10`.
 
 #### --why--
 
-Větší `flex-shrink` nepomůže — zmenšování zastavuje `min-width: auto`, ne málo velký `flex-shrink`.
+Myslíš si, že karta se zmenšuje málo? Zmenšování tu nezastavuje malý `flex-shrink`, ale hranice, pod kterou karta nesmí.
 
 ### --answer--
 
@@ -210,7 +224,7 @@ Dát nadpisu `min-width: 0`.
 
 #### --why--
 
-Nadpis není flex položkou řádku karet, tou je karta. Minimum, které brání zmenšení, patří kartě.
+Nadpis není flex položkou řádku karet, tou je karta. Hranice, která brání zmenšení, patří té položce, kterou flexbox rozvrhuje.
 
 ### --correct--
 
@@ -220,33 +234,9 @@ Dát kartě `min-width: 0`.
 
 Flex položka má výchozí `min-width: auto` = nejmenší šířka obsahu. Nadpis se nesmí zalomit, takže minimum karty je šířka celého nadpisu. `min-width: 0` na kartě ji dovolí zmenšit a teprve pak má nadpis co ořezávat.
 
-## --question--
+### --see--
 
-Kontejner je široký 300 px. Položka A má `flex: 0 1 200px`, položka B má `flex: 0 1 200px`. Obě obsahují krátký text. Jak budou široké?
-
-### --correct--
-
-Obě 150 px.
-
-#### --why--
-
-Chybí 100 px. Obě mají stejnou váhu (1 × 200), takže každá ztratí 50 px.
-
-### --answer--
-
-A 200 px a B 100 px, protože se zmenšuje až poslední položka.
-
-#### --why--
-
-Zmenšují se všechny položky s `flex-shrink` větším než nula najednou, podle vah, ne postupně od konce.
-
-### --answer--
-
-Obě 200 px a B přeteče, protože `flex-grow` je 0.
-
-#### --why--
-
-`flex-grow: 0` jen zakazuje růst. Zmenšování řídí `flex-shrink`, který je tady 1.
+css-flexbox/flex-do-hloubky#proc-se-polozka-nezmensi-min-width-auto
 
 ## --question--
 
@@ -258,7 +248,7 @@ Všechny tři položky se přesunou doprostřed.
 
 #### --why--
 
-Doprostřed by se přesunuly, jen kdyby zbylo nějaké volné místo. To ale už spotřebovaly automatické marginy.
+Doprostřed by se přesunuly, jen kdyby na `justify-content` zbylo nějaké volné místo. Zjisti, kdo si volné místo bere dřív.
 
 ### --correct--
 
@@ -274,7 +264,11 @@ Tlačítko zůstane vpravo a logo s navigací se vycentrují ve zbytku místa.
 
 #### --why--
 
-Tohle by nastalo, kdyby automatický margin sdílel volné místo s `justify-content`. Nesdílí — margin má přednost a spotřebuje všechno.
+Myslíš si, že automatický margin a `justify-content` sdílejí volné místo? Nesdílejí — jeden z nich dostane všechno.
+
+### --see--
+
+css-flexbox/uvod-do-flexboxu#automaticky-margin-jedna-polozka-stranou
 
 ## --question--
 
@@ -286,7 +280,7 @@ Tlačítko bude nahoře vizuálně i pro klávesu Tab a čtečku obrazovky.
 
 #### --why--
 
-`order` mění jen vizuální pořadí. Tab i čtečka jdou v pořadí HTML.
+Myslíš si, že `order` přesouvá prvek i v dokumentu? Mění jen to, jak ho prohlížeč nakreslí.
 
 ### --correct--
 
@@ -304,61 +298,67 @@ Pořadí v HTML určuje, jak stránku čte čtečka a jak prochází fokus. Kdy�
 
 Záporné hodnoty jsou platné. Položka s `order: -1` se postaví před všechny položky s výchozím `order: 0`.
 
-## --question--
+### --see--
 
-Karty jsou v kontejneru s `display: flex; flex-wrap: wrap; gap: 1rem;` a mají `flex: 1 1 250px`. Na obrazovce se vejdou tři do řádku a karet je sedm. Jak bude vypadat poslední řádek?
-
-### --answer--
-
-Sedmá karta bude stejně široká jako karty nad ní a bude vlevo.
-
-#### --why--
-
-Tak by to vypadalo v gridu se sloupci. Ve flexboxu si každý řádek dělí volné místo sám.
-
-### --correct--
-
-Sedmá karta bude sama v řádku a roztáhne se přes celou šířku.
-
-#### --why--
-
-`flex-grow: 1` rozdělí volné místo řádku mezi položky v tom řádku. Když je tam jen jedna, dostane všechno. Když potřebuješ karty srovnané ve sloupcích, je vhodnější grid.
-
-### --answer--
-
-Sedmá karta se nezobrazí, protože se do řádku nevejde.
-
-#### --why--
-
-`flex-wrap: wrap` přesune položku na další řádek, nic se neskrývá.
+css-flexbox/uvod-do-flexboxu#typicke-chyby-a-pasti
 
 ## --question--
 
-Karta je `display: flex; flex-direction: column;` a patička karty má `margin-block-start: auto`. Karty jsou v řádku vedle sebe. Proč se patičky všech karet v řádku srovnají na jednu výšku?
+Karty jsou v kontejneru širokém 800 px s `display: flex; flex-wrap: wrap; gap: 16px;` a každá má `flex: 1 1 250px`. Karet je sedm. Jak široká bude sedmá karta?
 
-### --answer--
+### --expected--
 
-Protože `margin-block-start: auto` nastaví všem patičkám stejnou pozici od horního okraje stránky.
+800
 
-#### --why--
+### --accept--
 
-Automatický margin nic neví o ostatních kartách. Pracuje jen s volným místem uvnitř své karty.
+800 px
+800px
 
-### --correct--
+### --why--
 
-Protože kontejner karet má výchozí `align-items: stretch`, karty v řádku jsou stejně vysoké a automatický margin v každé z nich sežere volné místo nad patičkou.
+Do řádku se vejdou tři karty (3 × 250 + 2 × 16 = 782 px), takže sedmá karta zůstane v třetím řádku sama. `flex-grow: 1` jí dá celé volné místo toho řádku a roztáhne se na všech 800 px. Ve flexboxu si každý řádek počítá volné místo sám; karty srovnané ve sloupcích by dal grid.
 
-#### --why--
+### --see--
 
-Stretch srovná výšku karet, flex sloupec uvnitř karty a automatický margin pošlou patičku ke dnu. Když jeden článek chybí (třeba `align-items: flex-start` na kontejneru), patičky se rozjedou.
+css-flexbox/flex-do-hloubky#flexbox-nebo-grid
 
-### --answer--
+## --question--
 
-Protože patička má `display: flex`.
+Flex kontejner s `flex-wrap: wrap` má tři řádky položek a je vyšší, než kolik řádky zaberou. Napiš jméno vlastnosti, která rozhoduje, kam půjde volné místo **mezi řádky**.
 
-#### --why--
+### --expected--
 
-Na tom, kde patička v kartě leží, rozhoduje karta (její rodič), ne to, jak patička rozvrhuje vlastní obsah.
+align-content
+
+### --why--
+
+`align-content` rozděluje volné místo na vedlejší ose mezi celé řádky, podobně jako `justify-content` mezi položky na hlavní ose. `align-items` zarovnává položky uvnitř jednoho řádku.
+
+### --see--
+
+css-flexbox/uvod-do-flexboxu#zalamovani-flex-wrap-gap-a-align-content
+
+## --question--
+
+Najdi v anglické dokumentaci MDN stránku o vlastnosti `flex-flow`. Které dvě vlastnosti tahle zkratka nastavuje? Napiš jejich jména oddělená čárkou.
+
+### --expected--
+
+flex-direction, flex-wrap
+
+### --accept--
+
+flex-wrap, flex-direction
+flex-direction a flex-wrap
+
+### --why--
+
+`flex-flow` je zkratka pro `flex-direction` a `flex-wrap`, třeba `flex-flow: row wrap`. Na MDN ji najdeš pod adresou `developer.mozilla.org/en-US/docs/Web/CSS/flex-flow` — v části „Constituent properties" jsou vždycky vypsané vlastnosti, které zkratka nastavuje.
+
+### --see--
+
+css-flexbox/uvod-do-flexboxu#kde-to-najdes-v-mdn
 
 ## --question--
 
@@ -386,7 +386,7 @@ Galerie fotek, kde mají být fotky v přesných sloupcích i na posledním neú
 
 #### --why--
 
-Srovnání do sloupců přes všechny řádky je dvourozměrné rozvržení — na to je grid.
+Srovnání do sloupců přes všechny řádky je rozvržení ve dvou osách najednou.
 
 ### --answer--
 
@@ -394,4 +394,268 @@ Kostra stránky s hlavičkou, bočním panelem, obsahem a patičkou v mřížce.
 
 #### --why--
 
-Rozvržení v řádcích i sloupcích najednou je silná stránka gridu. Flexbox by potřeboval vnořené kontejnery a dopočítané šířky.
+Rozvržení v řádcích i sloupcích najednou je jiný typ úlohy než jedna řada položek.
+
+### --see--
+
+css-flexbox/flex-do-hloubky#flexbox-nebo-grid
+
+# --code-- Kolegova stránka obchodu s deskovými hrami
+
+## --file-- index.html
+
+```html
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <title>Kostka — deskové hry</title>
+  <link rel="stylesheet" href="shop.css">
+</head>
+<body>
+  <div class="bar">
+    <a class="bar-brand" href="/">Kostka</a>
+    <a href="/novinky">Novinky</a>
+    <a href="/akce">Akce</a>
+    <a class="bar-cart" href="/kosik">Košík (2)</a>
+  </div>
+
+  <ul class="chips">
+    <li>Pro dva</li>
+    <li>Rodinné</li>
+    <li>Strategické</li>
+    <li>Party hry</li>
+    <li>Kooperativní</li>
+  </ul>
+
+  <div class="row">
+    <img class="thumb" src="carcassonne.jpg" width="96" height="96" alt="">
+    <div class="info">
+      <h2 class="name">Carcassonne: Hostinec a katedrály, rozšíření 1 (nová verze 2026)</h2>
+      <p class="meta">2–6 hráčů · 35 minut · od 7 let</p>
+      <p class="desc">Rozšíření přidává hostince u cest, katedrály ve městech
+        a velké figurky, které se počítají za dvě.</p>
+    </div>
+    <div class="buy">
+      <strong class="price">549 Kč</strong>
+      <button class="add">Do košíku</button>
+    </div>
+  </div>
+
+  <div class="note">
+    <span class="note-icon">i</span>
+    <span>Objednávky nad 1 500 Kč posíláme zdarma.</span>
+  </div>
+</body>
+</html>
+```
+
+## --file-- shop.css
+
+```css
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  color: #1f2933;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+.bar {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 20px;
+  background: #102a43;
+}
+
+.bar a {
+  color: #f0f4f8;
+}
+
+.bar-cart {
+  margin-left: auto;
+}
+
+.chips {
+  display: flex;
+  gap: 8px;
+  max-width: 320px;
+  padding: 0;
+  list-style: none;
+}
+
+.chips li {
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: #d9e2ec;
+  white-space: nowrap;
+}
+
+.row {
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+  border: 1px solid #d9e2ec;
+}
+
+.info {
+  flex: 1 1 auto;
+}
+
+.name {
+  margin: 0;
+  font-size: 18px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.buy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+}
+
+.note {
+  display: flex;
+  gap: 8px;
+  padding: 8px 20px;
+}
+
+.note-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #243b53;
+  color: #fff;
+  text-align: center;
+}
+```
+
+## --question--
+
+Pravidlo `.bar` (řádky 12–18 v `shop.css`) rozvrhuje logo, dva odkazy a košík, který má na řádku 25 `margin-left: auto`. Jeden řádek v pravidle `.bar` je zbytečný — když ho smažeš, lišta bude vypadat úplně stejně. Napiš jeho číslo.
+
+### --expected--
+
+14
+
+### --why--
+
+Řádek 14 je `justify-content: space-between`. Automatický margin košíku na řádku 25 si vezme všechno volné místo v liště dřív, než se uplatní `justify-content`, takže ten nemá co rozdělovat. Logo s odkazy zůstanou vlevo a košík vpravo i bez něj.
+
+### --see--
+
+css-flexbox/workshop-navigace/007
+
+## --question--
+
+Pět štítků v seznamu `.chips` (řádky 28–34, seznam má nejvýš 320 px) se do šířky nevejde. Co uvidíš?
+
+### --answer--
+
+Štítky se zalomí na druhý řádek.
+
+#### --why--
+
+Myslíš si, že flex kontejner zalamuje sám? Ve výchozím stavu drží všechny položky v jednom řádku. Podívej se, jestli pravidlo `.chips` zalamování zapíná.
+
+### --correct--
+
+Štítky zůstanou v jednom řádku a poslední z nich vylezou ze seznamu doprava.
+
+#### --why--
+
+`.chips` nemá `flex-wrap: wrap`, takže řádek je jeden. Zmenšit se štítky taky nemůžou: řádek 40 `white-space: nowrap` dělá z celého textu štítku nejmenší šířku obsahu a výchozí `min-width: auto` je pod ni nepustí. Zbytek přeteče.
+
+### --answer--
+
+Štítky se zmenší a text v nich se zalomí na dva řádky.
+
+#### --why--
+
+Zalomení textu uvnitř štítku zakazuje jeden z řádků pravidla `.chips li`. A bez zalomení nejde štítek zúžit pod šířku textu.
+
+### --see--
+
+css-flexbox/flex-do-hloubky#proc-se-polozka-nezmensi-min-width-auto
+
+## --question--
+
+Obrázek hry na řádku 25 v `index.html` má atributy 96 × 96 px, ale v prohlížeči je vyšší a zdeformovaný. Napiš deklaraci, kterou doplníš do pravidla `.row` (řádky 43–48), aby obrázek držel svůj tvar.
+
+### --expected--
+
+align-items: flex-start
+
+### --accept--
+
+align-items: start
+align-items: center
+align-items: flex-end
+align-items: end
+
+### --why--
+
+Řádek 9 dává všem obrázkům `height: auto` a výchozí `align-items: stretch` pak roztáhne obrázek na výšku celého řádku s popisem. Jiné zarovnání na vedlejší ose roztahování vypne. Stejně by pomohlo `align-self: flex-start` přímo na `.thumb`.
+
+### --see--
+
+css-flexbox/uvod-do-flexboxu#typicke-chyby-a-pasti
+
+## --question--
+
+Na telefonu dlouhý název hry (řádek 27 v `index.html`) neskončí třemi tečkami, ale vytlačí cenu a tlačítko z řádku ven, přestože `.name` má `overflow: hidden` a `text-overflow: ellipsis`. Napiš deklaraci, kterou doplníš do pravidla `.info` na řádcích 50–52.
+
+### --expected--
+
+min-width: 0
+
+### --accept--
+
+min-width: 0px
+
+### --why--
+
+Flex položkou řádku je `.info`, ne nadpis. Její výchozí `min-width: auto` je nejmenší šířka obsahu, a to je kvůli `white-space: nowrap` na řádku 57 celý název. `min-width: 0` dovolí `.info` zmenšit se a teprve pak má nadpis co ořezávat.
+
+### --see--
+
+css-flexbox/workshop-navigace/017
+
+## --question--
+
+Kolega chtěl mít cenu a tlačítko v bloku `.buy` vycentrované **vodorovně** a napsal k tomu řádek 65 v `shop.css`. Co ten řádek ve skutečnosti dělá?
+
+### --answer--
+
+Vycentruje cenu a tlačítko vodorovně, jak kolega chtěl.
+
+#### --why--
+
+Podívej se na řádek 64. Po otočení hlavní osy pracuje `justify-content` jiným směrem než v řádku.
+
+### --correct--
+
+Posune cenu s tlačítkem svisle doprostřed bloku `.buy`.
+
+#### --why--
+
+Řádek 64 otočil hlavní osu shora dolů a `justify-content` rozděluje volné místo na hlavní ose. `.buy` je jako flex položka `.row` roztažený na výšku řádku, takže volné místo má a skupina skončí svisle uprostřed. Vodorovně by centrovalo `align-items: center`.
+
+### --answer--
+
+Nic, protože blok `.buy` nemá nastavenou výšku.
+
+#### --why--
+
+Výšku mu nastavovat nemusíš: jako flex položka řádku `.row` s výchozím `align-items: stretch` je vysoký jako celý řádek.
+
+### --see--
+
+css-flexbox/uvod-do-flexboxu#typicke-chyby-a-pasti

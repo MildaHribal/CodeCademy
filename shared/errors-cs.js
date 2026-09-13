@@ -243,7 +243,7 @@ export const ERROR_PATTERNS = [
       'Odpověď serveru nemá tělo (třeba stav 204) nebo soubor je prázdný.',
       'Tělo požadavku se už jednou přečetlo.',
     ],
-    see: null,
+    see: 'node-zaklady/http-v-node#typicke-chyby-a-pasti',
   },
   {
     id: 'json-invalid',
@@ -254,7 +254,7 @@ export const ERROR_PATTERNS = [
       'Za poslední položkou nesmí být čárka.',
       'Parsuješ text, který JSON vůbec není (prázdný řetězec, `undefined`, HTML).',
     ],
-    see: null,
+    see: 'node-zaklady/http-v-node#typicke-chyby-a-pasti',
   },
   {
     id: 'failed-to-fetch',
@@ -441,7 +441,7 @@ export const ERROR_PATTERNS = [
       'Po `res.end()` chybí `return`, takže kód pokračuje k další odpovědi.',
       'Dvě větve (`if` a kód pod ním) posílají odpověď na stejný požadavek.',
     ],
-    see: 'node-zaklady/co-je-node#skript-a-server',
+    see: 'node-zaklady/http-v-node#jedna-odpoved-na-kazdy-pozadavek',
   },
   {
     id: 'econnrefused',

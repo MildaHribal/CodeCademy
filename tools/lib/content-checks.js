@@ -265,7 +265,9 @@ function planWorkshop(module, { addJob, later, context }) {
   steps.forEach((step, index) => {
     const label = `krok ${step.id.split('/').pop()}`;
     planStepLike(module, step, label, { addJob, later, context });
-    if (index > 0) {
+    // Krok kind: debug má v seedu z podstaty chybný kód (kontrakt kap. 3.4), takže se
+    // od řešení předchozího kroku lišit musí; návaznost hlídá až seed kroku za ním.
+    if (index > 0 && step.kind !== 'debug') {
       const previous = steps[index - 1];
       // Soubor, který v kroku N nově přibyl (např. index.html při přechodu z js na dom),
       // návaznost neporušuje — uživatelův dosavadní kód zůstává stejný.

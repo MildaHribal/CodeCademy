@@ -1915,7 +1915,7 @@ souhrny, např. počet kroků).
 |---|---|---|
 | K1 | testy nad **seedem**: aspoň jeden musí selhat; testy nad **řešením**: všechny projdou, bez `errors`, bez `syntaxError` | chyba |
 | K2 | seed má `syntaxError` | varování |
-| K3 | návaznost workshopu: seed kroku N ≠ řešení kroku N−1 po normalizaci bílých znaků (nové soubory se nepočítají) | varování |
+| K3 | návaznost workshopu: seed kroku N ≠ řešení kroku N−1 po normalizaci bílých znaků (nové soubory se nepočítají). Seed kroku `kind: debug` se lišit smí (chyba je záměr); návaznost se pak hlídá u kroku za ním. | varování |
 | K4 | lab bez `--solution--` | chyba |
 | T1 | **tip prozrazuje řešení**: *přidané řádky* = řádky souborů řešení (po `normalizeWhitespace`), které v seedu téhož souboru nejsou, mají aspoň 8 znaků a obsahují písmeno nebo číslici. *Kandidáti z tipu* = každý řádek textu tipu (bez úvodní odrážky `- `/`* `/`1. `), obsah každého inline kódu a každý řádek bloků kódu v tipu, po `normalizeWhitespace`. Shoda kandidáta s přidaným řádkem = chyba. | chyba |
 | T2 | krok workshopu mimo první třetinu bez `# --help--` (kromě `kind: parsons`) | varování |
@@ -1959,7 +1959,7 @@ Třetina kroku `i` (0-based) z `n` = `Math.floor(i * 3 / n)` (0, 1, 2).
 | Q1 | kvíz má méně než 5 otázek | varování |
 | Q2 | špatná odpověď (`--answer--`) bez `#### --why--` | varování |
 | Q3 | soubor `# --code--` mimo 40–120 řádků | varování |
-| Q4 | otázek mimo 10–20; psaná otázka bez `--why--`; otázka bez `--see--`; kvíz bez `# --code--`; méně než polovina psaných; méně než 20 % otázek má `--see--` do dřívější sekce téže části | doporučení |
+| Q4 | otázek mimo 10–20; psaná otázka bez `--why--`; otázka bez `--see--`; kvíz bez `# --code--`; méně než polovina psaných; méně než 20 % otázek má `--see--` do dřívější sekce téže části (jen když taková sekce už existuje na disku) | doporučení |
 | C1 | karta `code`: test nad seedem neselže nebo nad řešením neprojde | chyba |
 | C2 | karta `output` s právě jedním blokem ` ```js ` v textu: kód se spustí v runtime js a `normalizeAnswer(výstup) !== normalizeAnswer(expected)` | chyba |
 | C3 | karta `output` s jedním blokem js, který nic nevypíše | varování |

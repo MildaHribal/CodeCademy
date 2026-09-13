@@ -1,1 +1,1 @@
-{ "type": "quiz", "title": "Kvíz: CSS Flexbox", "summary": "Otázky na čtení kódu: proč se to zobrazí takhle a ne jinak.", "minutes": 15, "runtime": "dom" }
+{ "type": "quiz", "title": "Kvíz: CSS Flexbox", "summary": "Otázky na čtení a počítání: proč se to zobrazí takhle a ne jinak — i v cizím kódu.", "minutes": 25, "runtime": "dom" }

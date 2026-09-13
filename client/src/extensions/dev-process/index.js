@@ -21,7 +21,8 @@ workspaceExtensions.register({
   id: 'dev-process',
   order: 50,
   setup(ws) {
-    if (!ws.isNode) return undefined;
+    // U „Seřaď řádky" se nic nespouští jako server, HTTP klient by jen mátl.
+    if (!ws.isNode || ws.kind === 'parsons') return undefined;
     const session = sessionFor(ws.elements.output);
     if (!session) return undefined;
 

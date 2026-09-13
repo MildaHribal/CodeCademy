@@ -1,1 +1,1 @@
-{ "type": "workshop", "title": "Postav HTTP server knihovny", "summary": "Server bez frameworku, který čte knihy ze souboru, odpovídá v JSON a přijímá nové knihy.", "minutes": 90, "runtime": "node" }
+{ "type": "workshop", "title": "Postav HTTP server knihovny", "summary": "Server bez frameworku: čte knihy ze souboru, routuje podle adresy a metody, přijímá, ověřuje a maže knihy — a nespadne.", "minutes": 150, "runtime": "node" }

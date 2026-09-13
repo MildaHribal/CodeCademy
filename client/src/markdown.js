@@ -339,7 +339,8 @@ function openTermPopover(button, term, { pinned }) {
   title.className = 'term-popover__title';
   title.textContent = term.term;
   element.append(title);
-  if (term.en) {
+  // Anglický termín jen když se od českého liší (u „index“ by „anglicky index“ nic neřeklo).
+  if (term.en && term.en.toLowerCase() !== term.term.toLowerCase()) {
     const en = document.createElement('p');
     en.className = 'term-popover__en';
     en.textContent = `anglicky ${term.en}`;

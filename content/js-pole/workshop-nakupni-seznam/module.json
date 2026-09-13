@@ -1,1 +1,1 @@
-{ "type": "workshop", "title": "Nákupní seznam", "summary": "Krok za krokem napíšeš sadu funkcí nad polem položek a nakonec seznam vypíšeš do stránky.", "minutes": 120, "runtime": "js" }
+{ "type": "workshop", "title": "Nákupní seznam", "summary": "Třicet funkcí nad polem položek: přidání a odebrání bez mutace, hledání, součty, řazení, tři kolegovy chyby a nakonec výpis do stránky.", "minutes": 150, "runtime": "js" }

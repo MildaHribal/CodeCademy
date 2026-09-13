@@ -5,6 +5,7 @@ import { h, svg } from '../../dom.js';
 import { icons } from '../../icons.js';
 import { apiRequest } from '../../api-request.js';
 import { renderMarkdown } from '../../markdown.js';
+import { loadModule } from '../../content.js';
 import { sectionExtensions } from '../../screens/section.js';
 import { parseRef, refHref } from '../../../../shared/refs.js';
 import { outcomeLinkLabel } from './labels.js';
@@ -49,13 +50,28 @@ function outcomesBlock(outcomes, section) {
                 h('span', { class: 'section-outcomes__where' }, 'Kde se to učíš:'),
                 outcome.links
                   .filter((ref) => parseRef(ref))
-                  .map((ref) => h('a', { href: refHref(ref) }, outcomeLinkLabel(ref, section))),
+                  .map((ref) => outcomeLink(ref, section)),
               )
             : null,
         ),
       ),
     ),
   );
+}
+
+/** Odkaz „Kde se to učíš"; u kotvy v lekci se po načtení lekce doplní text nadpisu. */
+function outcomeLink(ref, section) {
+  const link = h('a', { href: refHref(ref), class: 'section-outcomes__link' }, outcomeLinkLabel(ref, section));
+  const parsed = parseRef(ref);
+  if (parsed.anchor && section.modules?.some((module) => module.id === parsed.moduleId)) {
+    const [sectionId, moduleSlug] = parsed.moduleId.split('/');
+    loadModule(sectionId, moduleSlug)
+      .then((detail) => {
+        link.textContent = outcomeLinkLabel(ref, section, detail.lesson?.headings ?? []);
+      })
+      .catch(() => {}); // bez nadpisu zůstane titulek lekce, odkaz funguje dál
+  }
+  return link;
 }
 
 function cheatsheetBlock(markdown, section) {
@@ -102,7 +118,7 @@ function termsBlock(terms) {
       'dl',
       { class: 'section-terms__list' },
       terms.map((term) => [
-        h('dt', { class: 'section-terms__term', id: `pojem-${term.id}` }, term.term, term.en ? h('span', { class: 'section-terms__en' }, term.en) : null),
+        h('dt', { class: 'section-terms__term', id: `pojem-${term.id}` }, term.term, term.en && term.en.toLowerCase() !== term.term.toLowerCase() ? h('span', { class: 'section-terms__en' }, term.en) : null),
         h(
           'dd',
           { class: 'section-terms__definition' },

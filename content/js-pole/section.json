@@ -1,5 +1,69 @@
 {
   "title": "Pole v JavaScriptu",
-  "intro": "Skoro všechna data, se kterými web pracuje, jsou seznamy: položky v košíku, příspěvky ve feedu, řádky z databáze. V této sekci se naučíš s poli pracovat pořádně — vytvářet je, procházet, přetvářet metodami `map`, `filter`, `reduce` a spol., řadit je a hlavně **nerozbít data, která ti někdo půjčil**.\n\nPo sekci umíš napsat funkci nad polem objektů bez nápovědy, víš, které metody mění původní pole a které vracejí nové, a přečteš cizí řetězení metod, aniž bys ho musel spouštět.\n\n**Předpoklady:** proměnné, datové typy, podmínky, funkce (i šipkové) a objekty.",
-  "modules": ["co-je-pole", "workshop-nakupni-seznam", "metody-pole-do-hloubky", "lab-statistika-znamek", "kviz"]
+  "intro": "Skoro všechna data, se kterými web pracuje, jsou seznamy: položky v košíku, příspěvky ve feedu, řádky z databáze. V této sekci se naučíš s poli pracovat pořádně — vytvářet je, procházet, přetvářet metodami `map`, `filter`, `reduce` a spol., řadit je a hlavně **nerozbít data, která ti někdo půjčil**.\n\nPostup: lekce o tom, co pole je a proč se „samo“ mění, pak workshop s třiceti funkcemi nad nákupním seznamem (včetně tří kolegových chyb), lekce, která metody vysvětlí do hloubky, dva samostatné laby a kvíz nad cizím kódem. Karty z téhle sekce se ti pak budou vracet v opakování.\n\n**Předpoklady:** proměnné, datové typy, podmínky, funkce (i šipkové) a objekty včetně spreadu a destrukturalizace.",
+  "modules": [
+    "co-je-pole",
+    "workshop-nakupni-seznam",
+    "metody-pole-do-hloubky",
+    "lab-statistika-znamek",
+    "lab-oprav-3-chyby",
+    "kviz"
+  ],
+  "outcomes": [
+    {
+      "text": "Napíšeš funkci nad polem objektů bez nápovědy a bez změny vstupních dat.",
+      "links": [
+        "js-pole/workshop-nakupni-seznam",
+        "js-pole/co-je-pole#pole-objektu",
+        "js-pole/lab-statistika-znamek"
+      ]
+    },
+    {
+      "text": "U každé běžné metody pole řekneš, jestli mění původní pole, nebo vrací nové.",
+      "links": [
+        "js-pole/co-je-pole#metody-ktere-pole-meni-a-metody-ktere-vraceji-nove",
+        "js-pole/metody-pole-do-hloubky#co-ktera-metoda-vraci"
+      ]
+    },
+    {
+      "text": "Vysvětlíš, proč změna pole nebo objektu uvnitř funkce změní data i tomu, kdo funkci zavolal, a opravíš to.",
+      "links": [
+        "js-pole/co-je-pole#promenna-neobsahuje-pole-ale-odkaz-na-nej",
+        "js-pole/co-je-pole#melka-kopie",
+        "js-pole/workshop-nakupni-seznam/028"
+      ]
+    },
+    {
+      "text": "Vybereš mezi `map`, `filter`, `find`, `some`/`every`, `reduce` a `for…of` podle toho, co má funkce vrátit.",
+      "links": [
+        "js-pole/metody-pole-do-hloubky#co-ktera-metoda-vraci",
+        "js-pole/metody-pole-do-hloubky#kdy-metody-a-kdy-for-of",
+        "js-pole/workshop-nakupni-seznam/023"
+      ]
+    },
+    {
+      "text": "Napíšeš `reduce`, který z pole vyrobí součet nebo objekt s počty podle klíče.",
+      "links": [
+        "js-pole/metody-pole-do-hloubky#jak-pracuje-reduce",
+        "js-pole/workshop-nakupni-seznam/024",
+        "js-pole/workshop-nakupni-seznam/025"
+      ]
+    },
+    {
+      "text": "Seřadíš pole čísel i českých textů porovnávací funkcí, aniž bys změnil původní pole.",
+      "links": [
+        "js-pole/metody-pole-do-hloubky#razeni-a-porovnavaci-funkce",
+        "js-pole/workshop-nakupni-seznam/020",
+        "js-pole/workshop-nakupni-seznam/021"
+      ]
+    },
+    {
+      "text": "V cizím kódu s poli najdeš a opravíš typické chyby: `sort` bez porovnávací funkce, `reduce` bez počáteční hodnoty, `indexOf` v podmínce a mutaci vstupu.",
+      "links": [
+        "js-pole/lab-oprav-3-chyby",
+        "js-pole/metody-pole-do-hloubky#typicke-chyby-a-pasti",
+        "js-pole/kviz"
+      ]
+    }
+  ]
 }

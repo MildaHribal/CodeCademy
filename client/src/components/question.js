@@ -166,6 +166,9 @@ export function createQuestion(question, options = {}) {
     api.evaluate();
   }
 
+  // Kde odpověď po odhalení najde: u výběru je označená volba, u psané rámeček pod polem.
+  const answerPlace = question.type === 'text' ? 'pod polem' : 'označená';
+
   const api = {
     element,
     isAnswered: () => body.isAnswered(),
@@ -224,13 +227,25 @@ export function createQuestion(question, options = {}) {
     },
 
     showAnswer() {
+      // Bez jediného pokusu (předpověď „Nevím, ukaž") nic neoznačit jako chybu: jen ukázat odpověď.
+      const neverEvaluated = flow.state().evaluations === 0;
       flow.revealAnswer();
       setLocked(true);
       const correct = flow.state().correct === true;
       if (legacy) body.reveal();
-      else body.showResult({ correct, showAnswer: true, locked: true });
+      else body.showResult({ correct, showAnswer: true, pretest: neverEvaluated, locked: true });
+      if (neverEvaluated && !legacy) {
+        element.dataset.result = 'revealed';
+        // U psané odpovědi mluví sám rámeček „Správná odpověď", u výběru je potřeba říct, kde ji hledat.
+        verdict.textContent = question.type === 'text' ? '' : 'Správná odpověď je označená.';
+        feedback.textContent = '';
+        evaluatedAnswerVisible = true;
+        renderActions();
+        onReveal?.();
+        return;
+      }
       element.dataset.result = correct ? 'correct' : 'wrong';
-      verdict.textContent = correct ? 'Správně.' : 'Správná odpověď je označená.';
+      verdict.textContent = correct ? 'Správně.' : `Správná odpověď je ${answerPlace}.`;
       evaluatedAnswerVisible = true;
       renderActions();
       onReveal?.();
@@ -256,7 +271,7 @@ export function createQuestion(question, options = {}) {
     if (correct) {
       verdict.textContent = 'Správně.';
     } else if (showAnswer) {
-      verdict.textContent = failures >= 2 ? 'Ani napodruhé to nesedí — správná odpověď je označená.' : 'Špatně — správná odpověď je označená.';
+      verdict.textContent = failures >= 2 ? `Ani napodruhé to nesedí — správná odpověď je ${answerPlace}.` : `Špatně — správná odpověď je ${answerPlace}.`;
     } else if (question.multiple) {
       verdict.textContent = 'Nesedí to. Zkus to znovu.';
     } else {

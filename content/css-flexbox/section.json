@@ -1,5 +1,35 @@
 {
   "title": "CSS Flexbox",
-  "intro": "Flexbox je nástroj na rozvržení prvků **v jedné řadě** — vedle sebe nebo pod sebou. Postavíš s ním hlavičky, navigace, lišty nástrojů, vnitřek karet i patičky, a to bez `float`, bez ručně dopočítaných marginů a bez triků se `position`.\n\nV sekci pochopíš, jak flexbox přemýšlí (hlavní a vedlejší osa), postavíš s ním hlavičku webu s kartami, naučíš se, jak prohlížeč počítá šířky položek a proč se některá položka odmítá zmenšit, a nakonec sám rozvrhneš ceník.\n\nPředpoklad: znáš základy HTML a CSS — selektory, box model a jednotky jako `px`, `rem` a `%`.",
-  "modules": ["uvod-do-flexboxu", "workshop-navigace", "flex-do-hloubky", "lab-cenik", "kviz"]
+  "intro": "Flexbox je nástroj na rozvržení prvků **v jedné řadě** — vedle sebe nebo pod sebou. Postavíš s ním hlavičky, navigace, lišty nástrojů, vnitřek karet i patičky, a to bez `float`, bez ručně dopočítaných marginů a bez triků se `position`.\n\nV sekci pochopíš, jak flexbox přemýšlí (hlavní a vedlejší osa a volné místo), postavíš s ním hlavičku webu s kartami, naučíš se na papíře spočítat, jak prohlížeč dělí šířky položek a proč se některá položka odmítá zmenšit, a nakonec sám rozvrhneš ceník.\n\nPředpoklad: znáš základy HTML a CSS — selektory, box model a jednotky jako `px`, `rem` a `%`.",
+  "modules": ["uvod-do-flexboxu", "workshop-navigace", "flex-do-hloubky", "lab-cenik", "kviz"],
+  "outcomes": [
+    {
+      "text": "Poznáš, na který prvek patří `display: flex`, a vysvětlíš, proč flex rozvrhuje jen přímé potomky.",
+      "links": ["css-flexbox/uvod-do-flexboxu#flex-kontejner-a-flex-polozky", "css-flexbox/workshop-navigace/005"]
+    },
+    {
+      "text": "Vybereš mezi `justify-content`, `align-items`, `align-self` a automatickým marginem podle toho, na které ose a pro kolik položek zarovnáváš — i po `flex-direction: column`.",
+      "links": ["css-flexbox/uvod-do-flexboxu#hlavni-a-vedlejsi-osa", "css-flexbox/uvod-do-flexboxu#automaticky-margin-jedna-polozka-stranou", "css-flexbox/workshop-navigace/020"]
+    },
+    {
+      "text": "Postavíš bez nápovědy hlavičku, kartu s patičkou u dna a patičku stránky, které se na telefonu zalomí a nepřetečou.",
+      "links": ["css-flexbox/workshop-navigace", "css-flexbox/uvod-do-flexboxu#zalamovani-flex-wrap-gap-a-align-content"]
+    },
+    {
+      "text": "Spočítáš na papíře šířky položek z `flex-grow`, `flex-shrink` a `flex-basis` a rozepíšeš zkratky `flex: 1`, `flex: auto` a `flex: none`.",
+      "links": ["css-flexbox/flex-do-hloubky#rust-v-cislech", "css-flexbox/flex-do-hloubky#zmensovani-v-cislech", "css-flexbox/flex-do-hloubky#zkratka-flex-a-jeji-vychozi-hodnoty"]
+    },
+    {
+      "text": "Opravíš položku, která se odmítá zmenšit, a vysvětlíš, proč pomáhá `min-width: 0` a na kterém prvku.",
+      "links": ["css-flexbox/flex-do-hloubky#proc-se-polozka-nezmensi-min-width-auto", "css-flexbox/workshop-navigace/017"]
+    },
+    {
+      "text": "Najdeš a opravíš chybu v cizím flexboxovém CSS podle popisu příznaku.",
+      "links": ["css-flexbox/workshop-navigace/018", "css-flexbox/workshop-navigace/024", "css-flexbox/kviz"]
+    },
+    {
+      "text": "Rozvrhneš responzivní řadu karet zalamováním bez media dotazu a víš, kdy místo flexboxu sáhnout po gridu.",
+      "links": ["css-flexbox/lab-cenik", "css-flexbox/flex-do-hloubky#flexbox-nebo-grid"]
+    }
+  ]
 }

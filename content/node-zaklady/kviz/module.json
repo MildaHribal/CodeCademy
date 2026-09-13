@@ -1,1 +1,1 @@
-{ "type": "quiz", "title": "Kvíz: Node.js základy", "summary": "Ověř si, že rozumíš Node, modulům a HTTP serveru.", "minutes": 15 }
+{ "type": "quiz", "title": "Kvíz: Node.js základy", "summary": "Ověř si, že rozumíš Node, HTTP a serveru — i v cizím kódu.", "minutes": 25 }

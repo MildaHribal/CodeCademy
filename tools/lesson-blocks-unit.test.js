@@ -265,5 +265,8 @@ describe('Než začneš a stránka sekce', () => {
     assert.equal(outcomeLinkLabel('js-pole/co-je-pole#kopie-pole', section), 'Co je pole');
     assert.equal(outcomeLinkLabel('js-pole/workshop/016', section), 'Nákupní seznam, krok 16');
     assert.equal(outcomeLinkLabel('jina/sekce', section), 'jina/sekce');
+    const headings = [{ anchor: 'kopie-pole-slice-vs-a', text: 'Kopie pole: `slice` vs. `[...a]`' }];
+    assert.equal(outcomeLinkLabel('js-pole/co-je-pole#kopie-pole-slice-vs-a', section, headings), 'Co je pole › Kopie pole: slice vs. [...a]');
+    assert.equal(outcomeLinkLabel('js-pole/co-je-pole#neznama', section, headings), 'Co je pole');
   });
 });

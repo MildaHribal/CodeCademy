@@ -463,3 +463,33 @@ o firmě Arkáda, bez postav, bez tiketů. Obsah vždy přepiš do formátu Akad
 | `pojmy.md`, `tahak.md`, `outcomes` | doporučené | S5, S6, S9 |
 | všechny `see` a `[[pojmy]]` platné | ano | S4, S5 |
 | `npm run overit -- content/<sekce>` bez chyb | ano | K1 a vše výš |
+
+---
+
+## 17. Poučení z přepracovaných pilotů (povinné)
+
+- **Layout test na zarovnání vyzkoušej i s řešením BEZ té vlastnosti.** Když dají obě varianty
+  stejné rozměry (stejně vysoké položky: `stretch` = `center`), požadavek do zadání nepatří,
+  nebo změň data, aby byl rozdíl vidět. Střed měř přes `Range` textu.
+- **Data testu musí rozlišit správnou a typicky špatnou logiku.** Řazení textů piš „podle české
+  abecedy" a volte data, na kterých obyčejné `sort()` nebo `<` selže (Č × C/D/Z, Ch za H).
+- **Karty a kvíz nekopírují** text `:::check`, otázek lekce ani kód předpovědí — kontrolní otázky
+  se už samy zakládají v opakování, shodná karta by přišla podruhé. Stejný vzor, jiná data.
+- **Otázky na konci lekce** neopakují kód pretestu ani kontrolní otázky; ptej se na sousední případ.
+- **Otázka ani `--why--` nestaví na pojmu, který výklad neuvedl.** Před odevzdáním hledej klíčové
+  slovo každé otázky v textu lekce.
+- **3. stupeň tipu u `recall` a `choose` není přejmenované řešení** — popisky podcílů (`// 1. …`)
+  nebo odkaz na vlastní dřívější funkci. U běžných kroků totéž, jakmile se vzor liší jen jmény.
+- **Lab:** rámeček `[!TIP]` v zadání neprozrazuje postup; tip k požadavku vede k výpočtu, ne k hodnotě.
+- **Každou past ověř spuštěním a hlídej zobecnění.** Platí-li jen za podmínky, napiš ji
+  („`reduce` bez `return` spadne, jen když s akumulátorem pracuješ").
+- **Barevný výklad v praxi:** kontrastní dvojice slov do `==zvýraznění==` (ne tučně, nejvýš 2× na
+  lekci); tučně nejvýš 1× na odstavec, nikdy tři podstatná jména v jedné větě; v postupu výpočtu
+  tučně jen výsledek; seznam s tučným úvodem odrážek a názvy tlačítek UI (**Spustit**) tučně smí být.
+- **Projekt a lab:** příběhy v popisu nečísluj (požadavky se v UI číslují zvlášť); odkazuj slovy.
+- **Když testy měří na jiné šířce, než nabízí přepínač náhledu** (testy / 768 / 375), napiš to v zadání.
+- **Debug krok** působí přirozeněji, když chybný kód přijde dřív jako „kolegův modul" a debug krok
+  ho až opraví (vzor `node-zaklady` 011 → 012).
+- **Sada `# --code--` s více soubory:** otázky jmenují soubor u čísla řádku („řádek 65 v `shop.css`").
+- **Tahák:** nadpis vzoru odpovídá kódu pod ním; tahák nezačíná vlastním nadpisem `#`
+  (UI ho už nadepisuje).

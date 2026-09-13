@@ -35,7 +35,7 @@ export function createReviewPanel(review, { isProject = false } = {}) {
       ? h(
           'div',
           { class: 'review__extensions' },
-          h('h3', { class: 'review__subtitle' }, isProject ? 'Rozšíření bez testů a do portfolia' : 'Rozšíření bez testů'),
+          h('h3', { class: 'review__subtitle' }, 'Kam dál: rozšíření'),
           renderMarkdown(review.extensions, { className: 'prose' }),
         )
       : null,

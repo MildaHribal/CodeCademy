@@ -16,6 +16,7 @@ import { projectExtensions } from '../../screens/project.js';
 import { createExplainPanel } from '../../lesson/blocks/explain.js';
 import { setupApproaches } from './approaches.js';
 import { changeWarning, debugChangeRatio } from './change-ratio.js';
+import { diffLines } from '../../../../shared/diff.js';
 import { debugSteps, kindLabel } from './labels.js';
 import { createParsonsEditor } from './parsons.js';
 import { createPlanPanel } from './plan.js';
@@ -59,6 +60,24 @@ workspaceExtensions.register({
         solution = null;
       }
       return solution;
+    }
+
+    // Krok bez oblasti --edit-- by editor otevřel na prvním souboru (často index.html). Chyba je
+    // ale v souboru, který oprava mění: když uživatel ještě nic neudělal, přepni na něj.
+    if (!ws.item.seed.some((file) => file.region) && !ws.state().completed) {
+      const startFile = ws.editor.activeFile?.();
+      let touched = false;
+      ws.on('files-change', () => (touched = true));
+      solutionFiles().then((files) => {
+        if (ws.signal.aborted || touched || !files || ws.editor.activeFile?.() !== startFile) return;
+        const target = files.find((file) => file.content !== ws.item.seed.find((seed) => seed.name === file.name)?.content);
+        if (!target) return;
+        // Otevři soubor a postav kurzor k prvnímu řádku, který oprava mění (ne na začátek souboru).
+        const seedContent = ws.item.seed.find((seed) => seed.name === target.name)?.content ?? '';
+        const firstChange = diffLines(seedContent, target.content).find((line) => line.type !== 'same');
+        const line = firstChange?.beforeLine ?? firstChange?.afterLine ?? 1;
+        if (!ws.editor.revealLine?.(target.name, line) && target.name !== startFile) ws.editor.selectFile?.(target.name);
+      });
     }
 
     ws.on('check-start', clear);

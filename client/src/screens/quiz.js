@@ -12,7 +12,7 @@ import { h, svg } from '../dom.js';
 import { icons } from '../icons.js';
 import { progress } from '../progress.js';
 import { apiRequest } from '../api-request.js';
-import { loadCurriculum, allModules } from '../content.js';
+import { loadCurriculum, loadModule, allModules } from '../content.js';
 import { minutes, percent, questions as questionsText } from '../text.js';
 import { createQuestion, questionItemId } from '../components/question.js';
 import { createCodeSetPanel } from '../components/quiz-code-set.js';
@@ -242,14 +242,22 @@ function wrongList(wrong) {
   });
   list.append(...items);
 
-  // Názvy modulů místo holých referencí, když se osnova načte.
+  // Názvy modulů (u kotvy i text nadpisu lekce) místo holých referencí, když se osnova načte.
   loadCurriculum()
-    .then((curriculum) => {
+    .then(async (curriculum) => {
       for (const { module } of allModules(curriculum)) titles.set(module.id, module.title);
       for (const link of list.querySelectorAll('a[data-ref]')) {
         const ref = link.dataset.ref;
-        const title = titles.get(refModuleId(ref));
-        if (title) link.textContent = ref.includes('#') ? `${title} (${ref.split('#')[1].replace(/-/g, ' ')})` : title;
+        const moduleId = refModuleId(ref);
+        const title = titles.get(moduleId);
+        if (!title) continue;
+        link.textContent = title;
+        const anchor = ref.split('#')[1];
+        if (!anchor) continue;
+        const [sectionId, moduleSlug] = moduleId.split('/');
+        const detail = await loadModule(sectionId, moduleSlug).catch(() => null);
+        const heading = detail?.lesson?.headings?.find((item) => item.anchor === anchor);
+        if (heading) link.textContent = `${title} › ${heading.text.replace(/[`*_]/g, '')}`;
       }
     })
     .catch(() => {});

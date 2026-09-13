@@ -13,15 +13,17 @@ může spolehnout: aby odpovídalo vždycky stejně, vracelo srozumitelné chyby
 nespadlo kvůli špatnému požadavku.
 
 Tohle je samostatný projekt: žádné kroky, jen zadání. Všechno, co potřebuješ, jsi
-psal ve workshopu **Postav HTTP server knihovny**. Když se zasekneš, vrať se k němu.
+psal ve workshopu [Postav HTTP server knihovny](see:node-zaklady/workshop-http-server/001)
+a v labu [API receptů](see:node-zaklady/lab-api-receptu). Když se zasekneš, vrať se k nim.
 
 ## Jak začít
 
 1. Klikni na **Začít projekt** a otevři složku projektu ve VS Code.
 2. V terminálu ve složce projektu spusť `npm run dev`. Server se po každém uložení
    sám restartuje.
-3. Piš do `index.js`. API zkoušej přes `curl` (příklady jsou v `README.md`) nebo
-   v prohlížeči na <http://localhost:3000/api/notes>.
+3. Piš do `index.js`. API zkoušej přes `curl` (příklady jsou v `README.md`), v prohlížeči
+   na <http://localhost:3000/api/notes>, nebo tady v panelu **Vyzkoušej server** —
+   spustí tvůj projekt a pošle na něj požadavek.
 4. Když máš hotový příběh, klikni na **Zkontrolovat**.
 
 Projekt nemá žádné závislosti a nic neinstaluješ. Používej jen vestavěné moduly
@@ -40,28 +42,32 @@ Každá poznámka je objekt se čtyřmi klíči:
 
 ## Uživatelské příběhy
 
-1. Když klient pošle `GET /api/notes`, dostane stav `200` a pole všech poznámek ze
+- Když klient pošle `GET /api/notes`, dostane stav `200` a pole všech poznámek ze
    souboru s daty. Prázdný soubor (`[]`) znamená prázdné pole, ne chybu.
-2. Když klient pošle `GET /api/notes/:id`, dostane stav `200` a poznámku s tím id.
+- Když klient pošle `GET /api/notes/:id`, dostane stav `200` a poznámku s tím id.
    Když taková poznámka není, dostane `404`.
-3. Když klient pošle `POST /api/notes` s tělem `{ "title": "…", "text": "…" }`,
+- Když klient pošle `POST /api/notes` s tělem `{ "title": "…", "text": "…" }`,
    server poznámku vytvoří, uloží do souboru a odpoví `201` a celou vytvořenou
    poznámkou:
    - `id` přidělí server a nesmí se opakovat — ani po smazání poznámky,
    - `title` uloží bez mezer na začátku a na konci,
    - když `text` v těle chybí, uloží prázdný řetězec,
    - `createdAt` je okamžik vytvoření.
-4. Když tělo `POST` není platný JSON, není to objekt, `title` chybí, není řetězec,
+- Když tělo `POST` není platný JSON, není to objekt, `title` chybí, není řetězec,
    je prázdné (nebo jen z mezer) či má po oříznutí víc než 100 znaků, nebo `text`
    není řetězec, dostane klient `400` a nic se neuloží.
-5. Když klient pošle `DELETE /api/notes/:id`, server poznámku smaže ze souboru
+- Když klient pošle `DELETE /api/notes/:id`, server poznámku smaže ze souboru
    a odpoví `204` s prázdným tělem. Když poznámka s tím id není, odpoví `404`.
-6. Poznámky přežijí restart serveru.
-7. Na adresu, kterou API nezná, dostane klient `404`. Na metodu, kterou adresa
+- Poznámky přežijí restart serveru.
+- Na adresu, kterou API nezná, dostane klient `404`. Na metodu, kterou adresa
    neumí (třeba `PUT /api/notes`), dostane `405` a hlavičku `Allow` s metodami,
    které adresa umí.
-8. Když se soubor s daty nedá přečíst (je poškozený), dostane klient `500` a server
+- Když se soubor s daty nedá přečíst (je poškozený), dostane klient `500` a server
    **běží dál**.
+
+> [!PITFALL]
+> Příběh o vytvoření poznámky zní nevinně, ale „id se nesmí opakovat ani po smazání" je nejčastější
+> důvod, proč projekt neprojde. Než začneš psát, rozmysli si, jak id vyrobíš.
 
 ## Technické požadavky
 
@@ -73,17 +79,9 @@ Každá poznámka je objekt se čtyřmi klíči:
 - Každá chybová odpověď má tělo `{ "error": "zpráva" }` se srozumitelnou českou zprávou.
 - Soubor s daty čti při každém požadavku znovu, nedrž si ho jen v paměti.
 
-## Tipy
-
-- Rozděl si kód na malé funkce: čtení a zápis dat, `sendJson`, `readBody`,
-  validace, jedna funkce na každou routu. Handler serveru pak jen rozhoduje, kterou
-  zavolat.
-- Jedinečné id bez počítání vyrobí `randomUUID()` z modulu `node:crypto`.
-- Příběh 8 vyřešíš jedním `try`/`catch` kolem celého zpracování požadavku.
-  V `catch` chybu vypiš přes `console.error`, ať ji v terminálu vidíš, a klientovi
-  pošli `500` s obecnou zprávou — podrobnosti chyby ven neposílej.
-- Pozor na odpověď `204`: nemá tělo, takže ani `Content-Type`. Pošli jen
-  `res.writeHead(204)` a `res.end()`.
+> [!TIP]
+> Když se zasekneš, tlačítko **Potřebuju nápovědu** u kontroly ukáže tipy k příběhu,
+> který neprošel. Nejdřív si ale zkus odpovědět, jak jsi totéž řešil ve workshopu.
 
 # --hints--
 
@@ -149,7 +147,7 @@ try {
   const server = await helpers.startServer('index.js', { env: { NOTES_FILE: notesFile } });
   const found = await fetch(new URL('/api/notes/test-2', server.url));
   assert.equal(found.status, 200, 'GET /api/notes/test-2 má vrátit 200');
-  assert.deepEqual(await found.json(), notes[1]);
+  assert.deepEqual(await found.json(), notes[1], 'GET /api/notes/test-2 má vrátit celou poznámku test-2 ze souboru');
 
   const missing = await fetch(new URL('/api/notes/neexistuje', server.url));
   assert.equal(missing.status, 404, 'Neznámé id má vrátit 404');
@@ -180,8 +178,8 @@ try {
   const note = await res.json();
   assert.equal(typeof note.id, 'string', 'id má být řetězec');
   assert.ok(note.id.length > 0, 'id nemá být prázdné');
-  assert.equal(note.title, 'Zavolat mámě');
-  assert.equal(note.text, 'v neděli odpoledne');
+  assert.equal(note.title, 'Zavolat mámě', 'Vytvořená poznámka má mít title „Zavolat mámě" z těla požadavku');
+  assert.equal(note.text, 'v neděli odpoledne', 'Vytvořená poznámka má mít text „v neděli odpoledne" z těla požadavku');
   assert.equal(typeof note.createdAt, 'string', 'createdAt má být řetězec');
   const created = Date.parse(note.createdAt);
   assert.ok(!Number.isNaN(created) && new Date(created).toISOString() === note.createdAt, `createdAt má být ve formátu ISO (toISOString), přišlo: ${note.createdAt}`);
@@ -436,3 +434,61 @@ try {
   await fs.rm(tmp, { recursive: true, force: true });
 }
 ```
+
+# --help--
+
+## --tip--
+
+Všechny stavební kameny máš ve workshopu — `server.js` z jeho posledního kroku
+[Server, který nespadne](see:node-zaklady/workshop-http-server/021) je dobrá mapa.
+Rozděl si kód na malé funkce: čtení a zápis dat, `sendJson`, `readBody`, validace
+a jedna funkce na každou routu. Handler pak jen rozhoduje, kterou zavolat.
+
+## --tip-- 9
+
+Odpověď `204` nemá tělo, a tak nepotřebuje ani hlavičku `Content-Type` — `sendJson`
+se na ni nehodí. Stačí stav přes `res.writeHead` a prázdné `res.end`. Viz
+[Stavové kódy](see:node-zaklady/http-v-node#stavove-kody).
+
+## --tip-- 11
+
+„Nejvyšší id + 1" z workshopu tady nestačí: po smazání poslední poznámky by další
+dostala stejné id a starý odkaz by najednou ukazoval na cizí poznámku. Náhodné
+jedinečné id bez počítání vyrobí `randomUUID()` z modulu `node:crypto`.
+
+## --tip-- 13
+
+Jeden `try`/`catch` kolem celého zpracování požadavku. V `catch` chybu vypiš přes
+`console.error`, ať ji v terminálu vidíš, a klientovi pošli `500` s obecnou zprávou —
+podrobnosti chyby ven neposílej. Stejný tvar máš v posledním kroku workshopu.
+
+# --review--
+
+Testy kontrolují, že API dělá, co má. Jestli je kód dobrý, zkontroluj sám — přesně na
+tohle se ptá kolega při code review.
+
+## --rubric--
+
+- Handler serveru jen rozhoduje, kterou funkci zavolat; každá routa má vlastní pojmenovanou funkci.
+- Čtení a zápis souboru je na jednom místě (dvě funkce), ne rozkopírované po routách.
+- Validace poznámky je samostatná funkce a její zprávy řeknou frontendu, co přesně je špatně.
+- Odpověď `500` neprozradí klientovi detaily chyby, ale v terminálu je vidět celá.
+- `README.md` popisuje, jak projekt spustit, a jedno rozhodnutí, které jsi udělal (třeba proč UUID).
+- Víš, co bys příště udělal jinak.
+
+## --extensions--
+
+**Rozšíření bez testů**
+
+- `PATCH /api/notes/:id` — změna názvu nebo textu se stejnou validací jako u `POST`
+  (a `updatedAt`).
+- Vyhledávání `GET /api/notes?q=nákup` v názvu i textu, bez ohledu na velikost písmen.
+- Zápis bez rizika poškození: zapiš do dočasného souboru a pak ho přejmenuj
+  (`rename` z `node:fs/promises`) — rozepsaný soubor tak nikdy nezůstane napůl.
+
+**Rozšíření do portfolia**
+
+- Jednoduchý frontend (HTML + `fetch`), který API používá, ve stejném repozitáři.
+- README s tabulkou endpointů, příklady `curl` a sekcí „Rozhodnutí" (soubor místo
+  databáze, UUID místo čísel, proč `204` u mazání).
+- Testy přes vestavěný `node:test`, které server spustí a projdou uživatelské příběhy.

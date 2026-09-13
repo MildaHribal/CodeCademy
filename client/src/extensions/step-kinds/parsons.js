@@ -280,10 +280,26 @@ export function createParsonsEditor(host, { files, onChange, item }) {
   };
 }
 
+/** Kolik řádků okolního kódu je vidět hned; zbytek (typicky kód z předchozích kroků) se sbalí. */
+const CONTEXT_VISIBLE = 4;
+
 function contextCode(lines, where) {
-  return h(
-    'pre',
-    { class: 'parsons__context', 'aria-label': `Kód ${where} tvým řešením` },
-    h('code', {}, lines.join('\n')),
+  const pre = (shown) => h('pre', { class: 'parsons__context', 'aria-label': `Kód ${where} tvým řešením` }, h('code', {}, shown.join('\n')));
+  if (lines.length <= CONTEXT_VISIBLE + 2) return pre(lines);
+
+  // Před řešením je vidět konec kódu, za ním začátek; zbytek jde rozbalit.
+  const hiddenCount = lines.length - CONTEXT_VISIBLE;
+  const visible = where === 'před' ? lines.slice(-CONTEXT_VISIBLE) : lines.slice(0, CONTEXT_VISIBLE);
+  const wrapper = h('div', { class: 'parsons__context-wrap' });
+  const toggle = h(
+    'button',
+    { type: 'button', class: 'parsons__context-toggle', 'aria-expanded': 'false' },
+    `… ${hiddenCount} ${hiddenCount >= 5 ? 'řádků' : 'řádky'} kódu ${where === 'před' ? 'výš' : 'níž'} — rozbalit`,
   );
+  toggle.addEventListener('click', () => {
+    wrapper.replaceChildren(pre(lines));
+  });
+  if (where === 'před') wrapper.append(toggle, pre(visible));
+  else wrapper.append(pre(visible), toggle);
+  return wrapper;
 }

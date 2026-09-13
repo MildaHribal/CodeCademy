@@ -14,7 +14,7 @@ export function createBriefPane({ item, module, isWorkshop, hintList, slots, onC
 
   const checkButton = h(
     'button',
-    { type: 'button', class: 'btn btn--primary', onclick: () => onCheck() },
+    { type: 'button', class: 'btn btn--primary', title: 'Zkontrolovat (Ctrl+Enter)', onclick: () => onCheck() },
     h('span', { class: 'btn__label' }, 'Zkontrolovat'),
     h('kbd', { class: 'btn__kbd' }, 'Ctrl+Enter'),
   );

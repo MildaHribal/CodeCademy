@@ -350,6 +350,35 @@ span.stepper__arrow {
   background: var(--footer-bg);
 }
 
+/* Lišta tlačítek pod zadáním: na úzkém panelu (1280 px a méně) se jinak rozpadne do
+   čtyř řádků a ukousne místo zadání. Tiché tlačítko nepotřebuje široký okraj. */
+.pane__footer .actions {
+  gap: 6px 4px;
+}
+
+.pane__footer .actions .btn--quiet {
+  padding-inline: 10px;
+}
+
+/* Na úzkém zadání (okno do ~1360 px) se zkratka do tlačítka nevejde vedle Obnovit;
+   připomíná ji title tlačítka a přehled zkratek (?). */
+@media (max-width: 1360px) {
+  .pane__footer .btn__kbd {
+    display: none;
+  }
+}
+
+@media (max-height: 760px) {
+  .pane__footer {
+    gap: 8px;
+    padding-block: 8px 10px;
+  }
+
+  .pane__footer .actions .btn {
+    min-height: 32px;
+  }
+}
+
 /* ——— Nápovědy (požadavky) ——— */
 
 .hints {

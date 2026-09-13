@@ -114,9 +114,13 @@ export function createCourseChecks(course) {
       const part = course.parts.find((p) => p.sectionIds.includes(sectionId));
       return Boolean(part && part.sectionIds.includes(target) && part.sectionIds.indexOf(target) < part.sectionIds.indexOf(sectionId));
     },
+    /** Q4 má smysl, jen když v téže části už existuje (je napsaná) nějaká dřívější sekce. */
     sectionHasEarlierInPart(sectionId) {
       const part = course.parts.find((p) => p.sectionIds.includes(sectionId));
-      return Boolean(part && part.sectionIds.indexOf(sectionId) > 0);
+      if (!part) return false;
+      return part.sectionIds
+        .slice(0, part.sectionIds.indexOf(sectionId))
+        .some((id) => course.sections.get(id)?.available);
     },
 
     /**

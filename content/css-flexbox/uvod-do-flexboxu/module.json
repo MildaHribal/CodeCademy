@@ -1,1 +1,1 @@
-{ "type": "lesson", "title": "Úvod do flexboxu", "summary": "Flex kontejner a položky, hlavní a vedlejší osa, justify-content, align-items a gap.", "minutes": 15, "runtime": "dom" }
+{ "type": "lesson", "title": "Úvod do flexboxu", "summary": "Flex kontejner a položky, hlavní a vedlejší osa, volné místo, zarovnání, zalamování a automatický margin.", "minutes": 25, "runtime": "dom" }
