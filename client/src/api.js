@@ -1,54 +1,15 @@
-// Tenký klient HTTP API serveru (docs/kontrakt.md, kap. 7).
-// Každá funkce vrací rozparsované JSON tělo, nebo vyhodí ApiError s českou zprávou.
+// Endpointy jádra (docs/kontrakt.md, kap. 7). Nástroje nepřidávají funkce sem, ale do
+// vlastního souboru přes apiRequest (api-request.js) — viz docs/platforma.md.
+import { apiRequest as request } from './api-request.js';
 
-export class ApiError extends Error {
-  constructor(message, { status = 0, offline = false } = {}) {
-    super(message);
-    this.name = 'ApiError';
-    this.status = status;
-    this.offline = offline;
-  }
-}
-
-async function request(method, path, body, { signal } = {}) {
-  let response;
-  try {
-    response = await fetch(path, {
-      method,
-      headers: body === undefined ? {} : { 'content-type': 'application/json' },
-      body: body === undefined ? undefined : JSON.stringify(body),
-      signal,
-    });
-  } catch (error) {
-    if (signal?.aborted) throw error; // zrušil to sám volající, server je v pořádku
-    throw new ApiError('Server Akademie neodpovídá. Zkontroluj, že běží (./start.sh), a zkus to znovu.', { offline: true });
-  }
-
-  let data = null;
-  try {
-    data = await response.json();
-  } catch {
-    // Tělo není JSON (např. proxy vrátila HTML stránku s chybou).
-  }
-
-  if (!response.ok) {
-    const message = data?.error ?? `Server vrátil chybu ${response.status}.`;
-    // Vite proxy vrací 502/504, když server za ní neběží.
-    const offline = !data?.error && (response.status === 502 || response.status === 504);
-    throw new ApiError(offline ? 'Server Akademie neodpovídá. Zkontroluj, že běží (./start.sh), a zkus to znovu.' : message, {
-      status: response.status,
-      offline,
-    });
-  }
-  if (data === null) throw new ApiError('Server poslal odpověď, které nerozumím.', { status: response.status });
-  return data;
-}
+export { ApiError, apiRequest } from './api-request.js';
 
 const segment = encodeURIComponent;
 
 export const api = {
   curriculum: () => request('GET', '/api/curriculum'),
   module: (sectionId, moduleId) => request('GET', `/api/module/${segment(sectionId)}/${segment(moduleId)}`),
+  moduleWithSolutions: (sectionId, moduleId) => request('GET', `/api/module/${segment(sectionId)}/${segment(moduleId)}?solution=1`),
 
   progress: () => request('GET', '/api/progress'),
   saveCode: (id, files) => request('PUT', '/api/progress/code', { id, files }),

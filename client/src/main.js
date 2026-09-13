@@ -1,4 +1,4 @@
-// Vstupní bod aplikace: styly, router a přepínání obrazovek.
+// Vstupní bod aplikace: styly, registr obrazovek, rozšíření a přepínání obrazovek.
 //
 // Každá obrazovka je funkce render(ctx, route). Kontext jí dává:
 //   ctx.root        — prvek <main>, kam kreslí
@@ -6,7 +6,12 @@
 //   ctx.onCleanup   — registrace úklidu (zničit editor, náhled, posluchače…)
 //   ctx.setCrumbs   — drobečková navigace v horní liště
 //   ctx.setLayout   — 'page' (čtení, úzký sloupec) nebo 'workspace' (celá plocha)
+//   ctx.setTitle    — titulek karty prohlížeče
+//
+// Obrazovky nástrojů se neregistrují tady, ale v client/src/extensions/<nástroj>.js
+// (načítají se automaticky) — viz docs/platforma.md.
 
+import './styles/tokens.css';
 import './styles/base.css';
 import './styles/layout.css';
 import './styles/prose.css';
@@ -19,21 +24,24 @@ import './styles/project.css';
 import { startRouter } from './router.js';
 import { progress } from './progress.js';
 import { h, replace } from './dom.js';
+import { appEvents } from './core/events.js';
+import { mountHeaderMenu, setHeaderRoute } from './core/header.js';
+import { registerScreen, screenFor } from './core/screens.js';
 import { renderOverview } from './screens/overview.js';
 import { renderSection } from './screens/section.js';
 import { renderModule } from './screens/module.js';
 import { renderNotFound } from './screens/not-found.js';
+import './extensions/index.js';
 
-const SCREENS = {
-  overview: renderOverview,
-  section: renderSection,
-  module: renderModule,
-  'not-found': renderNotFound,
-};
+registerScreen({ name: 'overview', render: renderOverview });
+registerScreen({ name: 'section', render: renderSection });
+registerScreen({ name: 'module', render: renderModule });
+registerScreen({ name: 'not-found', render: renderNotFound });
 
 const main = document.querySelector('#main');
 const crumbs = document.querySelector('.app-bar__crumbs');
 const saveStatus = document.querySelector('.app-bar__status');
+mountHeaderMenu(document.querySelector('.app-bar__menu'));
 
 let current = null; // { controller, cleanups }
 
@@ -68,9 +76,11 @@ async function show(route) {
   ctx.setTitle('');
   main.replaceChildren();
   window.scrollTo(0, 0);
+  setHeaderRoute(route);
+  appEvents.emit('route:change', { route });
 
   try {
-    await SCREENS[route.name](ctx, route);
+    await screenFor(route.name)(ctx, route);
   } catch (error) {
     if (controller.signal.aborted) return;
     console.error(error);

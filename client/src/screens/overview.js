@@ -6,7 +6,17 @@ import { progress, moduleStatus, sectionStatus } from '../progress.js';
 import { loadCurriculum, allModules } from '../content.js';
 import { MODULE_TYPE_LABELS, modules as modulesText, percent } from '../text.js';
 import { segmentedProgress } from '../components/status.js';
+import { createExtensionPoint } from '../core/registry.js';
+import { createSlots } from '../core/slots.js';
 import { withLoading, showLoadError } from './load.js';
+
+/**
+ * Rozšíření přehledu osnovy („K opakování: 12", statistiky…):
+ *   overviewExtensions.register({ id, order, setup(overview) { overview.addToSlot('before-toc', el); } })
+ * API: curriculum, signal, onCleanup, page, addToSlot(name, el, { order })
+ * sloty: 'head' (pod úvodem a panelem Pokračovat), 'before-toc' (nad obsahem kurzu), 'end'
+ */
+export const overviewExtensions = createExtensionPoint('přehledu');
 
 export async function renderOverview(ctx) {
   ctx.setTitle('');
@@ -25,8 +35,8 @@ export async function renderOverview(ctx) {
     return;
   }
 
-  ctx.root.append(
-    h(
+  const slots = createSlots(['head', 'before-toc', 'end']);
+  const page = h(
       'div',
       { class: 'page page--wide overview' },
       h(
@@ -44,16 +54,20 @@ export async function renderOverview(ctx) {
         ),
         resumePanel(curriculum),
       ),
+      slots.element('head'),
       progressError
         ? h('p', { class: 'notice notice--warning', role: 'status' }, `Postup se nepodařilo načíst (${progressError.message}). Osnova se ukazuje bez něj.`)
         : null,
+      slots.element('before-toc'),
       h(
         'div',
         { class: 'toc' },
         curriculum.parts.map((part, index) => partBlock(part, index + 1)),
       ),
-    ),
-  );
+      slots.element('end'),
+    );
+  ctx.root.append(page);
+  ctx.onCleanup(overviewExtensions.mount({ curriculum, signal: ctx.signal, onCleanup: ctx.onCleanup, page, addToSlot: slots.addToSlot }));
 }
 
 /** Kam pokračovat: naposledy otevřený nedokončený modul, jinak první nesplněný. */

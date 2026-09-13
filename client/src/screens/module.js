@@ -8,7 +8,7 @@ import { MODULE_TYPE_LABELS } from '../text.js';
 import { errorNotice } from '../components/status.js';
 import { withLoading, showLoadError } from './load.js';
 import { backLink } from './nav.js';
-import { renderWorkspace } from './workspace.js';
+import { renderWorkspace } from '../workspace/index.js';
 import { renderLesson } from './lesson.js';
 import { renderQuiz } from './quiz.js';
 import { renderProject } from './project.js';

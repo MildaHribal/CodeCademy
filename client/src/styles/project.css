@@ -76,7 +76,7 @@
 .project__frame {
   position: relative;
   height: 480px;
-  background: #fff;
+  background: var(--preview-bg);
 }
 
 .project__frame iframe {

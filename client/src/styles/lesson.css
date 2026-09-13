@@ -67,7 +67,7 @@
   flex: 3;
   min-height: 0;
   position: relative;
-  background: #fff;
+  background: var(--preview-bg);
 }
 
 .live__preview iframe {
@@ -242,7 +242,7 @@
 }
 
 .answer[data-state='correct'] {
-  border-color: #7fbf9c;
+  border-color: var(--done-border-strong);
   background: var(--done-soft);
   color: var(--ink);
 }
@@ -252,7 +252,7 @@
 }
 
 .answer[data-state='wrong'] {
-  border-color: #e3a39b;
+  border-color: var(--fail-border-strong);
   background: var(--fail-soft);
 }
 

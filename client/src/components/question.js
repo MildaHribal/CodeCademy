@@ -1,83 +1,41 @@
-// Jedna otázka s odpověďmi — používá ji kvíz i kontrolní otázky na konci lekce.
-// Odpovědi se míchají deterministicky podle klíče, takže při překreslení zůstanou na místě.
+// Otázky — používá je kvíz, kontrolní otázky v lekci a další nástroje (opakování, :::check).
+// Typy otázek jsou v registru; jádro má typ `choice` (volby, kontrakt kap. 4).
+// Nový typ (např. psaná odpověď s `expected`) = nový soubor v components/questions/ a registrace:
+//
+//   registerQuestionType({
+//     id: 'written',
+//     order: 10,
+//     match: (question) => typeof question.expected === 'string',
+//     create: (question, options) => ({ element, isAnswered, focus, reveal }),
+//   });
+//
+// Rozhraní vytvořené otázky (to používají kvíz a lekce):
+//   element        — prvek otázky (fieldset)
+//   isAnswered()   — true, když uživatel už odpověděl
+//   focus()        — přesune fokus na první ovládací prvek
+//   reveal()       — vyhodnotí a ukáže výsledek; vrátí true, když je odpověď správná
+//   answer()       — nepovinné: odpověď uživatele pro záznam (opakování, statistiky)
+//
+// options: { key: string (stabilní klíč pro míchání), number, total?, onChange?() }
+import { createRegistry } from '../core/registry.js';
+import { createChoiceQuestion } from './questions/choice.js';
 
-import { h, svg } from '../dom.js';
-import { icons } from '../icons.js';
-import { renderMarkdown } from '../markdown.js';
-import { shuffleBy } from '../shuffle.js';
+const questionTypes = createRegistry('Typ otázky');
 
-let uid = 0;
+export { nextQuestionUid } from './questions/uid.js';
 
-/**
- * @param {{ text, multiple, answers: {text, correct, why}[] }} question
- * @param {{ key: string, number: number, total?: number, onChange?: () => void }} options
- */
-export function createQuestion(question, { key, number, total, onChange }) {
-  const groupName = `q-${++uid}`;
-  const promptId = `${groupName}-prompt`;
-  const answers = shuffleBy(key, question.answers.map((answer, originalIndex) => ({ ...answer, originalIndex })));
+export function registerQuestionType(entry) {
+  if (typeof entry?.match !== 'function' || typeof entry?.create !== 'function') {
+    throw new Error(`Typ otázky „${entry?.id}" potřebuje match() a create()`);
+  }
+  return questionTypes.add(entry);
+}
 
-  const heading = h(
-    'p',
-    { class: 'question__number' },
-    total ? `Otázka ${number} z ${total}` : `Otázka ${number}`,
-    question.multiple ? h('span', { class: 'question__multiple' }, 'Vyber všechny správné odpovědi') : null,
-  );
-  const prompt = renderMarkdown(question.text, { className: 'prose question__prompt' });
-  prompt.id = promptId;
+registerQuestionType({ id: 'choice', order: 1000, match: (question) => Array.isArray(question.answers), create: createChoiceQuestion });
 
-  const options = answers.map((answer) => {
-    const input = h('input', {
-      type: question.multiple ? 'checkbox' : 'radio',
-      name: groupName,
-      class: 'answer__input',
-      onchange: () => onChange?.(),
-    });
-    const mark = h('span', { class: 'answer__mark' });
-    const why = h('div', { class: 'answer__why' });
-    const label = h(
-      'label',
-      { class: 'answer' },
-      input,
-      renderMarkdown(answer.text, { className: 'prose answer__text' }),
-      mark,
-    );
-    return { answer, input, label, mark, why, wrapper: h('li', { class: 'answer-item' }, label, why) };
-  });
-
-  const verdict = h('p', { class: 'question__verdict', role: 'status' });
-  const element = h(
-    'fieldset',
-    { class: 'question', 'aria-describedby': promptId },
-    h('legend', { class: 'visually-hidden' }, total ? `Otázka ${number} z ${total}` : `Otázka ${number}`),
-    heading,
-    prompt,
-    h('ul', { class: 'answers' }, options.map((o) => o.wrapper)),
-    verdict,
-  );
-
-  return {
-    element,
-    isAnswered: () => options.some((o) => o.input.checked),
-    focus: () => options[0]?.input.focus(),
-
-    /** Vyhodnotí otázku, ukáže správné odpovědi a vysvětlení. Vrátí true, když je odpověď správná. */
-    reveal() {
-      const correct = options.every((o) => o.input.checked === o.answer.correct);
-      element.dataset.result = correct ? 'correct' : 'wrong';
-      for (const o of options) {
-        o.input.disabled = true;
-        const chosen = o.input.checked;
-        o.label.dataset.state = o.answer.correct ? 'correct' : chosen ? 'wrong' : 'neutral';
-        if (o.answer.correct) o.mark.replaceChildren(svg(icons.check, { size: 18, label: 'Správná odpověď' }));
-        else if (chosen) o.mark.replaceChildren(svg(icons.cross, { size: 18, label: 'Špatná odpověď' }));
-        // Vysvětlení ukážeme u toho, co uživatel vybral, a u správných odpovědí.
-        if (o.answer.why && (chosen || o.answer.correct)) {
-          o.why.replaceChildren(renderMarkdown(o.answer.why, { className: 'prose answer__why-text' }));
-        }
-      }
-      verdict.textContent = correct ? 'Správně.' : question.multiple ? 'Nesedí to — zkontroluj označené odpovědi.' : 'Špatně.';
-      return correct;
-    },
-  };
+/** Vytvoří otázku podle prvního typu (podle order), jehož match() ji přijme. */
+export function createQuestion(question, options) {
+  const type = questionTypes.list().find((entry) => entry.match(question));
+  if (!type) throw new Error('Neznámý typ otázky (žádný registrovaný typ ji neumí zobrazit)');
+  return type.create(question, options);
 }

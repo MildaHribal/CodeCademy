@@ -13,6 +13,38 @@ import { css } from '@codemirror/lang-css';
 import { javascript } from '@codemirror/lang-javascript';
 import { oneDark } from '@codemirror/theme-one-dark';
 import { h } from '../dom.js';
+import { createRegistry } from '../core/registry.js';
+
+// ——— Registr rozšíření CodeMirroru (lint, doplňování, zvýraznění…) ———
+//
+//   registerEditorExtension({
+//     id: 'js-lint',
+//     order: 10,
+//     // Zavolá se pro každý soubor v každém editoru; vrátí extension, pole, nebo null.
+//     extension: ({ name, lang, region, runtime, context, compact, item }) => (lang === 'js' ? jsLinter() : null),
+//   });
+//
+// context: 'workspace' (krok, lab) | 'live' (živá ukázka v lekci) | jiný text, který předá volající.
+
+const editorExtensions = createRegistry('Rozšíření editoru');
+
+export function registerEditorExtension(entry) {
+  if (typeof entry?.extension !== 'function') throw new Error(`Rozšíření editoru „${entry?.id}" nemá funkci extension`);
+  return editorExtensions.add(entry);
+}
+
+function registeredExtensionsFor(fileContext) {
+  const out = [];
+  for (const entry of editorExtensions.list()) {
+    try {
+      const extension = entry.extension(fileContext);
+      if (extension) out.push(extension);
+    } catch (error) {
+      console.error(`Rozšíření editoru „${entry.id}" selhalo`, error);
+    }
+  }
+  return out;
+}
 
 function languageFor(lang) {
   switch (lang) {
@@ -80,21 +112,23 @@ const editorTheme = EditorView.theme(
     '.cm-scroller': { fontFamily: 'var(--font-mono)', lineHeight: '1.6' },
     '.cm-content': { paddingBlock: '12px' },
     '.cm-edit-region': {
-      backgroundColor: 'rgba(122, 162, 255, 0.10)',
-      boxShadow: 'inset 3px 0 0 #7aa2ff',
+      backgroundColor: 'var(--code-region-bg)',
+      boxShadow: 'inset 3px 0 0 var(--code-accent)',
     },
     '&.cm-focused': { outline: 'none' },
   },
   { dark: true },
 );
 
-/**
- * @param {HTMLElement} parent
- * @param {{ files: {name, lang, content, region?}[], onChange?: (files) => void, onSubmit?: () => void, label?: string, compact?: boolean }} options
- */
 let editorCount = 0;
 
-export function createCodeEditor(parent, { files, onChange, onSubmit, label = 'Editor kódu', compact = false }) {
+/**
+ * @param {HTMLElement} parent
+ * @param {{ files: {name, lang, content, region?}[], onChange?: (files) => void, onSubmit?: () => void, label?: string,
+ *   compact?: boolean, runtime?: string, context?: string, item?: object }} options
+ *   runtime, context a item se jen předávají registrovaným rozšířením editoru
+ */
+export function createCodeEditor(parent, { files, onChange, onSubmit, label = 'Editor kódu', compact = false, runtime = null, context = 'editor', item = null }) {
   const idPrefix = `editor${++editorCount}`; // víc editorů na stránce nesmí mít stejná id záložek
   const states = new Map();
   let activeName = null;
@@ -134,7 +168,11 @@ export function createCodeEditor(parent, { files, onChange, onSubmit, label = 'E
   const view = new EditorView({ parent: surface });
 
   function buildState(file) {
-    const state = EditorState.create({ doc: file.content, extensions: [...extensions, languageFor(file.lang)] });
+    const fileContext = { name: file.name, lang: file.lang, region: file.region ?? null, runtime, context, compact, item };
+    const state = EditorState.create({
+      doc: file.content,
+      extensions: [...extensions, languageFor(file.lang), ...registeredExtensionsFor(fileContext)],
+    });
     const range = regionToRange(state.doc, file.region);
     if (!range) return state;
     // Kurzor na konec prvního řádku oblasti — tam uživatel obvykle začne psát.
@@ -217,6 +255,26 @@ export function createCodeEditor(parent, { files, onChange, onSubmit, label = 'E
     /** Nahradí obsah všech souborů (např. Obnovit krok). Nevolá onChange. */
     setFiles: load,
     focus: () => view.focus(),
+    /** Jméno souboru v aktivní záložce. */
+    activeFile: () => activeName,
+    /** Přepne na záložku souboru. */
+    selectFile: (name) => {
+      if (states.has(name)) select(name);
+    },
+    /** Přepne na soubor, postaví kurzor na začátek řádku (1-based) a odscrolluje k němu. */
+    revealLine(name, line) {
+      if (!states.has(name)) return false;
+      if (name !== activeName) select(name);
+      const doc = view.state.doc;
+      const target = doc.line(Math.min(Math.max(1, Math.round(line)), doc.lines));
+      view.dispatch({ selection: { anchor: target.from }, effects: EditorView.scrollIntoView(target.from, { y: 'center' }) });
+      view.focus();
+      return true;
+    },
+    /** EditorView aktivního souboru (pro rozšíření, která potřebují přímý přístup). */
+    get view() {
+      return view;
+    },
     destroy: () => {
       view.destroy();
       root.remove();

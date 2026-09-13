@@ -3,6 +3,7 @@
 // a ukládá rozpracovaný kód se zpožděním (debounce), aby se neposílal každý znak.
 
 import { api } from './api.js';
+import { appEvents } from './core/events.js';
 
 const SAVE_DELAY_MS = 800;
 
@@ -47,6 +48,7 @@ export const progress = {
     const result = await api.complete(id, score);
     if (result.progress) adopt(result.progress);
     else state.completed[id] = new Date().toISOString();
+    appEvents.emit('progress:complete', { id, score });
     return state;
   },
 
@@ -60,6 +62,7 @@ export const progress = {
     }
     const result = await api.reset(id);
     if (result.progress) adopt(result.progress);
+    appEvents.emit('progress:reset', { id });
     return state;
   },
 

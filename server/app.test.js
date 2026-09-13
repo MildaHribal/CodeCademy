@@ -32,6 +32,7 @@ describe('HTTP API', () => {
 
   after(async () => {
     await new Promise((resolve) => server.close(resolve));
+    await server.akademie.ctx.progress.flush();
     fs.rmSync(root, { recursive: true, force: true });
   });
 
@@ -66,7 +67,12 @@ describe('HTTP API', () => {
     assert.equal(section.available, true);
     assert.deepEqual(section.modules.map((m) => m.type), ['lesson', 'workshop', 'lab', 'quiz', 'project', 'project']);
     assert.equal(section.modules[1].stepCount, 2);
-    assert.deepEqual(planned, { id: 'planovana', title: 'Plánovaná sekce', intro: 'Ještě bez obsahu.', available: false, modules: [] });
+    assert.deepEqual(planned, {
+      id: 'planovana', title: 'Plánovaná sekce', intro: 'Ještě bez obsahu.', available: false, modules: [], uroven: 'jadro', outcomes: [],
+    });
+    assert.equal(section.uroven, 'jadro');
+    assert.deepEqual(section.outcomes, []);
+    assert.deepEqual(data.doporucenaTrasa, []);
   });
 
   test('GET /api/module bez řešení a s řešením', async () => {
@@ -127,6 +133,7 @@ describe('HTTP API', () => {
     const progress = (await api('GET', '/api/progress')).data;
     assert.deepEqual(Object.keys(progress.completed).sort(), ['ukazka/kviz', 'ukazka/workshop/001']);
     assert.equal(progress.code['ukazka/workshop/002'].files[0].content, 'add(1, 2)');
+    await server.akademie.ctx.progress.flush();
     assert.ok(fs.existsSync(path.join(dataDir, 'progress.json')));
 
     const reset = await api('POST', '/api/progress/reset', { id: 'ukazka/workshop' });

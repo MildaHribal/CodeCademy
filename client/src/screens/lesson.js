@@ -1,14 +1,21 @@
-// Lekce: výklad v markdownu, živé ukázky a kontrolní otázky na konci.
+// Lekce: výklad v markdownu, bloky (živé ukázky…) a kontrolní otázky na konci.
 // Splněná je, když uživatel správně odpoví na všechny otázky
-// (bez otázek stačí tlačítko Mám přečteno).
+// (bez otázek stačí tlačítko Mám přečteno) a splní podmínky přidané bloky (addRequirement).
+//
+// Bloky vykresluje registr (lesson/blocks.js), rozšíření obrazovky se připojují přes
+// lessonExtensions (lesson/extensions.js). Tento soubor by nástroje neměly potřebovat měnit.
 
 import { h, svg } from '../dom.js';
 import { icons } from '../icons.js';
 import { progress } from '../progress.js';
-import { renderMarkdown } from '../markdown.js';
 import { minutes } from '../text.js';
-import { createLiveExample } from '../components/live-example.js';
+import { appEvents } from '../core/events.js';
+import { createSlots } from '../core/slots.js';
 import { createQuestion } from '../components/question.js';
+import { lessonBlockRenderer } from '../lesson/blocks.js';
+import '../lesson/blocks/index.js';
+import { lessonExtensions } from '../lesson/extensions.js';
+import { createSlugger } from '../../../shared/anchors.js';
 import { nextModuleLink } from './nav.js';
 
 export function renderLesson(ctx, { module, nav }) {
@@ -17,6 +24,30 @@ export function renderLesson(ctx, { module, nav }) {
 
   const article = h('article', { class: 'page lesson' });
   ctx.root.append(article);
+
+  const slots = createSlots(['head', 'before-finish', 'end', 'aside']);
+  const requirements = [];
+
+  const lesson = {
+    module,
+    id: module.id,
+    nav,
+    article,
+    signal: ctx.signal,
+    onCleanup: ctx.onCleanup,
+    addToSlot: slots.addToSlot,
+    addRequirement(requirement) {
+      requirements.push(requirement);
+    },
+    unmetRequirements: () => requirements.filter((r) => !r.isMet()),
+    headings: () =>
+      [...article.querySelectorAll('[data-anchor]')].map((element) => ({
+        anchor: element.dataset.anchor,
+        text: element.textContent,
+        level: Number(element.tagName.slice(1)),
+        element,
+      })),
+  };
 
   article.append(
     h(
@@ -30,29 +61,57 @@ export function renderLesson(ctx, { module, nav }) {
       ),
       startsWithHeading ? null : h('h1', { class: 'module-head__title' }, module.title),
     ),
+    slots.element('head'),
   );
 
-  // Výklad a živé ukázky. Ukázky se připojují až do prvků, které už jsou ve stránce.
-  let liveNumber = 0;
-  for (const block of blocks) {
-    if (block.kind === 'md') {
-      article.append(renderMarkdown(block.text, { className: 'prose lesson__text' }));
-    } else {
-      const host = h('div', { class: 'lesson__live' });
-      article.append(host);
-      const example = createLiveExample(host, block, { number: ++liveNumber });
-      ctx.onCleanup(() => example.destroy());
+  // Výklad a bloky. Bloky, které potřebují být ve stránce (iframe náhledu), dostanou mount().
+  const slugger = createSlugger();
+  const counters = new Map();
+  blocks.forEach((block, index) => {
+    const number = (counters.get(block.kind) ?? 0) + 1;
+    counters.set(block.kind, number);
+    const renderer = lessonBlockRenderer(block.kind);
+    if (!renderer) {
+      console.warn(`Neznámý blok lekce „${block.kind}"`);
+      article.append(h('p', { class: 'notice notice--warning' }, `Tenhle blok („${block.kind}“) zatím aplikace neumí zobrazit.`));
+      return;
     }
-  }
+    const rendered = renderer.render(block, { lesson, index, number, slugger });
+    const element = rendered instanceof Node ? rendered : rendered?.element;
+    if (element) article.append(element);
+    if (!(rendered instanceof Node) && rendered) {
+      rendered.mount?.();
+      if (rendered.destroy) ctx.onCleanup(() => rendered.destroy());
+    }
+  });
 
+  article.append(slots.element('before-finish'));
   const finish = h('section', { class: 'lesson__finish', 'aria-labelledby': 'lesson-finish-title' });
-  article.append(finish);
+  article.append(finish, slots.element('end'), slots.element('aside'));
 
-  if (questions.length) renderQuestions(finish, { ctx, module, nav, questions });
-  else renderReadButton(finish, { ctx, module, nav });
+  const env = { ctx, module, nav, lesson };
+  if (questions.length) renderQuestions(finish, { ...env, questions });
+  else renderReadButton(finish, env);
+
+  ctx.onCleanup(lessonExtensions.mount(lesson));
+  appEvents.emit('lesson:mount', { lesson });
 }
 
-function renderReadButton(container, { ctx, module, nav }) {
+/** Zpráva, když lekce ještě nesplňuje podmínky přidané bloky; jinak null. */
+function unmetMessage(lesson) {
+  const unmet = lesson.unmetRequirements();
+  if (!unmet.length) return null;
+  const labels = unmet.map((r) => r.label).filter(Boolean);
+  return h('p', {}, labels.length ? `Ještě chybí: ${labels.join(', ')}.` : `Ještě splň úkoly ve výkladu (chybí ${unmet.length}).`);
+}
+
+async function completeLesson({ ctx, module, lesson }) {
+  await progress.complete(module.id);
+  if (!ctx.signal.aborted) appEvents.emit('lesson:complete', { lesson, id: module.id });
+}
+
+function renderReadButton(container, env) {
+  const { ctx, module, nav, lesson } = env;
   const status = h('div', { class: 'lesson__status', role: 'status' });
   const button = h('button', { type: 'button', class: 'btn btn--primary' }, 'Mám přečteno');
 
@@ -64,9 +123,14 @@ function renderReadButton(container, { ctx, module, nav }) {
   }
 
   button.addEventListener('click', async () => {
+    const unmet = unmetMessage(lesson);
+    if (unmet) {
+      status.replaceChildren(unmet);
+      return;
+    }
     button.disabled = true;
     try {
-      await progress.complete(module.id);
+      await completeLesson(env);
       if (ctx.signal.aborted) return;
       button.remove();
       showDone(status, nav);
@@ -78,7 +142,8 @@ function renderReadButton(container, { ctx, module, nav }) {
   container.append(h('div', { class: 'actions' }, button));
 }
 
-function renderQuestions(container, { ctx, module, nav, questions }) {
+function renderQuestions(container, env) {
+  const { ctx, module, nav, questions, lesson } = env;
   container.replaceChildren(
     h('h2', { id: 'lesson-finish-title', class: 'lesson__finish-title' }, 'Kontrolní otázky'),
     h('p', { class: 'lesson__finish-lead' }, 'Když na všechny odpovíš správně, lekce se označí jako splněná.'),
@@ -106,7 +171,9 @@ function renderQuestions(container, { ctx, module, nav, questions }) {
       return;
     }
 
-    const correct = items.map((q) => q.reveal()).filter(Boolean).length;
+    const results = items.map((q, index) => ({ index, correct: q.reveal(), question: questions[index] }));
+    const correct = results.filter((r) => r.correct).length;
+    appEvents.emit('lesson:questions-checked', { lesson, id: module.id, results });
     actions.replaceChildren();
 
     if (correct < items.length) {
@@ -117,7 +184,7 @@ function renderQuestions(container, { ctx, module, nav, questions }) {
       actions.append(
         h(
           'button',
-          { type: 'button', class: 'btn', onclick: () => renderQuestions(container, { ctx, module, nav, questions }) },
+          { type: 'button', class: 'btn', onclick: () => renderQuestions(container, env) },
           svg(icons.reset),
           'Zkusit znovu',
         ),
@@ -125,8 +192,15 @@ function renderQuestions(container, { ctx, module, nav, questions }) {
       return;
     }
 
+    const unmet = unmetMessage(lesson);
+    if (unmet) {
+      status.replaceChildren(h('p', { class: 'result__title' }, 'Odpovědi jsou správně.'), unmet);
+      actions.append(h('button', { type: 'button', class: 'btn', onclick: () => renderQuestions(container, env) }, svg(icons.reset), 'Zkusit znovu'));
+      return;
+    }
+
     try {
-      await progress.complete(module.id);
+      await completeLesson(env);
       if (ctx.signal.aborted) return;
       showDone(status, nav);
     } catch (error) {

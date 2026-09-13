@@ -58,6 +58,70 @@ describe('router', () => {
     // Dřív decodeURIComponent vyhodil URIError, obrazovka se nepřekreslila a zůstala stará.
     assert.deepEqual(parseHash('#/sekce/%E0%A4%A'), { name: 'not-found' });
   });
+
+  test('krok je nepovinný parametr modulu, nadbytečné části adresy jsou „nenalezeno"', () => {
+    assert.deepEqual(parseHash('#/modul/a/b'), { name: 'module', sectionId: 'a', moduleId: 'b', stepKey: null });
+    assert.deepEqual(parseHash('#/modul/a/b/003/navic'), { name: 'not-found' });
+    assert.deepEqual(parseHash('#/sekce'), { name: 'not-found' });
+  });
+
+  test('cesty nástrojů: defineRoute s nepovinným parametrem a dotazem za ?', async () => {
+    const { defineRoute } = await import('../client/src/router.js');
+    defineRoute('test-notes', '/test-poznamky/:sectionId?');
+    assert.deepEqual(parseHash('#/test-poznamky'), { name: 'test-notes', sectionId: null });
+    assert.deepEqual(parseHash('#/test-poznamky/css-flexbox?q=flex%20box&strana=2'), {
+      name: 'test-notes', sectionId: 'css-flexbox', query: { q: 'flex box', strana: '2' },
+    });
+    assert.throws(() => defineRoute('test-notes', '/jinde'), /dvakrát/);
+  });
+});
+
+describe('rozšiřovací body (core/registry.js)', () => {
+  let createRegistry;
+  let createEmitter;
+  let createExtensionPoint;
+  before(async () => {
+    ({ createRegistry, createEmitter, createExtensionPoint } = await import('../client/src/core/registry.js'));
+  });
+
+  test('registr řadí podle order a pak podle pořadí registrace, duplicitní id je chyba', () => {
+    const registry = createRegistry('Položka');
+    registry.add({ id: 'b', order: 20 });
+    registry.add({ id: 'a' });
+    registry.add({ id: 'c', order: 20 });
+    const remove = registry.add({ id: 'd', order: 1 });
+    assert.deepEqual(registry.list().map((entry) => entry.id), ['d', 'b', 'c', 'a']);
+    assert.throws(() => registry.add({ id: 'a' }), /dvakrát/);
+    remove();
+    assert.equal(registry.has('d'), false);
+  });
+
+  test('události: chyba posluchače nezastaví ostatní, odhlášení funguje', (t) => {
+    t.mock.method(console, 'error', () => {});
+    const events = createEmitter();
+    const seen = [];
+    events.on('x', () => {
+      throw new Error('rozbitý posluchač');
+    });
+    const off = events.on('x', (payload) => seen.push(payload));
+    events.emit('x', 1);
+    off();
+    events.emit('x', 2);
+    assert.deepEqual(seen, [1]);
+  });
+
+  test('extension point: setup podle order, rozbité rozšíření neshodí ostatní, úklid v opačném pořadí', (t) => {
+    t.mock.method(console, 'error', () => {});
+    const point = createExtensionPoint('testu');
+    const log = [];
+    point.register({ id: 'druhe', order: 20, setup: (api) => { log.push(`setup druhe ${api.name}`); return () => log.push('uklid druhe'); } });
+    point.register({ id: 'rozbite', order: 15, setup: () => { throw new Error('chyba'); } });
+    point.register({ id: 'prvni', order: 10, setup: () => { log.push('setup prvni'); return () => log.push('uklid prvni'); } });
+    const cleanup = point.mount({ name: 'plocha' });
+    cleanup();
+    assert.deepEqual(log, ['setup prvni', 'setup druhe plocha', 'uklid druhe', 'uklid prvni']);
+    assert.throws(() => point.register({ id: 'bez-setup' }), /setup/);
+  });
 });
 
 describe('ukládání rozpracovaného kódu', () => {

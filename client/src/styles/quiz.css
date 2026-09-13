@@ -44,7 +44,7 @@
 .segmented__option input:checked + span {
   border-color: var(--ink);
   background: var(--ink);
-  color: #fff;
+  color: var(--on-ink);
 }
 
 .segmented__option input:focus-visible + span {
@@ -118,7 +118,7 @@
 }
 
 .quiz-summary--pass {
-  border-color: #9fcdb4;
+  border-color: var(--done-border);
   background: var(--done-soft);
 }
 

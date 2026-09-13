@@ -74,6 +74,71 @@
   font-weight: 600;
 }
 
+/* Menu nástrojů v liště (položky registrují nástroje přes core/header.js) */
+.app-bar__menu {
+  flex: none;
+}
+
+.app-menu {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.app-menu__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--ink-soft);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.app-menu__item:hover {
+  background: var(--hover-tint);
+  color: var(--ink);
+}
+
+.app-menu__item[aria-current='page'] {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.app-menu__badge {
+  min-width: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-size: 12px;
+  line-height: 18px;
+  text-align: center;
+}
+
+@media (max-width: 760px) {
+  /* Na úzkém okně zůstanou jen ikony (u položek, které ikonu mají). */
+  .app-menu__item:has(.icon) .app-menu__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+}
+
 .app-bar__status {
   flex: none;
   font-size: 13px;
@@ -153,7 +218,7 @@ body[data-layout='workspace'] #main {
   min-width: 6px;
   height: 8px;
   border-radius: 2px;
-  background: #e0e5eb;
+  background: var(--segment-empty);
   overflow: hidden;
 }
 
@@ -192,13 +257,13 @@ body[data-layout='workspace'] #main {
 .result[data-kind='pass'],
 .lesson__status[data-kind='pass'] {
   background: var(--done-soft);
-  color: #155c39;
+  color: var(--done-ink);
 }
 
 .result[data-kind='fail'],
 .result[data-kind='error'] {
   background: var(--fail-soft);
-  color: #7d1a12;
+  color: var(--fail-ink);
 }
 
 .result[data-kind='running'] {
@@ -218,7 +283,7 @@ body[data-layout='workspace'] #main {
   max-height: 160px;
   overflow: auto;
   border-radius: 4px;
-  background: rgba(255, 255, 255, 0.7);
+  background: var(--result-pre-bg);
   font-size: 12.5px;
   white-space: pre-wrap;
   overflow-wrap: anywhere;

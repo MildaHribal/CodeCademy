@@ -1,0 +1,94 @@
+/* Design tokeny: všechny barvy aplikace na jednom místě.
+   Ostatní styly barvy nepíšou natvrdo, jen přes var(--…).
+
+   Tmavý režim: atribut data-theme na <html> (`<html data-theme="dark">`).
+   Stačí doplnit blok :root[data-theme='dark'] níž se stejnými jmény proměnných —
+   přepínač a uložení volby jsou věc nástroje, který tmavý režim zavede.
+
+   Pojmenování: --<role>[-<varianta>] (ink = text, surface = plocha, rule = čára,
+   on-<plocha> = text na dané ploše, code-* = tmavý editor a bloky kódu, console-* = konzole). */
+
+:root,
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  /* Plochy a text */
+  --paper: #f3f5f7;
+  --surface: #ffffff;
+  --surface-sunken: #eef1f5;
+  --footer-bg: #f8f9fb;
+  --ink: #18212e;
+  --ink-soft: #4a5566;
+  --ink-faint: #5f6876;
+  --on-ink: #fff;
+  --rule: #d9dee5;
+  --rule-strong: #b6bfcb;
+  --hover-tint: rgba(24, 33, 46, 0.06);
+  --segment-empty: #e0e5eb;
+
+  /* Akcent (školní modrý inkoust) */
+  --accent: #2b50a8;
+  --accent-hover: #203f8a;
+  --accent-soft: #e7edf9;
+  --accent-muted: #9db0dd;
+  --on-accent: #fff;
+  --kbd-on-accent: rgba(255, 255, 255, 0.18);
+
+  /* Stavy */
+  --done: #1f7a4d;
+  --done-soft: #e2f1e9;
+  --done-ink: #155c39;
+  --done-border: #9fcdb4;
+  --done-border-strong: #7fbf9c;
+  --fail: #b42318;
+  --fail-soft: #fbebe9;
+  --fail-ink: #7d1a12;
+  --fail-ink-deep: #6f1710;
+  --fail-border: #e6b4ae;
+  --fail-border-strong: #e3a39b;
+  --warn: #7a5200;
+  --warn-soft: #fbf1dc;
+  --warn-border: #e8d3a4;
+  --result-pre-bg: rgba(255, 255, 255, 0.7);
+  --inline-code-ink: #1d2a44;
+
+  /* Náhled uživatelovy stránky — stránka má vlastní barvy, podklad zůstává bílý i v tmavém režimu */
+  --preview-bg: #fff;
+
+  /* Editor a bloky kódu (One Dark) */
+  --code-bg: #282c34;
+  --code-bg-deep: #21252b;
+  --code-ink: #d7dae0;
+  --focus-on-dark: #9bb8ff;
+  --code-tab-ink: #9da5b4;
+  --code-tab-ink-hover: #e6e9ef;
+  --code-tab-ink-active: #fff;
+  --code-accent: #7aa2ff;
+  --code-region-bg: rgba(122, 162, 255, 0.1);
+  --code-focus-ring: rgba(155, 184, 255, 0.35);
+  --tok-keyword: #c678dd;
+  --tok-string: #98c379;
+  --tok-atom: #d19a66;
+  --tok-comment: #8b929e;
+  --tok-type: #e5c07b;
+  --tok-property: #e06c75;
+  --tok-definition: #61afef;
+  --tok-operator: #56b6c2;
+  --tok-punctuation: #abb2bf;
+  --tok-invalid: #ff7b72;
+
+  /* Konzole */
+  --console-bg: #1d2026;
+  --console-muted: #8b929e;
+  --console-rule: rgba(255, 255, 255, 0.06);
+  --console-info: #9bc7ff;
+  --console-warn: #f0cf8a;
+  --console-warn-bg: rgba(229, 192, 123, 0.08);
+  --console-error: #ff9e97;
+  --console-error-bg: rgba(224, 108, 117, 0.12);
+}
+
+/* :root[data-theme='dark'] {
+     color-scheme: dark;
+     --paper: …; --surface: …; …
+   } */

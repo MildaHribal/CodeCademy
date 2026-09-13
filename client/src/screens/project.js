@@ -12,7 +12,20 @@ import { minutes } from '../text.js';
 import { createHintList } from '../components/hint-list.js';
 import { createConsolePanel } from '../components/console-panel.js';
 import { copyField } from '../components/copy-field.js';
+import { renderRunSummary, transformRun } from '../components/test-result.js';
+import { appEvents } from '../core/events.js';
+import { createExtensionPoint } from '../core/registry.js';
+import { createSlots } from '../core/slots.js';
 import { nextModuleLink } from './nav.js';
+
+/**
+ * Rozšíření obrazovky projektu:
+ *   projectExtensions.register({ id, order, setup(project) { project.addToSlot('after-stories', el); } })
+ * API: module, id, runtime, signal, onCleanup, page, hintList, addToSlot(name, el, { order })
+ * sloty: 'head' (pod nadpisem), 'after-stories' (pod příběhy a kontrolou), 'end' (konec stránky)
+ * událost: appEvents 'project:check-result' ({ id, result, passed })
+ */
+export const projectExtensions = createExtensionPoint('projektu');
 
 export function renderProject(ctx, { module, nav }) {
   const project = module.project;
@@ -44,7 +57,8 @@ export function renderProject(ctx, { module, nav }) {
   );
 
   // ——— Uživatelské příběhy a kontrola ———
-  const hintList = createHintList(project.hints, { ordered: true });
+  const hintList = createHintList(project.hints, { ordered: true, item: project });
+  const slots = createSlots(['head', 'after-stories', 'end']);
   const result = h('div', { class: 'result', role: 'status', 'aria-live': 'polite' });
   const checkButton = h('button', { type: 'button', class: 'btn btn--primary', disabled: true, onclick: check }, 'Zkontrolovat');
   const checkNote = h('p', { class: 'project__check-note' }, 'Kontrola čte soubory přímo z disku — nezapomeň je ve VS Code uložit.');
@@ -62,11 +76,27 @@ export function renderProject(ctx, { module, nav }) {
 
   append(page, [
     h('header', { class: 'module-head' }, meta, h('h1', { class: 'module-head__title' }, module.title)),
+    slots.element('head'),
     renderMarkdown(project.description, { className: 'prose project__description' }),
     folder,
     stories,
+    slots.element('after-stories'),
     isNode ? null : previewSection(),
+    slots.element('end'),
   ]);
+
+  ctx.onCleanup(
+    projectExtensions.mount({
+      module,
+      id: module.id,
+      runtime,
+      signal: ctx.signal,
+      onCleanup: ctx.onCleanup,
+      page,
+      hintList,
+      addToSlot: slots.addToSlot,
+    }),
+  );
 
   loadFolderState();
 
@@ -131,11 +161,13 @@ export function renderProject(ctx, { module, nav }) {
 
     try {
       // ctx.signal: při odchodu z obrazovky se běžící kontrola zruší (v prohlížeči i na serveru).
-      const run = isNode ? await api.checkProject(sectionId, moduleId, { signal: ctx.signal }) : await runInBrowser();
+      const raw = isNode ? await api.checkProject(sectionId, moduleId, { signal: ctx.signal }) : await runInBrowser();
       if (ctx.signal.aborted) return;
-      hintList.setResults(run.results ?? []);
+      const run = transformRun(raw, { item: project, files: null, runtime });
+      hintList.setResults(run.results ?? [], run);
       if (run.ok) await markDone();
       else showFailure(run);
+      appEvents.emit('project:check-result', { id: module.id, result: run, passed: Boolean(run.ok) });
     } catch (error) {
       if (ctx.signal.aborted) return;
       hintList.reset();
@@ -163,13 +195,23 @@ export function renderProject(ctx, { module, nav }) {
   }
 
   function showFailure(run) {
-    const passedCount = (run.results ?? []).filter((r) => r.pass).length;
+    const results = run.results ?? [];
+    const input = {
+      run,
+      item: project,
+      total: project.hints.length,
+      passedCount: results.filter((r) => r.pass).length,
+      skipped: results.some((r) => r.skipped),
+      context: 'project',
+    };
     result.dataset.kind = 'fail';
     replace(
       result,
-      h('p', { class: 'result__title' }, `Splněno ${passedCount} z ${project.hints.length}.`),
-      h('p', {}, 'U nesplněných bodů si rozbal, proč neprošly, oprav kód ve VS Code, ulož a zkontroluj znovu.'),
-      run.errors?.length ? h('pre', { class: 'result__pre' }, run.errors.join('\n')) : null,
+      renderRunSummary(input, ({ passedCount, total }) => [
+        h('p', { class: 'result__title' }, `Splněno ${passedCount} z ${total}.`),
+        h('p', {}, 'U nesplněných bodů si rozbal, proč neprošly, oprav kód ve VS Code, ulož a zkontroluj znovu.'),
+        run.errors?.length ? h('pre', { class: 'result__pre' }, run.errors.join('\n')) : null,
+      ]),
     );
   }
 

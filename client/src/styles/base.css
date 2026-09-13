@@ -1,43 +1,15 @@
 /* Základ: barvy, písma, tlačítka, štítky a přístupnost.
    Koncept "učebnice": nadpisy ve školní antikvě (Century Schoolbook),
-   text v systémovém bezpatkovém písmu, kód v tmavém editoru. */
+   text v systémovém bezpatkovém písmu, kód v tmavém editoru.
+   Barvy jsou jen v tokens.css — tady a v ostatních stylech se používají přes var(--…). */
 
 :root {
-  --paper: #f3f5f7;
-  --surface: #ffffff;
-  --surface-sunken: #eef1f5;
-  --ink: #18212e;
-  --ink-soft: #4a5566;
-  --ink-faint: #5f6876;
-  --rule: #d9dee5;
-  --rule-strong: #b6bfcb;
-
-  --accent: #2b50a8; /* školní modrý inkoust */
-  --accent-hover: #203f8a;
-  --accent-soft: #e7edf9;
-  --accent-muted: #9db0dd;
-
-  --done: #1f7a4d;
-  --done-soft: #e2f1e9;
-  --fail: #b42318;
-  --fail-soft: #fbebe9;
-  --warn: #7a5200;
-  --warn-soft: #fbf1dc;
-
-  --code-bg: #282c34;
-  --code-bg-deep: #21252b;
-  --code-ink: #d7dae0;
-  --focus-on-dark: #9bb8ff;
-
   --font-serif: 'Century Schoolbook', 'C059', 'TeX Gyre Schola', 'New Century Schoolbook', Georgia, serif;
   --font-sans: system-ui, 'Segoe UI', 'Noto Sans', 'Adwaita Sans', sans-serif;
   --font-mono: 'JetBrains Mono', 'JetBrainsMono Nerd Font', 'Cascadia Code', 'DejaVu Sans Mono', ui-monospace, monospace;
-
   --radius: 6px;
   --radius-large: 10px;
   --bar-height: 52px;
-
-  color-scheme: light;
 }
 
 *,
@@ -130,13 +102,13 @@ svg {
   z-index: 100;
   padding: 8px 14px;
   background: var(--ink);
-  color: #fff;
+  color: var(--on-ink);
   border-radius: var(--radius);
 }
 
 .skip-link:focus {
   top: 8px;
-  color: #fff;
+  color: var(--on-ink);
 }
 
 #main:focus {
@@ -190,13 +162,13 @@ svg {
 .btn--primary {
   background: var(--accent);
   border-color: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
 }
 
 .btn--primary:hover {
   background: var(--accent-hover);
   border-color: var(--accent-hover);
-  color: #fff;
+  color: var(--on-accent);
 }
 
 .btn--quiet {
@@ -206,7 +178,7 @@ svg {
 }
 
 .btn--quiet:hover {
-  background: rgba(24, 33, 46, 0.06);
+  background: var(--hover-tint);
   border-color: transparent;
 }
 
@@ -226,7 +198,7 @@ svg {
 .btn__kbd {
   padding: 1px 6px;
   border-radius: 4px;
-  background: rgba(255, 255, 255, 0.18);
+  background: var(--kbd-on-accent);
   font-size: 11.5px;
   font-weight: 500;
 }
@@ -282,14 +254,14 @@ svg {
 }
 
 .notice--error {
-  border-color: #e6b4ae;
+  border-color: var(--fail-border);
   background: var(--fail-soft);
 }
 
 .notice--warning {
   margin-block: 16px;
   padding: 10px 14px;
-  border-color: #e8d3a4;
+  border-color: var(--warn-border);
   background: var(--warn-soft);
   color: var(--warn);
 }
@@ -315,4 +287,11 @@ svg {
 .loading {
   padding-block: 24px;
   color: var(--ink-soft);
+}
+
+/* ——— Sloty rozšíření (core/slots.js) ——— */
+
+/* Obsah slotu se chová jako přímí potomci rodiče (tlačítko ve slotu lišty je položka flexu). */
+.slot {
+  display: contents;
 }

@@ -71,7 +71,7 @@
 }
 
 .stepper__item[data-done='true'] {
-  border-color: #9fcdb4;
+  border-color: var(--done-border);
   background: var(--done-soft);
   color: var(--done);
 }
@@ -79,7 +79,7 @@
 .stepper__item[aria-current='step'] {
   border-color: var(--accent);
   background: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
   box-shadow: 0 0 0 2px var(--accent-soft);
 }
 
@@ -234,7 +234,7 @@ span.stepper__arrow {
   gap: 10px;
   padding: 12px 16px 14px;
   border-top: 1px solid var(--rule);
-  background: #f8f9fb;
+  background: var(--footer-bg);
 }
 
 /* ——— Nápovědy (požadavky) ——— */
@@ -304,7 +304,7 @@ span.stepper__arrow {
   overflow: auto;
   border-radius: 4px;
   background: var(--fail-soft);
-  color: #6f1710;
+  color: var(--fail-ink-deep);
   font-size: 12.5px;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
@@ -343,7 +343,7 @@ span.stepper__arrow {
   border: 0;
   border-bottom: 2px solid transparent;
   background: transparent;
-  color: #9da5b4;
+  color: var(--code-tab-ink);
   font-family: var(--font-mono);
   font-size: 13px;
   white-space: nowrap;
@@ -351,13 +351,13 @@ span.stepper__arrow {
 }
 
 .editor__tab:hover {
-  color: #e6e9ef;
+  color: var(--code-tab-ink-hover);
 }
 
 .editor__tab[aria-selected='true'] {
   background: var(--code-bg);
-  color: #fff;
-  border-bottom-color: #7aa2ff;
+  color: var(--code-tab-ink-active);
+  border-bottom-color: var(--code-accent);
 }
 
 .editor__tab:focus-visible,
@@ -376,7 +376,7 @@ span.stepper__arrow {
 }
 
 .editor__surface .cm-editor.cm-focused {
-  box-shadow: inset 0 0 0 2px rgba(155, 184, 255, 0.35);
+  box-shadow: inset 0 0 0 2px var(--code-focus-ring);
 }
 
 /* ——— Náhled a konzole ——— */
@@ -389,7 +389,7 @@ span.stepper__arrow {
   flex: 3;
   min-height: 80px;
   position: relative;
-  background: #fff;
+  background: var(--preview-bg);
 }
 
 .output__frame {
@@ -408,7 +408,7 @@ span.stepper__arrow {
   flex: 2;
   min-height: 60px;
   overflow: auto;
-  background: #1d2026;
+  background: var(--console-bg);
   color: var(--code-ink);
   font-family: var(--font-mono);
   font-size: 13px;
@@ -421,7 +421,7 @@ span.stepper__arrow {
 
 .console__empty {
   padding: 10px 14px;
-  color: #8b929e;
+  color: var(--console-muted);
   font-family: var(--font-sans);
   font-size: 13px;
 }
@@ -434,7 +434,7 @@ span.stepper__arrow {
 
 .console__entry {
   padding: 4px 14px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid var(--console-rule);
 }
 
 .console__entry pre {
@@ -445,21 +445,21 @@ span.stepper__arrow {
 }
 
 .console__entry--info {
-  color: #9bc7ff;
+  color: var(--console-info);
 }
 
 .console__entry--warn {
-  color: #f0cf8a;
-  background: rgba(229, 192, 123, 0.08);
+  color: var(--console-warn);
+  background: var(--console-warn-bg);
 }
 
 .console__entry--error {
-  color: #ff9e97;
-  background: rgba(224, 108, 117, 0.12);
+  color: var(--console-error);
+  background: var(--console-error-bg);
 }
 
 .console__entry--system {
-  color: #8b929e;
+  color: var(--console-muted);
 }
 
 /* ——— Úzké okno: panely pod sebou, stránka se posouvá ——— */

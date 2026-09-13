@@ -6,7 +6,19 @@ import { icons } from '../icons.js';
 import { progress } from '../progress.js';
 import { minutes, percent, questions as questionsText } from '../text.js';
 import { createQuestion } from '../components/question.js';
+import { appEvents } from '../core/events.js';
+import { createExtensionPoint } from '../core/registry.js';
+import { createSlots } from '../core/slots.js';
 import { nextModuleLink, backLink } from './nav.js';
+
+/**
+ * Rozšíření obrazovky kvízu:
+ *   quizExtensions.register({ id, order, setup(quiz) { quiz.addToSlot('end', el); } })
+ * API: module, id, quiz (data kvízu), signal, onCleanup, page, addToSlot(name, el, { order })
+ * sloty: 'head' (pod hlavičkou), 'end' (konec stránky)
+ * událost: appEvents 'quiz:evaluated' ({ id, score, passed, results: [{ index, correct, question }] })
+ */
+export const quizExtensions = createExtensionPoint('kvízu');
 
 const MODE_KEY = 'akademie.quizMode';
 
@@ -37,20 +49,29 @@ export function renderQuiz(ctx, { module, nav }) {
   );
 
   const body = h('div', { class: 'quiz__body' });
+  const slots = createSlots(['head', 'end']);
   let round = null;
   page.append(
+    slots.element('head'),
     modeSwitch(readMode(), {
       onChange: (mode) => start(mode),
       // Potvrzení chceme jen tehdy, když by přepnutí zahodilo rozpracované odpovědi.
       shouldConfirm: () => Boolean(round && !round.evaluated && round.items.some((q) => q.isAnswered())),
     }),
     body,
+    slots.element('end'),
+  );
+  ctx.onCleanup(
+    quizExtensions.mount({ module, id: module.id, quiz, signal: ctx.signal, onCleanup: ctx.onCleanup, page, addToSlot: slots.addToSlot }),
   );
 
   function start(mode) {
     saveMode(mode);
     body.replaceChildren();
-    round = createRound(quiz, module.id, (score, items) => evaluate(score, items));
+    round = createRound(quiz, module.id, (score, items, results) => {
+      appEvents.emit('quiz:evaluated', { id: module.id, score, passed: score >= quiz.pass - 1e-9, results });
+      evaluate(score, items);
+    });
     if (mode === 'all') showAll(body, round);
     else showOneByOne(body, round);
   }
@@ -111,8 +132,9 @@ function createRound(quiz, quizId, onEvaluate) {
     evaluated: false,
     evaluate() {
       this.evaluated = true;
-      const correct = items.map((q) => q.reveal()).filter(Boolean).length;
-      onEvaluate(correct / items.length, items);
+      const results = items.map((q, index) => ({ index, correct: q.reveal(), question: quiz.questions[index] }));
+      const correct = results.filter((r) => r.correct).length;
+      onEvaluate(correct / items.length, items, results);
     },
   };
 }

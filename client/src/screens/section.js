@@ -8,7 +8,18 @@ import { loadCurriculum, findSection } from '../content.js';
 import { renderMarkdown } from '../markdown.js';
 import { MODULE_TYPE_LABELS, minutes, steps as stepsText } from '../text.js';
 import { segmentedProgress, statusBadge, errorNotice } from '../components/status.js';
+import { createExtensionPoint } from '../core/registry.js';
+import { createSlots } from '../core/slots.js';
 import { withLoading, showLoadError } from './load.js';
+
+/**
+ * Rozšíření stránky sekce (kalibrace jistoty, tahák, „Po sekci umíš", „Další na trase"…):
+ *   sectionExtensions.register({ id, order, setup(sectionPage) { sectionPage.addToSlot('end', el); } })
+ * API: curriculum, part, section, signal, onCleanup, page, addToSlot(name, el, { order })
+ * sloty: 'head' (pod nadpisem), 'after-progress' (pod ukazatelem postupu), 'end' (pod seznamem modulů)
+ * Jen u sekcí, které existují (section.available).
+ */
+export const sectionExtensions = createExtensionPoint('sekce');
 
 export async function renderSection(ctx, { sectionId }) {
   let curriculum;
@@ -75,7 +86,9 @@ export async function renderSection(ctx, { sectionId }) {
   }
 
   const status = sectionStatus(section);
+  const slots = createSlots(['head', 'after-progress', 'end']);
   append(page, [
+    slots.element('head'),
     section.intro ? renderMarkdown(section.intro, { className: 'prose section-page__intro' }) : null,
     h(
       'div',
@@ -87,12 +100,17 @@ export async function renderSection(ctx, { sectionId }) {
         status.done ? 'Sekce je splněná.' : `Splněno ${status.doneModules} z ${status.totalModules} modulů.`,
       ),
     ),
+    slots.element('after-progress'),
     h(
       'ol',
       { class: 'module-list' },
       section.modules.map((module) => moduleRow(module)),
     ),
+    slots.element('end'),
   ]);
+  ctx.onCleanup(
+    sectionExtensions.mount({ curriculum, part, section, signal: ctx.signal, onCleanup: ctx.onCleanup, page, addToSlot: slots.addToSlot }),
+  );
 }
 
 function moduleRow(module) {

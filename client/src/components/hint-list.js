@@ -4,6 +4,7 @@
 import { h, svg } from '../dom.js';
 import { icons } from '../icons.js';
 import { renderMarkdown } from '../markdown.js';
+import { renderHintFailure } from './test-result.js';
 
 const STATUS = {
   idle: { icon: icons.circle, label: 'Neověřeno' },
@@ -12,7 +13,11 @@ const STATUS = {
   fail: { icon: icons.cross, label: 'Nesplněno' },
 };
 
-export function createHintList(hints, { ordered = false } = {}) {
+/**
+ * @param {{ text, test }[]} hints
+ * @param {{ ordered?: boolean, item?: object }} options — item se předává rendererům výsledku
+ */
+export function createHintList(hints, { ordered = false, item: owner = null } = {}) {
   const items = hints.map((hint) => {
     const status = h('span', { class: 'hint__status' });
     const detail = h('div', { class: 'hint__detail' });
@@ -22,23 +27,17 @@ export function createHintList(hints, { ordered = false } = {}) {
 
   const list = h(ordered ? 'ol' : 'ul', { class: 'hints' }, items.map((item) => item.li));
 
-  function setStatus(item, key, error) {
+  function setStatus(item, key, { note = null, result = null, index = 0, run = null } = {}) {
     const { icon, label } = STATUS[key];
     item.li.dataset.status = key;
     item.status.replaceChildren(svg(icon, { size: 18, label }));
     item.detail.replaceChildren();
-    if (key === 'idle' && error) {
+    if (key === 'idle' && note) {
       // Test se nespustil (runner ho přeskočil) — vysvětlení bez rozbalování.
-      item.detail.append(h('p', { class: 'hint__note' }, error));
-    } else if (key === 'fail' && error) {
-      item.detail.append(
-        h(
-          'details',
-          { class: 'hint__error' },
-          h('summary', {}, 'Proč to neprošlo'),
-          h('pre', {}, error), // text chyby vkládáme jako text, ne jako HTML
-        ),
-      );
+      item.detail.append(h('p', { class: 'hint__note' }, note));
+    } else if (key === 'fail') {
+      const detail = renderHintFailure({ result, hint: hints[index], index, run, item: owner });
+      if (detail) item.detail.append(detail);
     }
   }
 
@@ -46,15 +45,22 @@ export function createHintList(hints, { ordered = false } = {}) {
     element: list,
     reset: () => items.forEach((item) => setStatus(item, 'idle')),
     running: () => items.forEach((item) => setStatus(item, 'running')),
-    /** results: [{ index, pass, error?, skipped? }] z RunResult */
-    setResults(results) {
+    /**
+     * results: [{ index, pass, error?, skipped?, note? }] z RunResult; `run` = celý RunResult pro renderery.
+     * `note` u přeskočeného požadavku nahradí výchozí vysvětlení.
+     */
+    setResults(results, run = null) {
       items.forEach((item, index) => {
         const result = results.find((r) => r.index === index);
         if (!result) setStatus(item, 'idle');
-        else if (result.skipped) setStatus(item, 'idle', 'Neověřeno — kontrola se zastavila na předchozí chybě.');
-        else setStatus(item, result.pass ? 'pass' : 'fail', result.error);
+        else if (result.skipped) setStatus(item, 'idle', { note: result.note ?? 'Neověřeno — kontrola se zastavila na předchozí chybě.' });
+        else setStatus(item, result.pass ? 'pass' : 'fail', { result, index, run });
       });
     },
+    /** Prvek <li> požadavku (pro zvýraznění, tipy u požadavku…). */
+    itemElement: (index) => items[index]?.li ?? null,
+    /** Stav požadavku: 'idle' | 'running' | 'pass' | 'fail'. */
+    status: (index) => items[index]?.li.dataset.status ?? null,
   };
   api.reset();
   return api;

@@ -13,7 +13,8 @@ describe('progress', () => {
     dataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'akademie-progress-test-'));
   });
 
-  afterEach(() => {
+  afterEach(async () => {
+    await createProgressStore(dataDir).flush();
     fs.rmSync(dataDir, { recursive: true, force: true });
   });
 
@@ -23,9 +24,11 @@ describe('progress', () => {
     assert.equal(fs.existsSync(store.file), false);
   });
 
-  test('saveCode uloží kód, nastaví lastVisited a přežije restart', () => {
+  test('saveCode uloží kód, nastaví lastVisited a přežije restart', async () => {
     const store = createProgressStore(dataDir, { now: () => new Date('2026-09-13T10:00:00.000Z') });
     store.saveCode('css-flexbox/workshop/002', [{ name: 'styles.css', content: 'nav {}', extra: 'pryč' }]);
+    await store.flush();
+    assert.equal(JSON.parse(fs.readFileSync(store.file, 'utf8')).lastVisited, 'css-flexbox/workshop/002');
 
     const reloaded = createProgressStore(dataDir).get();
     assert.deepEqual(reloaded.code['css-flexbox/workshop/002'], {
@@ -69,14 +72,15 @@ describe('progress', () => {
     assert.deepEqual(createProgressStore(dataDir).get().completed, progress.completed);
   });
 
-  test('zápis je atomický — nezůstane po něm .tmp a soubor je platný JSON', () => {
+  test('zápis je atomický — nezůstane po něm .tmp a soubor je platný JSON', async () => {
     const store = createProgressStore(dataDir);
     store.complete('a/b');
+    await store.flush();
     assert.deepEqual(fs.readdirSync(dataDir), ['progress.json']);
     assert.equal(JSON.parse(fs.readFileSync(store.file, 'utf8')).version, 1);
   });
 
-  test('poškozený soubor přejmenuje na .broken-<čas> a začne znovu', (t) => {
+  test('poškozený soubor přejmenuje na .broken-<čas> a začne znovu', async (t) => {
     t.mock.method(console, 'warn', () => {});
     fs.writeFileSync(path.join(dataDir, 'progress.json'), '{ "completed": ');
     const store = createProgressStore(dataDir, { now: () => new Date('2026-09-13T10:00:00.000Z') });
@@ -87,6 +91,7 @@ describe('progress', () => {
     assert.equal(fs.readFileSync(path.join(dataDir, broken), 'utf8'), '{ "completed": ');
 
     store.complete('a/b');
+    await store.flush();
     assert.deepEqual(fs.readdirSync(dataDir).sort(), ['progress.json', broken]);
   });
 
