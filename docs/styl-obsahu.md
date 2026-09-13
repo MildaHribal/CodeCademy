@@ -87,3 +87,29 @@ Stará výuková hra `~/arkada` (jen ke čtení, NIC v ní neměň) má v `tiket
 hodně dobrých výkladů, pastí a příkladů (`tiket.json` pole `rozbor`, `priklad`,
 `kontext`) a v `docs/*.md` osnovy. Použij je jako surovinu — **bez** příběhu
 o firmě Arkáda, bez postav, bez tiketů. Obsah vždy přepiš do formátu Akademie.
+
+---
+
+## Poučení z pilotních sekcí (povinné)
+
+- **Každý test vyzkoušej na 2–3 jiných správných a 2–3 typicky chybných řešeních** přes skutečný
+  runner — seed a řešení z verify nestačí. Typické díry: roztažená krabička (`stretch`) má stejný
+  střed jako vycentrovaná (zarovnání textu měř přes `Range` textu, ne přes rámeček prvku);
+  handler bez `return` projde testem s jediným požadavkem (pošli jich víc za sebou); testovací
+  data náhodou vyhoví i špatné logice (abecední pořadí = pořadí v poli).
+- **Regex na zdroják benevolentně** k legitimním variantám (destrukturalizace ve `for…of`,
+  šipková funkce, `Intl.Collator` místo `localeCompare`). Požadavek, který v prohlížeči
+  uživatele projde i bez dodržení (jazyk `'cs'`), kontroluj zvlášť.
+- **Tolerance v layout testech** podle toho, co je vidět okem (pár px), zvlášť v labech, kde si
+  uživatel smí vzhled upravit — jinak odmítneš správné `flex: 1` nebo grid.
+- **Rady „zkus si to v náhledu" ověř proti UI.** Media dotaz reaguje na šířku okna náhledu,
+  ne na `max-width` kontejneru. Náhled bývá užší než 640 px — nepiš „náhled je široký".
+- **Jeden krok = jedna nová věc platí i u node.** Kroky se serverem mají tendenci bobtnat
+  (tělo + parse + id + stav + hlavička). Klidně mezikrok, který odpoví 201 a uložení přidá
+  další krok — jen to v popisu výslovně řekni.
+- **Kvízy** nestaví na pojmech, které sekce ani předchozí sekce nevysvětlily, a neopakují
+  doslova otázky z lekce. Nejlepší jsou otázky na čtení kódu s pastí z workshopu.
+- **Asserce na okrajové případy** mají českou zprávu s vysvětlením — holé „Expected values
+  to be strictly equal" začátečníkovi nic neřekne.
+- **Příklad v popisu kroku** nesmí být kód řešení. Stejný vzor, jiný kontext.
+- Lekce nemají živé ukázky pro node — ukaž kód a výstup terminálu a vyzvi ke spuštění.

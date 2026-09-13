@@ -6,6 +6,7 @@ const api = `http://127.0.0.1:${process.env.API_PORT ?? 4300}`;
 export default defineConfig({
   root: 'client',
   build: {
+    chunkSizeWarningLimit: 1500,
     outDir: '../dist',
     emptyOutDir: true,
     rollupOptions: {

@@ -518,3 +518,50 @@ Výstup: souhrn po modulech, na konci počet chyb a varování. Exit kód 1 při
   které jsi sám spustil. Používej porty ze svého přiděleného rozsahu.
 - Žádné commity — commituje koordinátor.
 - Nikde (kód, komentáře, texty, commity) nezmiňuj AI, Clauda ani asistenta.
+
+---
+
+## 12. Upřesnění z vlny 1 (platí přednostně před kap. 6–10)
+
+**Frontmatter kroku / labu / projektu**
+- `timeoutMs: N` — limit jednoho testu (respektuje UI, server i verify). Projekty, které volají
+  `helpers.run('npm test')` apod., si ho musí zvýšit.
+- `main: soubor.js` — co spouští tlačítko **Spustit** u runtime node (jinak první `index.js`/`.js`).
+
+**RunResult (6.1)**
+- `results[i]` může mít `skipped: true` — když se uživatelova stránka zasekne už při načítání,
+  runner po prvním selhání zbylé testy nespouští (jinak by kontrola trvala `timeoutMs × počet testů`).
+- `runnerError` — selhal runner sám (nedostupné API, spadlá stránka), ne test.
+- U runtime node se `logs` berou z prvního testu, který nějaké logy má (stdout → `log`, stderr → `error`).
+
+**Runtime node (6.6)**
+- `helpers.run` při timeoutu vrací `{ code: null, timedOut: true, … }`.
+- `startServer` vrací `url` `http://127.0.0.1:PORT` (nebo `[::1]`, když server poslouchá jen na IPv6).
+- `helpers.waitFor` bere výjimku z `fn` jako „zatím ne"; po vypršení uvede poslední hlášku.
+
+**Runner v prohlížeči (6.3, 6.7, 6.8)**
+- `mountPreview(...).onConsole(cb)` → cb dostává `{ level: 'log'|'info'|'warn'|'error'|'clear', text, uncaught? }`,
+  vrací funkci pro odhlášení. `window.akademieRunner` má i `mountPreview`.
+- Testovací iframy jsou **průhledné v rohu okna** (ne mimo obrazovku — Chrome by přestal vykreslovat)
+  a test čeká, až layout převezme velikost iframu.
+- `index.html` bez doctype a `<html>/<head>/<body>` se bere jako tělo stránky; nepřipojené CSS/JS se
+  připojí samo (JS s `import`/`export` jako modul).
+- `alert/confirm/prompt` v testu jdou do `logs` (`confirm` → false, `prompt` → null).
+- Watchdog přidává rezervu +2000 ms na načtení a +1000 ms od startu testu, aby dřív zasáhl časovač
+  testu nebo ochrana smyček s konkrétní hláškou.
+- **Headless Chromium (verify, E2E) se musí spouštět s `--site-per-process`**, jinak sandboxované
+  iframy nejsou v odděleném procesu a nekonečná smyčka zamrazí stránku. Běžný Chrome izoluje sám.
+- Sandboxované iframy sdílejí jeden proces: zaseknutý test na chvíli zdrží i živý náhled. Při odchodu
+  z obrazovky se kontrola ruší (`AbortSignal`).
+
+**Server (7)**
+- Požadavky s `Host` mimo localhost/127.0.0.1/::1 → 403; POST/PUT s `Origin` mimo loopback → 403
+  (ochrana proti DNS rebindingu a CSRF — server spouští kód).
+- Stavové kódy: 400 neplatný vstup/slug, 404 neexistující modul, 405 metoda, 409 `check` před `start`,
+  413 tělo nad 5 MB, 500 rozbitý obsah (`ParseError`).
+
+**Verify (10)**
+- Návaznost workshopu: soubory, které v kroku N nově přibyly, varování nevyvolají.
+
+**Nástroje**
+- `node tools/e2e.js [--port N]` — kouřový průchod UI v Playwrightu (vlastní dočasná data, snímky do `.e2e/`).

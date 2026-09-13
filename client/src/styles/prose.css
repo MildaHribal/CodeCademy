@@ -1,0 +1,174 @@
+/* Text z markdownu: výklad lekcí, zadání kroků, otázky. */
+
+.prose {
+  font-size: 17px;
+  line-height: 1.65;
+  overflow-wrap: break-word;
+}
+
+.prose > * + * {
+  margin-top: 0.9em;
+}
+
+.prose h1 {
+  font-size: clamp(30px, 4vw, 40px);
+  letter-spacing: -0.01em;
+  margin-bottom: 0.6em;
+}
+
+.prose h2 {
+  font-size: 26px;
+  margin-top: 1.8em;
+}
+
+.prose h3 {
+  font-size: 20px;
+  margin-top: 1.5em;
+}
+
+.prose h4 {
+  font-size: 1em;
+  margin: 1.4em 0 0;
+}
+
+.prose p,
+.prose ul,
+.prose ol,
+.prose blockquote,
+.prose table {
+  margin-bottom: 0;
+}
+
+.prose ul,
+.prose ol {
+  padding-left: 1.4em;
+}
+
+.prose li + li {
+  margin-top: 0.3em;
+}
+
+.prose li::marker {
+  color: var(--ink-faint);
+}
+
+.prose strong {
+  font-weight: 700;
+}
+
+.prose em {
+  font-style: italic;
+}
+
+.prose blockquote {
+  margin-inline: 0;
+  padding: 2px 0 2px 16px;
+  border-left: 3px solid var(--rule-strong);
+  color: var(--ink-soft);
+}
+
+.prose hr {
+  border: 0;
+  border-top: 1px solid var(--rule);
+  margin-block: 2em;
+}
+
+.prose table {
+  border-collapse: collapse;
+  font-size: 0.92em;
+  display: block;
+  overflow-x: auto;
+}
+
+.prose th,
+.prose td {
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  vertical-align: top;
+}
+
+.prose th {
+  font-weight: 700;
+  border-bottom-color: var(--rule-strong);
+}
+
+.prose :not(pre) > code {
+  padding: 0.08em 0.25em;
+  border-radius: 4px;
+  background: var(--surface-sunken);
+  color: #1d2a44;
+  font-size: 0.88em;
+}
+
+.prose pre {
+  margin-inline: 0;
+  padding: 14px 16px;
+  border-radius: 8px;
+  background: var(--code-bg);
+  color: var(--code-ink);
+  font-size: 14px;
+  line-height: 1.55;
+  overflow-x: auto;
+  tab-size: 2;
+}
+
+.prose pre code {
+  font-size: inherit;
+}
+
+.prose pre:focus-visible {
+  outline-color: var(--focus-on-dark);
+}
+
+/* Barvy tokenů v blocích kódu — ladí s tématem One Dark v editoru. */
+.tok-keyword,
+.tok-modifier {
+  color: #c678dd;
+}
+.tok-string,
+.tok-string2,
+.tok-inserted {
+  color: #98c379;
+}
+.tok-number,
+.tok-bool,
+.tok-atom,
+.tok-attributeName {
+  color: #d19a66;
+}
+.tok-comment,
+.tok-meta {
+  color: #8b929e;
+  font-style: italic;
+}
+.tok-typeName,
+.tok-className,
+.tok-namespace {
+  color: #e5c07b;
+}
+.tok-propertyName,
+.tok-tagName,
+.tok-deleted {
+  color: #e06c75;
+}
+.tok-definition {
+  color: #61afef;
+}
+.tok-operator,
+.tok-url {
+  color: #56b6c2;
+}
+.tok-punctuation {
+  color: #abb2bf;
+}
+.tok-invalid {
+  color: #ff7b72;
+}
+.tok-heading,
+.tok-strong {
+  font-weight: 700;
+}
+.tok-emphasis {
+  font-style: italic;
+}

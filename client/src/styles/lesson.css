@@ -1,0 +1,294 @@
+/* Lekce a živé ukázky. */
+
+.lesson__text + .lesson__text,
+.lesson__live + .lesson__text {
+  margin-top: 1em;
+}
+
+.lesson__live {
+  margin-block: 28px;
+}
+
+@media (min-width: 1180px) {
+  /* Na širokém okně se ukázka vysune ze sloupce textu, ať má editor i náhled místo. */
+  .lesson__live {
+    margin-inline: -7rem;
+  }
+}
+
+.live {
+  margin: 0;
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius-large);
+  overflow: hidden;
+  background: var(--surface);
+}
+
+.live__bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 8px 6px 14px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.live__title {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.live__hint {
+  flex: 1;
+  color: var(--ink-faint);
+  font-size: 13px;
+}
+
+.live__body {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  height: 300px;
+}
+
+.live__editor {
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+}
+
+.live__output {
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid var(--rule);
+}
+
+.live__preview {
+  flex: 3;
+  min-height: 0;
+  position: relative;
+  background: #fff;
+}
+
+.live__preview iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.live__console {
+  flex: 1;
+  max-height: 45%;
+}
+
+.live--js .live__console {
+  max-height: none;
+}
+
+.editor--compact .editor__tab {
+  padding-block: 6px 5px;
+  font-size: 12.5px;
+}
+
+.editor--compact {
+  --code-size: 13.5px;
+}
+
+@media (max-width: 760px) {
+  .live__body {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: 260px 240px;
+    height: auto;
+  }
+
+  .live__output {
+    border-left: 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  .live__hint {
+    display: none;
+  }
+}
+
+/* ——— Konec lekce ——— */
+
+.lesson__finish {
+  margin-top: 56px;
+  padding-top: 28px;
+  border-top: 2px solid var(--ink);
+}
+
+.lesson__finish-title {
+  font-size: 28px;
+}
+
+.lesson__finish-lead {
+  margin-top: 6px;
+  color: var(--ink-soft);
+}
+
+.lesson__finish > .actions,
+.lesson__status + .actions {
+  margin-top: 20px;
+}
+
+.lesson__status:not(:empty) {
+  margin-top: 16px;
+}
+
+.lesson__note {
+  margin-top: 24px;
+  color: var(--ink-soft);
+}
+
+.lesson__note + .actions {
+  margin-top: 10px;
+}
+
+/* ——— Otázky (lekce i kvíz) ——— */
+
+.questions {
+  display: grid;
+}
+
+.question {
+  margin: 0;
+  padding: 26px 0 24px;
+  border: 0;
+  border-bottom: 1px solid var(--rule);
+  min-width: 0;
+}
+
+.question__number {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  margin-bottom: 8px;
+  color: var(--ink-soft);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.question__multiple {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.question__prompt {
+  font-size: 17px;
+}
+
+.answers {
+  display: grid;
+  gap: 8px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.answer {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr) 20px;
+  gap: 12px;
+  align-items: start;
+  padding: 11px 14px;
+  border: 1px solid var(--rule-strong);
+  border-radius: 8px;
+  background: var(--surface);
+  cursor: pointer;
+  transition: border-color 120ms ease, background-color 120ms ease;
+}
+
+.answer:hover {
+  border-color: var(--accent);
+}
+
+/* Jen před vyhodnocením — potom barvu určuje data-state. */
+.answer:not([data-state]):has(.answer__input:checked) {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.answer:has(.answer__input:focus-visible) {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.answer__input {
+  width: 18px;
+  height: 18px;
+  margin: 3px 0 0;
+  accent-color: var(--accent);
+}
+
+.answer__input:focus-visible {
+  outline: none;
+}
+
+.answer__text {
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.answer__mark {
+  padding-top: 2px;
+}
+
+.answer:has(.answer__input:disabled) {
+  cursor: default;
+}
+
+.answer[data-state='correct'] {
+  border-color: #7fbf9c;
+  background: var(--done-soft);
+  color: var(--ink);
+}
+
+.answer[data-state='correct'] .answer__mark {
+  color: var(--done);
+}
+
+.answer[data-state='wrong'] {
+  border-color: #e3a39b;
+  background: var(--fail-soft);
+}
+
+.answer[data-state='wrong'] .answer__mark {
+  color: var(--fail);
+}
+
+.answer[data-state='neutral'] {
+  border-color: var(--rule);
+  background: transparent;
+  color: var(--ink-soft);
+}
+
+.answer__why:not(:empty) {
+  margin: 6px 0 4px 46px;
+}
+
+.answer__why-text {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--ink-soft);
+}
+
+.question__verdict:empty {
+  display: none;
+}
+
+.question__verdict {
+  margin-top: 12px;
+  font-weight: 700;
+}
+
+.question[data-result='correct'] .question__verdict {
+  color: var(--done);
+}
+
+.question[data-result='wrong'] .question__verdict {
+  color: var(--fail);
+}

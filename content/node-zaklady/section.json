@@ -1,0 +1,5 @@
+{
+  "title": "Node.js základy",
+  "intro": "JavaScript umíš v prohlížeči. Tady ho pustíš na počítači jako program: přečteš soubor, vezmeš si nastavení z prostředí a postavíš HTTP server, který odpovídá v JSON.\n\nPo sekci umíš:\n\n- vysvětlit, co je Node a čím se liší od prohlížeče,\n- spustit soubor v Node a používat vestavěné moduly přes `node:` (`fs`, `http`, `process`),\n- napsat HTTP server bez frameworku: routování podle adresy a metody, stavové kódy, JSON, tělo požadavku,\n- postavit malé REST API, které si data ukládá do souboru.\n\nPředpoklad: JavaScript včetně `async`/`await` a modulů `import`/`export`. Frameworky jako Express nebo Nuxt dělají pod kapotou přesně tohle — po sekci budeš vědět, co za tebe řeší.",
+  "modules": ["co-je-node", "workshop-http-server", "projekt-api-poznamek", "kviz"]
+}

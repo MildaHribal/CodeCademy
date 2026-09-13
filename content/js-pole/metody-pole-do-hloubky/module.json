@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Metody pole do hloubky", "summary": "Callback, co která metoda vrací, řetězení, kdy psát for…of a na čem se nejčastěji padá.", "minutes": 15, "runtime": "js" }

@@ -1,0 +1,13 @@
+{
+  "parts": [
+    {
+      "id": "zaklady",
+      "title": "Základy",
+      "summary": "Malá osnova pro testy serveru.",
+      "sections": [
+        "ukazka",
+        { "id": "planovana", "title": "Plánovaná sekce", "summary": "Ještě bez obsahu." }
+      ]
+    }
+  ]
+}

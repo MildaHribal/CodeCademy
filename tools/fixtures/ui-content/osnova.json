@@ -1,0 +1,5 @@
+{
+  "parts": [
+    { "id": "ui", "title": "Testy rozhraní", "summary": "Obsah pro testy uživatelského rozhraní.", "sections": ["ui"] }
+  ]
+}

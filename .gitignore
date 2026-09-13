@@ -3,3 +3,4 @@ dist/
 data/
 moje-projekty/
 *.log
+.e2e/

@@ -1,0 +1,1 @@
+{ "type": "lab", "title": "Statistika známek", "summary": "Samostatně napíšeš funkce, které z třídních známek spočítají průměry, pořadí a rozdělení.", "minutes": 60, "runtime": "js" }

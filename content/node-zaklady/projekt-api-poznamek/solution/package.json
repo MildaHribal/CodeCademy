@@ -1,0 +1,11 @@
+{
+  "name": "api-poznamek",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "REST API pro poznámky v čistém Node.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js"
+  }
+}

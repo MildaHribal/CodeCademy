@@ -1,0 +1,1 @@
+{ "type": "project", "title": "REST API pro poznámky", "summary": "Samostatný projekt ve VS Code: API, které vypisuje, vytváří a maže poznámky a ukládá je do souboru.", "minutes": 150, "runtime": "node" }

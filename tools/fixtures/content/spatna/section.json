@@ -1,0 +1,5 @@
+{
+  "title": "Rozbitý obsah",
+  "intro": "Tady má ověření najít chybu i varování.",
+  "modules": ["workshop-rozbity", "kviz-kratky"]
+}

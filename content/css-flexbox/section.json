@@ -1,0 +1,5 @@
+{
+  "title": "CSS Flexbox",
+  "intro": "Flexbox je nástroj na rozvržení prvků **v jedné řadě** — vedle sebe nebo pod sebou. Postavíš s ním hlavičky, navigace, lišty nástrojů, vnitřek karet i patičky, a to bez `float`, bez ručně dopočítaných marginů a bez triků se `position`.\n\nV sekci pochopíš, jak flexbox přemýšlí (hlavní a vedlejší osa), postavíš s ním hlavičku webu s kartami, naučíš se, jak prohlížeč počítá šířky položek a proč se některá položka odmítá zmenšit, a nakonec sám rozvrhneš ceník.\n\nPředpoklad: znáš základy HTML a CSS — selektory, box model a jednotky jako `px`, `rem` a `%`.",
+  "modules": ["uvod-do-flexboxu", "workshop-navigace", "flex-do-hloubky", "lab-cenik", "kviz"]
+}

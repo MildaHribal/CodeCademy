@@ -1,0 +1,1 @@
+{ "type": "workshop", "title": "Postav hlavičku a karty", "summary": "Hlavička s logem, navigací a tlačítkem, karty s cenou u dna a patička — krok za krokem na flexboxu.", "minutes": 60, "runtime": "dom" }

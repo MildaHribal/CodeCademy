@@ -1,7 +1,66 @@
 {
   "parts": [
-    { "id": "web-a-css", "title": "Web a CSS", "summary": "HTML, CSS a layout.", "sections": ["css-flexbox"] },
-    { "id": "javascript", "title": "JavaScript", "summary": "Jazyk od základů do hloubky.", "sections": ["js-pole"] },
-    { "id": "framework-a-backend", "title": "Framework a backend", "summary": "Vue, Nuxt, Node, databáze.", "sections": ["node-zaklady"] }
+    {
+      "id": "web-a-css",
+      "title": "Web a CSS",
+      "summary": "Od prázdného souboru k responzivní, přístupné a animované stránce: HTML, formuláře, přístupnost a CSS do hloubky.",
+      "sections": [
+        { "id": "html-zaklady", "title": "HTML a jak funguje web", "summary": "Co se stane mezi adresou a vykreslenou stránkou, sémantická struktura dokumentu, obrázky, tabulky a čtení MDN." },
+        { "id": "html-formulare", "title": "Formuláře", "summary": "Formulář, který funguje bez JavaScriptu: typy polí, labely, skupiny, validace v prohlížeči a co se odešle na server." },
+        { "id": "html-pristupnost", "title": "Přístupnost", "summary": "Strom přístupnosti, klávesnice a fokus, ARIA jen tam, kde pomáhá, audit a oprava stránky. Končí projektem portfolia v HTML." },
+        { "id": "css-zaklady", "title": "Základy CSS", "summary": "Selektory, barvy, jednotky, typografie a vlastní vlastnosti jako design tokeny." },
+        { "id": "css-kaskada", "title": "Selektory a kaskáda do hloubky", "summary": "Kdo vyhraje a proč: kaskáda, specificita, dědičnost, @layer, :is(), :where(), :has(), nesting a @scope." },
+        { "id": "css-box-model", "title": "Box model a tok dokumentu", "summary": "Velikost boxu, block a inline, margin collapse, blokový formátovací kontext a přetečení." },
+        "css-flexbox",
+        { "id": "css-grid", "title": "CSS Grid", "summary": "Dvourozměrný layout, pojmenované oblasti, mřížka bez media queries, subgrid a volba mezi gridem a flexboxem." },
+        { "id": "css-pozicovani", "title": "Pozicování a vrstvení", "summary": "position a containing block, stacking context a z-index, sticky, popover, dialog a anchor positioning." },
+        { "id": "css-responzivita", "title": "Responzivní design a témata", "summary": "Mobile-first, media a container queries, clamp(), světlý a tmavý motiv a preference uživatele." },
+        { "id": "css-animace", "title": "Přechody, transformace a animace", "summary": "Přechody, klíčové snímky, @property, view transitions, animace řízené scrollem a výkon. Končí projekty landing page a portfolia." }
+      ]
+    },
+    {
+      "id": "javascript",
+      "title": "JavaScript",
+      "summary": "Jazyk od první proměnné po event loop: funkce, objekty a pole do hloubky, closures, třídy, chyby, DOM a asynchronní kód.",
+      "sections": [
+        { "id": "js-zaklady", "title": "Základy JavaScriptu", "summary": "Proměnné a typy, operátory, porovnání a truthy/falsy, podmínky a cykly." },
+        { "id": "js-retezce-cisla", "title": "Řetězce, čísla, data a regulární výrazy", "summary": "Práce s textem a Unicode, plovoucí čárka a peníze, Intl, Date a Temporal, regulární výrazy." },
+        { "id": "js-funkce", "title": "Funkce a rozsah platnosti", "summary": "Deklarace a šipky, parametry, scope, hoisting a TDZ, funkce jako hodnoty a první ladění breakpointem." },
+        { "id": "js-objekty", "title": "Objekty, reference a kopie", "summary": "Objekty, hodnota vs. reference, mutace vs. kopie, destrukturalizace, spread, structuredClone a JSON." },
+        "js-pole",
+        { "id": "js-funkce-hloubka", "title": "Closures, this a funkcionální styl", "summary": "Closures, čtyři pravidla this, bind, kompozice, rekurze, memoizace, debounce a throttle." },
+        { "id": "js-tridy-kolekce", "title": "Třídy, prototypy, Map, Set a iterátory", "summary": "Prototypy a třídy se soukromými poli, Map, Set a jeho nové metody, iterátory, generátory a iterator helpers." },
+        { "id": "js-chyby-ladeni", "title": "Chyby a ladění", "summary": "Výjimky, error.cause, vlastní třídy chyb, kde chyby chytat a systematické hledání chyby v cizím kódu." },
+        { "id": "js-dom", "title": "DOM, události a prohlížeč", "summary": "Práce s DOM bez XSS, události a delegace, formuláře v JS, localStorage, URL a observery. Končí projektem kanban tabule." },
+        { "id": "js-async", "title": "Asynchronní JavaScript a fetch", "summary": "Event loop, Promise, async/await, souběh a zrušení, fetch se stavy načítání a chyb. Končí projektem filmové databáze." }
+      ]
+    },
+    {
+      "id": "nastroje",
+      "title": "Nástroje",
+      "summary": "Terminál a Git, moduly, npm a Vite, DevTools a výkon, TypeScript a testování — všechno, co potřebuješ pro vlastní projekt.",
+      "sections": [
+        { "id": "nastroje-terminal-git", "title": "Terminál a Git", "summary": "Soubory, cesty a procesy v terminálu; Git od commitu po konflikt, větve, GitHub a záchrana z průšvihů." },
+        { "id": "nastroje-moduly-vite", "title": "Moduly, npm a Vite", "summary": "ES moduly, package.json, verze a lockfile, skripty, Vite dev server a build." },
+        { "id": "nastroje-devtools-vykon", "title": "DevTools a výkon webu", "summary": "Všechny panely DevTools, Core Web Vitals, rychlé načtení stránky, dlouhé úlohy a úniky paměti." },
+        { "id": "nastroje-typescript", "title": "TypeScript", "summary": "Typy funkcí a dat, unknown místo any, zúžení, rozlišená sjednocení, generika a tsconfig." },
+        { "id": "nastroje-testovani", "title": "Testování", "summary": "Co testovat, unit testy v node:test a Vitestu, mocky času a sítě, Playwright a refaktoring pod testy. Končí projektem ve Vite a TypeScriptu." }
+      ]
+    },
+    {
+      "id": "framework-a-backend",
+      "title": "Framework a backend",
+      "summary": "Backend bez frameworku, SQL, Vue 3 a Nuxt, autentizace a bezpečnost, nasazení a provoz.",
+      "sections": [
+        "node-zaklady",
+        { "id": "api-http-rest", "title": "HTTP a návrh REST API", "summary": "Metody a stavové kódy, návrh zdrojů, stránkování, validace na serveru, CORS a cache." },
+        { "id": "sql-databaze", "title": "SQL a databáze", "summary": "Schéma s klíči a vazbami, JOIN a agregace, transakce, indexy a N+1. Končí projektem API s databází." },
+        { "id": "vue-zaklady", "title": "Vue 3 základy", "summary": "Reaktivita (ref, computed, watch), šablony, seznamy a podmínky, komponenty s props, událostmi a sloty." },
+        { "id": "vue-aplikace", "title": "Vue aplikace", "summary": "Composables a životní cyklus, sdílený stav a Pinia, .vue soubory, Vite a Vue Router. Končí projektem SPA." },
+        { "id": "nuxt-fullstack", "title": "Nuxt: fullstack aplikace", "summary": "SSR a hydratace, souborové routování, serverové API routy nad databází, useFetch, SEO a runtimeConfig." },
+        { "id": "auth-bezpecnost", "title": "Autentizace a bezpečnost", "summary": "Hesla, session a cookies, JWT, autorizace a role, SQL injection, XSS, CSRF a rate limit." },
+        { "id": "nasazeni-provoz", "title": "Nasazení a provoz", "summary": "Konfigurace a tajemství, logování, Docker, HTTPS, CI/CD a závěrečný fullstack projekt." }
+      ]
+    }
   ]
 }

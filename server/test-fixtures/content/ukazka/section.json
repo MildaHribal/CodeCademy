@@ -1,0 +1,5 @@
+{
+  "title": "Ukázková sekce",
+  "intro": "Sekce se všemi typy modulů.",
+  "modules": ["lekce", "workshop", "lab", "kviz", "projekt", "projekt-web"]
+}

@@ -1,0 +1,5 @@
+{
+  "title": "Pole v JavaScriptu",
+  "intro": "Skoro všechna data, se kterými web pracuje, jsou seznamy: položky v košíku, příspěvky ve feedu, řádky z databáze. V této sekci se naučíš s poli pracovat pořádně — vytvářet je, procházet, přetvářet metodami `map`, `filter`, `reduce` a spol., řadit je a hlavně **nerozbít data, která ti někdo půjčil**.\n\nPo sekci umíš napsat funkci nad polem objektů bez nápovědy, víš, které metody mění původní pole a které vracejí nové, a přečteš cizí řetězení metod, aniž bys ho musel spouštět.\n\n**Předpoklady:** proměnné, datové typy, podmínky, funkce (i šipkové) a objekty.",
+  "modules": ["co-je-pole", "workshop-nakupni-seznam", "metody-pole-do-hloubky", "lab-statistika-znamek", "kviz"]
+}

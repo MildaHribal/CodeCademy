@@ -77,6 +77,9 @@ export function loadCurriculum(contentDir) {
       summary: part.summary ?? '',
       sections: (part.sections ?? []).map((entry) => {
         const sectionId = typeof entry === 'string' ? entry : entry.id;
+        if (typeof sectionId !== 'string' || !SLUG.test(sectionId)) {
+          throw new ParseError(`neplatný slug sekce "${sectionId}"`, { id: 'osnova.json' });
+        }
         const planned = typeof entry === 'string' ? {} : entry;
         const s = readSection(contentDir, sectionId);
         if (!s) {
@@ -124,6 +127,7 @@ function stripSolution(item) {
  * @param {{ includeSolutions?: boolean }} opts — API je posílá jen na požádání, verify vždy.
  */
 export function loadModule(contentDir, sectionId, moduleId, { includeSolutions = true } = {}) {
+  if (!SLUG.test(sectionId)) throw new ParseError(`neplatný slug sekce "${sectionId}"`, { id: `${sectionId}/${moduleId}` });
   const m = readModuleMeta(contentDir, sectionId, moduleId);
   const id = `${sectionId}/${moduleId}`;
   const dir = path.join(contentDir, sectionId, moduleId);
@@ -148,7 +152,8 @@ export function loadModule(contentDir, sectionId, moduleId, { includeSolutions =
       return { ...base, steps };
     }
     case 'lab':
-      return { ...base, lab: keep(parseStep(read('lab.md'), { id, defaultRuntime: base.runtime, defaultTitle: m.title })) };
+      // Lab smí seed i řešení vynechat (kontrakt kap. 3) — uživatel pak začíná s prázdnými soubory.
+      return { ...base, lab: keep(parseStep(read('lab.md'), { id, defaultRuntime: base.runtime, defaultTitle: m.title, requireSeed: false })) };
     case 'quiz':
       return { ...base, quiz: parseQuiz(read('quiz.md'), { id }) };
     case 'lesson':

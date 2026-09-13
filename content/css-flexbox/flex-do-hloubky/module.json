@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Flex do hloubky", "summary": "Jak prohlížeč počítá flex-grow, flex-shrink a flex-basis, proč se položka nezmenší a kdy sáhnout po gridu.", "minutes": 20, "runtime": "dom" }

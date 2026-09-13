@@ -1,0 +1,14 @@
+{
+  "parts": [
+    {
+      "id": "testovaci-cast",
+      "title": "Testovací obsah",
+      "summary": "Malý obsah pro testy nástroje verify.",
+      "sections": [
+        "dobra",
+        "spatna",
+        { "id": "planovana", "title": "Plánovaná sekce", "summary": "Na disku zatím není." }
+      ]
+    }
+  ]
+}

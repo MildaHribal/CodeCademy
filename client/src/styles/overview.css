@@ -1,0 +1,364 @@
+/* Přehled osnovy jako obsah učebnice + detail sekce. */
+
+.overview__head {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(280px, 1fr);
+  gap: 48px;
+  align-items: end;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.overview__title {
+  font-size: clamp(36px, 5vw, 52px);
+  letter-spacing: -0.015em;
+  line-height: 1.08;
+}
+
+.overview__lead {
+  margin-top: 16px;
+  max-width: 38ch;
+  color: var(--ink-soft);
+  font-size: 18px;
+  line-height: 1.55;
+}
+
+/* Záložka "Pokračovat" — jediná ozdoba přehledu: stužka jako v knize. */
+.resume {
+  position: relative;
+  display: grid;
+  gap: 4px;
+  padding: 22px 24px 24px;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-large);
+  background: var(--surface);
+}
+
+.resume::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  right: 24px;
+  width: 18px;
+  height: 34px;
+  background: var(--accent);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 76%, 0 100%);
+}
+
+.resume__label {
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+
+.resume__title {
+  padding-right: 36px;
+  font-family: var(--font-serif);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.resume__meta {
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+
+.resume__action {
+  justify-self: start;
+  margin-top: 16px;
+}
+
+.resume--done::before {
+  background: var(--done);
+}
+
+/* ——— Obsah ——— */
+
+.toc {
+  display: grid;
+  gap: 44px;
+  margin-top: 44px;
+}
+
+.toc-part__head {
+  display: grid;
+  grid-template-columns: 3.5rem minmax(0, 1fr) auto;
+  align-items: baseline;
+  column-gap: 0;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--ink);
+}
+
+.toc-part__number {
+  font-family: var(--font-serif);
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--accent);
+  font-variant-numeric: lining-nums;
+}
+
+.toc-part__title {
+  font-size: 28px;
+}
+
+.toc-part__summary {
+  margin-top: 2px;
+  color: var(--ink-soft);
+}
+
+.toc-part__percent {
+  color: var(--ink-soft);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+
+.toc-sections {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.toc-row {
+  display: grid;
+  grid-template-columns: 3.5rem minmax(0, 1fr) minmax(170px, 250px);
+  grid-template-areas:
+    'num title progress'
+    'num summary progress';
+  column-gap: 0;
+  align-items: baseline;
+  padding-block: 14px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.toc-row__main {
+  display: contents;
+}
+
+.toc-row__number {
+  grid-area: num;
+  font-family: var(--font-serif);
+  font-size: 17px;
+  color: var(--ink-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Tečkovaná vodicí linka od názvu k postupu, jako v obsahu knihy. */
+.toc-row__title {
+  grid-area: title;
+  display: flex;
+  align-items: baseline;
+  font-family: var(--font-serif);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.toc-row__title::after {
+  content: '';
+  flex: 1;
+  min-width: 24px;
+  margin-inline: 14px;
+  border-bottom: 2px dotted var(--rule-strong);
+  transform: translateY(-4px);
+}
+
+a.toc-row__title:hover {
+  color: var(--accent);
+}
+
+a.toc-row__title:hover::after {
+  border-bottom-color: var(--accent-muted);
+}
+
+.toc-row__summary {
+  grid-area: summary;
+  margin-top: 2px;
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+
+.toc-row__progress {
+  grid-area: progress;
+  align-self: center;
+  display: grid;
+  grid-template-columns: 1fr 4.5rem;
+  align-items: center;
+  gap: 12px;
+}
+
+.toc-row__percent {
+  font-size: 14px;
+  text-align: right;
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+
+.toc-row--done .toc-row__percent {
+  color: var(--done);
+  font-weight: 600;
+}
+
+.toc-row--planned .toc-row__title {
+  color: var(--ink-faint);
+  font-weight: 400;
+}
+
+.toc-row--planned .toc-row__title::after {
+  border-bottom-color: var(--rule);
+}
+
+.toc-row__planned {
+  grid-area: progress;
+  align-self: center;
+  justify-self: end;
+  color: var(--ink-faint);
+  font-size: 14px;
+  font-style: italic;
+}
+
+@media (max-width: 760px) {
+  .overview__head {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .toc-part__head {
+    grid-template-columns: 2.5rem minmax(0, 1fr) auto;
+  }
+
+  .toc-row {
+    grid-template-columns: 2.5rem minmax(0, 1fr);
+    grid-template-areas:
+      'num title'
+      'num summary'
+      'num progress';
+  }
+
+  .toc-row__progress,
+  .toc-row__planned {
+    justify-self: stretch;
+    margin-top: 8px;
+  }
+
+  .toc-row__planned {
+    justify-self: start;
+  }
+}
+
+/* ——— Detail sekce ——— */
+
+.section-page__title {
+  font-size: clamp(32px, 4.5vw, 44px);
+  letter-spacing: -0.01em;
+}
+
+.section-page__number {
+  color: var(--accent);
+  margin-right: 0.2em;
+  font-variant-numeric: lining-nums;
+}
+
+.section-page__lead {
+  margin-block: 16px 24px;
+  color: var(--ink-soft);
+  font-size: 18px;
+}
+
+.section-page__intro {
+  margin-top: 18px;
+}
+
+.section-page__progress {
+  display: grid;
+  gap: 8px;
+  margin-block: 32px 8px;
+  max-width: 420px;
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+
+.module-list {
+  margin: 24px 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 2px solid var(--ink);
+}
+
+.module-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr) auto;
+  gap: 4px 16px;
+  padding-block: 20px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.module-row__icon {
+  padding-top: 26px;
+  color: var(--ink-faint);
+}
+
+.module-row[data-done='true'] .module-row__icon {
+  color: var(--done);
+}
+
+.module-row__type {
+  color: var(--ink-soft);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.module-row__title {
+  margin-top: 2px;
+  font-size: 22px;
+}
+
+.module-row__title a {
+  color: var(--ink);
+  text-decoration: none;
+}
+
+/* Celý řádek je klikací, odkaz zůstává jediným prvkem v pořadí tabulátoru. */
+.module-row__title a::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.module-row:hover .module-row__title a {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.module-row__summary {
+  margin-top: 4px;
+  color: var(--ink-soft);
+}
+
+.module-row__side {
+  display: grid;
+  justify-items: end;
+  align-content: start;
+  gap: 6px;
+  padding-top: 24px;
+}
+
+.module-row__meta {
+  color: var(--ink-faint);
+  font-size: 13.5px;
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .module-row {
+    grid-template-columns: 28px minmax(0, 1fr);
+  }
+
+  .module-row__side {
+    grid-column: 2;
+    justify-items: start;
+    padding-top: 6px;
+  }
+}

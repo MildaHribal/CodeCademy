@@ -1,0 +1,501 @@
+/* Pracovní plocha kroku: zadání | editor | náhled a konzole. */
+
+.workspace {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.workspace__bar {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  min-height: 44px;
+  padding: 4px 16px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--rule);
+}
+
+.workspace__position {
+  flex: none;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ——— Navigace mezi kroky ——— */
+
+.stepper {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.stepper__list {
+  display: flex;
+  gap: 4px;
+  margin: 0;
+  padding: 3px;
+  list-style: none;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.stepper__item,
+.stepper__arrow {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 5px;
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  text-decoration: none;
+}
+
+.stepper__item {
+  border: 1px solid var(--rule-strong);
+  color: var(--ink-soft);
+  background: var(--surface);
+}
+
+.stepper__item:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.stepper__item[data-done='true'] {
+  border-color: #9fcdb4;
+  background: var(--done-soft);
+  color: var(--done);
+}
+
+.stepper__item[aria-current='step'] {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+  box-shadow: 0 0 0 2px var(--accent-soft);
+}
+
+.stepper__item[aria-current='step'][data-done='true'] {
+  border-color: var(--done);
+  background: var(--done);
+  box-shadow: 0 0 0 2px var(--done-soft);
+}
+
+.stepper__arrow {
+  flex: none;
+  color: var(--ink-soft);
+}
+
+a.stepper__arrow:hover {
+  background: var(--surface-sunken);
+  color: var(--accent);
+}
+
+span.stepper__arrow {
+  color: var(--rule-strong);
+}
+
+/* ——— Sloupce ——— */
+
+.columns {
+  --gutter-size: 7px;
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: var(--columns, 3fr var(--gutter-size) 4fr var(--gutter-size) 3fr);
+}
+
+.columns__pane {
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.columns__gutter {
+  position: relative;
+  background: var(--rule);
+  cursor: col-resize;
+  touch-action: none;
+}
+
+.columns__gutter::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 2px;
+  width: 3px;
+  height: 32px;
+  margin-top: -16px;
+  border-radius: 2px;
+  background: var(--rule-strong);
+}
+
+.columns__gutter:hover,
+.columns__gutter:focus-visible,
+.columns.is-resizing .columns__gutter {
+  background: var(--accent-muted);
+}
+
+.columns__gutter:focus-visible {
+  outline-offset: -2px;
+}
+
+.columns.is-resizing {
+  cursor: col-resize;
+  user-select: none;
+}
+
+.columns.is-resizing iframe {
+  pointer-events: none;
+}
+
+.pane__scroll {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+.pane__head {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 38px;
+  padding: 4px 8px 4px 14px;
+  border-bottom: 1px solid var(--rule);
+  background: var(--surface);
+}
+
+.pane__head h2 {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+
+.pane__tools {
+  display: flex;
+  gap: 4px;
+}
+
+/* ——— Zadání ——— */
+
+.pane--brief {
+  background: var(--surface);
+}
+
+.brief {
+  padding: 22px 22px 28px;
+}
+
+.brief__position {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  color: var(--ink-soft);
+  font-size: 13.5px;
+}
+
+.brief__title {
+  margin: 6px 0 14px;
+  font-size: 26px;
+  letter-spacing: -0.005em;
+}
+
+.brief__description {
+  font-size: 15.5px;
+  line-height: 1.62;
+}
+
+.brief__description pre {
+  font-size: 13px;
+}
+
+.brief__subtitle {
+  margin: 26px 0 6px;
+  font-size: 18px;
+}
+
+.pane__footer {
+  flex: none;
+  display: grid;
+  gap: 10px;
+  padding: 12px 16px 14px;
+  border-top: 1px solid var(--rule);
+  background: #f8f9fb;
+}
+
+/* ——— Nápovědy (požadavky) ——— */
+
+.hints {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.hint {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr);
+  gap: 10px;
+  padding-block: 10px;
+  border-top: 1px solid var(--rule);
+}
+
+.hint__status {
+  padding-top: 2px;
+  color: var(--ink-faint);
+}
+
+.hint[data-status='running'] .hint__status {
+  color: var(--accent);
+}
+
+.hint[data-status='running'] .hint__status svg {
+  animation: spin 1.2s linear infinite;
+}
+
+.hint[data-status='pass'] .hint__status {
+  color: var(--done);
+}
+
+.hint[data-status='fail'] .hint__status {
+  color: var(--fail);
+}
+
+.hint .prose {
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.hint__error {
+  margin-top: 6px;
+  font-size: 13px;
+}
+
+.hint__note {
+  margin: 6px 0 0;
+  color: var(--ink-faint);
+  font-size: 13px;
+}
+
+.hint__error summary {
+  width: fit-content;
+  color: var(--fail);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.hint__error pre {
+  margin: 6px 0 0;
+  padding: 8px 10px;
+  max-height: 180px;
+  overflow: auto;
+  border-radius: 4px;
+  background: var(--fail-soft);
+  color: #6f1710;
+  font-size: 12.5px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ——— Editor ——— */
+
+.pane--editor {
+  background: var(--code-bg);
+}
+
+.editor {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--code-bg);
+}
+
+.editor__tabs {
+  flex: none;
+  display: flex;
+  overflow-x: auto;
+  background: var(--code-bg-deep);
+  scrollbar-width: thin;
+}
+
+.editor__tab {
+  padding: 9px 16px 8px;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: #9da5b4;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.editor__tab:hover {
+  color: #e6e9ef;
+}
+
+.editor__tab[aria-selected='true'] {
+  background: var(--code-bg);
+  color: #fff;
+  border-bottom-color: #7aa2ff;
+}
+
+.editor__tab:focus-visible,
+.editor :focus-visible {
+  outline-color: var(--focus-on-dark);
+  outline-offset: -3px;
+}
+
+.editor__surface {
+  flex: 1;
+  min-height: 0;
+}
+
+.editor__surface .cm-editor {
+  height: 100%;
+}
+
+.editor__surface .cm-editor.cm-focused {
+  box-shadow: inset 0 0 0 2px rgba(155, 184, 255, 0.35);
+}
+
+/* ——— Náhled a konzole ——— */
+
+.pane--output {
+  background: var(--paper);
+}
+
+.output__preview {
+  flex: 3;
+  min-height: 80px;
+  position: relative;
+  background: #fff;
+}
+
+.output__frame {
+  position: absolute;
+  inset: 0;
+}
+
+.output__frame iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.console {
+  flex: 2;
+  min-height: 60px;
+  overflow: auto;
+  background: #1d2026;
+  color: var(--code-ink);
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+.output--console-only .console,
+.output--node .console {
+  flex: 1;
+}
+
+.console__empty {
+  padding: 10px 14px;
+  color: #8b929e;
+  font-family: var(--font-sans);
+  font-size: 13px;
+}
+
+.console__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.console__entry {
+  padding: 4px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.console__entry pre {
+  margin: 0;
+  font: inherit;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.console__entry--info {
+  color: #9bc7ff;
+}
+
+.console__entry--warn {
+  color: #f0cf8a;
+  background: rgba(229, 192, 123, 0.08);
+}
+
+.console__entry--error {
+  color: #ff9e97;
+  background: rgba(224, 108, 117, 0.12);
+}
+
+.console__entry--system {
+  color: #8b929e;
+}
+
+/* ——— Úzké okno: panely pod sebou, stránka se posouvá ——— */
+
+@media (max-width: 900px) {
+  body[data-layout='workspace'] {
+    height: auto;
+    overflow: visible;
+  }
+
+  .workspace__bar {
+    flex-wrap: wrap;
+  }
+
+  .stepper {
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .columns__gutter {
+    display: none;
+  }
+
+  .pane--brief {
+    overflow: visible;
+  }
+
+  .pane--editor {
+    height: 60vh;
+  }
+
+  .pane--output {
+    height: 70vh;
+  }
+}

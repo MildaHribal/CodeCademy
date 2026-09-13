@@ -1,0 +1,5 @@
+{
+  "title": "Dobrý obsah",
+  "intro": "Všechno tady má projít ověřením bez chyb i varování.",
+  "modules": ["lekce-flexbox", "workshop-navigace", "lab-soucet", "kviz"]
+}

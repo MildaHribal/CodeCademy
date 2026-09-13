@@ -1,0 +1,92 @@
+/* Projekt ve VS Code. */
+
+.project__description {
+  margin-bottom: 8px;
+}
+
+.project__folder-body {
+  display: grid;
+  gap: 14px;
+}
+
+.project__created {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--done);
+  font-weight: 600;
+}
+
+.copy-field {
+  display: grid;
+  gap: 4px;
+}
+
+.copy-field__label {
+  color: var(--ink-soft);
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.copy-field__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.copy-field__value {
+  flex: 1 1 18rem;
+  min-width: 0;
+  padding: 8px 10px;
+  border-radius: var(--radius);
+  background: var(--surface-sunken);
+  font-size: 13.5px;
+  overflow-wrap: anywhere;
+}
+
+.copy-field__feedback {
+  color: var(--done);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.project__stories .hints {
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.project__stories .result {
+  margin-bottom: 14px;
+}
+
+.project__check-note {
+  margin-top: 10px;
+  color: var(--ink-faint);
+  font-size: 13.5px;
+}
+
+.project__preview-output {
+  margin-top: 16px;
+  border: 1px solid var(--rule-strong);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.project__frame {
+  position: relative;
+  height: 480px;
+  background: #fff;
+}
+
+.project__frame iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.project__preview-output .console {
+  max-height: 180px;
+}
