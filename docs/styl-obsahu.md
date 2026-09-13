@@ -493,3 +493,64 @@ o firmě Arkáda, bez postav, bez tiketů. Obsah vždy přepiš do formátu Akad
 - **Sada `# --code--` s více soubory:** otázky jmenují soubor u čísla řádku („řádek 65 v `shop.css`").
 - **Tahák:** nadpis vzoru odpovídá kódu pod ním; tahák nezačíná vlastním nadpisem `#`
   (UI ho už nadepisuje).
+
+---
+
+## 18. Aby to bavilo a šlo to rychle (povinné)
+
+Motivaci drží tři věci: **smysl** (vím, k čemu to je), **pocit, že to zvládám** (obtížnost
+tak akorát a rychlá odezva) a **volba** (můžu to udělat po svém). K tomu **viditelný pokrok
+na něčem, co stojí za to**. Žádné body, série ani příběh: odměnou je výsledek na obrazovce,
+ne slova. Podklady: teorie sebeurčení (Ryan a Deci), princip malých pokroků (Amabile
+a Kramer), pravidlo 85 % (Wilson a kol., 2019), personalizace kontextu (Walkington),
+kurzy Joshe Comeaua, výzvy Frontend Mentoru a projekty The Odin Project.
+
+- **Workshop staví věc, kterou by si student rád ukázal.** Skutečný produkt (navigace
+  e-shopu, stránka herního serveru se stavem a hráči, přehrávač, přehled výdajů,
+  rezervace), ne „cvičná stránka". `summary` jmenuje výsledek slovesem („Postavíš kartu
+  produktu s hodnocením a košíkem"), ne téma („Flexbox"). Kontrola: dal by si student
+  snímek výsledku na LinkedIn?
+- **První viditelná změna do 5 minut.** Nejpozději krok 3 workshopu (a první `:::live`
+  lekce do konce první části `##`) změní náhled nebo výstup tak, že je to vidět. Žádné
+  tři kroky přípravy bez odezvy.
+- **Seed není prázdná bílá stránka.** Obsah, texty a základní design (custom properties
+  pro barvy, rozestupy, písmo) dodá seed; student píše to, co sekce učí. Kosmetiku, kterou
+  sekce neučí, nepiš do kroků. Výjimka: sekce o té kosmetice (`css-design`, `css-animace`).
+- **Každý krok výsledek viditelně posune.** Krok, po kterém se náhled ani konzole nezmění,
+  je výjimka a jeho popis řekne, kde se změna projeví.
+- **Výsledek vypadá jako z reálného webu.** Paleta ze 3–5 barev, systémové písmo
+  s hierarchií velikostí, rozestupy na škále, stavy `:hover` a `:focus-visible`, aspoň
+  jeden plynulý přechod. Platí pro výsledek workshopu, laby i hotové stavy projektů.
+- **V každé CSS sekci od `css-zaklady` aspoň jeden efekt, který udělá dojem.** Přechod,
+  hover efekt, gradient, stín s hloubkou, animace nebo `scroll-timeline`. V JS sekcích
+  místo efektu okamžitá interaktivita (živý filtr, přetažení, klávesová zkratka). Efekt
+  stojí jen na probrané látce. Když ho dodává seed, pojmenuj ho a řekni, kde se ho naučí
+  („tohle je `transition`, dostaneme se k němu v `css-animace`").
+- **Smysl hned na první obrazovce.** Lekce i workshop začínají 1–2 větami, kde to student
+  potká na skutečném webu nebo v práci (jmenuj komponentu nebo typ webu). Žádná historie
+  technologie na úvod.
+- **Témata a data z reálného světa, v sekci pestrá.** Česká data (ceny v Kč, česká jména
+  a místa, skutečné názvy produktů), žádné `foo`, `bar` ani lorem ipsum. Dva workshopy
+  v jedné sekci nemají stejnou doménu.
+- **Na konci workshopu výzva „Udělej po svém".** Poslední krok má oddíl `## Udělej po svém`
+  se 2–4 rozšířeními bez testů: aspoň jedno vizuální, jedno funkční a „přeměň to na téma,
+  které tě zajímá". Každé rozšíření má jednu větu s vodítkem, ne postup.
+- **Laby nechávají volbu.** Testy kontrolují strukturu a chování, ne texty, barvy ani
+  téma. Když to testy dovolí, zadání to řekne: „Téma, texty a vzhled jsou tvoje volba."
+  Každá sekce s labem má aspoň jeden lab s volným tématem.
+- **Obtížnost tak akorát.** Než workshop odevzdáš, projdi ho sám bez řešení. Krok, kde
+  jen opisuješ, zeslab (méně návodu). Krok, kde bys potřeboval víc než 3 tipy nebo nad ním
+  strávil víc než ~5 minut, rozděl. Cíl: běžný student projde kontrolu většinou na první
+  nebo druhý pokus.
+- **Realistický odhad `minutes`.** Počítej ~150 slov výkladu za minutu, 1 minutu na každý
+  interaktivní blok nebo otázku, 2 minuty na krok první třetiny, 3 minuty na krok druhé
+  a 5 minut na krok poslední třetiny, 5–8 minut na požadavek labu. Zaokrouhli nahoru na
+  5 minut.
+- **Zastavit se dá po 20–30 minutách s hotovým kusem.** Workshop nad 60 minut má každých
+  ~15 kroků mezistav, který stojí sám (hotová hlavička, funkční filtr), a popis toho kroku
+  to řekne („Tady máš hotovou hlavičku, klidně si dej pauzu"). Modul nad 90 minut rozděl.
+- **Teorie a tvorba se střídají.** V pořadí sekce nejsou dvě lekce za sebou bez workshopu
+  nebo labu mezi nimi. Výjimka: krátká lekce do 5 minut.
+- **Konec modulu ukáže další krok.** Poslední krok workshopu nebo závěr lekce jednou větou
+  řekne, co student postaví dál a co k tomu z právě naučeného použije („Příště z těchhle
+  karet uděláš filtrovatelný katalog").
