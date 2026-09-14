@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Rozšíření: iterator helpers", "summary": "Nepovinné rozšíření: map, filter, take, drop a toArray přímo na iterátoru, líné zpracování bez mezipolí a Iterator.from.", "minutes": 25, "runtime": "js" }

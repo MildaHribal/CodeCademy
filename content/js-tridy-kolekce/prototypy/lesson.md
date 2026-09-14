@@ -302,6 +302,8 @@ console.log(Object.hasOwn(dns, 'title'), Object.hasOwn(dns, 'label'));
 
 `extends` přidá do řetězu další článek: `Object.getPrototypeOf(Chapter.prototype) === Recording.prototype`. Řetěz kapitoly je `chapter → Chapter.prototype → Recording.prototype → Object.prototype → null`. **Přepsání metody** v potomkovi tedy znamená jen to, že hledání najde `label` v `Chapter.prototype` dřív než v `Recording.prototype`. A `instanceof` nedělá nic jiného, než že hledá `Recording.prototype` v řetězu objektu.
 
+Ve starším kódu uvidíš totéž napsané ručně, bez `class`: konstruktorová funkce `function Episode(title) { this.title = title; }` volaná přes `new` a metody přiřazené do prototypu, `Episode.prototype.label = function () { return this.title; };`. Chová se to stejně jako třída — jen bez soukromých polí a bez hlídání, že jsi nezapomněl `new`.
+
 :::explain
 Vysvětli vlastními slovy, jak JavaScript najde metodu `label`, když zavoláš `chapter.label()` na instanci třídy `Chapter extends Recording`, která `label` nepřepisuje.
 
@@ -470,6 +472,8 @@ To problém jen zvětší: metoda by se objevila v řetězu úplně každého ob
 js-tridy-kolekce/prototypy#nerozsiruj-vestavene-prototypy
 :::
 
+Dál: v labu [Oprav 3 chyby](see:js-tridy-kolekce/lab-oprav-3-chyby) najdeš v cizím kódu pole sdílené přes prototyp, getter, který volá sám sebe, a ztracené `this`.
+
 ## Kde to najdeš v MDN
 
 - [Inheritance and the prototype chain](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Inheritance_and_the_prototype_chain) — celý mechanismus s diagramy, včetně toho, jak ho používají třídy.
@@ -511,7 +515,7 @@ js-tridy-kolekce/prototypy#co-dela-class-pod-kapotou
 
 ## --question--
 
-Kterými zápisy zjistíš, jestli objekt `user` vlastnost `email` **zdědil** z prototypu, a přitom ji nemá u sebe? Vyber všechny správné.
+Kterým zápisem zjistíš, jestli objekt `user` vlastnost `email` **zdědil** z prototypu, a přitom ji nemá u sebe?
 
 ### --correct--
 
@@ -553,16 +557,16 @@ const todo = Object.create(template);
 groceries.title = 'Nákup';
 groceries.items.push('mléko');
 
-console.log(todo.title, todo.items.length);
+console.log(Object.hasOwn(groceries, 'title'), Object.hasOwn(groceries, 'items'), todo.items.length);
 ```
 
 ### --expected--
 
-Seznam 1
+true false 1
 
 ### --why--
 
-`groceries.title = …` vytvořilo vlastní vlastnost a `todo.title` se dál čte z prototypu. `groceries.items.push` ale nic nezapsalo — přečetlo pole z prototypu a změnilo ho, takže ho vidí i `todo`.
+Přiřazení `groceries.title = …` vytvořilo vlastní vlastnost. `groceries.items.push` ale do `groceries` nic nezapsalo: přečetlo pole z prototypu a změnilo ho. Vlastní `items` proto nevzniklo a změnu vidí i `todo`. Kdo si myslí, že `push` „přesune" pole do objektu, čeká tu `true true 0`.
 
 ### --see--
 

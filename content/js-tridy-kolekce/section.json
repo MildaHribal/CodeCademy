@@ -1,5 +1,66 @@
 {
   "title": "Třídy, prototypy, Map, Set a iterátory",
-  "intro": "draft",
-  "modules": ["tridy", "workshop-bankovni-ucet", "prototypy", "lab-oprav-3-chyby", "map-a-set", "workshop-filmovy-klub"]
+  "intro": "Každá větší aplikace má modely s pravidly — účet, který nepustí zůstatek do mínusu, košík, sklad, přehrávač — a data, pro která pole a obyčejný objekt nestačí: slovníky s klíči za běhu, seznamy bez duplicit, „co mají dva uživatelé společného\". V téhle sekci se naučíš psát **třídy se soukromým stavem**, pochopíš **prototypy**, na kterých třídy stojí, a sáhneš po správné kolekci: `Map`, `Set` s novými množinovými metodami a iterovatelné objekty.\n\nPostup: lekce o třídách a workshop s bankovním účtem, lekce o prototypech a lab se třemi chybami v cizím kódu, lekce o `Map` a `Set` a workshop s doporučovačem filmů, lekce o iterátorech a samostatný lab se skladem. Na konci je nepovinné rozšíření o iterator helpers a kvíz nad starším kódem garáže.\n\n**Předpoklady:** objekty a reference, metody pole, closures a pravidla pro `this` (sekce Closures, `this` a funkcionální styl).",
+  "modules": [
+    "tridy",
+    "workshop-bankovni-ucet",
+    "prototypy",
+    "lab-oprav-3-chyby",
+    "map-a-set",
+    "workshop-filmovy-klub",
+    "iteratory-generatory",
+    "lab-inventar",
+    "iterator-helpers",
+    "kviz"
+  ],
+  "outcomes": [
+    {
+      "text": "Napíšeš třídu se soukromými poli, gettery, statickou tovární metodou a potomkem přes `extends` a `super`.",
+      "links": [
+        "js-tridy-kolekce/tridy#soukroma-pole",
+        "js-tridy-kolekce/workshop-bankovni-ucet",
+        "js-tridy-kolekce/lab-inventar"
+      ]
+    },
+    {
+      "text": "Vysvětlíš řetěz prototypů: kde leží metody třídy, odkud mají pole a řetězce své metody a proč nerozšiřovat vestavěné prototypy.",
+      "links": [
+        "js-tridy-kolekce/prototypy#retez-prototypu",
+        "js-tridy-kolekce/prototypy#co-dela-class-pod-kapotou",
+        "js-tridy-kolekce/prototypy#nerozsiruj-vestavene-prototypy"
+      ]
+    },
+    {
+      "text": "Poznáš a opravíš ztracené `this` u metody předané jako callback, `this` před `super` a pole sdílené přes prototyp.",
+      "links": [
+        "js-tridy-kolekce/tridy#metoda-predana-jako-callback-ztrati-this",
+        "js-tridy-kolekce/workshop-bankovni-ucet/013",
+        "js-tridy-kolekce/lab-oprav-3-chyby"
+      ]
+    },
+    {
+      "text": "Vybereš mezi objektem, `Map`, `Set` a `WeakMap` podle toho, jaké klíče a jaké otázky nad daty máš.",
+      "links": [
+        "js-tridy-kolekce/map-a-set#kdy-map-a-kdy-objekt",
+        "js-tridy-kolekce/map-a-set#weakmap-data-k-objektu-dokud-objekt-zije",
+        "js-tridy-kolekce/workshop-filmovy-klub/005"
+      ]
+    },
+    {
+      "text": "Spočítáš průnik, rozdíl a sjednocení dvou množin metodami `Set` a víš, kdy záleží na pořadí.",
+      "links": [
+        "js-tridy-kolekce/map-a-set#mnozinove-operace",
+        "js-tridy-kolekce/workshop-filmovy-klub/010",
+        "js-tridy-kolekce/lab-inventar"
+      ]
+    },
+    {
+      "text": "Uděláš vlastní třídu iterovatelnou přes `*[Symbol.iterator]()` a napíšeš generátor, který vydává hodnoty líně.",
+      "links": [
+        "js-tridy-kolekce/iteratory-generatory#vlastni-iterovatelna-trida",
+        "js-tridy-kolekce/iteratory-generatory#line-a-nekonecne-sekvence",
+        "js-tridy-kolekce/lab-inventar"
+      ]
+    }
+  ]
 }

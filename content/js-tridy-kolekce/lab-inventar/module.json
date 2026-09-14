@@ -1,0 +1,1 @@
+{ "type": "lab", "title": "Inventář skladu", "summary": "Samostatně napíšeš třídy pro zboží a sklad: zásoby v Map, zboží ve slevě přes dědičnost, procházení skladu cyklem for…of a porovnání dvou skladů metodami Set.", "minutes": 75, "runtime": "js" }

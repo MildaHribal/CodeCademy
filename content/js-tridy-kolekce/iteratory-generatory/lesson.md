@@ -57,7 +57,7 @@ Cyklus `for…of` projde pole, řetězec, `Map`, `Set` i seznam prvků ze `query
 | iterovatelné | co dává |
 |---|---|
 | pole | položky |
-| řetězec | znaky (i emoji jako jeden znak) |
+| řetězec | znaky (jednoduché emoji jako `😀` vydá jako jeden znak) |
 | `Map` | dvojice `[klíč, hodnota]` |
 | `Set` | hodnoty |
 | `NodeList` z `querySelectorAll` | prvky stránky |
@@ -424,6 +424,8 @@ console.log(first.length, second.length);
 js-tridy-kolekce/iteratory-generatory#iterator-se-vycerpa
 :::
 
+Dál: v labu [Inventář skladu](see:js-tridy-kolekce/lab-inventar) napíšeš sklad jako třídu s mapou zboží, uděláš ho iterovatelným a porovnáš dva sklady metodami `Set`.
+
 ## Kde to najdeš v MDN
 
 - [Iteration protocols](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols) — přesný popis iterable a iterator protokolu a seznam míst, která iterovatelné hodnoty přijímají.
@@ -517,11 +519,11 @@ Kolega volá v cyklu `if (visitedIds.includes(id))` nad polem `visitedIds` a chc
 
 ### --answer--
 
-Nic, iterátor má taky metodu `includes`.
+Nic, průchod iterátorem je vždycky rychlejší než průchod polem.
 
 #### --why--
 
-Iterátor umí hlavně `next()`. Metoda `includes` na něm není.
+Iterátor vydává hodnoty po jedné přes `next()`. Hledání v něm je pořád průchod hodnotu po hodnotě, jen bez možnosti projít ho podruhé.
 
 ### --correct--
 

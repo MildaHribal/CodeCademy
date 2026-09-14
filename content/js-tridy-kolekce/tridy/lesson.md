@@ -595,7 +595,7 @@ js-tridy-kolekce/tridy#dedicnost-extends-a-super
 
 ## Kompozice, nebo dědičnost?
 
-Dědičnost svádí stavět dlouhé řetězy (`Recording → AudioRecording → PaidAudioRecording → …`). Každá změna rodiče pak může rozbít všechny potomky. Proto se v praxi víc používá [[kompozice]] (*composition*): objekt jiný objekt **má** a volá jeho metody.
+Dědičnost svádí stavět dlouhé řetězy (`Recording → AudioRecording → PaidAudioRecording → …`). Každá změna rodiče pak může rozbít všechny potomky. Proto se v praxi víc používá [[kompozice objektů|kompozice]] (*composition*): objekt jiný objekt **má** a volá jeho metody.
 
 | vztah | otázka | zápis |
 |---|---|---|
@@ -764,6 +764,8 @@ setTimeout(function () { player.next(); }, 3000);
 
 js-tridy-kolekce/tridy#metoda-predana-jako-callback-ztrati-this
 :::
+
+Dál tohle všechno použiješ naostro: ve workshopu [Bankovní účet](see:js-tridy-kolekce/workshop-bankovni-ucet) postavíš model účtu se soukromým zůstatkem, statickými továrními metodami a spořicím účtem, který dědí.
 
 ## Kde to najdeš v MDN
 

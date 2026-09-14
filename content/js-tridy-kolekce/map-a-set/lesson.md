@@ -419,6 +419,8 @@ JSON.stringify([...cart.entries()])
 js-tridy-kolekce/map-a-set#json-stringify-mapy
 :::
 
+Dál: ve workshopu [Filmový klub](see:js-tridy-kolekce/workshop-filmovy-klub) z `Map`, `Set` a množinových operací postavíš doporučovač filmů podle podobnosti vkusu.
+
 ## Kde to najdeš v MDN
 
 - [Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map) — metody a v části *Objects vs. maps* tabulka, kdy použít který.

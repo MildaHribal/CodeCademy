@@ -45,7 +45,7 @@ assert.equal(book(yoga, 'Petr Svoboda'), false, 'třináctá rezervace na jógu 
 assert.equal(book(circuit, 'Petr Svoboda'), true, 'kruhový trénink je prázdný, rezervace na něj má vrátit true i po zaplnění jógy');
 ```
 
-Nová lekce má název, začátek, kapacitu `12` a nikoho přihlášeného a `book` odmítne dvojí zápis.
+Nová lekce má název, začátek, kapacitu `12` a nikoho přihlášeného.
 
 ```js
 const lesson = createLesson('Pilates', '2026-09-23T17:30');
@@ -53,6 +53,12 @@ assert.equal(lesson.title, 'Pilates', "createLesson('Pilates', …).title má b�
 assert.equal(lesson.start, '2026-09-23T17:30', "createLesson(…, '2026-09-23T17:30').start má být '2026-09-23T17:30'");
 assert.equal(lesson.capacity, 12, 'nová lekce má mít kapacitu 12');
 assert.equal(lesson.attendees.length, 0, 'nová lekce nemá mít nikoho přihlášeného');
+```
+
+`book` odmítne dvojí zápis téhož člena na jednu lekci.
+
+```js
+const lesson = createLesson('Pilates', '2026-09-23T17:30');
 assert.equal(book(lesson, 'Jan Novák'), true, "první book(pilates, 'Jan Novák') má vrátit true");
 assert.equal(book(lesson, 'Jan Novák'), false, "druhý book(pilates, 'Jan Novák') má vrátit false — Jan už je zapsaný");
 ```
