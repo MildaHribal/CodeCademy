@@ -1,0 +1,7 @@
+{
+  "type": "workshop",
+  "title": "Hodnocení studentů",
+  "summary": "Postavíš program, který z bodů přidělí známku, slovní hodnocení a upozornění.",
+  "minutes": 55,
+  "runtime": "js"
+}

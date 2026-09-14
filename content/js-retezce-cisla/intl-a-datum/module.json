@@ -1,0 +1,7 @@
+{
+  "type": "lesson",
+  "title": "Formátování a datum",
+  "summary": "Intl.NumberFormat, DateTimeFormat, RelativeTimeFormat, PluralRules; pasti Date; Temporal (PlainDate, ZonedDateTime, Duration).",
+  "minutes": 20,
+  "runtime": "js"
+}

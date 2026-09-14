@@ -311,7 +311,7 @@ console.log(toEuro(500), toDollars(460));
 
 Rozdíly, na kterých teď záleží: deklaraci jde zavolat i nad místem, kde je
 napsaná, výraz a šipku až pod ním (proč, vysvětlí lekce
-[Rozsah platnosti, hoisting a TDZ](see:js-funkce/scope-a-hoisting#hoisting-deklarace-funkce-jde-volat-pred-zapisem)).
+[Rozsah platnosti, hoisting a TDZ](see:js-funkce/scope-a-hoisting#hoisting-a-temporal-dead-zone-tdz)).
 Šipka se hodí na krátké funkce, které předáváš jiným funkcím. Pro hlavní
 pojmenované funkce programu je deklarace čitelnější. Šipky se liší ještě chováním
 `this` — k němu se dostaneme v sekci *Closures, `this` a funkcionální styl*.

@@ -1,0 +1,7 @@
+{
+  "type": "lab",
+  "title": "Rozdělení účtu",
+  "summary": "Spočítáš rozdělení účtu v restauraci včetně spropitného, zaokrouhlení a bezpečného počítání v haléřích.",
+  "minutes": 45,
+  "runtime": "js"
+}

@@ -1,0 +1,52 @@
+{
+  "title": "Řetězce, čísla, data a regulární výrazy",
+  "intro": "V této sekci se naučíš zpracovat a formátovat text v češtině, počítat s penězi bezpečně a správně formátovat čísla i data pomocí vestavěných nástrojů prohlížeče. Dozvíš se, jak funguje vyhledávání a nahrazování pomocí regulárních výrazů, i kdy je lepší je nepoužívat.\n\nPostup: naučíš se pracovat s řetězci a vyzkoušíš si to na textových utilitách, objevíš, jak JavaScript počítá s čísly, pochopíš pasti starého Date objektu a jak je řeší Temporal. Na závěr si vše procvičíš na cenách v košíku a naučíš se mocný nástroj na kontrolu dat: regulární výrazy.\n\n**Předpoklady:** proměnné, datové typy, podmínky a cykly ze sekce js-zaklady.",
+  "modules": [
+    "retezce",
+    "workshop-textove-utility",
+    "cisla",
+    "intl-a-datum",
+    "workshop-kosik-ceny",
+    "regularni-vyrazy",
+    "lab-validace-vstupu",
+    "lab-rozdeleni-uctu",
+    "kviz"
+  ],
+  "outcomes": [
+    {
+      "text": "Zpracuješ a zformátuješ text v češtině včetně diakritiky a emoji.",
+      "links": [
+        "js-retezce-cisla/retezce#diakritika-a-normalize",
+        "js-retezce-cisla/workshop-textove-utility/004"
+      ]
+    },
+    {
+      "text": "Vysvětlíš, proč 0.1 + 0.2 !== 0.3, a spočítáš ceny bez ztráty přesnosti.",
+      "links": [
+        "js-retezce-cisla/cisla#desetinna-cisla",
+        "js-retezce-cisla/workshop-kosik-ceny/002"
+      ]
+    },
+    {
+      "text": "Zformátuješ čísla, ceny, množné číslo a data přes Intl s respektováním českých zvyklostí.",
+      "links": [
+        "js-retezce-cisla/intl-a-datum#intl-numberformat",
+        "js-retezce-cisla/workshop-kosik-ceny/007"
+      ]
+    },
+    {
+      "text": "Vyhneš se pastem Date a víš, jaké výhody přináší Temporal.",
+      "links": [
+        "js-retezce-cisla/intl-a-datum#pasti-date",
+        "js-retezce-cisla/intl-a-datum#temporal"
+      ]
+    },
+    {
+      "text": "Napíšeš a přečteš běžný regulární výraz pro ověření nebo úpravu vstupu.",
+      "links": [
+        "js-retezce-cisla/regularni-vyrazy",
+        "js-retezce-cisla/lab-validace-vstupu"
+      ]
+    }
+  ]
+}

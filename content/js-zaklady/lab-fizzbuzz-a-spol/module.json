@@ -1,0 +1,7 @@
+{
+  "type": "lab",
+  "title": "Malé algoritmy",
+  "summary": "FizzBuzz, součet číslic, převod teploty a prvočísla — poprvé sám bez vedení.",
+  "minutes": 50,
+  "runtime": "js"
+}

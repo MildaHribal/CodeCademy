@@ -1,0 +1,5 @@
+{
+  "title": "Nastavení aplikace",
+  "description": "Sloučení výchozího a uživatelského nastavení, uložení do JSON a zpět. Včetně hluboké kopie a práce s datem.",
+  "type": "workshop"
+}

@@ -1,0 +1,7 @@
+{
+  "type": "lesson",
+  "title": "Jak řešit úlohu",
+  "summary": "Postup od zadání k fungujícímu kódu: přeformuluj, rozlož, vyzkoušej.",
+  "minutes": 10,
+  "runtime": "js"
+}

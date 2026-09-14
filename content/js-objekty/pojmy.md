@@ -25,15 +25,6 @@ lekce: js-objekty/objekty#vypocitany-klic-v-literalu
 
 Klíč v hranatých závorkách přímo v zápisu objektu, `{ [field]: value }`. Výraz v závorkách se vyhodnotí a jeho výsledek se stane jménem klíče.
 
-## --term-- metoda
-
-en: method
-aliases: metody, metodu, metodou, metod
-mdn: https://developer.mozilla.org/en-US/docs/Glossary/Method
-lekce: js-objekty/objekty#metody-funkce-ve-vlastnosti
-
-Vlastnost objektu, jejíž hodnotou je funkce, třeba `console.log`. Bez kulatých závorek se nezavolá, jen se přečte funkce samotná.
-
 ## --term-- destrukturalizace
 
 en: destructuring
@@ -112,3 +103,11 @@ mdn: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators
 lekce: js-objekty/objekty#destrukturalizace-vlastnosti-rovnou-do-promennych
 
 Zápis `...jméno` na konci destrukturalizace: posbírá všechny zbývající vlastnosti do nového objektu, `const { password, ...publicData } = user`.
+
+## --term-- metoda
+
+en: method
+mdn: https://developer.mozilla.org/en-US/docs/Glossary/Method
+lekce: js-objekty/objekty#metody-funkce-ve-vlastnosti
+
+Vlastnost objektu, jejíž hodnotou je funkce, třeba `console.log`.

@@ -1,0 +1,7 @@
+{
+  "type": "workshop",
+  "title": "Převodník jednotek",
+  "summary": "Postavíš převodník délek, hmotností a teplot, rozložíš logiku do funkcí a použiješ výchozí parametry i guard clauses.",
+  "minutes": 45,
+  "runtime": "js"
+}

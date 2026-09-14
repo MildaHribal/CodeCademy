@@ -3,8 +3,25 @@
   "intro": "x",
   "modules": [
     "objekty",
-    "workshop-stav-serveru",
     "reference-a-mutace",
-    "kopie-a-json"
+    "workshop-profil-uzivatele",
+    "kopie-a-json",
+    "workshop-nastaveni-aplikace",
+    "lab-adresar",
+    "kviz"
+  ],
+  "outcomes": [
+    {
+      "text": "modelovat data objekty a procházet je (Object.entries a spol.),"
+    },
+    {
+      "text": "vysvětlit, proč změna objektu uvnitř funkce změnila data i venku, a nakreslit to,"
+    },
+    {
+      "text": "vybrat správnou kopii (mělká, structuredClone, JSON) a říct, co která ztratí,"
+    },
+    {
+      "text": "upravit zanořená data bez mutace pomocí destrukturalizace a spreadu."
+    }
   ]
 }

@@ -1,0 +1,8 @@
+{
+  "type": "lab",
+  "title": "Oprav 3 chyby",
+  "summary": "Najdi a oprav tři chyby v cizím programu.",
+  "minutes": 30,
+  "runtime": "js",
+  "kind": "debug"
+}

@@ -1,0 +1,7 @@
+{
+  "type": "lesson",
+  "title": "První program",
+  "summary": "Kde JavaScript běží, co dělá console.log a jak prohlížeč čte tvůj kód.",
+  "minutes": 15,
+  "runtime": "js"
+}

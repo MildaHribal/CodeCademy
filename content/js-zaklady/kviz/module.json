@@ -1,0 +1,7 @@
+{
+  "type": "quiz",
+  "title": "Kvíz: základy JavaScriptu",
+  "summary": "Co vypíše kód, truthy/falsy, typy chyb a pasti v cyklech.",
+  "minutes": 25,
+  "runtime": "js"
+}

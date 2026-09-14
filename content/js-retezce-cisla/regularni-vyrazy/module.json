@@ -1,0 +1,7 @@
+{
+  "type": "lesson",
+  "title": "Regulární výrazy",
+  "summary": "Třídy znaků, kvantifikátory (hladové vs. líné), kotvy, pojmenované skupiny, příznaky, test, matchAll, replace s funkcí, RegExp.escape.",
+  "minutes": 25,
+  "runtime": "js"
+}

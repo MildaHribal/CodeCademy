@@ -1,0 +1,7 @@
+{
+  "type": "lab",
+  "title": "Validace vstupů",
+  "summary": "Ověříš běžné české formátované vstupy jako PSČ, rodné číslo, heslo a cenu pomocí regulárních výrazů i práce s řetězci.",
+  "minutes": 45,
+  "runtime": "js"
+}

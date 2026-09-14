@@ -1,0 +1,5 @@
+{
+  "title": "Profil uživatele",
+  "description": "Vytvoříš sadu funkcí pro správu uživatelského profilu. Naučíš se používat destrukturalizaci, spread operátor a upravovat data bez jejich mutace.",
+  "type": "workshop"
+}

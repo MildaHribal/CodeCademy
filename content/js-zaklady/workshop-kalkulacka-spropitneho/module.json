@@ -1,0 +1,7 @@
+{
+  "type": "workshop",
+  "title": "Kalkulačka spropitného",
+  "summary": "Postavíš kalkulačku, která spočítá spropitné a rozdělí účet mezi lidi.",
+  "minutes": 55,
+  "runtime": "js"
+}

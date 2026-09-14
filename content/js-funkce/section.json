@@ -1,0 +1,32 @@
+{
+  "title": "Funkce a rozsah platnosti",
+  "intro": "Aby tvůj kód nezesložitěl do jedné obří a nepřehledné nudle, potřebuješ ho rozdělit na menší, srozumitelné kousky. V této sekci se naučíš vytvářet funkce, chápat, jak si mezi sebou předávají data a proč proměnná z jedné funkce není vidět v jiné.\n\nPostup: naučíš se deklarovat funkce, vysvětlíme si záludnosti rozsahu platnosti a hoisting, postavíš si převodník jednotek, zjistíš, že funkci můžeš předat jako hodnotu, a naprogramuješ generátor hesel.\n\n**Předpoklady:** proměnné, typy, podmínky, cykly.",
+  "modules": [
+    "funkce",
+    "scope-a-hoisting",
+    "workshop-prevodnik-jednotek",
+    "funkce-jako-hodnoty",
+    "lab-generator-hesel",
+    "kviz"
+  ],
+  "outcomes": [
+    {
+      "text": "Rozdělíš program do malých funkcí s jasným vstupem a výstupem.",
+      "links": [
+        "js-funkce/funkce#return-jak-funkce-vraci-vysledek"
+      ]
+    },
+    {
+      "text": "Vysvětlíš rozsah platnosti, stínění, hoisting a TDZ.",
+      "links": [
+        "js-funkce/scope-a-hoisting#hoisting-a-temporal-dead-zone-tdz"
+      ]
+    },
+    {
+      "text": "Předáš funkci jako hodnotu jiné funkci (callback).",
+      "links": [
+        "js-funkce/funkce-jako-hodnoty#callback-a-settimeout"
+      ]
+    }
+  ]
+}

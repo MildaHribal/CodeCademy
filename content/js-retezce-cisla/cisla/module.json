@@ -1,0 +1,7 @@
+{
+  "type": "lesson",
+  "title": "Čísla a počítání",
+  "summary": "Plovoucí čárka, počítání v haléřích, zaokrouhlení záporných čísel, Number.isNaN, parseInt vs. Number, BigInt a Math.random.",
+  "minutes": 20,
+  "runtime": "js"
+}

@@ -1,0 +1,53 @@
+{
+  "title": "Základy JavaScriptu",
+  "intro": "V této sekci přejdeš od statické stránky k programům, které se rozhodují, počítají a opakují akce. Naučíš se číst chybové hlášky a zastavit program v debuggeru — ten ti od teď ušetří hodiny marného hledání.\n\n**Předpoklady:** `html-zaklady` a `start-nastroje`.",
+  "modules": [
+    "prvni-program",
+    "cteni-chyb-a-debugger",
+    "promenne-a-typy",
+    "workshop-kalkulacka-spropitneho",
+    "porovnani-a-logika",
+    "workshop-hodnoceni",
+    "cykly",
+    "reseni-problemu",
+    "lab-fizzbuzz-a-spol",
+    "lab-oprav-3-chyby",
+    "kviz"
+  ],
+  "outcomes": [
+    {
+      "text": "Napíšeš krátký program s proměnnými, podmínkami a cykly.",
+      "links": [
+        "js-zaklady/promenne-a-typy",
+        "js-zaklady/porovnani-a-logika",
+        "js-zaklady/cykly"
+      ]
+    },
+    {
+      "text": "Vysvětlíš datové typy a rozdíl mezi == a ===, truthy a falsy.",
+      "links": [
+        "js-zaklady/promenne-a-typy",
+        "js-zaklady/porovnani-a-logika"
+      ]
+    },
+    {
+      "text": "Přečteš chybovou hlášku a stack, zastavíš program na debugger; a krokuješ ho.",
+      "links": [
+        "js-zaklady/cteni-chyb-a-debugger"
+      ]
+    },
+    {
+      "text": "Postupuješ při řešení úlohy: přeformuluješ, vymyslíš příklady, rozložíš na kroky.",
+      "links": [
+        "js-zaklady/reseni-problemu"
+      ]
+    },
+    {
+      "text": "Najdeš a opravíš chybu v krátkém cizím programu.",
+      "links": [
+        "js-zaklady/lab-oprav-3-chyby",
+        "js-zaklady/workshop-kalkulacka-spropitneho"
+      ]
+    }
+  ]
+}

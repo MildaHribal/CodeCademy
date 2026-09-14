@@ -105,7 +105,26 @@ console.log(product);
 
 Zkus přidat vlastnost `volume: 2` a vypiš ji. Pak zkus `product.producer.name` a sleduj, jak tečky jdou za sebou do zanořeného objektu.
 
-Zápis `product.price = 35` přepíše existující vlastnost, `product.discount = 10` přidá novou. Objekt v `const` se měnit dá — proč, vysvětlí hned další lekce.
+Zápis `product.price = 35` přepíše existující vlastnost, `product.discount = 10` přidá novou. Změnu si můžeš krokovat:
+
+:::memory
+```js
+const product = { name: 'Kofola 2 l', price: 39 };
+product.price = 35;
+product.discount = 10;
+```
+--step-- 1 | vznikne objekt
+product -> @product
+@product: { name: 'Kofola 2 l', price: 39 }
+--step-- 2 | vlastnost se přepíše
+product -> @product
+@product: { name: 'Kofola 2 l', price: 35 }
+--step-- 3 | přidá se nová vlastnost
+product -> @product
+@product: { name: 'Kofola 2 l', price: 35, discount: 10 }
+:::
+
+Objekt v `const` se měnit dá — proč, vysvětlí hned další lekce.
 
 Když se jméno proměnné shoduje s klíčem, stačí klíč napsat jednou. Tomu se říká zkrácený zápis vlastnosti (*shorthand property*):
 

@@ -1,0 +1,7 @@
+{
+  "type": "lesson",
+  "title": "Cykly",
+  "summary": "for, while, for…of, break a continue a jak se vyhnout nekonečné smyčce.",
+  "minutes": 15,
+  "runtime": "js"
+}
