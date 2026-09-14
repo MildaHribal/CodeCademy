@@ -145,27 +145,31 @@ js-funkce/scope-a-hoisting#stineni-stejne-jmeno-uvnitr-a-venku
 
 ## --card-- output
 
-Co vypíše tenhle kód?
+Co vypíše tenhle kód? Každý výpis na nový řádek.
 
 ```js
-if (true) {
-  var color = 'modrá';
+function printPrice(price) {
+  console.log(`${price} Kč`);
 }
 
-console.log(color);
+const shown = printPrice(90);
+console.log(shown);
 ```
 
 ### --expected--
 
-modrá
+```text
+90 Kč
+undefined
+```
 
 ### --why--
 
-Myslíš si, že proměnná z bloku za jeho závorkou zanikne? S `let` a `const` ano, ale `var` bloky nerespektuje a platí pro celou funkci nebo skript.
+Myslíš si, že co funkce vypíše, to taky vrátí? Výpis do konzole ukáže hodnotu člověku, ale funkce bez `return` vrací `undefined`. Do `shown` se proto uloží `undefined`.
 
 ### --see--
 
-js-funkce/scope-a-hoisting#blokovy-rozsah-let-a-const-vs-var
+js-funkce/funkce#return-jak-funkce-vraci-vysledek
 
 ## --card-- output
 
@@ -320,37 +324,42 @@ js-funkce/funkce#vychozi-a-zbytkove-parametry
 
 ## --card-- code js
 
-Napiš funkci `pricePerPiece(total, pieces)`, která vrátí cenu za kus. Když `pieces` není kladné číslo, vrátí hned `null` (guard clause).
+Napiš funkci `discountPercent(original, sale)`, která vrátí slevu v celých procentech (z 1000 Kč na 750 Kč je sleva `25`). Když `original` není kladné číslo nebo je `sale` vyšší než `original`, vrátí hned `null` (guard clause).
 
 ### --seed--
 
 ```js
-function pricePerPiece(total, pieces) {
+function discountPercent(original, sale) {
 }
 ```
 
 ### --test--
 
 ```js
-assert.equal(pricePerPiece(120, 4), 30, 'pricePerPiece(120, 4) má vrátit 30');
-assert.equal(pricePerPiece(120, 0), null, 'pricePerPiece(120, 0) má vrátit null');
-assert.equal(pricePerPiece(120, -2), null, 'pricePerPiece(120, -2) má vrátit null');
+assert.equal(discountPercent(1000, 750), 25, 'discountPercent(1000, 750) má vrátit 25');
+assert.equal(discountPercent(399, 299), 25, 'discountPercent(399, 299) má vrátit 25 (25,06 % zaokrouhleno)');
+assert.equal(discountPercent(0, 10), null, 'discountPercent(0, 10) má vrátit null — z nulové ceny slevu nespočítáš');
+assert.equal(discountPercent(500, 600), null, 'discountPercent(500, 600) má vrátit null — zdražení není sleva');
+assert.equal(discountPercent(500, 500), 0, 'discountPercent(500, 500) má vrátit 0');
 ```
 
 ### --solution--
 
 ```js
-function pricePerPiece(total, pieces) {
-  if (pieces <= 0) {
+function discountPercent(original, sale) {
+  if (original <= 0) {
     return null;
   }
-  return total / pieces;
+  if (sale > original) {
+    return null;
+  }
+  return Math.round((1 - sale / original) * 100);
 }
 ```
 
 ### --why--
 
-Kontrola nesmyslného vstupu stojí na začátku a hned vrací. Hlavní výpočet pak zůstane na konci bez `else`.
+Kontroly nesmyslného vstupu stojí na začátku a každá hned vrací. Hlavní výpočet pak zůstane na konci bez zanoření do `else`.
 
 ### --see--
 
@@ -358,34 +367,35 @@ js-funkce/funkce#predcasny-return-guard-clause
 
 ## --card-- code js
 
-Napiš funkci `durationLabel(minutes, unit)`, která vrátí text `` `${minutes} ${unit}` ``. Když `unit` chybí, použije se `'min'`. Nula minut musí dát `'0 min'`.
+Napiš funkci `ratingLabel(rating, decimals)`, která vrátí hodnocení produktu zaokrouhlené na `decimals` desetinných míst a za ním ` / 5`. Když `decimals` chybí, zaokrouhlí na jedno místo. Nula desetinných míst je platná: `ratingLabel(4.56, 0)` vrátí `'5 / 5'`.
 
 ### --seed--
 
 ```js
-function durationLabel(minutes, unit) {
+function ratingLabel(rating, decimals) {
 }
 ```
 
 ### --test--
 
 ```js
-assert.equal(durationLabel(45), '45 min', "durationLabel(45) má vrátit '45 min'");
-assert.equal(durationLabel(2, 'h'), '2 h', "durationLabel(2, 'h') má vrátit '2 h'");
-assert.equal(durationLabel(0), '0 min', "durationLabel(0) má vrátit '0 min'");
+assert.equal(ratingLabel(4.56), '4.6 / 5', "ratingLabel(4.56) má vrátit '4.6 / 5' — výchozí je jedno desetinné místo");
+assert.equal(ratingLabel(4.56, 2), '4.56 / 5', "ratingLabel(4.56, 2) má vrátit '4.56 / 5'");
+assert.equal(ratingLabel(4.56, 0), '5 / 5', "ratingLabel(4.56, 0) má vrátit '5 / 5' — nula se nesmí nahradit výchozí hodnotou");
 ```
 
 ### --solution--
 
 ```js
-function durationLabel(minutes, unit = 'min') {
-  return `${minutes} ${unit}`;
+function ratingLabel(rating, decimals = 1) {
+  const factor = 10 ** decimals;
+  return `${Math.round(rating * factor) / factor} / 5`;
 }
 ```
 
 ### --why--
 
-Výchozí parametr se použije jen pro chybějící argument. Nula v `minutes` s výchozí hodnotou nijak nesouvisí a projde.
+Výchozí parametr se použije jen pro chybějící argument, takže předaná nula projde. Se zápisem `decimals || 1` by se nula přepsala na jedničku a hodnocení by se zaokrouhlilo na jedno místo.
 
 ### --see--
 
@@ -393,33 +403,34 @@ js-funkce/funkce#vychozi-a-zbytkove-parametry
 
 ## --card-- code js
 
-Napiš funkci `applyRule(price, rule)`, která zavolá callback `rule` s cenou a vrátí jeho výsledek zaokrouhlený na celé koruny.
+Napiš funkci `applyDiscount(price, discountRule)`, která na cenu použije pravidlo slevy předané jako callback a vrátí výsledek. Cena po slevě nikdy neklesne pod `0`.
 
 ### --seed--
 
 ```js
-function applyRule(price, rule) {
+function applyDiscount(price, discountRule) {
 }
 ```
 
 ### --test--
 
 ```js
-assert.equal(applyRule(999, (price) => price / 2), 500, 'applyRule(999, polovina) má vrátit 500');
-assert.equal(applyRule(1000, (price) => price - 150), 850, 'applyRule(1000, sleva 150) má vrátit 850');
+assert.equal(applyDiscount(500, (price) => price - 100), 400, 'applyDiscount(500, sleva 100 Kč) má vrátit 400');
+assert.equal(applyDiscount(800, (price) => price * 0.75), 600, 'applyDiscount(800, sleva 25 %) má vrátit 600');
+assert.equal(applyDiscount(80, (price) => price - 100), 0, 'applyDiscount(80, sleva 100 Kč) má vrátit 0, ne zápornou cenu');
 ```
 
 ### --solution--
 
 ```js
-function applyRule(price, rule) {
-  return Math.round(rule(price));
+function applyDiscount(price, discountRule) {
+  return Math.max(0, discountRule(price));
 }
 ```
 
 ### --why--
 
-`rule` je funkce, takže ji uvnitř zavoláš se závorkami a cenou. Kdo `applyRule` volá, předá pravidlo bez závorek nebo jako šipku.
+`discountRule` je funkce, takže ji uvnitř zavoláš se závorkami a cenou a s jejím výsledkem pracuješ dál. Kdo `applyDiscount` volá, předá pravidlo bez závorek nebo jako šipku přímo v argumentu.
 
 ### --see--
 

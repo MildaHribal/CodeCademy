@@ -327,7 +327,7 @@ function withVat(price) {
 const result = withVat(100);
 console.log(result);
 ```
---step-- 5 | funkce je připravená, volání ještě neproběhlo
+--step-- 1 | funkce je připravená od začátku skriptu, volání ještě neproběhlo
 vatRate = 1.21
 withVat -> @fn
 @fn: function withVat(price)
@@ -344,12 +344,13 @@ result = 121
 @fn: function withVat(price)
 :::
 
-Totéž uvidíš ve skutečném prohlížeči. Když se program zastaví na breakpointu uvnitř
-funkce (klikni na **Nová karta** nad výstupem, otevři DevTools a v panelu Sources
-klikni na číslo řádku), ukazuje Chrome vpravo dva panely:
+Totéž uvidíš ve skutečném prohlížeči. Ve workshopu a v labu otevře tlačítko **Nová
+karta** nad výstupem tvůj kód v nové kartě, kde fungují DevTools (postup znáš z lekce
+[Čtení chyb a debugger](see:js-zaklady/cteni-chyb-a-debugger#debugger-v-praxi-a-v-akademii)).
+Když se program zastaví na breakpointu uvnitř funkce, ukazuje Chrome vpravo dva panely:
 
 - **Call Stack** — zásobník volání: nahoře funkce, ve které stojíš, pod ní ty, které na ni čekají.
-- **Scope** — proměnné rozdělené podle rozsahu: *Local* (parametry a proměnné rozdělaného volání), *Block* (`let`/`const` z bloku, ve kterém stojíš), *Script* (`let` a `const` z nejvyšší úrovně skriptu) a *Global* (vestavěné věci prohlížeče).
+- **Scope** — proměnné rozdělené podle rozsahu: *Local* (parametry a proměnné rozdělaného volání), *Block* (`let`/`const` z bloku, ve kterém stojíš), *Script* (`let` a `const` z nejvyšší úrovně skriptu) a *Global* (vestavěné věci prohlížeče jako `console`, a k nim globální `var` a deklarace funkcí z nejvyšší úrovně skriptu).
 
 > [!TIP]
 > Místo `console.log` na pěti místech dej jeden breakpoint a přečti si hodnoty v panelu
@@ -380,7 +381,7 @@ Global
 
 #### --why--
 
-Global obsahuje vestavěné věci prohlížeče (`console`, `setTimeout`…). Proměnná z tvého volání funkce tam není.
+Global obsahuje vestavěné věci prohlížeče (`console`, `setTimeout`…) a globální `var` a deklarace funkcí, třeba samotnou funkci `withVat`. Parametr rozdělaného volání tam není.
 
 ### --see--
 
@@ -662,11 +663,12 @@ const label = 'venku';
 
 function outer() {
   const label = 'v outer';
-  return inner();
-}
 
-function inner() {
-  return label;
+  function inner() {
+    return label;
+  }
+
+  return inner();
 }
 
 console.log(outer());
@@ -674,11 +676,11 @@ console.log(outer());
 
 ### --expected--
 
-venku
+v outer
 
 ### --why--
 
-`inner` je napsaná na nejvyšší úrovni skriptu, a tak chybějící `label` hledá tam. Že ji volá `outer` s vlastní `label`, na tom nic nemění — rozsah platnosti je lexikální.
+Myslíš si, že vnitřní funkce vždycky sáhne po globální proměnné? Rozhoduje, kde je funkce napsaná. `inner` je tentokrát napsaná **uvnitř** `outer`, takže při hledání zevnitř ven narazí nejdřív na `label` z těla `outer`. V ukázce s `formatPrice` byla funkce napsaná venku, a proto viděla jen globální proměnnou.
 
 ### --see--
 
@@ -686,27 +688,28 @@ js-funkce/scope-a-hoisting#lexikalni-rozsah-a-zasobnik-volani
 
 ## --question--
 
-Co vypíše tenhle kód?
+Co vypíše tenhle kód? Pomocná funkce je napsaná až pod `return`.
 
 ```js
-function countdown() {
-  for (var seconds = 3; seconds > 0; seconds--) {
-    // odpočet
+function receipt(price) {
+  return `Celkem: ${withVat(price)} Kč`;
+
+  function withVat(amount) {
+    return amount * 1.21;
   }
-  return seconds;
 }
 
-console.log(countdown());
+console.log(receipt(100));
 ```
 
 ### --expected--
 
-0
+Celkem: 121 Kč
 
 ### --why--
 
-`var` platí pro celou funkci, ne jen pro blok cyklu, takže `seconds` existuje i za ním. Cyklus skončí ve chvíli, kdy podmínka `seconds > 0` přestane platit, tedy při `0`. S `let` by `return seconds` skončilo `ReferenceError`.
+Myslíš si, že kód pod `return` pro JavaScript neexistuje? Nespustí se, ale deklarace v něm se zaregistrují už na začátku volání. Hoisting platí pro každý rozsah, tedy i pro tělo funkce, a deklarace `withVat` je proto připravená dřív, než se provede `return`. Se šipkou v `const` na stejném místě by volání skončilo `ReferenceError`.
 
 ### --see--
 
-js-funkce/scope-a-hoisting#blokovy-rozsah-let-a-const-vs-var
+js-funkce/scope-a-hoisting#hoisting-a-temporal-dead-zone-tdz

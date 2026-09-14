@@ -291,26 +291,34 @@ js-funkce/funkce#vychozi-a-zbytkove-parametry
 
 ## --question--
 
-Co vypíše tenhle kód?
+Co vypíše poslední řádek?
 
 ```js
-const places = 0 || 2;
-const count = 0 ?? 2;
+function deliveryDays(method) {
+  let days = 5;
+  switch (method) {
+    case 'express':
+      days = 1;
+    case 'zasilkovna':
+      days = 3;
+  }
+  return days;
+}
 
-console.log(places, count);
+console.log(deliveryDays('express'));
 ```
 
 ### --expected--
 
-2 0
+3
 
 ### --why--
 
-`||` vrátí pravou stranu pro každou nepravdivou levou stranu, a `0` je nepravdivá. `??` vrátí pravou stranu jen pro `null` a `undefined`, takže nula zůstane. Proto se na výchozí hodnoty čísel `||` nehodí.
+Myslíš si, že `switch` po shodě provede jen svůj `case`? Bez `break` (nebo `return`) pokračuje dalším `case` — propadne. Po `days = 1` se proto provede i `days = 3`. Ve funkci jde propadání zabránit i tak, že každá větev rovnou vrátí: `case 'express': return 1;`.
 
 ### --see--
 
-js-zaklady/porovnani-a-logika
+js-zaklady/porovnani-a-logika#zapomenuty-break
 
 ## --question--
 
@@ -332,7 +340,7 @@ console.log(price + 1);
 
 ### --see--
 
-js-retezce-cisla/cisla
+js-retezce-cisla/cisla#tofixed-vraci-retezec
 
 ## --question--
 
@@ -358,7 +366,7 @@ Cyklus běží pro `day` 1, 2, 3 a 4. Při `day = 5` podmínka `day < 5` už nep
 
 ### --see--
 
-js-zaklady/cykly
+js-zaklady/cykly#kolikrat-cyklus-probehne
 
 ## --question--
 
@@ -382,7 +390,7 @@ eva
 
 ### --see--
 
-js-retezce-cisla/retezce
+js-retezce-cisla/retezce#retezec-se-neda-zmenit
 
 # --code-- Rezervace lekcí ve fitku
 
@@ -463,7 +471,7 @@ js-funkce/scope-a-hoisting#hoisting-a-temporal-dead-zone-tdz
 
 ## --question--
 
-Řádek 50 udělá rezervaci tří míst. Co pak vypíše řádek 51?
+Řádek 50 zavolá `reserve(3)` a vypíše `Rezervováno: 3`. Co pak vypíše řádek 51?
 
 ### --expected--
 

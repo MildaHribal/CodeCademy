@@ -342,7 +342,8 @@ pojmenované funkce programu je deklarace čitelnější. Šipky se liší ješt
 > [!PITFALL]
 > **Šipka, která má vrátit objekt, potřebuje kolem objektu kulaté závorky.**
 > `(name) => { name: name }` vrátí `undefined`, protože složené závorky se čtou
-> jako tělo funkce. Oprava: `(name) => ({ name: name })`.
+> jako tělo funkce. Oprava: `(name) => ({ name: name })`. Objekty podrobně přijdou
+> v sekci *Objekty, reference a kopie*, tahle past tě tam bude čekat.
 
 :::check
 Přepiš funkci na šipkovou funkci s výrazem místo těla, uloženou do `const square`.
@@ -672,27 +673,31 @@ js-funkce/funkce#vychozi-a-zbytkove-parametry
 
 ## --question--
 
-Co vypíše poslední řádek?
+Kolegyně chtěla dopravu zdarma od 1500 Kč, jinak od 500 Kč za 49 Kč a pod 500 Kč za 99 Kč. Co vrátí `shippingPrice(2000)`?
 
 ```js
-const perPerson = (total, people) => {
-  const share = total / people;
-};
-
-console.log(`Na osobu: ${perPerson(1200, 4)} Kč`);
+function shippingPrice(total) {
+  if (total >= 500) {
+    return 49;
+  }
+  if (total >= 1500) {
+    return 0;
+  }
+  return 99;
+}
 ```
 
 ### --expected--
 
-Na osobu: undefined Kč
+49
 
 ### --why--
 
-Funkce spočítá `share`, ale nic nevrací, protože za šipkou je tělo ve složených závorkách bez `return`. Do textu se proto dosadí `undefined`. Oprava: `return total / people;`.
+Myslíš si, že funkce projde všechny podmínky a použije tu nejpřesnější? Skončí na prvním `return`, na který narazí. `2000 >= 500` platí, takže vrátí `49` a ke kontrole na 1500 Kč se nikdy nedostane. U guard clauses a víc `return` za sebou proto záleží na pořadí: přísnější podmínka (`>= 1500`) musí být první.
 
 ### --see--
 
-js-funkce/funkce#typicke-chyby-a-pasti
+js-funkce/funkce#predcasny-return-guard-clause
 
 ## --question--
 
@@ -712,42 +717,46 @@ js-funkce/funkce#vychozi-a-zbytkove-parametry
 
 ## --question--
 
-Kolega tvrdí, že tyhle dvě funkce jsou zaměnitelné. V čem se liší výsledek?
+Dnes je pondělí. Co vypíše tenhle kód na webu pekárny?
 
 ```js
-function logArea(width, height) {
-  console.log(width * height);
+function isWeekend(day) {
+  return day === 'sobota' || day === 'neděle';
 }
 
-function getArea(width, height) {
-  return width * height;
+const today = 'pondělí';
+
+if (isWeekend) {
+  console.log('Otevřeno od 9:00');
+} else {
+  console.log('Otevřeno od 6:30');
 }
 ```
 
 ### --answer--
 
-Neliší, obě vytvoří hodnotu `width * height`.
+`Otevřeno od 6:30`
 
 #### --why--
 
-Obě ji spočítají, ale jen jedna ji předá programu. Co vrátí funkce, která nemá `return`?
+Tak by to dopadlo s voláním `isWeekend(today)`. Podívej se, co přesně stojí v podmínce `if`.
 
 ### --correct--
 
-`getArea` výsledek vrátí, `logArea` ho jen vypíše a vrací `undefined`.
+`Otevřeno od 9:00`
 
 #### --why--
 
-S výsledkem `getArea(2, 3)` jde dál počítat. `logArea(2, 3) + 1` vypíše `6` a pak dá `NaN`.
+V podmínce je funkce sama, ne její výsledek: chybí závorky i argument. Funkce je pravdivá hodnota, takže podmínka platí každý den. Oprava: `if (isWeekend(today))`.
 
 ### --answer--
 
-`logArea` je rychlejší, protože nic nevrací.
+Nic, program spadne, protože `isWeekend` nedostala argument.
 
 #### --why--
 
-Rychlost tu nehraje roli. Rozdíl je v tom, co dostane místo, odkud se funkce volá.
+Funkce se tu vůbec nevolá, takže jí argument chybět nemůže. A i kdyby se zavolala bez argumentu, JavaScript by nespadl, jen by `day` bylo `undefined`.
 
 ### --see--
 
-js-funkce/funkce#return-jak-funkce-vraci-vysledek
+js-funkce/funkce#funkce-bez-zavorek

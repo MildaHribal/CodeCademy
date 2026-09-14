@@ -22,13 +22,13 @@
 
 ## Rozsah platnosti
 
-| deklarace | [[rozsah platnosti]] | před svým řádkem | znovu stejné jméno |
-|---|---|---|---|
-| `const` | blok `{ }` | TDZ → `ReferenceError` | `SyntaxError` |
-| `let` | blok `{ }` | TDZ → `ReferenceError` | `SyntaxError` |
-| `var` | celá funkce (skript) | `undefined` | projde tiše |
-| `function name()` | celá funkce (skript) | dá se zavolat | přepíše předchozí |
-| přiřazení bez deklarace | globální (v modulu chyba) | — | — |
+| deklarace | [[rozsah platnosti]] | před svým řádkem |
+|---|---|---|
+| `const` | blok `{ }` | TDZ → `ReferenceError` |
+| `let` | blok `{ }` | TDZ → `ReferenceError` |
+| `var` | celá funkce (skript) | `undefined` |
+| `function name()` | celá funkce (skript) | dá se zavolat |
+| přiřazení bez deklarace | globální (ve strict mode chyba) | — |
 
 V DevTools: breakpoint (klik na číslo řádku v Sources) → panel **Scope** (*Local*, *Block*, *Script*, *Global*) a panel **Call Stack** ([[zásobník volání]]).
 
@@ -91,6 +91,6 @@ setTimeout(() => showMessage('Uloženo'), 1000);
 | změna uvnitř `if` se neprojeví, žádná chyba | `let` uvnitř bloku [[zastíní]] vnější proměnnou | uvnitř bloku jen přiřadit |
 | `ReferenceError: Cannot access 'x' before initialization` | čtení `let`/`const` v TDZ | deklaraci přesunout nad použití |
 | `ReferenceError: row is not defined` v pomocné funkci | funkce nevidí proměnné volajícího ([[lexikální rozsah]]) | předat hodnotu parametrem |
-| `TypeError: rule is not a function` | místo funkce předán její výsledek `rule()` | předat `rule` bez závorek |
+| `TypeError: rule is not a function` | místo funkce předán její výsledek, třeba `applyRule(900, halfPrice(900))` | předat `halfPrice` bez závorek |
 | akce z `setTimeout` proběhne hned | `setTimeout(fn(), ms)` | `setTimeout(fn, ms)` |
 | callback dostane `undefined` | volající mu argument nepředává | obalit šipkou s argumentem |

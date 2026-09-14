@@ -15,7 +15,7 @@ Co formulář od funkcí chce:
 - Celé náhodné číslo i náhodný znak jde získat s vlastní náhodou i bez ní.
 - Vygenerované heslo má zadanou délku, nikdy ale kratší než `MIN_LENGTH`. Bez argumentů má 16 znaků z `DEFAULT_CHARS`.
 - Ukazatel síly počítá body za délku, číslice, velká písmena a symboly a ukáže slovní hodnocení.
-- Kdo si heslo pamatuje radši, dostane heslovou frázi z náhodných slov, třeba `kopec-řeka-les-chata`.
+- Kdo si radši pamatuje slova, dostane heslovou frázi z náhodných slov, třeba `kopec-řeka-les-chata`.
 
 Slova pro heslovou frázi a výpisy do konzole jsou tvoje volba: fráze z pohádek, z Pokémonů, z pražských ulic. Testy si posílají vlastní slova.
 
@@ -111,6 +111,8 @@ assert.equal(isUppercase('5'), false, "isUppercase('5') má vrátit false");
 ```js
 assert.equal(isSymbol('!'), true, "isSymbol('!') má vrátit true");
 assert.equal(isSymbol('_'), true, "isSymbol('_') má vrátit true");
+assert.equal(isSymbol('.'), true, "isSymbol('.') má vrátit true — symbol je každý znak mimo písmena, číslice a mezeru, nejen znaky z SYMBOLS");
+assert.equal(isSymbol('€'), true, "isSymbol('€') má vrátit true");
 assert.equal(isSymbol('ř'), false, "isSymbol('ř') má vrátit false — písmeno s diakritikou není symbol");
 assert.equal(isSymbol('3'), false, "isSymbol('3') má vrátit false");
 assert.equal(isSymbol(' '), false, "isSymbol(' ') má vrátit false");
@@ -122,6 +124,7 @@ assert.equal(isSymbol(' '), false, "isSymbol(' ') má vrátit false");
 assert.equal(passwordScore('abcdefgh'), 0, "passwordScore('abcdefgh') má vrátit 0");
 assert.equal(passwordScore('Abcdefg1!'), 3, "passwordScore('Abcdefg1!') má vrátit 3 — číslice, velké písmeno, symbol");
 assert.equal(passwordScore('abcdefghijkl'), 1, "passwordScore('abcdefghijkl') má vrátit 1 — jen délka 12");
+assert.equal(passwordScore('abcdefghijklmnop'), 2, "passwordScore('abcdefghijklmnop') má vrátit 2 — délka 16 dá bod za 12 i za 16");
 assert.equal(passwordScore('Žluťoučký kůň 2026 ě!'), 5, "passwordScore('Žluťoučký kůň 2026 ě!') má vrátit 5");
 ```
 
@@ -130,6 +133,7 @@ assert.equal(passwordScore('Žluťoučký kůň 2026 ě!'), 5, "passwordScore('�
 ```js
 assert.equal(strengthLabel(''), 'Zadej heslo', "strengthLabel('') má vrátit 'Zadej heslo'");
 assert.equal(strengthLabel('abcdefgh'), 'slabé', "strengthLabel('abcdefgh') má vrátit 'slabé'");
+assert.equal(strengthLabel('Abcdefgh1'), 'slabé', "strengthLabel('Abcdefgh1') má vrátit 'slabé' (2 body)");
 assert.equal(strengthLabel('Abcdefg1!'), 'střední', "strengthLabel('Abcdefg1!') má vrátit 'střední' (3 body)");
 assert.equal(strengthLabel('Abcdefghijk1!'), 'silné', "strengthLabel('Abcdefghijk1!') má vrátit 'silné' (4 body)");
 ```
