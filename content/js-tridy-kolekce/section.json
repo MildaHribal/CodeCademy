@@ -1,0 +1,5 @@
+{
+  "title": "Třídy, prototypy, Map, Set a iterátory",
+  "intro": "draft",
+  "modules": ["tridy", "workshop-bankovni-ucet", "prototypy", "lab-oprav-3-chyby", "map-a-set", "workshop-filmovy-klub"]
+}

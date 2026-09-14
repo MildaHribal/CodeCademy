@@ -191,7 +191,7 @@ js-funkce/funkce#parametry-a-argumenty
 ## `return`: jak funkce vrací výsledek
 
 `return` udělá dvě věci naráz: **ukončí funkci a pošle hodnotu ven** na místo, kde
-se funkce volala. Díky tomu jde výsledek uložit do proměnné, poslat do další
+se funkce volala. Té hodnotě se říká [[návratová hodnota]]. Díky tomu jde výsledek uložit do proměnné, poslat do další
 funkce nebo sečíst. Co když `return` chybí?
 
 :::live js predict
@@ -235,8 +235,31 @@ jak `NaN` zmizí.
 > [!REMEMBER]
 > **Funkce bez `return` vrací `undefined`.** Výpis do konzole není návratová hodnota.
 
-Funkce smí mít `return` na víc místech. Skončí na prvním, na který narazí — toho
-se využívá u kontrol na začátku funkce, ve workshopu je budeš psát.
+### Předčasný `return` (guard clause)
+
+Funkce smí mít `return` na víc místech a skončí na prvním, na který narazí. Toho se
+využívá u kontrol na začátku funkce: když vstup nedává smysl, funkce hned vrátí
+náhradní výsledek a zbytek těla už nemusí řešit výjimky. Taková kontrola se jmenuje
+[[guard clause]] (doslova „strážní podmínka").
+
+:::live js
+```js
+function pricePerPerson(total, people) {
+  if (people <= 0) {
+    return null;
+  }
+  return total / people;
+}
+
+console.log(pricePerPerson(1200, 4));
+console.log(pricePerPerson(1200, 0));
+```
+:::
+
+Zkus smazat celý blok `if` a sleduj, co vrátí druhé volání (`Infinity`, dělení nulou
+v JavaScriptu nespadne). Hlavní výpočet stojí na konci funkce bez zanoření do `else`
+a kontroly se čtou shora jako seznam: „nejdřív vyřeš nesmyslné vstupy, pak počítej".
+Ve workshopu takové kontroly napíšeš.
 
 :::check
 Co vrátí `check(15)`?
@@ -471,7 +494,7 @@ Proč na tom záleží? Čistou funkci otestuješ jedním řádkem
 stalo předtím. U `applyDiscount` musíš vědět, jakou hodnotu má zrovna `discount`,
 a každé volání navíc změní `discountsUsed`. Program jako celek čistý být nemůže —
 někde se musí vypsat výsledek nebo uložit data. Dobrým zvykem je mít výpočty
-v čistých funkcích a vedlejší efekty (výpis, zápis) soustředit na pár míst.
+v čistých funkcích a [[vedlejší efekt|vedlejší efekty]] (výpis, zápis) soustředit na pár míst.
 
 :::check
 Která funkce je čistá?

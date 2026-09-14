@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Vlastní chyby a návratové hodnoty", "summary": "Napíšeš vlastní třídy chyb, v catch rozlišíš chybu zákazníka od chyby programu a rozhodneš, kdy vrátit výsledek s chybami místo výjimky.", "minutes": 30, "runtime": "js" }

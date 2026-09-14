@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "this", "summary": "Pět otázek, kterými u každého volání určíš this, proč metoda předaná jako callback zapomene svůj objekt a jak to opravit šipkovou funkcí nebo bind.", "minutes": 35, "runtime": "js" }

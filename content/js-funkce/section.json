@@ -1,31 +1,62 @@
 {
   "title": "Funkce a rozsah platnosti",
-  "intro": "Aby tvůj kód nezesložitěl do jedné obří a nepřehledné nudle, potřebuješ ho rozdělit na menší, srozumitelné kousky. V této sekci se naučíš vytvářet funkce, chápat, jak si mezi sebou předávají data a proč proměnná z jedné funkce není vidět v jiné.\n\nPostup: naučíš se deklarovat funkce, vysvětlíme si záludnosti rozsahu platnosti a hoisting, postavíš si převodník jednotek, zjistíš, že funkci můžeš předat jako hodnotu, a naprogramuješ generátor hesel.\n\n**Předpoklady:** proměnné, typy, podmínky, cykly.",
+  "intro": "Každý větší program je poskládaný z malých funkcí: výpočet ceny v košíku, kontrola hesla ve formuláři, převod jednotek. V této sekci se naučíš funkce psát tak, aby měly jasný vstup a výstup, šly skládat a testovat — a pochopíš, kde je která proměnná vidět, proč jde některou funkci zavolat dřív, než je napsaná, a proč jiná spadne.\n\nPostup: lekce o funkcích, workshop, ve kterém z dvaceti malých funkcí postavíš převodník jednotek se skutečnou stránkou, lekce o rozsahu platnosti a hoistingu, cvičení *Oprav 3 chyby* v kódu pokladny kina, lekce o funkcích jako hodnotách a callbackech, samostatný lab s generátorem hesel a kvíz nad cizím kódem. Chyby budeš hledat breakpointem a panelem Scope, ne `console.log` na deseti místech.\n\n**Předpoklady:** proměnné a typy, podmínky, cykly, práce s řetězci a čísly (sekce *Základy JavaScriptu* a *Řetězce, čísla, data a regulární výrazy*).",
   "modules": [
     "funkce",
-    "scope-a-hoisting",
     "workshop-prevodnik-jednotek",
+    "scope-a-hoisting",
+    "lab-oprav-3-chyby",
     "funkce-jako-hodnoty",
     "lab-generator-hesel",
     "kviz"
   ],
   "outcomes": [
     {
-      "text": "Rozdělíš program do malých funkcí s jasným vstupem a výstupem.",
+      "text": "Rozdělíš program do malých funkcí s jasným vstupem a výstupem a složíš z nich větší celek.",
       "links": [
-        "js-funkce/funkce#return-jak-funkce-vraci-vysledek"
+        "js-funkce/funkce#return-jak-funkce-vraci-vysledek",
+        "js-funkce/workshop-prevodnik-jednotek/015",
+        "js-funkce/workshop-prevodnik-jednotek/024"
       ]
     },
     {
-      "text": "Vysvětlíš rozsah platnosti, stínění, hoisting a TDZ.",
+      "text": "Napíšeš funkci s výchozími a zbytkovými parametry a víš, proč na výchozí hodnotu nepoužít `||`.",
       "links": [
+        "js-funkce/funkce#vychozi-a-zbytkove-parametry",
+        "js-funkce/workshop-prevodnik-jednotek/013",
+        "js-funkce/workshop-prevodnik-jednotek/014"
+      ]
+    },
+    {
+      "text": "Ošetříš nesmyslný vstup guard clauses na začátku funkce místo zanořených `else`.",
+      "links": [
+        "js-funkce/funkce#predcasny-return-guard-clause",
+        "js-funkce/workshop-prevodnik-jednotek/008",
+        "js-funkce/workshop-prevodnik-jednotek/009"
+      ]
+    },
+    {
+      "text": "Vysvětlíš rozsah platnosti, stínění, lexikální rozsah, hoisting a TDZ a u kódu předpovíš, kde vznikne `ReferenceError`.",
+      "links": [
+        "js-funkce/scope-a-hoisting#stineni-stejne-jmeno-uvnitr-a-venku",
+        "js-funkce/scope-a-hoisting#lexikalni-rozsah-a-zasobnik-volani",
         "js-funkce/scope-a-hoisting#hoisting-a-temporal-dead-zone-tdz"
       ]
     },
     {
-      "text": "Předáš funkci jako hodnotu jiné funkci (callback).",
+      "text": "Předáš funkci jako hodnotu jiné funkci (callback) a poznáš chybu, kdy se místo funkce předá její výsledek.",
       "links": [
-        "js-funkce/funkce-jako-hodnoty#callback-a-settimeout"
+        "js-funkce/funkce-jako-hodnoty#fn-vs-fn-predat-nebo-zavolat",
+        "js-funkce/funkce-jako-hodnoty#callback-funkce-kterou-zavola-nekdo-jiny",
+        "js-funkce/lab-generator-hesel"
+      ]
+    },
+    {
+      "text": "Najdeš chybu breakpointem a panely Scope a Call Stack místo `console.log` na mnoha místech.",
+      "links": [
+        "js-funkce/scope-a-hoisting#lexikalni-rozsah-a-zasobnik-volani",
+        "js-funkce/workshop-prevodnik-jednotek/018",
+        "js-funkce/lab-oprav-3-chyby"
       ]
     }
   ]

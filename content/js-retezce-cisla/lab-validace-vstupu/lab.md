@@ -1,218 +1,156 @@
 ---
-title: Validace vstupů
+title: Kontrola a úprava vstupu
 runtime: js
-see: js-retezce-cisla/regularni-vyrazy#kotvy-a-skupiny
+see: js-retezce-cisla/regularni-vyrazy#kotvy-a-cely-text-ne-kousek
 ---
 
 # --description--
 
-Při tvorbě webových formulářů v e-shopu nebo při registraci je ověření uživatelských dat klíčovou součástí každé aplikace. Špatně zadané PSČ zdrží doručení balíku, neplatné rodné číslo odmítne platební brána a slabé heslo ohrozí účet zákazníka. V tomto labu si procvičíš práci s řetězci, čísly a regulárními výrazy při validaci běžných českých vstupů.
+Brněnský půlmaraton spouští online přihlášky. Formulář už je hotový, chybí mu ale kontrola toho, co lidé napíšou: PSČ s mezerou i bez, rodné číslo pro pojištění závodníků, heslo do účtu, hashtagy k fotkám z trati a startovné, které zadávají pořadatelé ručně. Tvoje funkce rozhodnou, co formulář přijme, a vstup uvedou do jednotného tvaru.
 
-Tvým úkolem je vytvořit sadu validačních a pomocných funkcí v souboru `script.js` pro čtyři typy vstupů: poštovní směrovací číslo (PSČ), rodné číslo, heslo a cenu zboží.
+Tentokrát bez návodu — o postupu rozhoduješ sám. Používej, co ses v sekci naučil: metody řetězců, převod na číslo, haléře a regulární výrazy. Pomocné funkce si klidně přidej. V `script.js` jsou prázdné kostry funkcí s popisem.
 
-## --story-- Uživatelské příběhy
+Co pořadatelé od formuláře chtějí:
 
-- **Jako zákazník e-shopu** chci zadat PSČ s mezerou i bez mezery (např. `110 00` i `11000`), aby systém mé zadání přijal a automaticky upravil do jednotného tvaru s mezerou.
-- **Jako administrátor systému** chci ověřit rodné číslo včetně správného měsíce, dne a kontrolního součtu (dělitelnost 11 u 10místných čísel), aby v databázi nebyla neplatná data.
-- **Jako uživatel při registraci** chci okamžitou zpětnou vazbu k heslu (délka aspoň 8 znaků, malé i velké písmeno, číslice a speciální znak), abych věděl, která pravidla ještě heslu chybí.
-- **Jako prodejce** chci zadat cenu v různých běžných tvarech (např. `1 250 Kč`, `499,90`, `99,- Kč`), aby systém cenu správně převedl na číselnou hodnotu v Kč.
+- Závodník napíše PSČ jako `602 00` i `60200`, formulář ho přijme a uloží vždycky s mezerou.
+- Rodné číslo jde napsat s lomítkem i bez. Formulář odmítne číslo, které nemá správný tvar, a u desetimístného čísla i takové, které neprojde kontrolou dělitelnosti 11.
+- Při volbě hesla závodník hned vidí, co je s heslem špatně, nebo nic, když je v pořádku.
+- Z popisu fotky se vytáhnou hashtagy v jednotném tvaru a bez opakování.
+- Pořadatel zadá startovné v kterémkoli běžném českém zápisu a uloží se v haléřích.
 
-## --tests-- Tabulka testů a pravidel
-
-| Funkce | Vstup (příklad) | Očekávaný výsledek | Pravidlo / význam |
-|---|---|---|---|
-| `isValidZipCode` | `'110 00'`, `'11000'` | `true` | Platné PSČ (5 číslic nebo 3 číslice, mezera a 2 číslice) |
-| `isValidZipCode` | `'1100'`, `'110 000'`, `'abcde'` | `false` | Špatná délka, chybná pozice mezery nebo nečíselné znaky |
-| `formatZipCode` | `'11000'` | `'110 00'` | Převedení na jednotný tvar `XXX XX` |
-| `formatZipCode` | `'neplatne'` | `null` | Neplatný vstup vrátí `null` |
-| `isValidBirthNumber` | `'950512/1010'`, `'9505121010'` | `true` | Platné 10místné RČ muže (květen, dělitelné 11) |
-| `isValidBirthNumber` | `'855512/1003'` | `true` | Platné 10místné RČ ženy (měsíc +50) |
-| `isValidBirthNumber` | `'530101/123'` | `true` | Historické 9místné RČ (do roku 1953 bez dělitelnosti 11) |
-| `isValidBirthNumber` | `'951312/1010'`, `'950532/1010'` | `false` | Neplatný měsíc (13) nebo den (32) |
-| `isValidBirthNumber` | `'950512/1011'` | `false` | 10místné číslo není dělitelné 11 |
-| `isValidPassword` | `'TajneHeslo123!'` | `true` | Splňuje všech 5 bezpečnostních kritérií |
-| `isValidPassword` | `'krat1!'` | `false` | Nesplňuje minimální délku 8 znaků |
-| `validatePassword` | `'HesloBezCisla!'` | `{ valid: false, errors: ['NO_DIGIT'] }` | Seznam kódů nesplněných pravidel |
-| `isValidPrice` | `'1 250,50 Kč'`, `'99,-'` | `true` | Běžné zápisy cen s měnou, desetinnou čárkou/tečkou i `,-` |
-| `isValidPrice` | `'-50 Kč'`, `'zdarma'` | `false` | Záporná částka, nečíselný text |
-| `parsePrice` | `'1 250,50 Kč'` | `1250.5` | Převedení textu ceny na číslo |
-| `parsePrice` | `'neplatna'` | `null` | Neplatný vstup vrátí `null` |
+Přesné požadavky jsou v seznamu kontrol. Každá funkce před kontrolou ořízne mezery na krajích vstupu.
 
 > [!NOTE]
-> Všechny funkce musí bezpečně ošetřit neplatné typy vstupů (`null`, `undefined`, číslo místo řetězce atd.) a vrátit `false` nebo `null` bez vyhození neošetřené výjimky.
+> Kontrola rodného čísla je zjednodušená: neověřuje datum narození ani výjimky u čísel z let 1954–1985. Pravidla pro heslo vycházejí ze současných doporučení (třeba amerického úřadu NIST), která upřednostňují délku a zákaz zjevných hesel před povinnými speciálními znaky.
 
 # --hints--
 
-`isValidZipCode(value)` vrátí `true` pro platná PSČ bez mezery (5 číslic) i s mezerou (3 číslice + mezera + 2 číslice) a ignoruje krajní mezery.
+`isValidZip(text)` vrátí `true` pro pět číslic nebo tři číslice, jednu mezeru a dvě číslice; mezery na krajích nevadí.
 
 ```js
-assert.equal(isValidZipCode('11000'), true, "isValidZipCode('11000') má vrátit true");
-assert.equal(isValidZipCode('110 00'), true, "isValidZipCode('110 00') má vrátit true");
-assert.equal(isValidZipCode('79601'), true, "isValidZipCode('79601') má vrátit true");
-assert.equal(isValidZipCode('602 00'), true, "isValidZipCode('602 00') má vrátit true");
-assert.equal(isValidZipCode('  110 00  '), true, "isValidZipCode('  110 00  ') má ignorovat krajní mezery a vrátit true");
+assert.equal(isValidZip('60200'), true, "isValidZip('60200') má vrátit true");
+assert.equal(isValidZip('602 00'), true, "isValidZip('602 00') má vrátit true");
+assert.equal(isValidZip('  110 00 '), true, "isValidZip('  110 00 ') má vrátit true — mezery na krajích se ořízne");
 ```
 
-`isValidZipCode(value)` vrátí `false` pro nesprávnou délku, špatně umístěnou mezeru, nečíselné znaky nebo neplatný typ.
+`isValidZip(text)` vrátí `false` pro jiný počet číslic, mezeru na špatném místě, víc mezer nebo jiné znaky.
 
 ```js
-assert.equal(isValidZipCode('1100'), false, "isValidZipCode('1100') má vrátit false (málo číslic)");
-assert.equal(isValidZipCode('110000'), false, "isValidZipCode('110000') má vrátit false (6 číslic)");
-assert.equal(isValidZipCode('11 000'), false, "isValidZipCode('11 000') má vrátit false (mezera na špatném místě)");
-assert.equal(isValidZipCode('110  00'), false, "isValidZipCode('110  00') má vrátit false (dvě mezery)");
-assert.equal(isValidZipCode('110-00'), false, "isValidZipCode('110-00') má vrátit false (pomlčka místo mezery)");
-assert.equal(isValidZipCode('abcde'), false, "isValidZipCode('abcde') má vrátit false (písmena místo číslic)");
-assert.equal(isValidZipCode('1100a'), false, "isValidZipCode('1100a') má vrátit false (písmeno na konci)");
-assert.equal(isValidZipCode(''), false, "isValidZipCode('') má vrátit false pro prázdný řetězec");
-assert.equal(isValidZipCode(null), false, "isValidZipCode(null) má vrátit false pro neřetězcový vstup");
+assert.equal(isValidZip('6020'), false, "isValidZip('6020') má vrátit false — čtyři číslice");
+assert.equal(isValidZip('602000'), false, "isValidZip('602000') má vrátit false — šest číslic");
+assert.equal(isValidZip('60 200'), false, "isValidZip('60 200') má vrátit false — mezera za druhou číslicí");
+assert.equal(isValidZip('602  00'), false, "isValidZip('602  00') má vrátit false — dvě mezery");
+assert.equal(isValidZip('602-00'), false, "isValidZip('602-00') má vrátit false — pomlčka");
+assert.equal(isValidZip('PSČ 60200'), false, "isValidZip('PSČ 60200') má vrátit false — text navíc");
+assert.equal(isValidZip(''), false, "isValidZip('') má vrátit false");
 ```
 
-`formatZipCode(value)` upraví platné PSČ na jednotný tvar `XXX XX`, u neplatného vstupu vrátí `null`.
+`formatZip(text)` vrátí platné PSČ ve tvaru `602 00`, neplatné vrátí `null`.
 
 ```js
-assert.equal(formatZipCode('11000'), '110 00', "formatZipCode('11000') má vrátit '110 00'");
-assert.equal(formatZipCode('110 00'), '110 00', "formatZipCode('110 00') má vrátit '110 00'");
-assert.equal(formatZipCode('  60200  '), '602 00', "formatZipCode('  60200  ') má vrátit '602 00'");
-assert.equal(formatZipCode('1100'), null, "formatZipCode('1100') má vrátit null pro neplatné PSČ");
-assert.equal(formatZipCode('abcde'), null, "formatZipCode('abcde') má vrátit null");
+assert.equal(formatZip('60200'), '602 00', "formatZip('60200') má vrátit '602 00'");
+assert.equal(formatZip(' 110 00 '), '110 00', "formatZip(' 110 00 ') má vrátit '110 00'");
+assert.equal(formatZip('6020'), null, "formatZip('6020') má vrátit null");
 ```
 
-`isValidBirthNumber(value)` vrátí `true` pro platná 10místná rodná čísla mužů i žen, s lomítkem i bez lomítka.
+`isValidBirthNumber(text)` přijme šest číslic, nepovinné lomítko a tři nebo čtyři číslice.
 
 ```js
-assert.equal(isValidBirthNumber('950512/1010'), true, "isValidBirthNumber('950512/1010') má vrátit true (muž, květen, dělitelné 11)");
-assert.equal(isValidBirthNumber('9505121010'), true, "isValidBirthNumber('9505121010') má vrátit true bez lomítka");
-assert.equal(isValidBirthNumber('855512/1003'), true, "isValidBirthNumber('855512/1003') má vrátit true (žena, měsíc +50, dělitelné 11)");
-assert.equal(isValidBirthNumber('000101/1010'), true, "isValidBirthNumber('000101/1010') má vrátit true (rok 2000, leden)");
-assert.equal(isValidBirthNumber('  040715/1008  '), true, "isValidBirthNumber('  040715/1008  ') má tolerovat krajní mezery");
+assert.equal(isValidBirthNumber('900101/1008'), true, "isValidBirthNumber('900101/1008') má vrátit true");
+assert.equal(isValidBirthNumber('9055121009'), true, "isValidBirthNumber('9055121009') má vrátit true — bez lomítka");
+assert.equal(isValidBirthNumber('530101/123'), true, "isValidBirthNumber('530101/123') má vrátit true — devítimístné číslo z doby před rokem 1954");
+assert.equal(isValidBirthNumber(' 045203/1008 '), true, "isValidBirthNumber(' 045203/1008 ') má vrátit true — nula na začátku i mezery na krajích");
 ```
 
-`isValidBirthNumber(value)` vrátí `true` pro historická 9místná rodná čísla (před rokem 1954), u kterých se neověřuje dělitelnost 11.
+`isValidBirthNumber(text)` odmítne jiný tvar.
 
 ```js
-assert.equal(isValidBirthNumber('530101/123'), true, "isValidBirthNumber('530101/123') má vrátit true pro 9místné RČ s lomítkem");
-assert.equal(isValidBirthNumber('530101123'), true, "isValidBirthNumber('530101123') má vrátit true pro 9místné RČ bez lomítka");
-assert.equal(isValidBirthNumber('485515/001'), true, "isValidBirthNumber('485515/001') má vrátit true pro 9místné ženské RČ");
-```
-
-`isValidBirthNumber(value)` vrátí `false`, pokud datum v rodném čísle neodpovídá platnému měsíci nebo dni.
-
-```js
-assert.equal(isValidBirthNumber('951312/1010'), false, "isValidBirthNumber('951312/1010') má vrátit false (měsíc 13 neexistuje)");
-assert.equal(isValidBirthNumber('950012/1010'), false, "isValidBirthNumber('950012/1010') má vrátit false (měsíc 00 neexistuje)");
-assert.equal(isValidBirthNumber('856512/1003'), false, "isValidBirthNumber('856512/1003') má vrátit false (ženský měsíc 65 je mimo rozsah 51–62)");
-assert.equal(isValidBirthNumber('950532/1010'), false, "isValidBirthNumber('950532/1010') má vrátit false (den 32 neexistuje)");
-assert.equal(isValidBirthNumber('950500/1010'), false, "isValidBirthNumber('950500/1010') má vrátit false (den 00 neexistuje)");
-```
-
-`isValidBirthNumber(value)` vrátí `false`, pokud 10místné rodné číslo není dělitelné 11 nebo je formát neplatný.
-
-```js
-assert.equal(isValidBirthNumber('950512/1011'), false, "isValidBirthNumber('950512/1011') má vrátit false (není dělitelné 11)");
-assert.equal(isValidBirthNumber('950512/101'), false, "isValidBirthNumber('950512/101') má vrátit false pro koncovku 3 číslic u ročníku 1995");
-assert.equal(isValidBirthNumber('950512/10100'), false, "isValidBirthNumber('950512/10100') má vrátit false pro koncovku 5 číslic");
-assert.equal(isValidBirthNumber('950512-1010'), false, "isValidBirthNumber('950512-1010') má vrátit false pro špatný oddělovač");
-assert.equal(isValidBirthNumber('95051a/1010'), false, "isValidBirthNumber('95051a/1010') má vrátit false pro písmeno v čísle");
+assert.equal(isValidBirthNumber('900101-1008'), false, "isValidBirthNumber('900101-1008') má vrátit false — pomlčka místo lomítka");
+assert.equal(isValidBirthNumber('90010/11008'), false, "isValidBirthNumber('90010/11008') má vrátit false — lomítko na špatném místě");
+assert.equal(isValidBirthNumber('900101/10089'), false, "isValidBirthNumber('900101/10089') má vrátit false — za lomítkem pět číslic");
+assert.equal(isValidBirthNumber('90o101/1008'), false, "isValidBirthNumber('90o101/1008') má vrátit false — písmeno o místo nuly");
 assert.equal(isValidBirthNumber(''), false, "isValidBirthNumber('') má vrátit false");
-assert.equal(isValidBirthNumber(null), false, "isValidBirthNumber(null) má vrátit false");
 ```
 
-`isValidPassword(password)` vrátí `true`, pokud heslo splňuje všech 5 bezpečnostních pravidel (aspoň 8 znaků, malé písmeno, velké písmeno, číslice a speciální znak).
+Desetimístné rodné číslo (bez lomítka) musí být dělitelné 11, jinak `isValidBirthNumber` vrátí `false`.
 
 ```js
-assert.equal(isValidPassword('TajneHeslo123!'), true, "isValidPassword('TajneHeslo123!') má vrátit true");
-assert.equal(isValidPassword('Kratke1#'), true, "isValidPassword('Kratke1#') má vrátit true (přesně 8 znaků)");
-assert.equal(isValidPassword('M0je_Bezpecne-Heslo'), true, "isValidPassword('M0je_Bezpecne-Heslo') má vrátit true s podtržítkem a pomlčkou");
+assert.equal(isValidBirthNumber('900101/1009'), false, "isValidBirthNumber('900101/1009') má vrátit false — 9001011009 není dělitelné 11");
+assert.equal(isValidBirthNumber('785120/1006'), true, "isValidBirthNumber('785120/1006') má vrátit true — 7851201006 je dělitelné 11");
+assert.equal(isValidBirthNumber('7851201007'), false, "isValidBirthNumber('7851201007') má vrátit false");
 ```
 
-`isValidPassword(password)` vrátí `false`, pokud v heslu chybí libovolné z pěti požadovaných pravidel nebo vstup není řetězec.
+`passwordProblem(password, email)` vrátí `'Zadej heslo.'` pro prázdné heslo a `'Heslo musí mít aspoň 12 znaků.'` pro kratší heslo.
 
 ```js
-assert.equal(isValidPassword('Krat1!'), false, "isValidPassword('Krat1!') má vrátit false (málo znaků)");
-assert.equal(isValidPassword('dlouheheslo123!'), false, "isValidPassword('dlouheheslo123!') má vrátit false (chybí velké písmeno)");
-assert.equal(isValidPassword('DLOUHEHESLO123!'), false, "isValidPassword('DLOUHEHESLO123!') má vrátit false (chybí malé písmeno)");
-assert.equal(isValidPassword('BezpecneHeslo!'), false, "isValidPassword('BezpecneHeslo!') má vrátit false (chybí číslice)");
-assert.equal(isValidPassword('BezpecneHeslo123'), false, "isValidPassword('BezpecneHeslo123') má vrátit false (chybí speciální znak)");
-assert.equal(isValidPassword(''), false, "isValidPassword('') má vrátit false pro prázdný řetězec");
-assert.equal(isValidPassword(12345678), false, "isValidPassword(12345678) má vrátit false pro neřetězcový vstup");
+assert.equal(passwordProblem('', 'jana@seznam.cz'), 'Zadej heslo.', "passwordProblem('', …) má vrátit 'Zadej heslo.'");
+assert.equal(passwordProblem('   ', 'jana@seznam.cz'), 'Zadej heslo.', "passwordProblem('   ', …) má vrátit 'Zadej heslo.' — heslo jen z mezer je prázdné");
+assert.equal(passwordProblem('bezimkolem1', 'jana@seznam.cz'), 'Heslo musí mít aspoň 12 znaků.', "passwordProblem('bezimkolem1', …) má vrátit 'Heslo musí mít aspoň 12 znaků.' — má 11 znaků");
 ```
 
-`validatePassword(password)` vrátí objekt `{ valid, errors }` s kódy chybějících pravidel v pořadí `MIN_LENGTH`, `NO_LOWER`, `NO_UPPER`, `NO_DIGIT`, `NO_SPECIAL`.
+Heslo, které obsahuje část e-mailu před zavináčem (bez ohledu na velikost písmen), dostane `'Heslo nesmí obsahovat tvůj e-mail.'`.
 
 ```js
-assert.deepEqual(validatePassword('TajneHeslo123!'), { valid: true, errors: [] }, "validatePassword('TajneHeslo123!') má vrátit { valid: true, errors: [] }");
-assert.deepEqual(validatePassword('heslo'), { valid: false, errors: ['MIN_LENGTH', 'NO_UPPER', 'NO_DIGIT', 'NO_SPECIAL'] }, "validatePassword('heslo') má vrátit 4 chyby");
-assert.deepEqual(validatePassword('HesloBezCisla!'), { valid: false, errors: ['NO_DIGIT'] }, "validatePassword('HesloBezCisla!') má vrátit ['NO_DIGIT']");
-assert.deepEqual(validatePassword('TajneHeslo123'), { valid: false, errors: ['NO_SPECIAL'] }, "validatePassword('TajneHeslo123') má vrátit ['NO_SPECIAL']");
-assert.deepEqual(validatePassword(null).valid, false, "validatePassword(null).valid má být false");
+assert.equal(passwordProblem('JanaNovakova2026', 'jana.novakova@seznam.cz'), 'Heslo musí mít aspoň 12 znaků.' === '' ? '' : passwordProblem('JanaNovakova2026', 'jana.novakova@seznam.cz'), 'passwordProblem nesmí spadnout');
+assert.equal(passwordProblem('behamjana.novakova', 'jana.novakova@seznam.cz'), 'Heslo nesmí obsahovat tvůj e-mail.', "passwordProblem('behamjana.novakova', 'jana.novakova@seznam.cz') má vrátit 'Heslo nesmí obsahovat tvůj e-mail.'");
+assert.equal(passwordProblem('Běžím s PETRKOLAR!', 'petrkolar@email.cz'), 'Heslo nesmí obsahovat tvůj e-mail.', "passwordProblem('Běžím s PETRKOLAR!', 'petrkolar@email.cz') má vrátit 'Heslo nesmí obsahovat tvůj e-mail.' — velikost písmen nerozhoduje");
 ```
 
-`isValidPrice(value)` vrátí `true` pro běžné české zápisy cen (s měnou Kč/CZK i bez ní, s desetinnou čárkou i tečkou, se zápisem `,-` a s mezerami mezi tisíci).
+Heslo jen z číslic dostane `'Heslo nesmí být jen z číslic.'`, dobré heslo prázdný text.
 
 ```js
-assert.equal(isValidPrice('150'), true, "isValidPrice('150') má vrátit true");
-assert.equal(isValidPrice('150 Kč'), true, "isValidPrice('150 Kč') má vrátit true");
-assert.equal(isValidPrice('150 CZK'), true, "isValidPrice('150 CZK') má vrátit true");
-assert.equal(isValidPrice('1 250 Kč'), true, "isValidPrice('1 250 Kč') má vrátit true (s mezerou mezi tisíci)");
-assert.equal(isValidPrice('1250,50 Kč'), true, "isValidPrice('1250,50 Kč') má vrátit true (desetinná čárka)");
-assert.equal(isValidPrice('1250.50 CZK'), true, "isValidPrice('1250.50 CZK') má vrátit true (desetinná tečka)");
-assert.equal(isValidPrice('99,-'), true, "isValidPrice('99,-') má vrátit true (zápis se spojovníkem)");
-assert.equal(isValidPrice('99,- Kč'), true, "isValidPrice('99,- Kč') má vrátit true");
-assert.equal(isValidPrice('0 Kč'), true, "isValidPrice('0 Kč') má vrátit true");
-assert.equal(isValidPrice('0,50 Kč'), true, "isValidPrice('0,50 Kč') má vrátit true");
-assert.equal(isValidPrice('  2 499,- Kč  '), true, "isValidPrice('  2 499,- Kč  ') má tolerovat krajní mezery");
+assert.equal(passwordProblem('123456789012', 'jana@seznam.cz'), 'Heslo nesmí být jen z číslic.', "passwordProblem('123456789012', …) má vrátit 'Heslo nesmí být jen z číslic.'");
+assert.equal(passwordProblem('ranní běh kolem přehrady', 'jana@seznam.cz'), '', "passwordProblem('ranní běh kolem přehrady', …) má vrátit '' — heslo je v pořádku");
+assert.equal(passwordProblem('Půlmaraton2026', 'jana@seznam.cz'), '', "passwordProblem('Půlmaraton2026', …) má vrátit '' — e-mail jana v hesle není");
 ```
 
-`isValidPrice(value)` vrátí `false` pro záporné částky, nečíselný text, vícenásobné oddělovače a neplatné typy.
+`normalizeHashtags(text)` vrátí hashtagy z textu malými písmeny, oddělené mezerou, v pořadí výskytu; hashtag tvoří `#` a za ním písmena (i česká), číslice nebo `_`.
 
 ```js
-assert.equal(isValidPrice('-50 Kč'), false, "isValidPrice('-50 Kč') má vrátit false pro zápornou částku");
-assert.equal(isValidPrice('zdarma'), false, "isValidPrice('zdarma') má vrátit false pro nečíselný text");
-assert.equal(isValidPrice('12.50.30'), false, "isValidPrice('12.50.30') má vrátit false pro více teček");
-assert.equal(isValidPrice('12a50 Kč'), false, "isValidPrice('12a50 Kč') má vrátit false pro písmeno v čísle");
-assert.equal(isValidPrice(''), false, "isValidPrice('') má vrátit false pro prázdný řetězec");
-assert.equal(isValidPrice(null), false, "isValidPrice(null) má vrátit false pro neřetězcový vstup");
+assert.equal(normalizeHashtags('Cíl! #Pulmaraton2026 a #BRNO'), '#pulmaraton2026 #brno', "normalizeHashtags('Cíl! #Pulmaraton2026 a #BRNO') má vrátit '#pulmaraton2026 #brno'");
+assert.equal(normalizeHashtags('Na trati #běh_s_přáteli, super.'), '#běh_s_přáteli', "normalizeHashtags('Na trati #běh_s_přáteli, super.') má vrátit '#běh_s_přáteli' — čárka za hashtagem už k němu nepatří");
+assert.equal(normalizeHashtags('Bez hashtagů'), '', "normalizeHashtags('Bez hashtagů') má vrátit ''");
 ```
 
-`parsePrice(value)` převede platný text ceny na číslo v Kč a u neplatného vstupu vrátí `null`.
+`normalizeHashtags(text)` každý hashtag vrátí jen jednou a samotné `#` hashtag není.
 
 ```js
-assert.equal(parsePrice('150'), 150, "parsePrice('150') má vrátit 150");
-assert.equal(parsePrice('150 Kč'), 150, "parsePrice('150 Kč') má vrátit 150");
-assert.equal(parsePrice('1 250 Kč'), 1250, "parsePrice('1 250 Kč') má vrátit 1250");
-assert.equal(parsePrice('1250,50 Kč'), 1250.5, "parsePrice('1250,50 Kč') má vrátit 1250.5");
-assert.equal(parsePrice('1250.50 CZK'), 1250.5, "parsePrice('1250.50 CZK') má vrátit 1250.5");
-assert.equal(parsePrice('99,- Kč'), 99, "parsePrice('99,- Kč') má vrátit 99");
-assert.equal(parsePrice('0,50 Kč'), 0.5, "parsePrice('0,50 Kč') má vrátit 0.5");
+assert.equal(normalizeHashtags('#Brno #brno #cíl #BRNO'), '#brno #cíl', "normalizeHashtags('#Brno #brno #cíl #BRNO') má vrátit '#brno #cíl' — opakování se vynechá");
+assert.equal(normalizeHashtags('Skóre 3 # 2 a #brnobezi'), '#brnobezi', "normalizeHashtags('Skóre 3 # 2 a #brnobezi') má vrátit '#brnobezi'");
+assert.equal(normalizeHashtags('#běh #běhání'), '#běh #běhání', "normalizeHashtags('#běh #běhání') má vrátit '#běh #běhání' — #běh a #běhání jsou dva různé hashtagy");
+```
+
+`parsePrice(text)` vrátí startovné v celých haléřích z běžných zápisů: tisíce oddělené mezerou, desetinná čárka nebo tečka, `,-` a `Kč` na konci.
+
+```js
+assert.equal(parsePrice('650'), 65000, "parsePrice('650') má vrátit 65000");
+assert.equal(parsePrice('1 299,90 Kč'), 129990, "parsePrice('1 299,90 Kč') má vrátit 129990");
+assert.equal(parsePrice('49.9'), 4990, "parsePrice('49.9') má vrátit 4990");
+assert.equal(parsePrice('990,- Kč'), 99000, "parsePrice('990,- Kč') má vrátit 99000");
+assert.equal(parsePrice(' 4,35 '), 435, "parsePrice(' 4,35 ') má vrátit 435 — ne 434");
+assert.equal(parsePrice('1 250 Kč'), 125000, "parsePrice('1 250 Kč') s nezalomitelnou mezerou z Intl má vrátit 125000");
+```
+
+`parsePrice(text)` vrátí `null` pro zápis, který cena není.
+
+```js
 assert.equal(parsePrice('zdarma'), null, "parsePrice('zdarma') má vrátit null");
-assert.equal(parsePrice('-10 Kč'), null, "parsePrice('-10 Kč') má vrátit null");
-assert.equal(parsePrice(null), null, "parsePrice(null) má vrátit null");
-```
-
-Všechny funkce bezpečně zpracují neočekávané vstupy (`undefined`, čísla, objekty, prázdné řetězce) bez vyhození neošetřené výjimky.
-
-```js
-const invalidInputs = [undefined, 12345, {}, [], true];
-for (const input of invalidInputs) {
-  assert.equal(isValidZipCode(input), false, `isValidZipCode(${JSON.stringify(input)}) nesmí spadnout a má vrátit false`);
-  assert.equal(formatZipCode(input), null, `formatZipCode(${JSON.stringify(input)}) nesmí spadnout a má vrátit null`);
-  assert.equal(isValidBirthNumber(input), false, `isValidBirthNumber(${JSON.stringify(input)}) nesmí spadnout a má vrátit false`);
-  assert.equal(isValidPassword(input), false, `isValidPassword(${JSON.stringify(input)}) nesmí spadnout a má vrátit false`);
-  assert.equal(validatePassword(input).valid, false, `validatePassword(${JSON.stringify(input)}).valid má být false`);
-  assert.equal(isValidPrice(input), false, `isValidPrice(${JSON.stringify(input)}) nesmí spadnout a má vrátit false`);
-  assert.equal(parsePrice(input), null, `parsePrice(${JSON.stringify(input)}) nesmí spadnout a má vrátit null`);
-}
+assert.equal(parsePrice(''), null, "parsePrice('') má vrátit null");
+assert.equal(parsePrice('-50'), null, "parsePrice('-50') má vrátit null — záporná cena");
+assert.equal(parsePrice('12,345'), null, "parsePrice('12,345') má vrátit null — tři desetinná místa");
+assert.equal(parsePrice('1,2,3'), null, "parsePrice('1,2,3') má vrátit null");
+assert.equal(parsePrice('12 34'), null, "parsePrice('12 34') má vrátit null — za mezerou musí být tři číslice");
 ```
 
 # --help--
 
-## --tip-- 4
+## --tip-- 6
 
-Pro ověření formátu rodného čísla se hodí regulární výraz se zachycujícími skupinami pro rok, měsíc, den a koncovku. Viz výklad o skupinách v lekci [Kotvy a skupiny](see:js-retezce-cisla/regularni-vyrazy#kotvy-a-skupiny).
+Tvar zkontroluj regulárním výrazem, dělitelnost obyčejným kódem: číslice bez lomítka převeď na číslo a použij operátor `%`. Viz [Kdy regulární výraz nepoužít](see:js-retezce-cisla/regularni-vyrazy#kdy-regularni-vyraz-nepouzit).
 
-## --tip-- 13
+## --tip-- 12
 
-Při parsování ceny nejdřív odstraň mezery a symboly měny, nahraď desetinnou čárku tečkou a teprve potom převeď řetězec na číslo pomocí vestavěné funkce `Number`.
+Postup po krocích: celý zápis ověř jedním výrazem s kotvami, pak z textu odstraň mezery, `,-` a `Kč`, čárku nahraď tečkou a na haléře převeď jako ve workshopu Ceny v košíku.
 
 # --seed--
 
@@ -220,61 +158,55 @@ Při parsování ceny nejdřív odstraň mezery a symboly měny, nahraď desetin
 
 ```js
 /**
- * Ověří, zda je zadané PSČ platné (5 číslic nebo 3 číslice, mezera a 2 číslice).
- * @param {string} value
+ * Je text platné PSČ? Pět číslic, nebo tři číslice, mezera a dvě číslice.
+ * @param {string} text
  * @returns {boolean}
  */
-function isValidZipCode(value) {
+function isValidZip(text) {
 }
 
 /**
- * Převede platné PSČ na jednotný formát s mezerou 'XXX XX', u neplatného vstupu vrátí null.
- * @param {string} value
- * @returns {string|null}
+ * Platné PSČ ve tvaru '602 00', jinak null.
+ * @param {string} text
+ * @returns {string | null}
  */
-function formatZipCode(value) {
+function formatZip(text) {
 }
 
 /**
- * Ověří platnost českého rodného čísla (formát, datum a dělitelnost 11 pro 10místná RČ).
- * @param {string} value
+ * Má rodné číslo správný tvar (a u deseti číslic dělitelnost 11)?
+ * @param {string} text
  * @returns {boolean}
  */
-function isValidBirthNumber(value) {
+function isValidBirthNumber(text) {
 }
 
 /**
- * Ověří heslo a vrátí objekt { valid: boolean, errors: string[] }.
- * Pravidla: MIN_LENGTH (aspoň 8), NO_LOWER, NO_UPPER, NO_DIGIT, NO_SPECIAL.
+ * Co je s heslem špatně? Prázdný text, když nic.
  * @param {string} password
- * @returns {{ valid: boolean, errors: string[] }}
+ * @param {string} email
+ * @returns {string}
  */
-function validatePassword(password) {
+function passwordProblem(password, email) {
 }
 
 /**
- * Ověří, zda heslo splňuje všech 5 bezpečnostních pravidel.
- * @param {string} password
- * @returns {boolean}
+ * Hashtagy z textu malými písmeny, bez opakování, oddělené mezerou.
+ * @param {string} text
+ * @returns {string}
  */
-function isValidPassword(password) {
+function normalizeHashtags(text) {
 }
 
 /**
- * Ověří, zda řetězec představuje platný zápis ceny v Kč.
- * @param {string} value
- * @returns {boolean}
+ * Startovné z textu v celých haléřích, nebo null.
+ * @param {string} text
+ * @returns {number | null}
  */
-function isValidPrice(value) {
+function parsePrice(text) {
 }
 
-/**
- * Převede řetězec s cenou na číslo v Kč, u neplatného vstupu vrátí null.
- * @param {string} value
- * @returns {number|null}
- */
-function parsePrice(value) {
-}
+console.log(formatZip('60200'), isValidBirthNumber('900101/1008'), parsePrice('1 299,90 Kč'));
 ```
 
 # --solution--
@@ -282,270 +214,245 @@ function parsePrice(value) {
 ## --file-- script.js
 
 ```js
-function isValidZipCode(value) {
-  if (typeof value !== 'string') return false;
-  return /^(\d{5}|\d{3} \d{2})$/.test(value.trim());
+function isValidZip(text) {
+  return /^\d{3} ?\d{2}$/.test(text.trim());
 }
 
-function formatZipCode(value) {
-  if (!isValidZipCode(value)) return null;
-  const digits = value.trim().replace(/\s+/g, '');
+function formatZip(text) {
+  if (!isValidZip(text)) {
+    return null;
+  }
+  const digits = text.replaceAll(' ', '');
   return `${digits.slice(0, 3)} ${digits.slice(3)}`;
 }
 
-function isValidBirthNumber(value) {
-  if (typeof value !== 'string') return false;
-  const match = value.trim().match(/^(\d{2})(\d{2})(\d{2})\/?(\d{3,4})$/);
-  if (!match) return false;
-  const [, yyStr, mmStr, ddStr, ext] = match;
-  const yy = Number(yyStr);
-  const mm = Number(mmStr);
-  const dd = Number(ddStr);
-  const isMaleMonth = mm >= 1 && mm <= 12;
-  const isFemaleMonth = mm >= 51 && mm <= 62;
-  if (!isMaleMonth && !isFemaleMonth) return false;
-  if (dd < 1 || dd > 31) return false;
-  if (ext.length === 3) {
-    if (yy > 53) return false;
-    return true;
+function isValidBirthNumber(text) {
+  const match = text.trim().match(/^(\d{6})\/?(\d{3,4})$/);
+  if (!match) {
+    return false;
   }
-  const fullDigits = `${yyStr}${mmStr}${ddStr}${ext}`;
-  return Number(fullDigits) % 11 === 0;
-}
-
-function validatePassword(password) {
-  if (typeof password !== 'string') {
-    return { valid: false, errors: ['MIN_LENGTH', 'NO_LOWER', 'NO_UPPER', 'NO_DIGIT', 'NO_SPECIAL'] };
-  }
-  const errors = [];
-  if (password.length < 8) errors.push('MIN_LENGTH');
-  if (!/[a-z]/.test(password)) errors.push('NO_LOWER');
-  if (!/[A-Z]/.test(password)) errors.push('NO_UPPER');
-  if (!/\d/.test(password)) errors.push('NO_DIGIT');
-  if (!/[^a-zA-Z0-9]/.test(password)) errors.push('NO_SPECIAL');
-  return { valid: errors.length === 0, errors };
-}
-
-function isValidPassword(password) {
-  return validatePassword(password).valid;
-}
-
-function parsePrice(value) {
-  if (typeof value !== 'string') return null;
-  const trimmed = value.trim();
-  if (!trimmed) return null;
-  const re = /^(\d{1,3}(?:[ ]\d{3})*|\d+)(?:([,.])(\d{1,2}|[-–]))?\s*(?:Kč|CZK)?$/i;
-  const match = trimmed.match(re);
-  if (!match) return null;
-  const whole = match[1].replace(/\s+/g, '');
-  const dec = match[3];
-  if (!dec || dec === '-' || dec === '–') return Number(whole);
-  return Number(`${whole}.${dec}`);
-}
-
-function isValidPrice(value) {
-  return parsePrice(value) !== null;
-}
-```
-
-# --approaches--
-
-## --approach-- Validace regulárními výrazy
-
-Využívá regulární výrazy na všech místech, kde ověřujeme strukturu a formát řetězce. U PSČ kontroluje buď pětici číslic, nebo trojici a dvojici oddělenou jednou mezerou (`/^(\d{5}|\d{3} \d{2})$/`). Tento zápis je velmi úsporný, vejde se na jediný řádek a snadno se čte každému, kdo zná kotvy `^` a `$` a třídu znaků `\d`.
-
-### --file-- script.js
-
-```js
-function isValidZipCode(value) {
-  if (typeof value !== 'string') return false;
-  return /^(\d{5}|\d{3} \d{2})$/.test(value.trim());
-}
-
-function formatZipCode(value) {
-  if (!isValidZipCode(value)) return null;
-  const digits = value.trim().replace(/\s+/g, '');
-  return `${digits.slice(0, 3)} ${digits.slice(3)}`;
-}
-
-function isValidBirthNumber(value) {
-  if (typeof value !== 'string') return false;
-  const match = value.trim().match(/^(\d{2})(\d{2})(\d{2})\/?(\d{3,4})$/);
-  if (!match) return false;
-  const [, yyStr, mmStr, ddStr, ext] = match;
-  const yy = Number(yyStr);
-  const mm = Number(mmStr);
-  const dd = Number(ddStr);
-  const isMaleMonth = mm >= 1 && mm <= 12;
-  const isFemaleMonth = mm >= 51 && mm <= 62;
-  if (!isMaleMonth && !isFemaleMonth) return false;
-  if (dd < 1 || dd > 31) return false;
-  if (ext.length === 3) {
-    if (yy > 53) return false;
-    return true;
-  }
-  const fullDigits = `${yyStr}${mmStr}${ddStr}${ext}`;
-  return Number(fullDigits) % 11 === 0;
-}
-
-function validatePassword(password) {
-  if (typeof password !== 'string') {
-    return { valid: false, errors: ['MIN_LENGTH', 'NO_LOWER', 'NO_UPPER', 'NO_DIGIT', 'NO_SPECIAL'] };
-  }
-  const errors = [];
-  if (password.length < 8) errors.push('MIN_LENGTH');
-  if (!/[a-z]/.test(password)) errors.push('NO_LOWER');
-  if (!/[A-Z]/.test(password)) errors.push('NO_UPPER');
-  if (!/\d/.test(password)) errors.push('NO_DIGIT');
-  if (!/[^a-zA-Z0-9]/.test(password)) errors.push('NO_SPECIAL');
-  return { valid: errors.length === 0, errors };
-}
-
-function isValidPassword(password) {
-  return validatePassword(password).valid;
-}
-
-function parsePrice(value) {
-  if (typeof value !== 'string') return null;
-  const trimmed = value.trim();
-  if (!trimmed) return null;
-  const re = /^(\d{1,3}(?:[ ]\d{3})*|\d+)(?:([,.])(\d{1,2}|[-–]))?\s*(?:Kč|CZK)?$/i;
-  const match = trimmed.match(re);
-  if (!match) return null;
-  const whole = match[1].replace(/\s+/g, '');
-  const dec = match[3];
-  if (!dec || dec === '-' || dec === '–') return Number(whole);
-  return Number(`${whole}.${dec}`);
-}
-
-function isValidPrice(value) {
-  return parsePrice(value) !== null;
-}
-```
-
-## --approach-- Ruční kontrola bez regulárních výrazů u PSČ
-
-U PSČ se zcela vyhýbá regulárnímu výrazu a provádí přímou kontrolu délky a jednotlivých znaků. Nejprve ořízne krajní mezery přes `trim()`. Pokud má text délku 5, projde cyklem znak po znaku a ověří, že každý znak leží mezi `'0'` a `'9'`. Pokud má délku 6, ověří mezeru na indexu 3 a ostatní pozice jako číslice. Výhodou je naprostá explicitnost a nulová závislost na regex enginu, nevýhodou je podstatně delší kód (15 řádků místo 1 řádku).
-
-### --file-- script.js
-
-```js
-function isValidZipCode(value) {
-  if (typeof value !== 'string') return false;
-  const s = value.trim();
-  if (s.length === 5) {
-    for (let i = 0; i < 5; i++) {
-      if (s[i] < '0' || s[i] > '9') return false;
-    }
-    return true;
-  }
-  if (s.length === 6) {
-    if (s[3] !== ' ') return false;
-    for (let i = 0; i < 6; i++) {
-      if (i === 3) continue;
-      if (s[i] < '0' || s[i] > '9') return false;
-    }
-    return true;
-  }
-  return false;
-}
-
-function formatZipCode(value) {
-  if (!isValidZipCode(value)) return null;
-  const clean = [];
-  const s = value.trim();
-  for (const ch of s) {
-    if (ch >= '0' && ch <= '9') clean.push(ch);
-  }
-  return `${clean.slice(0, 3).join('')} ${clean.slice(3).join('')}`;
-}
-
-function isValidBirthNumber(value) {
-  if (typeof value !== 'string') return false;
-  const s = value.trim();
-  let digits = '';
-  let slashCount = 0;
-  for (let i = 0; i < s.length; i++) {
-    const ch = s[i];
-    if (ch === '/') {
-      slashCount++;
-      if (slashCount > 1 || i !== 6) return false;
-    } else if (ch >= '0' && ch <= '9') {
-      digits += ch;
-    } else {
-      return false;
-    }
-  }
-  if (digits.length !== 9 && digits.length !== 10) return false;
-  const yy = Number(digits.slice(0, 2));
-  const mm = Number(digits.slice(2, 4));
-  const dd = Number(digits.slice(4, 6));
-  if (!((mm >= 1 && mm <= 12) || (mm >= 51 && mm <= 62))) return false;
-  if (dd < 1 || dd > 31) return false;
+  const digits = match[1] + match[2];
   if (digits.length === 9) {
-    if (yy > 53) return false;
     return true;
   }
   return Number(digits) % 11 === 0;
 }
 
-function validatePassword(password) {
-  if (typeof password !== 'string') {
-    return { valid: false, errors: ['MIN_LENGTH', 'NO_LOWER', 'NO_UPPER', 'NO_DIGIT', 'NO_SPECIAL'] };
+function passwordProblem(password, email) {
+  const value = password.trim();
+  if (value === '') {
+    return 'Zadej heslo.';
   }
-  const errors = [];
-  if (password.length < 8) errors.push('MIN_LENGTH');
-  let hasLower = false;
-  let hasUpper = false;
-  let hasDigit = false;
-  let hasSpecial = false;
-  for (const ch of password) {
-    if (ch >= 'a' && ch <= 'z') hasLower = true;
-    else if (ch >= 'A' && ch <= 'Z') hasUpper = true;
-    else if (ch >= '0' && ch <= '9') hasDigit = true;
-    else hasSpecial = true;
+  if ([...value].length < 12) {
+    return 'Heslo musí mít aspoň 12 znaků.';
   }
-  if (!hasLower) errors.push('NO_LOWER');
-  if (!hasUpper) errors.push('NO_UPPER');
-  if (!hasDigit) errors.push('NO_DIGIT');
-  if (!hasSpecial) errors.push('NO_SPECIAL');
-  return { valid: errors.length === 0, errors };
+  const emailName = email.trim().toLowerCase().split('@')[0];
+  if (emailName.length >= 3 && value.toLowerCase().includes(emailName)) {
+    return 'Heslo nesmí obsahovat tvůj e-mail.';
+  }
+  if (/^\d+$/.test(value)) {
+    return 'Heslo nesmí být jen z číslic.';
+  }
+  return '';
 }
 
-function isValidPassword(password) {
-  return validatePassword(password).valid;
+function normalizeHashtags(text) {
+  let result = '';
+  for (const match of text.matchAll(/#[\p{L}\p{N}_]+/gu)) {
+    const tag = match[0].toLowerCase();
+    if (!` ${result} `.includes(` ${tag} `)) {
+      result = result === '' ? tag : `${result} ${tag}`;
+    }
+  }
+  return result;
 }
 
-function parsePrice(value) {
-  if (typeof value !== 'string') return null;
-  const trimmed = value.trim();
-  if (!trimmed) return null;
-  const re = /^(\d{1,3}(?:[ ]\d{3})*|\d+)(?:([,.])(\d{1,2}|[-–]))?\s*(?:Kč|CZK)?$/i;
-  const match = trimmed.match(re);
-  if (!match) return null;
-  const whole = match[1].replace(/\s+/g, '');
-  const dec = match[3];
-  if (!dec || dec === '-' || dec === '–') return Number(whole);
-  return Number(`${whole}.${dec}`);
+function parsePrice(text) {
+  const value = text.trim();
+  const pattern = /^(\d{1,3}(\s\d{3})+|\d+)([,.](\d{1,2}|-))?(\s*Kč)?$/u;
+  if (!pattern.test(value)) {
+    return null;
+  }
+  const number = value
+    .replace(/\s*Kč$/u, '')
+    .replace(/[,.]-$/, '')
+    .replace(/\s/gu, '')
+    .replace(',', '.');
+  return Math.round(Number(number) * 100);
 }
 
-function isValidPrice(value) {
-  return parsePrice(value) !== null;
+console.log(formatZip('60200'), isValidBirthNumber('900101/1008'), parsePrice('1 299,90 Kč'));
+```
+
+# --approaches--
+
+## --approach-- Regulární výrazy pro tvar
+
+Každý tvar popisuje jeden výraz s kotvami a zbytek (dělitelnost, převod na haléře) řeší obyčejný kód. Krátké a u PSČ i rodného čísla čitelné, když znáš značky; u ceny už výraz stojí za komentář.
+
+### --file-- script.js
+
+```js
+function isValidZip(text) {
+  return /^\d{3} ?\d{2}$/.test(text.trim());
+}
+
+function formatZip(text) {
+  if (!isValidZip(text)) {
+    return null;
+  }
+  const digits = text.replaceAll(' ', '');
+  return `${digits.slice(0, 3)} ${digits.slice(3)}`;
+}
+
+function isValidBirthNumber(text) {
+  const match = text.trim().match(/^(?<date>\d{6})\/?(?<suffix>\d{3,4})$/);
+  if (!match) {
+    return false;
+  }
+  const digits = match.groups.date + match.groups.suffix;
+  return digits.length === 9 || Number(digits) % 11 === 0;
+}
+
+function passwordProblem(password, email) {
+  const value = password.trim();
+  const emailName = email.trim().toLowerCase().slice(0, email.indexOf('@'));
+  if (value === '') return 'Zadej heslo.';
+  if ([...value].length < 12) return 'Heslo musí mít aspoň 12 znaků.';
+  if (emailName.length >= 3 && value.toLowerCase().includes(emailName)) return 'Heslo nesmí obsahovat tvůj e-mail.';
+  if (/^\d+$/.test(value)) return 'Heslo nesmí být jen z číslic.';
+  return '';
+}
+
+function normalizeHashtags(text) {
+  let result = '';
+  for (const match of text.matchAll(/#[\p{L}\p{N}_]+/gu)) {
+    const tag = match[0].toLowerCase();
+    if (!` ${result} `.includes(` ${tag} `)) {
+      result = result === '' ? tag : `${result} ${tag}`;
+    }
+  }
+  return result;
+}
+
+function parsePrice(text) {
+  // celé koruny (případně s mezerami po tisících), desetiny nebo ,- a nepovinné Kč
+  const match = text.trim().match(/^(?<whole>\d{1,3}(?:\s\d{3})+|\d+)(?:[,.](?:(?<fraction>\d{1,2})|-))?(?:\s*Kč)?$/u);
+  if (!match) {
+    return null;
+  }
+  const whole = Number(match.groups.whole.replace(/\s/gu, ''));
+  const fraction = (match.groups.fraction ?? '0').padEnd(2, '0');
+  return whole * 100 + Number(fraction);
+}
+```
+
+## --approach-- Ruční kontrola znaků u PSČ
+
+Bez regulárního výrazu: délka a pozice mezery se hlídají podmínkami, číslice cyklem. Delší, ale každý řádek přečte i ten, kdo regulární výrazy nezná, a u chyby přesně víš, na kterém znaku kontrola selhala. U ceny s mnoha variantami by ruční kontrola rychle zbobtnala.
+
+### --file-- script.js
+
+```js
+function isDigits(text) {
+  if (text === '') {
+    return false;
+  }
+  for (const char of text) {
+    if (!'0123456789'.includes(char)) {
+      return false;
+    }
+  }
+  return true;
+}
+
+function isValidZip(text) {
+  const value = text.trim();
+  if (value.length === 5) {
+    return isDigits(value);
+  }
+  if (value.length === 6 && value[3] === ' ') {
+    return isDigits(value.slice(0, 3)) && isDigits(value.slice(4));
+  }
+  return false;
+}
+
+function formatZip(text) {
+  if (!isValidZip(text)) {
+    return null;
+  }
+  const digits = text.replaceAll(' ', '');
+  return `${digits.slice(0, 3)} ${digits.slice(3)}`;
+}
+
+function isValidBirthNumber(text) {
+  const value = text.trim();
+  const slash = value.indexOf('/');
+  const digits = slash === 6 ? value.slice(0, 6) + value.slice(7) : value;
+  if ((slash !== -1 && slash !== 6) || !isDigits(digits)) {
+    return false;
+  }
+  if (digits.length === 9) {
+    return true;
+  }
+  return digits.length === 10 && Number(digits) % 11 === 0;
+}
+
+function passwordProblem(password, email) {
+  const value = password.trim();
+  if (value === '') {
+    return 'Zadej heslo.';
+  }
+  if ([...value].length < 12) {
+    return 'Heslo musí mít aspoň 12 znaků.';
+  }
+  const at = email.indexOf('@');
+  const emailName = email.slice(0, at === -1 ? email.length : at).trim().toLowerCase();
+  if (emailName.length >= 3 && value.toLowerCase().includes(emailName)) {
+    return 'Heslo nesmí obsahovat tvůj e-mail.';
+  }
+  if (isDigits(value)) {
+    return 'Heslo nesmí být jen z číslic.';
+  }
+  return '';
+}
+
+function normalizeHashtags(text) {
+  let result = '';
+  for (const match of text.matchAll(/#[\p{L}\p{N}_]+/gu)) {
+    const tag = match[0].toLowerCase();
+    if (!` ${result} `.includes(` ${tag} `)) {
+      result = result === '' ? tag : `${result} ${tag}`;
+    }
+  }
+  return result;
+}
+
+function parsePrice(text) {
+  const value = text.trim();
+  if (!/^(\d{1,3}(\s\d{3})+|\d+)([,.](\d{1,2}|-))?(\s*Kč)?$/u.test(value)) {
+    return null;
+  }
+  let number = value.replace(/\s*Kč$/u, '');
+  if (number.endsWith(',-') || number.endsWith('.-')) {
+    number = number.slice(0, -2);
+  }
+  return Math.round(Number(number.replace(/\s/gu, '').replace(',', '.')) * 100);
 }
 ```
 
 # --review--
 
-Testy kontrolují návratové hodnoty funkcí. Než lab uzavřeš, zkontroluj čistotu kódu sám.
+Testy kontrolují, co funkce vracejí. Tohle zkontroluj sám, než lab uzavřeš.
 
 ## --rubric--
 
-- Funkce `isValidZipCode` používá kotvy `^` a `$`, takže nezamění PSČ s delším číslem.
-- Kontrola hesla rozlišuje všech 5 kritérií a vrací přesný seznam chybějících pravidel.
-- Funkce `parsePrice` bezpečně odstraní mezery mezi tisíci a správně převede desetinnou čárku na tečku pro `Number()`.
-- Žádná funkce nespadne s neošetřenou chybou, když dostane `null`, `undefined` nebo číslo.
-- Víš, kdy je lepší použít regulární výraz a kdy stačí jednoduché metody řetězců jako `includes` nebo `slice`.
+- Každý regulární výraz, který kontroluje celý vstup, má kotvy `^` a `$`.
+- Výraz kontroluje jen tvar; dělitelnost, převod na haléře a podobnou logiku řeší obyčejný kód.
+- Složitější výraz (cena) má komentář nebo pojmenované skupiny, aby ho šlo přečíst za měsíc.
+- Oříznutí mezer a převod na malá písmena jsou na jednom místě, ne rozkopírované do každé podmínky.
+- Víš, u které funkce bys příště regulární výraz nepoužil a proč.
 
 ## --extensions--
 
-Zkus přidat funkci `isValidIco(value)`, která ověří 8místné české IČO včetně váženého kontrolního součtu (váhy 8, 7, 6, 5, 4, 3, 2 modulo 11), nebo funkci `isValidEmail(value)`, která zkontroluje základní tvar e-mailové adresy se zavináčem a doménou.
+Přidej `isValidIco(text)` pro osmimístné IČO s kontrolním součtem (váhy 8 až 2, modulo 11); u rodného čísla ověř i datum narození — měsíc zvětšený o 50 (a od roku 2004 i o 20 nebo 70) znamená ženu; z `parsePrice` udělej `formatPrice(halere)` přes `Intl.NumberFormat` a vyzkoušej, že `parsePrice(formatPrice(x))` vrátí zase `x`.

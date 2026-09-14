@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Iterátory a generátory", "summary": "Na čem stojí for…of a spread: Symbol.iterator, next(), generátory s yield, vlastní iterovatelná třída a líné nekonečné sekvence.", "minutes": 25, "runtime": "js" }

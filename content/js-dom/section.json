@@ -1,5 +1,11 @@
 {
   "title": "DOM, události a prohlížeč",
   "intro": "Tady se z JavaScriptu stává web, na který se dá klikat. Naučíš se měnit stránku bez XSS, obsluhovat události a klávesnici, zpracovat formulář a udržet stav aplikace v datech, `localStorage` i v adrese.",
-  "modules": ["strom-dom"]
+  "modules": [
+    "strom-dom",
+    "workshop-seznam-ukolu",
+    "udalosti",
+    "workshop-zalozky-a-dialog",
+    "formulare-v-js"
+  ]
 }

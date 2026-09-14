@@ -1,91 +1,96 @@
-# Tahák: Funkce a rozsah platnosti
+> [!REMEMBER]
+> **Funkce je pojmenovaný postup s jasným vstupem (parametry) a výstupem (`return`).** Proměnná je vidět v bloku, kde vznikla, a hledá se zevnitř ven podle toho, kde je funkce napsaná.
 
-## Vytváření funkcí
+## Zápisy funkcí
 
-### Deklarace funkce
-Načte se před spuštěním kódu (hoisting), dá se volat dřív, než je v kódu napsaná.
+| zápis | vrací | jde zavolat nad svým řádkem? |
+|---|---|---|
+| `function withVat(price) { return price * 1.21; }` | co je za `return` | ano ([[hoisting]]) |
+| `const withVat = function (price) { return price * 1.21; };` | co je za `return` | ne, `ReferenceError` (TDZ) |
+| `const withVat = (price) => price * 1.21;` | výraz za šipkou | ne, `ReferenceError` (TDZ) |
+| `const withVat = (price) => { return price * 1.21; };` | co je za `return` | ne, `ReferenceError` (TDZ) |
 
-```js
-function secti(a, b) {
-  return a + b;
-}
-```
+## Parametry
 
-### Funkční výraz a šipková funkce
-Uložená do proměnné. Nedá se volat před inicializací.
+| zápis | co dělá | pozor |
+|---|---|---|
+| `f(a, b)` | argumenty se přiřadí podle pořadí | chybějící argument je `undefined` |
+| `function f(decimals = 2)` | [[výchozí parametr]] pro `undefined` | `0`, `''` a `null` výchozí hodnotu nespustí |
+| `function f(first, ...rest)` | [[zbytkový parametr]]: zbylé argumenty v poli | jen jeden a poslední; bez argumentů `[]` |
+| `value \|\| 2` | náhrada každé nepravdivé hodnoty | přepíše i `0` a `''` — na výchozí hodnoty nepoužívat |
+| `value ?? 2` | náhrada jen `null` a `undefined` | nulu nechá být |
 
-```js
-const odecti = (a, b) => {
-  return a - b;
-};
+## Rozsah platnosti
 
-// Zkrácený zápis pro jediný výraz (return je implicitní)
-const nasob = (a, b) => a * b;
-```
+| deklarace | [[rozsah platnosti]] | před svým řádkem | znovu stejné jméno |
+|---|---|---|---|
+| `const` | blok `{ }` | TDZ → `ReferenceError` | `SyntaxError` |
+| `let` | blok `{ }` | TDZ → `ReferenceError` | `SyntaxError` |
+| `var` | celá funkce (skript) | `undefined` | projde tiše |
+| `function name()` | celá funkce (skript) | dá se zavolat | přepíše předchozí |
+| přiřazení bez deklarace | globální (v modulu chyba) | — | — |
 
-## Parametry a argumenty
+V DevTools: breakpoint (klik na číslo řádku v Sources) → panel **Scope** (*Local*, *Block*, *Script*, *Global*) a panel **Call Stack** ([[zásobník volání]]).
 
-**Parametr** = proměnná v definici. **Argument** = hodnota při volání.
-
-```js
-// Výchozí hodnoty (použijí se, když se argument vynechá nebo je undefined)
-function pozdrav(jmeno = 'Anonym') {
-  console.log(`Ahoj ${jmeno}`);
-}
-
-// Zbytkové parametry (rest) sbalí zbylé argumenty do pole
-function sectiVse(prvni, ...zbytek) {
-  // prvni je číslo, zbytek je pole čísel
-}
-```
-
-## Návratová hodnota (return)
-Pokud funkce neobsahuje `return` (nebo je prázdný), vrací `undefined`. Jakmile kód narazí na `return`, funkce okamžitě končí.
+## Vzory
 
 ```js
-function vydel(a, b) {
-  if (b === 0) {
-    return null; // Guard clause - okamžité ukončení
+// guard clause: nesmysly vyřiď hned, výpočet nech na konci
+function pricePerPerson(total, people) {
+  if (people <= 0) {
+    return null;
   }
-  return a / b;
-}
-```
-
-## Rozsah platnosti (Scope)
-
-Každý blok (`{}`) nebo funkce vytváří vlastní bezpečný prostor pro proměnné.
-
-*   **Globální scope**: Přístupné odevšad (vyhýbej se jim).
-*   **Blokový scope**: `let` a `const` existují jen uvnitř bloku `{ ... }`, kde byly vytvořeny (např. v cyklu, v `if`).
-*   **Funkční scope**: `var` nerespektuje bloky, je omezený pouze na funkci, ve které vznikl.
-
-### Stínění (Shadowing)
-Pokud má vnitřní proměnná stejný název jako vnější, dočasně ji „zastíní“.
-
-```js
-const x = 10;
-if (true) {
-  const x = 20; // Stíní vnější x
-  console.log(x); // 20
-}
-console.log(x); // 10
-```
-
-## Hoisting a TDZ (Temporal Dead Zone)
-Fyzicky je kód prováděn shora dolů, ale deklarace funkcí a proměnných se „virtuálně“ přesouvají nahoru.
-Proměnné `let` a `const` však nelze přečíst dříve, než na jejich řádek kód dorazí. Tento zakázaný prostor od začátku bloku po deklaraci se nazývá TDZ.
-
-## Callback (funkce jako hodnota)
-Funkci můžeme předat jiné funkci jako argument – nepíšeme za ni závorky `()`, ty by ji hned spustily.
-
-```js
-function zatrub() {
-  console.log('Tuuut!');
+  return total / people;
 }
 
-// Spustí zatrub() za 2 vteřiny
-setTimeout(zatrub, 2000); 
+// výchozí a zbytkový parametr
+function formatNumber(value, decimals = 2) {
+  return String(roundTo(value, decimals)).replace('.', ',');
+}
 
-// Špatně! Spustí hned a předá výsledek (undefined) setTimeoutu:
-// setTimeout(zatrub(), 2000);
+function totalKm(...milesLegs) {
+  let total = 0;
+  for (const miles of milesLegs) {
+    total += milesToKm(miles);
+  }
+  return total;
+}
+
+// skládání malých funkcí
+function describeConversion(text, conversion) {
+  const amount = parseAmount(text);
+  if (Number.isNaN(amount)) {
+    return 'Zadej číslo';
+  }
+  return `${formatNumber(amount, 1)} → ${formatResult(convert(amount, conversion), targetUnit(conversion))}`;
+}
+
+// čistý výpočet × vedlejší efekt
+const withVat = (price) => price * 1.21;
+function printPrice(price) {
+  console.log(`${withVat(price)} Kč`);
+}
+
+// callback: funkci předávám bez závorek
+function applyRule(price, rule) {
+  return Math.round(rule(price));
+}
+applyRule(899, (price) => price - 100);
+setTimeout(hideNotice, 5000);
+setTimeout(() => showMessage('Uloženo'), 1000);
 ```
+
+## Pasti
+
+| příznak | příčina | oprava |
+|---|---|---|
+| funkce vrací `undefined`, výpočet dá `NaN` | chybí `return` (i v šipce se `{ }`) | přidat `return`, nebo u šipky smazat `{ }` |
+| `undefined`, i když výraz pod `return` vypadá správně | `return` na samostatném řádku | výraz začít na řádku s `return` |
+| `roundTo(x, 0)` zaokrouhlí na dvě místa | výchozí hodnota přes `\|\|` | výchozí parametr nebo `??` |
+| `if (isOpen)` platí vždy, v textu je zdroják funkce | jméno funkce bez závorek | `isOpen()` |
+| změna uvnitř `if` se neprojeví, žádná chyba | `let` uvnitř bloku [[zastíní]] vnější proměnnou | uvnitř bloku jen přiřadit |
+| `ReferenceError: Cannot access 'x' before initialization` | čtení `let`/`const` v TDZ | deklaraci přesunout nad použití |
+| `ReferenceError: row is not defined` v pomocné funkci | funkce nevidí proměnné volajícího ([[lexikální rozsah]]) | předat hodnotu parametrem |
+| `TypeError: rule is not a function` | místo funkce předán její výsledek `rule()` | předat `rule` bez závorek |
+| akce z `setTimeout` proběhne hned | `setTimeout(fn(), ms)` | `setTimeout(fn, ms)` |
+| callback dostane `undefined` | volající mu argument nepředává | obalit šipkou s argumentem |

@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Události", "summary": "Posluchače a jejich volby, cesta události stromem, target a currentTarget, preventDefault proti stopPropagation, delegace, klávesnice, pointer události a vlastní události.", "minutes": 35, "runtime": "dom" }

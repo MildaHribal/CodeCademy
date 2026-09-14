@@ -275,7 +275,7 @@ for (const part of parts) {
 Zkus do `tags` přidat na konec čárku (`'kolo,horské,Author,'`) a sleduj `parts.length` a poslední hashtag. Za poslední čárkou je prázdný řetězec a `split` ho poctivě vrátí.
 
 > [!PITFALL]
-> **`split(' ')` a dvě mezery za sebou.** `'Jana  Nováková'.split(' ')` vrátí tři kousky `['Jana', '', 'Nováková']` — mezi mezerami je prázdný řetězec. Druhé „slovo" je pak prázdné a `parts[1][0]` je `undefined`. Oprava: nejdřív text vyčisti, nebo rozděl regulárním výrazem `split(/\s+/)`, ke kterému se dostaneš v lekci [Regulární výrazy](see:js-retezce-cisla/regularni-vyrazy#tridy-znaku-a-priznaky).
+> **`split(' ')` a dvě mezery za sebou.** `'Jana  Nováková'.split(' ')` vrátí tři kousky `['Jana', '', 'Nováková']` — mezi mezerami je prázdný řetězec. Druhé „slovo" je pak prázdné a `parts[1][0]` je `undefined`. Oprava: nejdřív text vyčisti, nebo rozděl regulárním výrazem `split(/\s+/)`, ke kterému se dostaneš v lekci [Regulární výrazy](see:js-retezce-cisla/regularni-vyrazy#tridy-znaku).
 
 :::check
 Co vypíše tenhle kód?
@@ -435,7 +435,7 @@ console.log(word.replace(/\p{M}/gu, ''));
 ```
 :::
 
-Zápis mezi lomítky `/\p{M}/gu` je regulární výraz: „každá značka (*Mark*) v celém textu". Rozebereš ho v lekci [Regulární výrazy](see:js-retezce-cisla/regularni-vyrazy#tridy-znaku-a-priznaky), teď ho ber jako hotový vzor. Podívej se na poslední řádek: **bez `normalize('NFD')` se nesmaže nic**, protože `ž` je jeden znak a žádnou samostatnou značku nemá.
+Zápis mezi lomítky `/\p{M}/gu` je regulární výraz: „každá značka (*Mark*) v celém textu". Rozebereš ho v lekci [Regulární výrazy](see:js-retezce-cisla/regularni-vyrazy#tridy-znaku), teď ho ber jako hotový vzor. Podívej se na poslední řádek: **bez `normalize('NFD')` se nesmaže nic**, protože `ž` je jeden znak a žádnou samostatnou značku nemá.
 
 > [!REMEMBER]
 > **Diakritiku odstraníš ve dvou krocích: rozlož (`normalize('NFD')`), pak smaž značky (`replace(/\p{M}/gu, '')`).** Jeden krok bez druhého nedělá nic.
@@ -562,6 +562,8 @@ Index `1` je druhý znak, ne první. A u prázdného textu by vrátil `undefined
 
 js-retezce-cisla/retezce#znak-na-neexistujici-pozici
 :::
+
+Ve workshopu Inzerát do bazaru z těchhle metod postavíš čistý titulek, zkrácený popis, adresu bez diakritiky a živý náhled inzerátu.
 
 ## Kde to najdeš v MDN
 

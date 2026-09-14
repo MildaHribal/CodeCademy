@@ -1,0 +1,1 @@
+{ "type": "workshop", "title": "Bankovní účet", "summary": "Postavíš model bankovního účtu s chráněným zůstatkem, historií pohybů a spořicím účtem a vypíšeš ho do stránky, kde jde vkládat a vybírat.", "minutes": 95, "runtime": "js" }

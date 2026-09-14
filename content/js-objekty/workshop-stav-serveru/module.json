@@ -1,1 +1,1 @@
-{ "type": "workshop", "title": "Stav herního serveru", "summary": "Postavíš stavovou kartu herního serveru: hráči online, majitel, pravidla a odezva podle regionu, s výběrem regionu, který se přepočítá hned.", "minutes": 75, "runtime": "js" }
+{ "type": "workshop", "title": "Stav herního serveru", "summary": "Postavíš stavovou kartu herního serveru: hráči online, majitel, pravidla a odezva podle regionu, s výběrem regionu, který se přepočítá hned.", "minutes": 85, "runtime": "js" }

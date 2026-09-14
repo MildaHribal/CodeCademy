@@ -1,5 +1,11 @@
 {
   "title": "Asynchronní JavaScript a fetch",
   "intro": "draft",
-  "modules": ["event-loop"]
+  "modules": [
+    "event-loop",
+    "workshop-vyprodej",
+    "promise",
+    "lab-platebni-terminal",
+    "async-await"
+  ]
 }

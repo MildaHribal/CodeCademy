@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Prototypy", "summary": "Co je pod třídou: řetěz prototypů, Object.create, odkud mají pole a řetězce metody a proč nerozšiřovat vestavěné prototypy.", "minutes": 25, "runtime": "js" }

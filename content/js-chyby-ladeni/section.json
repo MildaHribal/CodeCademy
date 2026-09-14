@@ -1,0 +1,10 @@
+{
+  "title": "Chyby a systematické ladění",
+  "intro": "draft",
+  "modules": [
+    "vyjimky",
+    "workshop-ulozene-hry",
+    "vlastni-chyby",
+    "workshop-validace-dat"
+  ]
+}

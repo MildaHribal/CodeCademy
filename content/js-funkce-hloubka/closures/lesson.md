@@ -429,6 +429,99 @@ Nové zavolání vytvoří nové prostředí s novým prázdným polem. Původn�
 js-funkce-hloubka/closures#soukromy-stav
 :::
 
+## Funkce, která obalí jinou funkci
+
+Prostředí nemusí držet jen číslo nebo pole. Může v něm být i **jiná funkce**. Továrna
+dostane funkci jako argument a vrátí novou funkci, která tu původní obalí: před
+voláním nebo po něm udělá něco navíc a výsledek pošle dál. Takové funkci se říká
+[[obalující funkce]] (*wrapper*).
+
+:::live js
+```js
+function countCalls(fn) {
+  let calls = 0;
+
+  return (...args) => {
+    calls += 1;
+    console.log(`Volání č. ${calls}`);
+    return fn(...args);
+  };
+}
+
+const ticketPrice = (km, discount) => Math.round(km * 1.6 * (1 - discount));
+const countedPrice = countCalls(ticketPrice);
+
+console.log(countedPrice(120, 0));
+console.log(countedPrice(120, 0.5));
+```
+:::
+
+Obal neví, kolik argumentů bude původní funkce potřebovat, a nemusí to vědět.
+`(...args)` je zbytkový parametr: sbalí všechny argumenty volání do pole.
+`fn(...args)` je naopak rozprostření: pole zase rozbalí do argumentů. Zkus přidat
+třetí volání `countedPrice(300, 0.25)` a sleduj, že počítadlo pokračuje. Pak
+obal zkus na jinou funkci, třeba `countCalls(Math.max)`.
+
+Obal musí výsledek původní funkce **vrátit**. Co se stane, když `return` chybí?
+
+:::live js predict
+```js
+function logCalls(fn) {
+  return (...args) => {
+    console.log('Volám s', args.length, 'argumenty');
+    fn(...args);
+  };
+}
+
+const double = (n) => n * 2;
+const loggedDouble = logCalls(double);
+console.log(loggedDouble(21));
+```
+--question-- Co vypíše tenhle kód? Napiš oba řádky výstupu.
+--expected--
+```text
+Volám s 1 argumenty
+undefined
+```
+--why-- Obal původní funkci zavolal a ta vrátila `42`, jenže obal tu hodnotu zahodil. Šipková funkce se složenými závorkami bez `return` vrací `undefined`. Oprava je `return fn(...args);`.
+:::
+
+Na tomhle vzoru stojí nástroje, které potkáš skoro v každé aplikaci: `once` (funkce
+proběhne jen poprvé), mezipaměť výsledků a `debounce` (funkce počká, až uživatel
+dopíše). Všechny tři napíšeš ve workshopu.
+
+:::check
+Kde je uložená funkce `ticketPrice`, kterou volá `countedPrice`?
+
+### --answer--
+
+Ve vlastnosti objektu `countedPrice`.
+
+#### --why--
+
+`countedPrice` je funkce bez vlastních vlastností. Původní funkci drží jinde.
+
+### --correct--
+
+V prostředí volání `countCalls`, jako parametr `fn`.
+
+#### --why--
+
+Obal vznikl uvnitř `countCalls`, takže drží její prostředí i s parametrem `fn` a proměnnou `calls`.
+
+### --answer--
+
+Nikde, `countCalls` ji zavolá jen jednou při vytvoření obalu.
+
+#### --why--
+
+Při vytvoření obalu se `fn` nevolá. Volá ji až obal, pokaždé znovu.
+
+### --see--
+
+js-funkce-hloubka/closures#funkce-ktera-obali-jinou-funkci
+:::
+
 ## `var` v cyklu se `setTimeout`
 
 Tohle je nejznámější past s closures. `setTimeout` spustí funkci **později** — až

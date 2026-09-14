@@ -1,245 +1,594 @@
 # Cykly
 
 :::check pretest
-Představ si cyklus, který opakuje kód pro každé písmeno ve slově "Ahoj". Kolikrát celkem se blok kódu spustí?
+Kolikrát se provede tělo tohohle cyklu? Napiš jen číslo.
+
+```js
+for (let day = 1; day < 5; day++) {
+  console.log('Den', day);
+}
+```
 
 ### --expected--
 
 4
 
-### --accept--
-
-čtyřikrát
-
 ### --why--
 
-Slovo má 4 písmena, takže se kód otočí přesně čtyřikrát. Tomuhle opakování se říká cyklus nebo smyčka.
+`day` začne na `1` a cyklus běží, dokud platí `day < 5`: pro `1`, `2`, `3` a `4`. Pětka už podmínku nesplní. Proč se na tomhle místě chybuje nejčastěji, uvidíš v části o počtu opakování.
 :::
 
-Když chceš vypsat pět uživatelů, můžeš pětkrát napsat `console.log`. Ale když jich chceš vypsat tisíc, tak to nejde. K počítačům se programy píšou právě proto, aby za nás dělaly otravnou opakující se práci. Způsobu, jak donutit program kousek kódu opakovat, se říká cyklus (*loop*).
+:::check pretest
+Heslo je `'Ahoj1'`. Kolikrát proběhne cyklus `for (const char of password)`, když v `password` je tohle heslo?
+
+### --answer--
+
+Jednou, heslo je jedna hodnota.
+
+#### --why--
+
+Je to jedna hodnota, ale `for…of` ji rozloží. Na co? Uvidíš v části o `for…of`.
+
+### --correct--
+
+Pětkrát, jednou pro každý znak.
+
+#### --why--
+
+`for…of` prochází text znak po znaku. Víc v části o `for…of`.
+
+### --answer--
+
+Vůbec, `for…of` s textem nefunguje.
+
+#### --why--
+
+S textem funguje. Jak, vysvětlí část o `for…of`.
+:::
+
+Aplikace s půjčkou ukáže splátkový kalendář na dvanáct měsíců. Kontrola hesla projde každý znak a hledá číslici. Spořicí kalkulačka počítá, za kolik let naspoříš na auto. Psát dvanáct skoro stejných řádků nechceš — a u spoření ani nevíš, kolik jich bude. Program potřebuje umět **opakovat**.
 
 > [!REMEMBER]
-> **Cyklus spouští stejný kód dokola, dokud platí nějaká podmínka.** Aby ses v cyklu neztratil, pamatuj si, že se pokaždé spustí ten samý kus kódu, jen proměnné se mění.
+> **Cyklus opakuje blok, dokud platí podmínka. Tvoje práce je zařídit, aby jednou platit přestala.** Každý průchod tělem cyklu se jmenuje [[iterace]].
 
 ## Cyklus `for`
 
-Nejčastější cyklus v JavaScriptu je `for`. Používá se, když předem víš, kolikrát chceš kód zopakovat. 
+`for` se hodí, když víš, kolikrát opakovat, nebo počítáš od–do. V závorce má tři části oddělené středníky:
 
-Cyklus má tři části v závorce, oddělené středníky:
-1. **Začátek:** co se stane před prvním během (založení počítadla `let i = 0`).
-2. **Podmínka:** dokud tohle platí, cyklus poběží dál (`i < 3`). Přečte se před každým krokem.
-3. **Krok:** co se stane po každém kole (`i++` znamená zvětši `i` o jedna).
+```js
+for (let month = 1; month <= 3; month++) {
+  console.log(`Splátka za ${month}. měsíc`);
+}
+```
+
+1. `let month = 1` — **start**: proběhne jednou, před prvním průchodem.
+2. `month <= 3` — **podmínka**: kontroluje se před každým průchodem. Když neplatí, cyklus skončí.
+3. `month++` — **krok**: proběhne po každém průchodu. `month++` je zkratka za `month += 1`.
+
+:::live js
+```js
+const loan = 12000;
+const months = 4;
+let paid = 0;
+
+for (let month = 1; month <= months; month++) {
+  paid += loan / months;
+  console.log(`${month}. měsíc: splaceno ${paid} Kč`);
+}
+
+console.log('Hotovo, splaceno celkem', paid, 'Kč');
+```
+:::
+
+Zkus změnit `months` na `6`. Pak změň `month++` na `month += 2` a sleduj, které měsíce se vypíšou.
+
+Krokuj šipkami a sleduj, jak se hodnoty mění průchod po průchodu. Řádek 3 je tělo cyklu, řádek 2 jeho hlavička:
 
 :::memory
 ```js
-for (let i = 0; i < 3; i++) {
-  console.log(i);
+let paid = 0;
+for (let month = 1; month <= 3; month++) {
+  paid += 1000;
 }
 ```
---step-- 1 | Před smyčkou (založení i)
-i = 0
---step-- 2 | První průchod
-i = 1
---step-- 3 | Druhý průchod
-i = 2
+--step-- 1 | před cyklem
+paid = 0
+--step-- 2 | start: month = 1, podmínka 1 <= 3 platí
+paid = 0
+month = 1
+--step-- 3 | první průchod tělem
+paid = 1000
+month = 1
+--step-- 2 | krok month++, podmínka 2 <= 3 platí
+paid = 1000
+month = 2
+--step-- 3 | druhý průchod
+paid = 2000
+month = 2
+--step-- 2 | krok month++, podmínka 3 <= 3 platí
+paid = 2000
+month = 3
+--step-- 3 | třetí průchod
+paid = 3000
+month = 3
+--step-- 2 | krok month++, podmínka 4 <= 3 neplatí, cyklus končí
+paid = 3000
 :::
 
-Zkus odhadnout, co se vypíše v následujícím kódu:
+Všimni si posledního kroku: `month` se zvýší na `4`, podmínka neplatí a tělo se už neprovede. Proměnná `month` po cyklu neexistuje — `let` v hlavičce platí jen uvnitř cyklu. `paid` je deklarovaná **nad** cyklem, a proto si hodnotu drží mezi průchody i po nich.
+
+:::check
+Jakou hodnotu má `total` po skončení cyklu?
+
+```js
+let total = 0;
+for (let i = 1; i <= 4; i++) {
+  total += i;
+}
+```
+
+### --expected--
+
+10
+
+### --why--
+
+Tělo proběhne pro `i` = 1, 2, 3 a 4 a do `total` přičte každé z nich: `1 + 2 + 3 + 4 = 10`.
+
+### --see--
+
+js-zaklady/cykly#cyklus-for
+:::
+
+## Kolikrát cyklus proběhne
+
+Nejčastější chyba v cyklech je o jedna: cyklus proběhne o jeden průchod víc, nebo míň, než měl. Říká se jí [[off-by-one]]. Vzniká na dvou místech — kde začínáš (`0` nebo `1`) a jestli je v podmínce `<` nebo `<=`.
+
+| hlavička | hodnoty | průchodů |
+|---|---|---|
+| `for (let i = 0; i < 5; i++)` | 0, 1, 2, 3, 4 | 5 |
+| `for (let i = 1; i <= 5; i++)` | 1, 2, 3, 4, 5 | 5 |
+| `for (let i = 0; i <= 5; i++)` | 0, 1, 2, 3, 4, 5 | 6 |
+| `for (let i = 1; i < 5; i++)` | 1, 2, 3, 4 | 4 |
 
 :::live js predict
 ```js
-for (let i = 1; i <= 3; i++) {
-  console.log('Kolo ' + i);
+let printed = 0;
+
+for (let seat = 1; seat <= 10; seat += 3) {
+  printed++;
 }
+
+console.log(printed);
 ```
---question-- Co vypíše tento kód?
---expected--
-Kolo 1
-Kolo 2
-Kolo 3
---why-- Začíná na jedničce (`i = 1`) a končí, když podmínka (`i <= 3`) přestane platit. Vypíše to postupně pro `1`, `2` i `3`.
+--question-- Pokladna tiskne vstupenku na každé třetí místo v řadě. Co vypíše `console.log`?
+--expected-- 4
+--why-- `seat` jde po třech: 1, 4, 7, 10. Desítka ještě splní `seat <= 10`, další hodnota 13 už ne. Při kroku větším než 1 se průchody nepočítají „od–do", ale po skocích. Zkus změnit `<=` na `<` a spočítej znovu.
 :::
 
-> [!PITFALL]
-> **Off-by-one errors (chyby o jedničku).** Dávat pozor, jestli napsat `<` nebo `<=`, je nejčastější úkol při psaní `for` cyklů. Když počítáš od `0` a chceš `3` průchody, píšeš `< 3`. Když počítáš od `1`, obvykle používáš `<=`. Pokud se spleteš, cyklus udělá o jeden krok víc nebo míň.
+Než cyklus spustíš, řekni si nahlas první a poslední hodnotu. Když potřebuješ přesný počet opakování `n`, nejbezpečnější vzor je `for (let i = 0; i < n; i++)` — začíná nulou a končí ostrým `<`.
 
 :::check
-Jaká hodnota bude uložena v proměnné `i` ve chvíli, kdy cyklus `for (let i = 0; i < 5; i++)` definitivně skončí a program pokračuje dál?
+Kolikrát proběhne `for (let i = 0; i <= 12; i++)`?
 
 ### --expected--
 
-5
+13
 
 ### --why--
 
-Poslední platný krok je pro `i = 4`. Po něm se `i` zvýší na `5`, zkontroluje se podmínka `5 < 5`, zjistí se, že neplatí, a cyklus končí. Kód pod cyklem by tedy (kdyby tam bylo `i` vidět) našel hodnotu 5.
+Hodnoty jsou 0, 1, … 12 — to je dvanáct čísel od jedničky a k tomu nula. S `<=` a startem na nule je průchodů o jeden víc než horní hranice.
+
+### --see--
+
+js-zaklady/cykly#kolikrat-cyklus-probehne
 :::
 
-## Nekonečný cyklus a `while`
+## `while` a `do…while`
 
-Druhý typ cyklu je `while` (dokud). Nemá počítadlo, má jen podmínku. Cyklus běží, dokud je podmínka v závorce pravdivá. Používá se tam, kde nevíš předem, kdy přesně skončíš — například když taháš další a další data, dokud nějaká jsou.
+Když dopředu nevíš, kolikrát opakovat, ale víš, **kdy přestat**, hodí se `while`. Má jen podmínku; start je před ním a krok musíš napsat do těla sám:
 
 :::live js
 ```js
-let count = 3;
-while (count > 0) {
-  console.log('Odpočet:', count);
-  count = count - 1;
+const goal = 250000;
+let savings = 100000;
+let years = 0;
+
+while (savings < goal) {
+  savings = savings * 1.2;
+  years++;
 }
-console.log('Start!');
+
+console.log(`Na auto naspoříš za ${years} let.`);
 ```
 :::
 
-Co by se stalo, kdybych v předchozím kódu smazal řádek `count = count - 1`? Podmínka `count > 0` by byla pravdivá navždy. Vznikne **nekonečný cyklus**. Program se zasekne, prohlížeč zmrzne a větrák se roztočí. 
+Zkus změnit úrok `1.2` na `1.05`. Cyklus proběhne víckrát, ale skončí sám, protože úspory rostou, až podmínku přestanou splňovat.
 
-> [!PITFALL]
-> **Nekonečný cyklus zasekne záložku.** Vždycky se ujisti, že něco v těle cyklu postupně mění podmínku tak, aby se jednou vyhodnotila jako `false`. U `for` na to slouží ta třetí část (`i++`), u `while` si to musíš napsat sám dovnitř.
-
-:::check
-Co chybí v tomto cyklu, aby nezmrznul prohlížeč?
+`do…while` je stejný cyklus s podmínkou na konci. Tělo proto proběhne **aspoň jednou**, i když podmínka neplatí od začátku:
 
 ```js
-let n = 0;
-while (n < 10) {
-  console.log(n);
+let attempt = 0;
+do {
+  attempt++;
+  console.log('Pokus o připojení', attempt);
+} while (attempt < 3);
+```
+
+Použiješ ho zřídka — typicky u „zkus a pak se rozhodni, jestli znovu".
+
+:::check
+Kolikrát se provede tělo, když podmínka neplatí hned na začátku?
+
+```js
+let stock = 0;
+while (stock > 0) {
+  stock--;
 }
 ```
 
-### --expected--
+### --answer--
 
-n++
+Jednou, pak se podmínka zkontroluje.
 
-### --accept--
+#### --why--
 
-n = n + 1
-zvýšení n
-n += 1
+Tak by se choval `do…while`. Kdy kontroluje podmínku `while`?
 
-### --why--
+### --correct--
 
-V těle cyklu chybí cokoli, co by měnilo proměnnou `n`. Zůstane pořád na `0`, `0 < 10` je vždy `true` a cyklus poběží do nekonečna. Kód by měl mít uvnitř `n++`.
+Ani jednou.
+
+#### --why--
+
+`while` kontroluje podmínku před každým průchodem, i před prvním. `0 > 0` neplatí, a tak tělo nezačne.
+
+### --answer--
+
+Donekonečna, `stock` nikdy nebude kladné.
+
+#### --why--
+
+Nekonečný cyklus vznikne, když podmínka platí a nikdy platit nepřestane. Tady neplatí vůbec.
+
+### --see--
+
+js-zaklady/cykly#while-a-do-while
 :::
 
-## Cyklus `for...of` na texty a pole
+## `for…of` prochází text znak po znaku
 
-Když chceš projít všechny položky pole nebo všechna písmena v textu, psát kvůli tomu číselné počítadlo `i` a řešit indexy, to je otrava a zdroj chyb. Proto JavaScript zavedl cyklus `for...of`. 
+Když chceš projít všechny znaky textu, nepotřebuješ počítadlo. `for…of` do proměnné postupně dá každý znak:
 
 :::live js
 ```js
-const word = 'Ahoj';
+const password = 'Leto2026!';
+let digits = 0;
 
-for (const letter of word) {
-  console.log('Písmeno:', letter);
+for (const char of password) {
+  if (char >= '0' && char <= '9') {
+    digits++;
+  }
 }
+
+console.log(`Heslo má ${digits} číslice.`);
 ```
 :::
 
-Cyklus `for...of` se sám postará o všechno za oponou: vezme první písmeno, strčí ho do konstanty `letter` a provede tělo. Pak vezme druhé písmeno, a tak dále, dokud neprojde slovo celé. Později uvidíš, že přesně tohle dělá i s poli (`for (const item of cart)`). Proměnná se jmenuje jak chceš, ale konvence je volit jednotné číslo k proměnné, přes kterou procházíš.
+Zkus změnit heslo a sleduj počet. Proměnná `char` je `const` — v každém průchodu vzniká nová, takže do ní nic nepřiřazuješ. Porovnání `char >= '0' && char <= '9'` využívá toho, že se texty porovnávají podle pořadí znaků.
+
+Stejně `for…of` prochází i pole, ke kterým se dostaneš v sekci Pole. Počet znaků textu zjistíš přes `text.length`.
 
 :::check
-Jakou hodnotu bude mít konstanta `char` v prvním průchodu cyklem `for (const char of 'PES')`?
+Co vypíše tenhle kód?
+
+```js
+let result = '';
+for (const letter of 'kolo') {
+  result = letter + result;
+}
+console.log(result);
+```
 
 ### --expected--
 
-P
-
-### --accept--
-
-'P'
-"P"
+olok
 
 ### --why--
 
-`for...of` prochází řetězec znak po znaku. V prvním kroku vezme první znak zleva, což je `'P'`.
+Každý znak se přidá **před** dosavadní výsledek: `k`, `ok`, `lok`, `olok`. Text se tak otočí.
+
+### --see--
+
+js-zaklady/cykly#for-of-prochazi-text-znak-po-znaku
 :::
 
-## Přerušení: `break` a `continue`
+## `break` a `continue`
 
-Občas potřebuješ cyklus zastavit dřív, než dojde na konec, nebo přeskočit aktuální položku.
+Dvě slova mění průběh cyklu:
 
-- **`break`**: úplně ukončí cyklus, jako by podmínka přestala platit. Program pokračuje pod ním.
-- **`continue`**: zahodí zbytek aktuálního průchodu a skočí rovnou na další (zpátky na hodnocení podmínky a inkrement počítadla).
+- `break` cyklus **ukončí** hned. Hodí se, když už máš, co jsi hledal.
+- `continue` přeskočí **zbytek tohohle průchodu** a pokračuje dalším.
 
-:::live js predict
+:::live js
 ```js
-for (let i = 1; i <= 5; i++) {
-  if (i === 3) {
+const code = 'CZ-4471-AB';
+
+for (const char of code) {
+  if (char === '-') {
     continue;
   }
-  console.log(i);
+  if (char === 'A') {
+    console.log('Našel jsem A, dál nehledám.');
+    break;
+  }
+  console.log('Kontroluji', char);
 }
 ```
---question-- Co vypíše tento kód?
+:::
+
+Zkus prohodit `continue` a `break` a sleduj, kde cyklus skončí.
+
+:::check
+Co vypíše tenhle kód? Napiš čísla oddělená mezerou.
+
+```js
+let output = '';
+for (let i = 1; i <= 6; i++) {
+  if (i % 2 === 0) {
+    continue;
+  }
+  if (i === 5) {
+    break;
+  }
+  output += i + ' ';
+}
+console.log(output);
+```
+
+### --expected--
+
+1 3
+
+### --why--
+
+Sudá čísla (`i % 2 === 0`) `continue` přeskočí, takže se zapíšou `1` a `3`. U `5` zastaví cyklus `break` dřív, než se číslo zapíše.
+
+### --see--
+
+js-zaklady/cykly#break-a-continue
+:::
+
+## Nekonečná smyčka
+
+Když podmínka nikdy nepřestane platit, cyklus běží navždy. Ve skutečném prohlížeči karta zamrzne a nereaguje, dokud ji nezavřeš. Tři nejčastější příčiny:
+
+- **zapomenutý krok:** ve `while` chybí `count++`,
+- **krok špatným směrem:** `i--` místo `i++` u cyklu, který má dojít nahoru,
+- **podmínka, která se nemůže změnit:** ptá se na proměnnou, kterou tělo nemění.
+
+Akademie tě chrání: smyčku, která běží příliš dlouho, zastaví a ohlásí `Smyčka běží příliš dlouho — nekonečná smyčka? (řádek 3)`. Číslo řádku ukazuje na cyklus. Neznamená to, že je kód pomalý — znamená to, že podmínka nikdy nepřestala platit.
+
+> [!TIP]
+> Když si nejsi jistý, jestli cyklus skončí, vypiš si na začátku těla hodnotu, na které podmínka závisí. Uvidíš, jestli se k hranici blíží, nebo od ní vzdaluje.
+
+:::check
+Proč tenhle cyklus nikdy neskončí?
+
+```js
+let copies = 10;
+while (copies > 0) {
+  console.log('Tisknu kopii');
+  copies + 1;
+}
+```
+
+### --answer--
+
+`console.log` v cyklu nejde použít.
+
+#### --why--
+
+Výpis v cyklu je v pořádku. Na čem závisí podmínka a kde se ta hodnota mění?
+
+### --correct--
+
+`copies + 1` hodnotu jen spočítá a zahodí, `copies` zůstane `10` a podmínka platí pořád.
+
+#### --why--
+
+Bez přiřazení se proměnná nezmění. Ani `copies += 1` by nepomohlo — hodnota by od hranice nula utíkala. Správně je `copies--`.
+
+### --answer--
+
+Podmínka má být `copies >= 0`.
+
+#### --why--
+
+S `>=` by se podmínka splnila ještě snáz. Proč se hodnota `copies` vůbec nemění?
+
+### --see--
+
+js-zaklady/cykly#nekonecna-smycka
+:::
+
+## Typické chyby a pasti
+
+### Průchod navíc
+
+> [!PITFALL]
+> **Off-by-one: cyklus proběhne o jednou víc nebo míň.** Příznak: vypíše se o řádek víc (třeba 13 měsíců místo 12), poslední položka chybí, nebo výsledek sedí „skoro". Oprava: řekni si první a poslední hodnotu a zkontroluj start (`0`/`1`) a porovnání (`<`/`<=`).
+
+### Součet deklarovaný uvnitř cyklu
+
+:::live js predict
+```js
+for (let day = 1; day <= 3; day++) {
+  let steps = 0;
+  steps += 4000;
+  console.log(`Den ${day}: celkem ${steps} kroků`);
+}
+```
+--question-- Aplikace má sčítat kroky za tři dny, každý den 4 000. Co vypíše? Každý výpis na vlastní řádek.
 --expected--
-1
-2
-4
-5
---why-- Když je `i` přesně 3, podmínka `if` platí, spustí se `continue`. To zastaví zbytek těla cyklu (tedy `console.log`) a rovnou pošle cyklus do dalšího kola s `i = 4`. Číslo 3 se proto nevypíše.
+```text
+Den 1: celkem 4000 kroků
+Den 2: celkem 4000 kroků
+Den 3: celkem 4000 kroků
+```
+--why-- `let steps = 0` je uvnitř těla, takže v každém průchodu vznikne nová proměnná s nulou. Součet se nikdy nenasčítá. Přesuň deklaraci nad cyklus a součet poroste: 4000, 8000, 12000.
+:::
+
+> [!PITFALL]
+> **Proměnná pro průběžný výsledek deklarovaná uvnitř cyklu se v každém průchodu vynuluje.** Příznak: součet nebo počet je vždy jen hodnota posledního průchodu. Oprava: deklaruj ji přes `let` **nad** cyklem, v těle jen přičítej.
+
+### `const` v hlavičce `for`
+
+> [!PITFALL]
+> **`for (const i = 0; i < 3; i++)` vypíše první průchod a pak spadne s `TypeError: Assignment to constant variable.`** Krok `i++` přiřazuje do proměnné, a to `const` nedovolí. Oprava: v klasickém `for` piš `let`. Ve `for…of` naopak `const` stačí.
+
+### Nekonečná smyčka z kroku
+
+> [!PITFALL]
+> **Ve `while` chybí krok nebo jde špatným směrem.** Příznak: karta zamrzne, v Akademii hláška `Smyčka běží příliš dlouho — nekonečná smyčka? (řádek N)`. Oprava: najdi proměnnou z podmínky a zkontroluj, že ji tělo mění směrem k hranici.
+
+:::check
+Cyklus má vypsat čísla stránek 1 až 10, ale poslední stránka chybí. Oprav hlavičku a napiš ji celou.
+
+```js
+for (let page = 1; page < 10; page++) {
+```
+
+### --expected--
+
+for (let page = 1; page <= 10; page++) {
+
+### --accept--
+
+for (let page = 1; page < 11; page++) {
+for (let page = 1; page <= 10; page += 1) {
+
+### --why--
+
+S `< 10` skončí cyklus u devítky. Když má být desítka poslední hodnota, patří do podmínky `<= 10`.
+
+### --see--
+
+js-zaklady/cykly#pruchod-navic
 :::
 
 ## Kde to najdeš v MDN
 
-- [for statement](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for) — popis starého dobrého `for` s počítadlem.
-- [while statement](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/while) — jak funguje `while` cyklus.
-- [for...of](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...of) — procházení polí a řetězců (to nejpohodlnější z cyklů).
+- [Loops and iteration](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Loops_and_iteration) — přehled všech cyklů včetně `break` a `continue` na jedné stránce.
+- [for](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for) — pořadí, ve kterém se provádějí tři části hlavičky.
+- [for...of](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...of) — co všechno jde procházet: text, pole a další.
+- [break](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/break) — ukončení cyklu i `switch`.
 
 # --questions--
 
 ## --question--
 
-Kolikrát se vypíše pozdrav v tomto kódu?
+Co vypíše tenhle kód? Každý výpis na vlastní řádek.
 
 ```js
-let count = 5;
-while (count < 3) {
-  console.log('Ahoj');
-  count++;
+let floor = 5;
+while (floor > 1) {
+  floor -= 2;
+  console.log('Patro', floor);
 }
 ```
 
 ### --expected--
 
-0
-
-### --accept--
-
-ani jednou
-nula
-0krát
+```text
+Patro 3
+Patro 1
+```
 
 ### --why--
 
-Cyklus `while` se ptá na podmínku vždy **před** začátkem těla. Jelikož hodnota proměnné `count` je už na začátku `5`, podmínka `5 < 3` se vyhodnotí jako `false` a cyklus se vůbec nespustí.
+Podmínka se kontroluje před průchodem: `5 > 1`, výtah sjede na 3 a vypíše; `3 > 1`, sjede na 1 a vypíše; `1 > 1` neplatí a cyklus končí. Výpis je až **po** odečtení, proto se pětka nevypíše.
 
 ### --see--
 
-js-zaklady/cykly#nekonecny-cyklus-a-while
+js-zaklady/cykly#while-a-do-while
 
 ## --question--
 
-Když už v `for...of` projíždíš text a hledáš konkrétní písmeno, jak cyklus zastavíš hned ve chvíli, kdy ho najdeš, aby zbytečně neprocházel zbytek textu?
+Napiš hlavičku cyklu `for` s proměnnou `i`, která projde čísla 10, 20, 30 … 100.
 
-### --answer--
+### --expected--
 
-Použiju `continue`.
+for (let i = 10; i <= 100; i += 10)
 
-#### --why--
+### --accept--
 
-`continue` cyklus nezastaví, jen přeskočí jeden krok a pokračuje dalším znakem.
+for (let i = 10; i < 101; i += 10)
+for (let i = 10; i < 110; i += 10)
+for (let i = 10; i <= 100; i = i + 10)
 
-### --correct--
+### --why--
 
-Použiju `break`.
-
-### --answer--
-
-Změním text na prázdný.
-
-#### --why--
-
-Smyčka nad původním stringem by proběhla dál. Správný příkaz na okamžité ukončení cyklu je `break`.
+Start na `10`, krok po deseti a podmínka, která stovku ještě pustí (`<= 100`).
 
 ### --see--
 
-js-zaklady/cykly#preruseni-break-a-continue
+js-zaklady/cykly#kolikrat-cyklus-probehne
+
+## --question--
+
+Kdy použiješ `while` místo `for`?
+
+### --answer--
+
+Když chceš projít všechny znaky textu.
+
+#### --why--
+
+Na znaky textu je nejkratší `for…of`. Kdy ale nemáš žádné „od–do"?
+
+### --correct--
+
+Když dopředu nevíš, kolikrát opakovat, jen kdy přestat.
+
+#### --why--
+
+`while` hlídá jen podmínku. Hodí se na „opakuj, dokud nenaspoříš", kde počet průchodů vyjde až z výpočtu.
+
+### --answer--
+
+Když cyklus musí proběhnout aspoň jednou.
+
+#### --why--
+
+Tuhle vlastnost má `do…while`, obyčejný `while` klidně neproběhne ani jednou.
+
+### --see--
+
+js-zaklady/cykly#while-a-do-while
+
+## --question--
+
+Co vypíše tenhle kód?
+
+```js
+let count = 0;
+for (const char of 'banán') {
+  if (char === 'a') {
+    count++;
+  }
+}
+console.log(count);
+```
+
+### --expected--
+
+1
+
+### --why--
+
+Porovnání `===` rozlišuje `a` a `á` — jsou to různé znaky. Slovo `banán` obsahuje jedno `a` a jedno `á`, takže se napočítá jen `1`.
+
+### --see--
+
+js-zaklady/cykly#for-of-prochazi-text-znak-po-znaku

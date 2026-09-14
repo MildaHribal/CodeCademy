@@ -320,9 +320,9 @@ Blok `try…catch` tu jen zachytí chybu, aby ukázka doběhla (podrobně ho pro
 Volitelné řetězení (*optional chaining*) `?.`, které znáš ze základů, se zastaví, když je hodnota vlevo `undefined` nebo `null`, a celý výraz vrátí `undefined`. S operátorem `??` pak doplníš náhradní hodnotu:
 
 ```js
-player.stats?.kills;              // stats chybí: bez chyby, výsledek undefined
-player.clan?.name ?? 'bez klanu'; // klan je null: dosadí se náhrada
-player.greet?.();                 // metodu zavolá, jen když existuje
+player.stats?.kills;              // počet zabití, i když stats chybí
+player.clan?.name ?? 'bez klanu'; // název klanu, nebo náhradní text
+player.greet?.();                 // zavolá metodu, jen když existuje
 ```
 
 Zkus v ukázce výše změnit `player.stats.kills` na `player.stats?.kills ?? 0` a sleduj, že `catch` už nic nezachytí.
@@ -559,6 +559,7 @@ if (product.stock) {
 > [!PITFALL]
 > **Funkce s destrukturalizací v parametru spadne, když ji zavoláš bez argumentu.**
 > `playerLabel()` skončí hláškou `TypeError: Cannot destructure property 'nick' of 'undefined' as it is undefined.`
+> Když má první vlastnost výchozí hodnotu (`{ level = 1, nick }`), zní hláška jinak: `TypeError: Cannot read properties of undefined (reading 'level')`.
 > Oprava: dej celému parametru výchozí prázdný objekt, `function playerLabel({ nick, level = 1 } = {})`.
 
 ### `in` najde i zděděné vlastnosti
@@ -622,6 +623,8 @@ Funkce dostane tentýž objekt, ne prázdnou kopii. Chyba je ve způsobu, jakým
 
 js-objekty/objekty#tecka-misto-zavorek
 :::
+
+Ve workshopu [Stav herního serveru](see:js-objekty/workshop-stav-serveru) z těchhle nástrojů postavíš kartu serveru s hráči, pravidly a odezvou podle regionu.
 
 ## Kde to najdeš v MDN
 

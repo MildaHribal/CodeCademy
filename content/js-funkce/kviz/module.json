@@ -1,4 +1,1 @@
-{
-  "title": "Kvíz: Funkce",
-  "type": "quiz"
-}
+{ "type": "quiz", "title": "Kvíz: funkce", "summary": "Čtení kódu s funkcemi: stínění, hoisting a TDZ, návratové hodnoty, callbacky a starší kód rezervací ve fitku.", "minutes": 30 }

@@ -1,1 +1,1 @@
-{ "type": "lesson", "title": "Closures", "summary": "Funkce si pamatuje prostředí, ve kterém vznikla: počítadla, továrny, soukromý stav a past s var v cyklu.", "minutes": 25, "runtime": "js" }
+{ "type": "lesson", "title": "Closures", "summary": "Funkce si pamatuje prostředí, ve kterém vznikla: počítadla, továrny, soukromý stav, obalující funkce a past s var v cyklu.", "minutes": 40, "runtime": "js" }

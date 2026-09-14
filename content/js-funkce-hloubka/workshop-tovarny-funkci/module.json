@@ -1,0 +1,1 @@
+{ "type": "workshop", "title": "Továrny, memoizace a debounce", "summary": "Postavíš knihovnu utilit pro našeptávač vlakových stanic — počítadla, historii, once, mezipaměť, debounce a throttle — a složíš z ní živé vyhledávací pole.", "minutes": 100, "runtime": "js" }

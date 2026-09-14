@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Map, Set a WeakMap", "summary": "Slovník s libovolnými klíči, kolekce bez duplicit, množinové operace union, intersection a difference a data přilepená k objektům.", "minutes": 30, "runtime": "js" }

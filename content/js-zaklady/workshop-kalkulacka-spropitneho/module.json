@@ -1,7 +1,7 @@
 {
   "type": "workshop",
   "title": "Kalkulačka spropitného",
-  "summary": "Postavíš kalkulačku, která spočítá spropitné a rozdělí účet mezi lidi.",
-  "minutes": 55,
+  "summary": "Postavíš kalkulačku, která z objednávky stolu spočítá spropitné, rozdělí účet mezi hosty a vypíše účtenku i SMS.",
+  "minutes": 85,
   "runtime": "js"
 }

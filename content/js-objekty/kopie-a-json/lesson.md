@@ -566,6 +566,8 @@ Slučování objektů s JSON nesouvisí. Problém je v tom, který objekt se př
 js-objekty/kopie-a-json#object-assign-do-vychozich-hodnot
 :::
 
+Ve workshopu [Nastavení aplikace](see:js-objekty/workshop-nastaveni-aplikace) tohle všechno použiješ na panelu nastavení přehrávače podcastů: sloučení s výchozími hodnotami, uložení do JSON, koncept se Zrušit a datum, které přežije načtení.
+
 ## Kde to najdeš v MDN
 
 - [structuredClone()](https://developer.mozilla.org/en-US/docs/Web/API/Window/structuredClone) — co umí zkopírovat a kdy vyhodí `DataCloneError`; odkaz na seznam podporovaných typů.

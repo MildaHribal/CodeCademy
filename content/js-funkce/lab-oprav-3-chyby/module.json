@@ -1,0 +1,1 @@
+{ "type": "lab", "title": "Oprav 3 chyby", "summary": "Kód pokladny letního kina má tři chyby z pastí rozsahu platnosti: TDZ, stínění v bloku a proměnnou volajícího. Najdi je breakpointem, oprav a nic dalšího nerozbij.", "minutes": 40, "runtime": "js" }

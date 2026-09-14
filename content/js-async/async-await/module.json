@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "async a await", "summary": "Asynchronní kód, který se čte shora dolů: co async funkce vrací, kde se na await zastaví, chyby přes try/catch a kdy čekat postupně a kdy souběžně.", "minutes": 35, "runtime": "js" }

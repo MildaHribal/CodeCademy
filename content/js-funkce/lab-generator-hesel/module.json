@@ -1,7 +1,7 @@
 {
   "type": "lab",
   "title": "Generátor a kontrola hesel",
-  "summary": "Napiš funkce pro generování bezpečných hesel a kontrolu jejich síly. Procvičíš si návrh funkcí, parametry a návratové hodnoty.",
-  "minutes": 60,
+  "summary": "Samostatně napíšeš generátor hesel a heslových frází a ukazatel síly hesla; náhodu předáš jako callback, aby šla otestovat.",
+  "minutes": 85,
   "runtime": "js"
 }

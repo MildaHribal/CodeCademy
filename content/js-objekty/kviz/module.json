@@ -1,4 +1,1 @@
-{
-  "title": "Kvíz: Objekty a reference",
-  "type": "quiz"
-}
+{ "type": "quiz", "title": "Kvíz: objekty", "summary": "Čtení kódu s objekty: destrukturalizace, reference a mutace, mělká a hluboká kopie, co přežije JSON, a košík e-shopu po kolegovi s pěti pastmi.", "minutes": 30 }

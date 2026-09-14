@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Třídy", "summary": "Šablona pro objekty se stejnými daty a chováním: constructor, metody, soukromá pole, gettery, static a dědičnost.", "minutes": 30, "runtime": "js" }

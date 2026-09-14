@@ -595,6 +595,8 @@ Chyba je v `return`, funkce má vracet `user`.
 js-objekty/reference-a-mutace#kopie-prirazenim
 :::
 
+Ve workshopu [Profil uživatele](see:js-objekty/workshop-profil-uzivatele) napíšeš sadu funkcí, které upravují profil vývojáře a původní data nechají být — i kolegovu, která je rozbíjí.
+
 ## Kde to najdeš v MDN
 
 - [JavaScript data types and data structures](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Data_structures) — které hodnoty jsou primitivní a že jsou neměnné (*immutable*), oddíl *Primitive values*.

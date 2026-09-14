@@ -1,256 +1,458 @@
 # První program
 
 :::check pretest
-Co myslíš, že se stane, když do konzole prohlížeče napíšeš `2 + 3` a stiskneš Enter?
+Co vypíše tenhle řádek? Tipni si, i když si nejsi jistý.
+
+```js
+console.log('2 + 3');
+```
 
 ### --expected--
 
-5
+2 + 3
 
 ### --why--
 
-Konzole funguje jako kalkulačka — výraz vyhodnotí a výsledek ukáže. JavaScript umí počítat, ale umí i mnohem víc. Po téhle lekci budeš vědět, kde všude tvůj kód běží a jak ho spustit.
+Uvozovky dělají z `2 + 3` text a text se vypíše přesně tak, jak je napsaný. Bez uvozovek by JavaScript nejdřív spočítal výsledek. Rozdíl uvidíš hned v první ukázce.
 :::
 
-> [!REMEMBER]
-> **JavaScript je jazyk, kterým dáváš stránce chování.** HTML je struktura, CSS je vzhled a JavaScript je to, co se stane, když uživatel klikne, zadá text nebo přijdou data ze serveru.
-
-## Kde JavaScript běží
-
-Když otevřeš libovolný web — třeba e-shop, mapu nebo sociální síť — prohlížeč stáhne HTML, CSS a JavaScript. Tvůj kód běží **v prohlížeči uživatele**, ne na serveru. Každý prohlížeč má vestavěný JavaScript engine: Chrome a Edge používají V8, Firefox má SpiderMonkey.
-
-JavaScript ale nemusí běžet jen v prohlížeči. Program zvaný **Node.js** vezme stejný engine V8 a spustí JavaScript na počítači bez prohlížeče — můžeš s ním psát servery, nástroje a skripty. K Node.js se dostaneme v sekci `node-zaklady`.
-
-:::check
-Kde běží JavaScript, který napíšeš do stránky?
+:::check pretest
+Otevřeš e-shop a klikneš na „Přidat do košíku". Kde se provede JavaScript, který zvýší číslo u ikony košíku?
 
 ### --answer--
 
-Na serveru
+Na serveru e-shopu, prohlížeč dostane jen výsledek.
 
 #### --why--
 
-Server stránku odešle, ale JavaScript ze `<script>` běží v prohlížeči uživatele, ne na serveru.
+Server stránku i skript pošle, ale kód ze stránky se neprovádí u něj. Kde tedy? Odpověď je v první části.
 
 ### --correct--
 
-V prohlížeči uživatele
-
-### --answer--
-
-V editoru VS Code
+V prohlížeči uživatele.
 
 #### --why--
 
-Editor je jen nástroj na psaní kódu. Spouštění zajistí prohlížeč nebo Node.js.
+Prohlížeč si skript stáhne spolu s HTML a CSS a spustí ho sám. Víc v první části.
+
+### --answer--
+
+V editoru, ve kterém programátor kód napsal.
+
+#### --why--
+
+Editor kód jen upravuje a ukládá, nespouští ho. Kde běží, vysvětlí první část.
+:::
+
+Každý web, kde se po kliknutí něco změní bez načtení nové stránky — číslo u košíku, rozbalené menu, kontrola formuláře —, dělá tu práci JavaScriptem. HTML stránku popíše a CSS ji obleče, ale ani jedno neumí nic spočítat, rozhodnout nebo zopakovat. Na to potřebuješ program.
+
+> [!REMEMBER]
+> **Program je seznam příkazů, které se provedou shora dolů, jeden po druhém.** Když některý příkaz spadne, zbytek se už neprovede.
+
+## Kde JavaScript běží
+
+Každý prohlížeč má zabudovaný *engine*, který JavaScript čte a provádí: Chrome a Edge mají V8, Firefox SpiderMonkey, Safari JavaScriptCore. Když stránka načte skript, engine ho provede přímo v počítači nebo telefonu uživatele. Server skript jen pošle, stejně jako obrázek.
+
+Stejný jazyk umí běžet i mimo prohlížeč. Node.js vezme engine V8 a spouští JavaScript v terminálu — píšou se v něm servery a nástroje. K němu se dostaneš v sekci Node.js. Do té doby píšeš JavaScript pro prohlížeč.
+
+V Akademii máš prohlížeč pořád po ruce: ukázky v lekcích i kroky workshopů spouštějí kód v izolovaném rámu stránky a výpisy ukazují v panelu konzole. Nic nemusíš instalovat.
+
+:::check
+Kamarád tvrdí, že JavaScript ze stránky nepoběží, když uživatel nemá nainstalovaný Node.js. Má pravdu?
+
+### --answer--
+
+Ano, Node.js je potřeba pro každý JavaScript.
+
+#### --why--
+
+Node.js je jen jedno z prostředí, kde JavaScript běží. Co spouští skripty webových stránek?
+
+### --correct--
+
+Ne, skript ze stránky provede engine zabudovaný v prohlížeči.
+
+#### --why--
+
+Každý prohlížeč má vlastní engine (V8, SpiderMonkey, JavaScriptCore). Node.js je prostředí pro JavaScript mimo prohlížeč.
+
+### --answer--
+
+Ne, protože skript provede server a prohlížeči pošle výsledek.
+
+#### --why--
+
+Server skript jen pošle jako soubor. Provádí se až u uživatele.
+
+### --see--
+
+js-zaklady/prvni-program#kde-javascript-bezi
 :::
 
 ## Konzole a `console.log`
 
-Konzole je tvůj nejrychlejší nástroj. Otevřeš ji v DevTools klávesou **F12** (nebo Ctrl+Shift+J) a můžeš do ní psát JavaScript přímo — prohlížeč ho hned vyhodnotí.
+Konzole je místo, kam program píše zprávy pro vývojáře. Uživatel ji nevidí, ty ano. Ve skutečném prohlížeči ji otevřeš v nástrojích pro vývojáře (*DevTools*) klávesou **F12** nebo zkratkou Ctrl+Shift+J (na Macu Cmd+Option+J). Do konzole jde psát i přímo: napiš `2 + 3`, stiskni Enter a uvidíš `5`.
 
-V programu výpisy do konzole vypadají takhle:
+V programu do konzole píše příkaz `console.log(…)`. Do závorek dáš, co chceš vypsat. Víc hodnot oddělíš čárkou a konzole je vypíše za sebou s mezerou.
 
 :::live js
 ```js
-console.log('Ahoj, světe!');
+console.log('Objednávka přijata');
 console.log(2 + 3);
-console.log('Cena:', 150, 'Kč');
+console.log('2 + 3');
+console.log('Cena:', 250 * 2, 'Kč');
 ```
 :::
 
-Zkus změnit text v uvozovkách nebo čísla a sleduj, jak se výstup mění.
+Zkus smazat uvozovky u `'Objednávka přijata'` a sleduj, co se v konzoli změní. Pak u třetího řádku uber jednu uvozovku.
 
-`console.log` vypíše hodnotu do konzole a pokračuje dál. Můžeš mu dát víc hodnot oddělených čárkou — vypíše je vedle sebe s mezerou.
-
-:::check
-Co vypíše `console.log('Věk:', 25)`?
-
-### --expected--
-
-Věk: 25
-
-### --why--
-
-`console.log` vypíše všechny hodnoty oddělené mezerou. Řetězec `'Věk:'` a číslo `25` se spojí do výstupu `Věk: 25`.
-:::
-
-## Příkazy a středníky
-
-Program je posloupnost **příkazů** (*statements*). Každý příkaz říká: „udělej tohle." Příkazy se oddělují **středníkem** nebo novým řádkem.
-
-:::live js
-```js
-let x = 10;
-let y = 20;
-console.log(x + y);
-```
-:::
-
-JavaScript má funkci zvanou **automatické vkládání středníků** (ASI — *automatic semicolon insertion*). Když na konci řádku chybí středník, engine ho zkusí doplnit sám. Většinou to funguje, ale existují pasti, kde ASI udělá něco jiného, než čekáš:
-
-:::live js predict
-```js
-let a = 1
-let b = 2
-console.log(a + b)
-```
---question-- Co vypíše kód bez středníků?
---expected-- 3
---why-- Tady ASI funguje správně — každý řádek je jasný příkaz. Ale spoléhat na to u složitějšího kódu je riskantní. Piš středníky vždy.
-:::
+Text v uvozovkách je ==řetězec== (*string*) — hodnota, která se nepočítá, jen se vypíše. Číslo bez uvozovek je ==číslo== a JavaScript s ním počítá: `250 * 2` se vypíše jako `500`. Uvozovky můžou být jednoduché `'…'` i dvojité `"…"`, jen musí být na obou stranách stejné. V Akademii píšeme jednoduché.
 
 > [!TIP]
-> **Piš středníky vždy.** Ušetříš si překvapení u řádků začínajících `(`, `[` nebo šablonovým řetězcem. Editor (ESLint, Prettier) ti s tím pomůže.
+> `console.log` je tvůj nejrychlejší nástroj na otázku „co v té chvíli program ví". Když si nejsi jistý hodnotou, vypiš ji. Výpis s popiskem (`console.log('cena:', price)`) se v delší konzoli snáz najde.
 
 :::check
-Proč je bezpečnější psát středníky explicitně, i když je JavaScript doplní sám?
+Napiš příkaz, který do konzole vypíše text `Doprava zdarma`.
 
 ### --expected--
 
-ASI ne vždy doplní středník tam, kde čekáš.
+console.log('Doprava zdarma')
 
 ### --accept--
 
-Automatické vkládání středníků nemusí fungovat správně.
-ASI může udělat chybu.
+console.log(`Doprava zdarma`)
 
 ### --why--
 
-ASI většinou funguje, ale u řádků začínajících `(` nebo `[` může spojit dva příkazy do jednoho a program se zachová jinak, než čekáš.
+Text patří do uvozovek, jinak by ho JavaScript bral jako jméno něčeho, co má najít. Dvojité uvozovky platforma přijme stejně jako jednoduché, středník na konci taky.
+
+### --see--
+
+js-zaklady/prvni-program#konzole-a-console-log
+:::
+
+## Příkazy se provádějí shora dolů
+
+Program je řada **příkazů** (*statements*). Každý příkaz je jeden pokyn: „vypiš", „spočítej a ulož", „rozhodni". Engine je provádí v pořadí, v jakém jsou v souboru, shora dolů.
+
+Uvnitř příkazů jsou **výrazy** (*expressions*): kusy kódu, které mají hodnotu. `2 + 3` je výraz s hodnotou `5`, `'Brno'` je výraz s hodnotou `'Brno'`. Příkaz `console.log(2 + 3);` nejdřív vyhodnotí výraz v závorkách a teprve výsledek vypíše.
+
+:::live js predict
+```js
+console.log('Začátek');
+console.log(10 - 2 * 3);
+console.log('Konec');
+```
+--question-- Co vypíše tenhle program? Každý výpis napiš na vlastní řádek.
+--expected--
+```text
+Začátek
+4
+Konec
+```
+--why-- Příkazy jdou shora dolů a každý nejdřív vyhodnotí svůj výraz. `10 - 2 * 3` počítá jako v matematice: násobení má přednost, takže `10 - 6` je `4`. Zkus výraz uzavřít do závorek `(10 - 2) * 3` a sleduj, co se změní.
+:::
+
+Pořadí má důsledek, který potkáš brzy: když příkaz uprostřed spadne, prohlížeč program v tom místě zastaví. Výpisy nad ním v konzoli zůstanou, příkazy pod ním se neprovedou vůbec.
+
+:::check
+Program má tři řádky. Druhý obsahuje překlep a spadne s chybou. Co bude v konzoli?
+
+```js
+console.log('Načítám košík');
+consol.log('Položky: 3');
+console.log('Hotovo');
+```
+
+### --answer--
+
+Nic, protože program obsahuje chybu.
+
+#### --why--
+
+Tahle chyba se projeví až při provádění druhého řádku. Co se stihlo provést předtím?
+
+### --correct--
+
+`Načítám košík` a pod ním chybová hláška.
+
+#### --why--
+
+První řádek se provede, druhý spadne a program se zastaví. `Hotovo` se už nevypíše.
+
+### --answer--
+
+`Načítám košík` a `Hotovo`, chybný řádek se přeskočí.
+
+#### --why--
+
+Prohlížeč chybné příkazy nepřeskakuje. Co se stane s příkazy pod místem, kde program spadl?
+
+### --see--
+
+js-zaklady/prvni-program#prikazy-se-provadeji-shora-dolu
+:::
+
+## Středníky a automatické doplňování
+
+Příkazy se oddělují středníkem `;`. Když ho na konci řádku vynecháš, engine ho většinou doplní sám. Tomu se říká automatické vkládání středníků (*automatic semicolon insertion*, ASI). „Většinou" je ale přesně to slovo, které v programování nechceš slyšet: když další řádek začíná závorkou `(`, engine středník nedoplní a oba řádky slepí do jednoho příkazu.
+
+:::live js predict
+```js
+try {
+  const price = 250
+  const total = price
+  (price * 2)
+  console.log(total)
+} catch (error) {
+  console.log(String(error))
+}
+```
+--question-- Autor chtěl vypsat `250`. Co ukázka ve skutečnosti vypíše?
+--expected-- TypeError: price is not a function
+--accept-- price is not a function
+--why-- Za `const total = price` chybí středník a další řádek začíná závorkou. Engine to přečte jako jeden příkaz `const total = price(price * 2)` — tedy „zavolej `price` jako funkci". Jenže `price` je číslo, a proto `TypeError`. Připiš středník za `const total = price` a ukázka vypíše `250`.
+:::
+
+> [!NOTE]
+> `try { … } catch (error) { … }` v ukázce jen zachytí chybu, aby se hláška vypsala do konzole a ukázka nespadla. Sám ho zatím nepiš, dostaneš se k němu v sekci o chybách.
+
+> [!REMEMBER]
+> **Středník piš za každý příkaz.** Nespoléhej na to, že ho engine doplní — u řádku začínajícího `(`, `[` nebo zpětnou uvozovkou to neudělá.
+
+Ve skutečných projektech středníky hlídá formátovač (třeba Prettier), který kód při uložení upraví. Dokud ho nemáš, piš je sám.
+
+:::check
+Co udělá engine, když další řádek začíná závorkou `(` a na konci předchozího řádku chybí středník?
+
+### --answer--
+
+Středník doplní vždycky, takže se nic nestane.
+
+#### --why--
+
+Doplnění středníku není bezpodmínečné. Podívej se znovu, co se stalo v ukázce s `price`.
+
+### --correct--
+
+Oba řádky přečte jako jeden příkaz.
+
+#### --why--
+
+Závorka na začátku řádku může pokračovat předchozím výrazem (třeba jako volání funkce), takže engine středník nevloží a řádky spojí.
+
+### --answer--
+
+Ohlásí `SyntaxError` a program vůbec nespustí.
+
+#### --why--
+
+Spojený kód je platný zápis, proto syntaktická chyba nevznikne. Problém se ukáže až při provádění.
+
+### --see--
+
+js-zaklady/prvni-program#stredniky-a-automaticke-doplnovani
 :::
 
 ## Komentáře
 
-Komentáře engine přeskočí. Slouží tobě a kolegům — vysvětlují **proč**, ne **co** kód dělá:
+Komentář je text pro lidi, engine ho přeskočí. Jednořádkový začíná `//` a platí do konce řádku, víceřádkový je mezi `/*` a `*/`.
 
 :::live js
 ```js
-// Maximální počet pokusů před zablokováním účtu
-const maxAttempts = 5;
+// Doprava zdarma od 1 500 Kč: tak to má e-shop v obchodních podmínkách.
+console.log('Hranice pro dopravu zdarma:', 1500, 'Kč');
 
 /*
-  Poznámka: cena je v haléřích, abychom se vyhnuli
-  chybám při zaokrouhlování (viz sekce js-retezce-cisla)
+  Zatím nepoužíváme, marketing slevu teprve schvaluje.
+  console.log('Sleva 10 %');
 */
-const priceInHalere = 4990;
-console.log(priceInHalere / 100, 'Kč');
+console.log('Hotovo');
 ```
 :::
 
-- `//` — jednořádkový komentář, platí do konce řádku.
-- `/* … */` — víceřádkový komentář.
+Zkus smazat `/*` a `*/` kolem druhého výpisu a sleduj, co přibude v konzoli.
 
-> [!PITFALL]
-> **Komentář „co kód dělá" je šum.** `// přičti 1` u `count += 1` nikomu nepomůže. Komentuj **proč**: proč haléře místo korun, proč právě 5 pokusů, proč ten workaround.
+Dobrý komentář říká **proč** kód vypadá, jak vypadá. Co dělá, má být vidět z kódu samotného. `// vypíše hranici` nad `console.log('Hranice…')` jen opakuje kód. `// podle obchodních podmínek` vysvětlí, odkud se číslo vzalo.
+
+> [!TIP]
+> Ve VS Code i v editoru Akademie zakomentuješ vybrané řádky zkratkou Ctrl+/ (na Macu Cmd+/). Stejná zkratka komentář zase odebere. Hodí se, když chceš kus kódu na chvíli vypnout.
 
 :::check
-Jaký komentář je užitečnější u řádku `const timeout = 3000`?
+Který komentář nad řádkem `console.log('Sklad:', 12);` má smysl nechat v kódu?
 
 ### --answer--
 
-`// nastavení timeoutu na 3000`
+`// vypíše Sklad: 12`
 
 #### --why--
 
-Tohle říká to samé, co kód. Lepší je vysvětlit, proč právě 3 sekundy.
+Tenhle komentář jen opakuje, co je vidět z kódu. Co by čtenář z kódu vyčíst nemohl?
 
 ### --correct--
 
-`// 3 sekundy stačí i na pomalé 3G připojení`
+`// 12 kusů hlásí sklad v Ostravě ranní uzávěrkou`
+
+#### --why--
+
+Vysvětluje, odkud číslo pochází — to v kódu vidět není.
+
+### --answer--
+
+`// console.log`
+
+#### --why--
+
+Název příkazu je vidět hned pod komentářem. Komentář má přidat informaci, kterou kód neříká.
+
+### --see--
+
+js-zaklady/prvni-program#komentare
 :::
 
-## `<script>` v HTML
+## `<script>` ve stránce
 
-Když píšeš JavaScript pro stránku, vložíš ho do souboru s příponou `.js` a odkážeš na něj ze stránky:
+Na skutečném webu je JavaScript v souboru s příponou `.js` a stránka ho načte prvkem `<script>`:
 
 ```html
-<!DOCTYPE html>
+<!doctype html>
 <html lang="cs">
-<head>
-  <meta charset="UTF-8">
-  <title>Můj první skript</title>
-</head>
-<body>
-  <h1>Ahoj</h1>
-  <script src="script.js"></script>
-</body>
+  <head>
+    <meta charset="utf-8">
+    <title>Košík</title>
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <h1>Košík</h1>
+  </body>
 </html>
 ```
 
-`<script>` patří na konec `<body>`, aby se HTML zobrazilo dřív, než se skript začne stahovat a spouštět. V Akademii se o tohle nemusíš starat — editor spouští tvůj `script.js` automaticky.
+Atribut `defer` řekne prohlížeči: stáhni skript hned, ale proveď ho až po přečtení celého HTML. Skript tak najde všechny prvky stránky. Starší návody místo toho dávají `<script>` na konec `<body>`, výsledek je podobný. Moderní projekty často píšou `type="module"`, který se chová jako `defer` — k modulům se dostaneš v sekci o nástrojích.
+
+V krocích s JavaScriptem bez stránky (štítek konzole) spouští Akademie tvůj `script.js` sama, `<script>` psát nemusíš.
 
 :::check
-Kam v HTML patří `<script src="script.js"></script>` a proč?
+Skript v `<head>` bez atributu `defer` hledá nadpis stránky a nenajde ho. Proč?
+
+### --answer--
+
+Skript v `<head>` se vůbec neprovede.
+
+#### --why--
+
+Provede se — a právě v tom je problém. Kdy přesně?
+
+### --correct--
+
+Provede se dřív, než prohlížeč přečte `<body>` s nadpisem.
+
+#### --why--
+
+Prohlížeč čte HTML shora dolů a skript bez `defer` provede hned, jak na něj narazí. `defer` provedení odloží na chvíli po přečtení celého HTML.
+
+### --answer--
+
+Nadpis musí mít atribut `defer`.
+
+#### --why--
+
+`defer` patří k `<script>`, ne k prvkům, které skript hledá.
+
+### --see--
+
+js-zaklady/prvni-program#script-ve-strance
+:::
+
+## Typické chyby a pasti
+
+### Text bez uvozovek
+
+:::live js predict
+```js
+try {
+  console.log(Ahoj);
+} catch (error) {
+  console.log(String(error));
+}
+```
+--question-- Autor chtěl vypsat pozdrav. Co ukázka vypíše?
+--option-- `Ahoj`
+--option-- `undefined`
+--option*-- `ReferenceError: Ahoj is not defined`
+--why-- Bez uvozovek není `Ahoj` text, ale jméno. Engine hledá proměnnou nebo funkci jménem `Ahoj`, žádnou nenajde a ohlásí `ReferenceError`. Obal slovo uvozovkami a ukázka pozdraví.
+:::
+
+> [!PITFALL]
+> **Text bez uvozovek JavaScript nebere jako text, ale jako jméno.** Jedno slovo skončí hláškou `ReferenceError: Ahoj is not defined`, víc slov za sebou (`console.log(Dobrý den)`) dokonce `SyntaxError` a program nejde vůbec spustit. Oprava: text vždy do uvozovek.
+
+### Velká písmena a překlepy
+
+JavaScript rozlišuje velká a malá písmena. `console`, `Console` a `CONSOLE` jsou tři různá jména.
+
+> [!PITFALL]
+> **`Console.log('Ahoj')` spadne s `ReferenceError: Console is not defined`, `console.lg('Ahoj')` s `TypeError: console.lg is not a function`.** Hláška v obou případech ukazuje přesně to jméno, které je napsané špatně. Oprava: přečti jméno z hlášky a porovnej ho písmeno po písmenu s tím, co jsi chtěl napsat.
+
+### Typografické uvozovky
+
+> [!PITFALL]
+> **Kód zkopírovaný z Wordu, e-mailu nebo chatu často obsahuje české uvozovky `„…“` místo `'…'`.** Program pak nejde spustit: `SyntaxError: Invalid or unexpected token`. Oprava: uvozovky přepiš na klávesnici. Editor ti napoví barvou — text v pravých uvozovkách je obarvený jako řetězec, v typografických ne.
+
+### Chybějící čárka mezi hodnotami
+
+:::check
+Tenhle řádek nejde spustit. Napiš ho opravený.
+
+```js
+console.log('Cena:' 250);
+```
 
 ### --expected--
 
-Na konec body.
-
-### --accept--
-
-Před </body>.
-Na konec <body>, aby se stránka zobrazila dřív.
+console.log('Cena:', 250)
 
 ### --why--
 
-Prohlížeč čte HTML shora dolů. Skript na konci `<body>` nechá nejdřív zobrazit obsah stránky a teprve pak spustí JavaScript.
+Hodnoty v `console.log` odděluje čárka. Bez ní engine vidí dvě hodnoty těsně za sebou a ohlásí `SyntaxError: missing ) after argument list` — myslí si, že za první hodnotou měly závorky skončit.
+
+### --see--
+
+js-zaklady/prvni-program#chybejici-carka-mezi-hodnotami
 :::
+
+> [!PITFALL]
+> **Mezi hodnotami v závorkách chybí čárka.** Příznak: `SyntaxError: missing ) after argument list` a nespustí se ani řádky nad chybou, protože syntaktická chyba zastaví celý soubor ještě před spuštěním. Oprava: najdi v řádku z hlášky místo, kde dvě hodnoty stojí těsně za sebou.
 
 ## Kde to najdeš v MDN
 
-- [JavaScript basics](https://developer.mozilla.org/en-US/docs/Learn_web_development/Getting_started/Your_first_website/Adding_interactivity) — úvod do JavaScriptu na stránce.
-- [console.log()](https://developer.mozilla.org/en-US/docs/Web/API/console/log_static) — referenční stránka `console.log`, její parametry a příklady.
-- [Lexical grammar — automatic semicolon insertion](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Lexical_grammar#automatic_semicolon_insertion) — přesná pravidla, kdy ASI funguje a kdy ne.
-- [`<script>`: The Script element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script) — atributy `src`, `type`, `defer` a `async`.
+- [What is JavaScript?](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Scripting/What_is_JavaScript) — co JavaScript na stránce dělá a jak se do stránky dostane.
+- [console.log()](https://developer.mozilla.org/en-US/docs/Web/API/console/log_static) — parametry `console.log` a ukázky výpisu víc hodnot najednou.
+- [Lexical grammar](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Lexical_grammar) — v části *Automatic semicolon insertion* přesná pravidla, kdy engine středník doplní a kdy ne.
+- [`<script>` element](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/script) — atributy `src`, `defer` a `type`.
 
 # --questions--
 
 ## --question--
 
-Co vypíše tenhle kód?
+Co vypíše tenhle program? Každý výpis napiš na vlastní řádek.
 
 ```js
-console.log('a');
-console.log('b');
+// console.log('Pobočka Plzeň');
+console.log('Pobočka', 'Brno');
+/* console.log('Pobočka Ostrava'); */
+console.log(4 * 25, 'Kč');
 ```
 
 ### --expected--
 
-a
-b
+```text
+Pobočka Brno
+100 Kč
+```
 
 ### --why--
 
-`console.log` vypíše hodnotu a skončí. Příkazy se provádějí shora dolů, takže se nejdřív vypíše `a`, pak `b` — každý na vlastní řádek.
-
-### --see--
-
-js-zaklady/prvni-program#konzole-a-console-log
-
-## --question--
-
-Který způsob zápisu komentáře v JavaScriptu je správný?
-
-### --answer--
-
-`<!-- komentář -->`
-
-#### --why--
-
-Tohle je HTML komentář, ne JavaScript.
-
-### --correct--
-
-`// komentář`
-
-### --answer--
-
-`# komentář`
-
-#### --why--
-
-`#` je komentář v Pythonu nebo Bashe, ne v JavaScriptu.
+Zakomentované řádky engine přeskočí. `console.log` s víc hodnotami je vypíše oddělené mezerou a výraz `4 * 25` nejdřív spočítá.
 
 ### --see--
 
@@ -258,21 +460,52 @@ js-zaklady/prvni-program#komentare
 
 ## --question--
 
-Co se stane, když ve skriptu napíšeš `console.log(10 * 3)`, ale stránka nemá `<script>` na ten soubor?
+Program vypsal do konzole `Načteno` a pod tím červenou hlášku. V souboru je pod chybným řádkem ještě `console.log('Zobrazeno');`. Proč se nevypsal?
 
-### --expected--
+### --answer--
 
-Nic se nevypíše.
+Konzole ukazuje vždycky jen jeden výpis.
 
-### --accept--
+#### --why--
 
-Nic.
-Skript se nespustí.
+Konzole ukáže libovolně výpisů. Co se stalo s programem v místě chyby?
 
-### --why--
+### --correct--
 
-Prohlížeč spustí jen skripty, na které odkazuje HTML. Soubor bez `<script>` prohlížeč nevidí.
+Program se na chybném řádku zastavil a další příkazy neprovedl.
+
+#### --why--
+
+Příkazy jdou shora dolů. Nezachycená chyba program ukončí, takže řádky pod ní se nikdy neprovedou.
+
+### --answer--
+
+`console.log` nejde použít dvakrát za sebou.
+
+#### --why--
+
+`console.log` můžeš volat, kolikrát chceš — první výpis to dokazuje. Proč se druhý neprovedl?
 
 ### --see--
 
-js-zaklady/prvni-program#script-v-html
+js-zaklady/prvni-program#prikazy-se-provadeji-shora-dolu
+
+## --question--
+
+Co vypíše tenhle řádek?
+
+```js
+console.log('5 * 4', 5 * 4);
+```
+
+### --expected--
+
+5 * 4 20
+
+### --why--
+
+První hodnota je řetězec a vypíše se, jak je. Druhá je výraz a vypíše se jeho výsledek. Obě oddělí mezera.
+
+### --see--
+
+js-zaklady/prvni-program#konzole-a-console-log

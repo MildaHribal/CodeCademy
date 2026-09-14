@@ -1,5 +1,1 @@
-{
-  "title": "Profil uživatele",
-  "description": "Vytvoříš sadu funkcí pro správu uživatelského profilu. Naučíš se používat destrukturalizaci, spread operátor a upravovat data bez jejich mutace.",
-  "type": "workshop"
-}
+{ "type": "workshop", "title": "Profil uživatele", "summary": "Postavíš editor profilu vývojáře s náhledem pro firmy a tlačítkem Zrušit: úpravy bez mutace, destrukturalizace a oprava dvou kolegových funkcí, které rozbíjely uložená data.", "minutes": 90, "runtime": "js" }

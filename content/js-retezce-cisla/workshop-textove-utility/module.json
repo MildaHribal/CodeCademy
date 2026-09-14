@@ -1,3 +1,7 @@
 {
-  "type": "workshop", "title": "Textové utility"
+  "type": "workshop",
+  "title": "Textové utility pro inzerát",
+  "summary": "Postavíš textové funkce pro inzerát v bazaru kol — čistý titulek, adresu bez diakritiky, iniciály, telefon, skrytý e-mail a počítadlo znaků s emoji — a z nich živý náhled inzerátu.",
+  "minutes": 90,
+  "runtime": "js"
 }

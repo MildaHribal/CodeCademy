@@ -1,0 +1,1 @@
+{ "type": "workshop", "title": "Validace objednávky", "summary": "Postavíš validaci objednávky pro e-shop s kávou: vlastní třídy chyb, hláška u každého políčka, všechny chyby najednou a oprava kolegova kódu, který chybu programu vydával za platnou objednávku.", "minutes": 90, "runtime": "js" }

@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Formuláře v JavaScriptu", "summary": "Odeslání bez znovunačtení, data přes FormData, input proti change, Constraint Validation API, vlastní pravidla a chyby, které uvidí i čtečka obrazovky.", "minutes": 35, "runtime": "dom" }

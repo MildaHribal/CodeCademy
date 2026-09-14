@@ -1,5 +1,1 @@
-{
-  "title": "Adresář kontaktů",
-  "description": "Procvič si práci s objekty a poli na aplikaci pro správu kontaktů. Naučíš se přidávat, upravovat a vyhledávat položky tak, abys nemutoval původní data.",
-  "type": "lab"
-}
+{ "type": "lab", "title": "Adresář kontaktů", "summary": "Samostatně napíšeš funkce adresáře uloženého v objektu: přidání, úpravu, mazání, štítky, hledání, koncept pro dialog a export do JSON — a žádná nezmění data, která dostane.", "minutes": 90, "runtime": "js" }

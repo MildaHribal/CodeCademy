@@ -1,4 +1,7 @@
 {
   "type": "workshop",
-  "title": "N\u00e1kupn\u00ed ko\u0161\u00edk a ceny"
+  "title": "Ceny v košíku",
+  "summary": "Spočítáš košík e-shopu s deskovými hrami na haléř přesně — DPH, slevu, dopravu, splátky, „3 kusy“ a datum doručení — a oživíš jeho shrnutí, které se přepočítá s každým kusem.",
+  "minutes": 90,
+  "runtime": "js"
 }

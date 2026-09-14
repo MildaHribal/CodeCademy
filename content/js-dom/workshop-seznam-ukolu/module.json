@@ -1,0 +1,1 @@
+{ "type": "workshop", "title": "Seznam úkolů na stěhování", "summary": "Postavíš seznam úkolů, který se vykresluje z dat: přidávání formulářem, odškrtávání, mazání, prázdný stav a pruh postupu — bez XSS a se dvěma kolegovými chybami.", "minutes": 80, "runtime": "dom" }

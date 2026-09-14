@@ -1,8 +1,9 @@
 {
   "title": "Objekty, reference a kopie",
-  "intro": "x",
+  "intro": "Profil uživatele, položka v košíku, stav herního serveru, nastavení aplikace, odpověď z API — skoro všechna data na webu jsou objekty. V této sekci se naučíš objekty číst, procházet a hlavně **upravovat tak, aby se data nerozbila jinde**: pochopíš, proč se objekt „sám\" změní, když ho předáš funkci, a kterou kopii kdy použít.\n\nPostup: lekce o objektech a workshop se stavovou kartou herního serveru, lekce o referencích a workshop s editorem profilu, který má tlačítko Zrušit, lekce o kopiích a JSON a workshop s panelem nastavení, které přežije obnovení stránky. Pak samostatný lab s adresářem kontaktů a kvíz nad cizím kódem košíku. Karty z téhle sekce se ti budou vracet v opakování.\n\n**Předpoklady:** proměnné a typy, podmínky a cykly, práce s texty a `Intl`, funkce včetně šipkových a výchozích parametrů.",
   "modules": [
     "objekty",
+    "workshop-stav-serveru",
     "reference-a-mutace",
     "workshop-profil-uzivatele",
     "kopie-a-json",
@@ -12,16 +13,61 @@
   ],
   "outcomes": [
     {
-      "text": "modelovat data objekty a procházet je (Object.entries a spol.),"
+      "text": "Namodeluješ data objektem a přečteš z něj vlastnost tečkou, hranatými závorkami i bezpečně přes `?.` a `Object.hasOwn`.",
+      "links": [
+        "js-objekty/objekty#hranate-zavorky-klic-v-promenne",
+        "js-objekty/objekty#kdyz-vlastnost-chybi-in-a-object-hasown",
+        "js-objekty/workshop-stav-serveru"
+      ]
     },
     {
-      "text": "vysvětlit, proč změna objektu uvnitř funkce změnila data i venku, a nakreslit to,"
+      "text": "Projdeš objekt přes `Object.keys`, `Object.values` a `Object.entries` a složíš z upravených dvojic nový přes `Object.fromEntries`.",
+      "links": [
+        "js-objekty/objekty#prochazeni-objektu-object-keys-values-a-entries",
+        "js-objekty/workshop-stav-serveru/013",
+        "js-objekty/workshop-stav-serveru/014"
+      ]
     },
     {
-      "text": "vybrat správnou kopii (mělká, structuredClone, JSON) a říct, co která ztratí,"
+      "text": "Vysvětlíš a nakreslíš, proč změna objektu uvnitř funkce změnila data i venku, a rozlišíš mutaci od nového přiřazení.",
+      "links": [
+        "js-objekty/reference-a-mutace#objekty-se-sdileji-pres-odkaz",
+        "js-objekty/reference-a-mutace#objekt-v-parametru-funkce",
+        "js-objekty/reference-a-mutace#mutace-objektu-nove-prirazeni"
+      ]
     },
     {
-      "text": "upravit zanořená data bez mutace pomocí destrukturalizace a spreadu."
+      "text": "Upravíš i zanořená data bez mutace pomocí spreadu a destrukturalizace s přejmenováním, výchozí hodnotou a zbytkem vlastností.",
+      "links": [
+        "js-objekty/reference-a-mutace#uprava-bez-mutace-novy-objekt",
+        "js-objekty/workshop-profil-uzivatele/009",
+        "js-objekty/workshop-profil-uzivatele/013",
+        "js-objekty/objekty#destrukturalizace-vlastnosti-rovnou-do-promennych"
+      ]
+    },
+    {
+      "text": "Vybereš správnou kopii (mělká, `structuredClone`, JSON) a řekneš, co která ztratí.",
+      "links": [
+        "js-objekty/kopie-a-json#kterou-kopii-vybrat",
+        "js-objekty/kopie-a-json#co-json-ztrati",
+        "js-objekty/workshop-nastaveni-aplikace/011"
+      ]
+    },
+    {
+      "text": "Uložíš data do JSON a načteš je zpátky tak, že rozbitý text ani datum aplikaci neshodí.",
+      "links": [
+        "js-objekty/kopie-a-json#bezpecne-nacteni-json",
+        "js-objekty/kopie-a-json#datum-po-json",
+        "js-objekty/workshop-nastaveni-aplikace"
+      ]
+    },
+    {
+      "text": "V cizím kódu najdeš a opravíš mutaci vstupu, sdílený vnořený objekt a `Object.assign` do výchozích hodnot.",
+      "links": [
+        "js-objekty/workshop-profil-uzivatele/010",
+        "js-objekty/workshop-nastaveni-aplikace/012",
+        "js-objekty/kviz"
+      ]
     }
   ]
 }
