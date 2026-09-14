@@ -1,7 +1,7 @@
 {
   "type": "lab",
-  "title": "Validace vstupů",
-  "summary": "Ověříš běžné české formátované vstupy jako PSČ, rodné číslo, heslo a cenu pomocí regulárních výrazů i práce s řetězci.",
-  "minutes": 45,
+  "title": "Kontrola a úprava vstupu",
+  "summary": "Samostatně napíšeš kontrolu přihlášky na půlmaraton: PSČ, rodné číslo, heslo, hashtagy a startovné v libovolném českém zápisu.",
+  "minutes": 80,
   "runtime": "js"
 }

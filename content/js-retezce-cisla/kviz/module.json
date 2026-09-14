@@ -1,7 +1,7 @@
 {
   "type": "quiz",
-  "title": "Kvíz: Řetězce, čísla, data a regulární výrazy",
-  "summary": "Čtení kódu s řetězci, čísly a datem: zaokrouhlování, délka emoji a Unicode, pasti Date, regulární výrazy a základy datových typů.",
-  "minutes": 25,
+  "title": "Kvíz: text a čísla",
+  "summary": "Čtení kódu s řetězci, čísly a datem: zaokrouhlení, délka emoji, převody textu na číslo, pasti Date, regulární výrazy a cizí modul faktur se čtyřmi chybami.",
+  "minutes": 30,
   "runtime": "js"
 }

@@ -19,7 +19,7 @@ console.log(city.length);
 :::
 
 :::check pretest
-Kolik znaků hlásí `'👍🏽'.length`? Emoji s odstínem pleti je na obrazovce jeden obrázek.
+Kolik hlásí `'🚲'.length`? Kolo je na obrazovce jeden obrázek.
 
 ### --answer--
 
@@ -29,21 +29,21 @@ Kolik znaků hlásí `'👍🏽'.length`? Emoji s odstínem pleti je na obrazovc
 
 Tak to vypadá na obrazovce. `length` ale nepočítá obrázky, co přesně počítá, uvidíš v části o Unicode.
 
-### --answer--
+### --correct--
 
 2
 
 #### --why--
 
-Blíž, ale ještě ne. Co přesně `length` počítá, uvidíš v části o Unicode.
+`length` počítá kódové jednotky, ne to, co vidíš, a emoji kola jich zabírá dvě. Rozbor je v části o Unicode.
 
-### --correct--
+### --answer--
 
-4
+0, protože emoji není písmeno.
 
 #### --why--
 
-`length` počítá kódové jednotky, ne to, co vidíš. Palec zabere dvě a odstín pleti další dvě. Rozbor je v části o Unicode.
+`length` počítá každý uložený kousek textu, emoji nevyjímaje. Kolik kousků emoji zabírá, uvidíš v části o Unicode.
 :::
 
 Text je všude: vyhledávání v e-shopu, adresa článku `/clanky/zluty-kun`, iniciály v kolečku místo profilové fotky, zkrácený popis inzerátu s výpustkou. Všechno to jsou **řetězce** (*strings*) a pár metod, které z nich vyrobí jiný řetězec.
@@ -73,7 +73,7 @@ console.log(`[${loud}]`);
 
 Hranaté závorky ve výpisu jen ukazují, kde řetězec začíná a končí. Zkus přidat řádek `title.toLowerCase();` bez `const` a vypiš znovu `title`. Nic se nezmění: metoda vrátila nový řetězec a ten jsi zahodil.
 
-Řetězce jsou **neměnné** (*immutable*). Žádná metoda nepřepíše znaky uvnitř. Ani zápis `title[0] = 'h'` nic nezmění: v obyčejném skriptu se tiše ignoruje, v modulu (ten má přísný režim, *strict mode*) vyhodí `TypeError: Cannot assign to read only property '0' of string`. Změnit můžeš jen to, na co ukazuje proměnná: `let name = 'Ema'; name = name.toUpperCase();` uloží do `name` nový řetězec.
+Řetězce jsou [[neměnnost řetězce|neměnné]] (*immutable*). Žádná metoda nepřepíše znaky uvnitř. Ani zápis `title[0] = 'h'` nic nezmění: v obyčejném skriptu se tiše ignoruje, v modulu (ten má přísný režim, *strict mode*) vyhodí `TypeError: Cannot assign to read only property '0' of string '  Horské kolo Author  '`. Změnit můžeš jen to, na co ukazuje proměnná: `let name = 'Ema'; name = name.toUpperCase();` uloží do `name` nový řetězec.
 
 :::live js predict
 ```js
@@ -317,7 +317,7 @@ true
 --why-- `<` porovnává čísla znaků: `Č` (268) je větší než `D` (68), takže Čáp „není před" Domem. `c` má menší číslo než `h`, a tak chata vyjde před hradem, i když v české abecedě je `ch` až za `h`.
 :::
 
-Porovnání podle skutečné abecedy dělá `a.localeCompare(b, 'cs')`. Vrátí **záporné číslo**, když `a` patří před `b`, **kladné**, když za, a `0`, když jsou stejné. Druhý argument je jazyk (*locale*). Bez něj se použije jazyk prohlížeče, a u uživatele s anglickým systémem by se řadilo jinak — proto ho vždycky piš.
+Porovnání podle skutečné abecedy dělá `a.localeCompare(b, 'cs')`. Vrátí **záporné číslo**, když `a` patří před `b`, **kladné**, když za, a `0`, když jsou stejné. Druhý argument je [[kód jazyka]] (*locale*). Bez něj se použije jazyk prohlížeče, a u uživatele s anglickým systémem by se řadilo jinak — proto ho vždycky piš.
 
 :::live js
 ```js
@@ -422,7 +422,7 @@ js-retezce-cisla/retezce#unicode-diakritika-a-emoji
 
 Písmeno `é` jde v Unicode zapsat dvěma způsoby: jako jeden znak `é`, nebo jako `e` a za ním samostatnou čárku. Na obrazovce vypadají stejně, ale `===` je porovná jako různé řetězce. Takový text přijde třeba z macOS nebo po zkopírování z PDF.
 
-`text.normalize('NFC')` sloučí písmeno a značku do jednoho znaku, `text.normalize('NFD')` naopak každé písmeno s diakritikou **rozloží** na základní písmeno a značku. Po rozložení jdou značky smazat — a zůstane text bez diakritiky, přesně to, co potřebuješ na adresu `/inzerat/zlutoucky-kun` nebo na vyhledávání, které najde `zidle` i v `Židle`.
+[[Normalizace]] to srovná: `text.normalize('NFC')` sloučí písmeno a značku do jednoho znaku, `text.normalize('NFD')` naopak každé písmeno s diakritikou **rozloží** na základní písmeno a značku. Po rozložení jdou značky smazat — a zůstane text bez diakritiky, přesně to, co potřebuješ na adresu `/inzerat/zlutoucky-kun` nebo na vyhledávání, které najde `zidle` i v `Židle`.
 
 :::live js
 ```js
@@ -563,7 +563,7 @@ Index `1` je druhý znak, ne první. A u prázdného textu by vrátil `undefined
 js-retezce-cisla/retezce#znak-na-neexistujici-pozici
 :::
 
-Ve workshopu Inzerát do bazaru z těchhle metod postavíš čistý titulek, zkrácený popis, adresu bez diakritiky a živý náhled inzerátu.
+Ve workshopu Textové utility pro inzerát z těchhle metod postavíš čistý titulek, zkrácený popis, adresu bez diakritiky a živý náhled inzerátu.
 
 ## Kde to najdeš v MDN
 

@@ -1,36 +1,31 @@
 # Formátování a datum
 
 :::check pretest
-Co podle tebe vypíše tenhle kód? Tipni si.
-
-```js
-const date = new Date(2026, 1, 30);
-console.log(date.getDate());
-```
+Který měsíc je v datu `new Date(2026, 9, 1)`? Tipni si.
 
 ### --answer--
 
-`30`
+září
 
 #### --why--
 
-Tak to vypadá podle zápisu. Co udělá `Date` s dnem, který v měsíci není, uvidíš v části o pastech `Date`.
+Tak by to četl člověk. Jak `Date` čísluje měsíce, uvidíš v části o pastech `Date`.
 
 ### --correct--
 
-`2`
+říjen
 
 #### --why--
 
-Měsíc `1` je v `Date` únor, 30. únor neexistuje a datum „přeteče" do března. Rozbor je v části o pastech `Date`.
+`Date` čísluje měsíce od nuly: leden je `0`, takže `9` je desátý měsíc. Rozbor je v části o pastech `Date`.
 
 ### --answer--
 
-Vyhodí chybu `RangeError`, protože datum neexistuje.
+Vyhodí chybu, protože pořadí argumentů je den, měsíc, rok.
 
 #### --why--
 
-To by bylo rozumné, ale `Date` neplatné datum neodmítne. Co s ním udělá, uvidíš v části o pastech `Date`.
+Pořadí rok, měsíc, den je správně. Háček je v tom, od kolika se měsíce počítají — ukáže to část o pastech `Date`.
 :::
 
 :::check pretest
@@ -70,7 +65,7 @@ Druhý problém je samotné datum. Objekt `Date` je v JavaScriptu od roku 1995 a
 
 ## `Intl.NumberFormat`: ceny, procenta a jednotky
 
-`Intl` je vestavěný objekt pro formátování podle jazyka a země (*internationalization*). Formátovač vytvoříš jednou — s kódem jazyka (*locale*) jako `'cs-CZ'` a nastavením — a pak přes něj pošleš libovolně čísel.
+`Intl` je vestavěný objekt pro formátování podle jazyka a země (*internationalization*). Formátovač vytvoříš jednou — s [[kód jazyka|kódem jazyka]] (*locale*) jako `'cs-CZ'` a nastavením — a pak přes něj pošleš libovolně čísel.
 
 :::live js
 ```js
@@ -338,7 +333,7 @@ Datum objednávky se tím posunulo taky. Kopii vyrobíš přes `new Date(orderDa
 ### Rozdíl dnů a letní čas
 
 > [!PITFALL]
-> **Den nemá vždycky 24 hodin.** Rozdíl `(new Date(2026, 11, 24) - new Date(2026, 8, 14)) / 86400000` v Česku vyjde `101.04166666666667`, protože v říjnu se posouvají hodiny a jeden den má 25 hodin. Příznak: „za 101,04 dne" nebo o den špatný odpočet po zaokrouhlení dolů. Oprava: `Temporal.PlainDate` a jeho `until`, které počítá kalendářní dny.
+> **Den nemá vždycky 24 hodin.** Rozdíl `(new Date(2026, 11, 24) - new Date(2026, 8, 14)) / 86400000` v Česku vyjde `101.04166666666667`, protože v říjnu se posouvají hodiny a jeden den má 25 hodin. Na jaře je to naopak: od 27. do 30. března 2027 vyjde `2.9583333333333335`, protože 28. března má den jen 23 hodin. Příznak: „za 101,04 dne", nebo na jaře o den kratší odpočet po zaokrouhlení dolů. Oprava: `Temporal.PlainDate` a jeho `until`, které počítá kalendářní dny.
 
 :::check
 Která volání vytvoří 1. prosince 2026? Vyber všechna.
@@ -374,7 +369,7 @@ js-retezce-cisla/intl-a-datum#mesice-od-nuly-a-pretekani
 
 ## `Temporal`: datum bez pastí
 
-[[Temporal]] je nové rozhraní pro datum a čas, které `Date` nahrazuje. Od března 2026 je součástí standardu ECMAScript 2026. Chrome a Edge ho mají od verze 144, Firefox od 139. **Safari ho v září 2026 ve stabilní verzi ještě nemá** — na veřejném webu proto potřebuješ polyfill (třeba balíček `temporal-polyfill`), nebo zatím `Date`. V Akademii i v aktuálním Chromu funguje bez instalace.
+[[Temporal]] je nové rozhraní pro datum a čas, které `Date` nahrazuje. V březnu 2026 ho schválila komise, která jazyk řídí (TC39), a vyjde v ECMAScript 2027. Chrome a Edge ho mají od verze 144, Firefox od 139. **Safari ho v září 2026 ve stabilní verzi ještě nemá** — na veřejném webu proto potřebuješ polyfill (třeba balíček `temporal-polyfill`), nebo zatím `Date`. V Akademii i v aktuálním Chromu funguje bez instalace.
 
 Místo jednoho objektu pro všechno má `Temporal` typ pro každou situaci:
 
@@ -423,6 +418,9 @@ console.log(talk.add({ hours: 24 }).toString());
 :::
 
 Zkus za `today` dosadit `Temporal.Now.plainDateISO()` a dostaneš skutečný počet dní do Vánoc. Poslední dva řádky ukazují letní čas: „o den později" je v noci na 25. října jiný okamžik než „o 24 hodin později". `dayOfWeek` je `1` pro pondělí až `7` pro neděli.
+
+> [!PITFALL]
+> **`Temporal` v prohlížeči bez podpory neexistuje.** Příznak: stránka v Safari spadne s `ReferenceError: Temporal is not defined`, i když u tebe v Chromu funguje. Oprava: na veřejném webu načti polyfill, nebo před použitím zkontroluj `typeof Temporal !== 'undefined'` a nabídni náhradu přes `Date`.
 
 Porovnání: `a.equals(b)` vrátí `true`, když jde o stejné datum, a `Temporal.PlainDate.compare(a, b)` vrátí `-1`, `0` nebo `1` — `===` porovnává objekty, ne data.
 
@@ -496,11 +494,11 @@ Myslíš si, že každý den má 24 hodin? V den změny letního času má 23 ne
 
 ### --correct--
 
-Když mezi daty je přechod ze letního času na zimní nebo naopak.
+Když mezi daty je jarní posun hodin na letní čas.
 
 #### --why--
 
-Den s 23 hodinami zkrátí rozdíl pod celé číslo a `Math.floor` ho usekne dolů. Kalendářní dny spolehlivě spočítá `Temporal.PlainDate` a `until`.
+Den s 23 hodinami zkrátí rozdíl pod celé číslo (třeba `2.958…`) a `Math.floor` ho usekne dolů. Na podzim má den 25 hodin, rozdíl vyjde o kousek víc a `Math.floor` náhodou sedí. Kalendářní dny spolehlivě spočítá `Temporal.PlainDate` a `until`.
 
 ### --answer--
 

@@ -2,6 +2,6 @@
   "type": "workshop",
   "title": "Ceny v košíku",
   "summary": "Spočítáš košík e-shopu s deskovými hrami na haléř přesně — DPH, slevu, dopravu, splátky, „3 kusy“ a datum doručení — a oživíš jeho shrnutí, které se přepočítá s každým kusem.",
-  "minutes": 90,
+  "minutes": 75,
   "runtime": "js"
 }

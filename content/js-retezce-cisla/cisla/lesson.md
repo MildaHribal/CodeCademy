@@ -145,7 +145,7 @@ Zkus změnit `fromForm` na `19.99` a sleduj oba první výpisy. Dělení stovkou
 > [!REMEMBER]
 > **Z korun na haléře: `Math.round(koruny * 100)`. Počítej v haléřích, na koruny převáděj až při výpisu.**
 
-V praxi se tomu říká „ukládat nejmenší jednotku měny" a stejně to dělají platební brány: Stripe i GoPay posílají částky v haléřích nebo centech.
+V praxi se tomu říká „ukládat [[nejmenší jednotka měny|nejmenší jednotku měny]]" a stejně to dělají platební brány: Stripe i GoPay posílají částky v haléřích nebo centech.
 
 :::check
 Napiš výraz, který převede cenu `price` v korunách (třeba `19.99`) na celé haléře.
@@ -184,7 +184,7 @@ Desetinná čísla ukládá počítač ve dvojkové soustavě jen přibližně, 
 
 ## Zaokrouhlení: `round`, `floor`, `ceil` a `trunc`
 
-Objekt `Math` má čtyři způsoby, jak z desetinného čísla udělat celé. U kladných čísel se liší jen `round`, u záporných se rozejdou všechny:
+Objekt `Math` má čtyři způsoby, jak z desetinného čísla udělat celé. U kladných čísel dávají `floor` a `trunc` totéž, u záporných se rozejdou:
 
 | funkce | co dělá | `4.7` | `-4.7` |
 |---|---|---|---|
@@ -251,7 +251,7 @@ Druhá past je zaokrouhlení. `toFixed` zaokrouhluje skutečnou uloženou hodnot
 > [!PITFALL]
 > **S výsledkem `toFixed` už nepočítej.** Příznak: součet vypadá jako slepené texty (`'10.505'`, `'1299.0089'`) nebo porovnání `'9.00' < '10.00'` vrátí `false` (texty se porovnávají znak po znaku). Oprava: počítej s čísly v haléřích a `toFixed` nebo `Intl.NumberFormat` použij až na úplném konci, na výpis.
 
-Na české formátování čísel (čárka místo tečky, mezery mezi tisíci, `Kč`) je lepší `Intl.NumberFormat` — probere ho lekce [Formátování a datum](see:js-retezce-cisla/intl-a-datum#intl-numberformat).
+Na české formátování čísel (čárka místo tečky, mezery mezi tisíci, `Kč`) je lepší `Intl.NumberFormat` — probere ho lekce [Formátování a datum](see:js-retezce-cisla/intl-a-datum#intl-numberformat-ceny-procenta-a-jednotky).
 
 :::check
 Kolega píše `const total = (price * quantity).toFixed(2) + shipping;`. Co je špatně?
@@ -542,7 +542,7 @@ Závorky se vyhodnotí dřív: `'2' + 1` je `'21'` a `parseInt` z něj udělá `
 js-retezce-cisla/cisla#text-z-formulare-misto-cisla
 :::
 
-Příště ceny v haléřích zformátuješ česky přes `Intl` a ve workshopu z nich postavíš košík s DPH, slevou a dopravou.
+V labu Rozdělení společných výdajů si haléře, převod textu a zaokrouhlení vyzkoušíš sám a příště ceny zformátuješ česky přes `Intl`.
 
 ## Kde to najdeš v MDN
 

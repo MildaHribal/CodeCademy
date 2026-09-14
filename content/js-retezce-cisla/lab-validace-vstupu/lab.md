@@ -91,7 +91,7 @@ assert.equal(passwordProblem('bezimkolem1', 'jana@seznam.cz'), 'Heslo musí mít
 Heslo, které obsahuje část e-mailu před zavináčem (bez ohledu na velikost písmen), dostane `'Heslo nesmí obsahovat tvůj e-mail.'`.
 
 ```js
-assert.equal(passwordProblem('JanaNovakova2026', 'jana.novakova@seznam.cz'), 'Heslo musí mít aspoň 12 znaků.' === '' ? '' : passwordProblem('JanaNovakova2026', 'jana.novakova@seznam.cz'), 'passwordProblem nesmí spadnout');
+assert.equal(passwordProblem('Jana.Novakova2026', 'jana.novakova@seznam.cz'), 'Heslo nesmí obsahovat tvůj e-mail.', "passwordProblem('Jana.Novakova2026', 'jana.novakova@seznam.cz') má vrátit 'Heslo nesmí obsahovat tvůj e-mail.'");
 assert.equal(passwordProblem('behamjana.novakova', 'jana.novakova@seznam.cz'), 'Heslo nesmí obsahovat tvůj e-mail.', "passwordProblem('behamjana.novakova', 'jana.novakova@seznam.cz') má vrátit 'Heslo nesmí obsahovat tvůj e-mail.'");
 assert.equal(passwordProblem('Běžím s PETRKOLAR!', 'petrkolar@email.cz'), 'Heslo nesmí obsahovat tvůj e-mail.', "passwordProblem('Běžím s PETRKOLAR!', 'petrkolar@email.cz') má vrátit 'Heslo nesmí obsahovat tvůj e-mail.' — velikost písmen nerozhoduje");
 ```
@@ -117,7 +117,7 @@ assert.equal(normalizeHashtags('Bez hashtagů'), '', "normalizeHashtags('Bez has
 ```js
 assert.equal(normalizeHashtags('#Brno #brno #cíl #BRNO'), '#brno #cíl', "normalizeHashtags('#Brno #brno #cíl #BRNO') má vrátit '#brno #cíl' — opakování se vynechá");
 assert.equal(normalizeHashtags('Skóre 3 # 2 a #brnobezi'), '#brnobezi', "normalizeHashtags('Skóre 3 # 2 a #brnobezi') má vrátit '#brnobezi'");
-assert.equal(normalizeHashtags('#běh #běhání'), '#běh #běhání', "normalizeHashtags('#běh #běhání') má vrátit '#běh #běhání' — #běh a #běhání jsou dva různé hashtagy");
+assert.equal(normalizeHashtags('#běhání #běh'), '#běhání #běh', "normalizeHashtags('#běhání #běh') má vrátit '#běhání #běh' — #běh je jiný hashtag než #běhání, i když je jeho začátkem");
 ```
 
 `parsePrice(text)` vrátí startovné v celých haléřích z běžných zápisů: tisíce oddělené mezerou, desetinná čárka nebo tečka, `,-` a `Kč` na konci.
@@ -316,7 +316,7 @@ function isValidBirthNumber(text) {
 
 function passwordProblem(password, email) {
   const value = password.trim();
-  const emailName = email.trim().toLowerCase().slice(0, email.indexOf('@'));
+  const emailName = email.trim().toLowerCase().split('@')[0];
   if (value === '') return 'Zadej heslo.';
   if ([...value].length < 12) return 'Heslo musí mít aspoň 12 znaků.';
   if (emailName.length >= 3 && value.toLowerCase().includes(emailName)) return 'Heslo nesmí obsahovat tvůj e-mail.';

@@ -1,0 +1,7 @@
+{
+  "type": "lab",
+  "title": "Rozdělení společných výdajů",
+  "summary": "Samostatně napíšeš výpočetní jádro aplikace na společné výdaje: částky z textu, podíly na haléř, spropitné, zaokrouhlení na koruny a věty o tom, kdo komu dluží.",
+  "minutes": 70,
+  "runtime": "js"
+}

@@ -1,50 +1,75 @@
 {
   "title": "Řetězce, čísla, data a regulární výrazy",
-  "intro": "V této sekci se naučíš zpracovat a formátovat text v češtině, počítat s penězi bezpečně a správně formátovat čísla i data pomocí vestavěných nástrojů prohlížeče. Dozvíš se, jak funguje vyhledávání a nahrazování pomocí regulárních výrazů, i kdy je lepší je nepoužívat.\n\nPostup: naučíš se pracovat s řetězci a vyzkoušíš si to na textových utilitách, objevíš, jak JavaScript počítá s čísly, pochopíš pasti starého Date objektu a jak je řeší Temporal. Na závěr si vše procvičíš na cenách v košíku a naučíš se mocný nástroj na kontrolu dat: regulární výrazy.\n\n**Předpoklady:** proměnné, datové typy, podmínky a cykly ze sekce js-zaklady.",
+  "intro": "Skoro všechno, co web ukazuje, je text nebo číslo: hledání v e-shopu, adresa článku, cena v košíku, „3 recenze\", datum doručení, kontrola PSČ ve formuláři. V této sekci se naučíš s textem a čísly pracovat tak, aby to fungovalo i v češtině — s diakritikou, emoji, desetinnou čárkou a haléři — a aby cena nikdy nevyšla o haléř jinak.\n\nPostup: lekce o řetězcích a workshop, ve kterém postavíš textové funkce a živý náhled inzerátu do bazaru kol. Pak lekce o číslech a samostatný lab na rozdělení společných výdajů, lekce o formátování přes `Intl` a o datu (`Date` a `Temporal`) a workshop s košíkem e-shopu, který počítá DPH, dopravu a datum doručení. Nakonec regulární výrazy, lab s kontrolou formuláře a kvíz nad cizím kódem faktur.\n\n**Předpoklady:** proměnné, typy, podmínky, cykly a jednoduché funkce ze sekce `js-zaklady`.",
   "modules": [
     "retezce",
     "workshop-textove-utility",
     "cisla",
+    "lab-rozdeleni-uctu",
     "intl-a-datum",
     "workshop-kosik-ceny",
     "regularni-vyrazy",
     "lab-validace-vstupu",
-    "lab-rozdeleni-uctu",
     "kviz"
   ],
   "outcomes": [
     {
-      "text": "Zpracuješ a zformátuješ text v češtině včetně diakritiky a emoji.",
+      "text": "Zpracuješ text z formuláře: ořízneš ho, vyřízneš a najdeš jeho části, odstraníš diakritiku a víš, že každá metoda vrací nový řetězec.",
       "links": [
+        "js-retezce-cisla/retezce#retezec-se-neda-zmenit",
         "js-retezce-cisla/retezce#diakritika-a-normalize",
-        "js-retezce-cisla/workshop-textove-utility/004"
+        "js-retezce-cisla/workshop-textove-utility/012",
+        "js-retezce-cisla/workshop-textove-utility/014"
       ]
     },
     {
-      "text": "Vysvětlíš, proč 0.1 + 0.2 !== 0.3, a spočítáš ceny bez ztráty přesnosti.",
+      "text": "Spočítáš znaky tak, jak je vidí člověk, i s emoji, a seřadíš texty podle české abecedy.",
       "links": [
-        "js-retezce-cisla/cisla#desetinna-cisla",
-        "js-retezce-cisla/workshop-kosik-ceny/002"
+        "js-retezce-cisla/retezce#unicode-diakritika-a-emoji",
+        "js-retezce-cisla/retezce#porovnani-a-razeni-podle-cestiny",
+        "js-retezce-cisla/workshop-textove-utility/016",
+        "js-retezce-cisla/workshop-textove-utility/018"
       ]
     },
     {
-      "text": "Zformátuješ čísla, ceny, množné číslo a data přes Intl s respektováním českých zvyklostí.",
+      "text": "Vysvětlíš, proč `0.1 + 0.2 !== 0.3`, a spočítáš ceny, slevy a podíly v celých haléřích tak, aby nechyběl ani haléř.",
       "links": [
-        "js-retezce-cisla/intl-a-datum#intl-numberformat",
-        "js-retezce-cisla/workshop-kosik-ceny/007"
+        "js-retezce-cisla/cisla#jeden-typ-number-a-plovouci-radova-carka",
+        "js-retezce-cisla/cisla#pocitani-v-halerich",
+        "js-retezce-cisla/workshop-kosik-ceny/007",
+        "js-retezce-cisla/lab-rozdeleni-uctu"
       ]
     },
     {
-      "text": "Vyhneš se pastem Date a víš, jaké výhody přináší Temporal.",
+      "text": "Převedeš text na číslo správným nástrojem (`Number`, `parseInt`, `parseFloat`) a ošetříš `NaN`, prázdný vstup i desetinnou čárku.",
+      "links": [
+        "js-retezce-cisla/cisla#z-textu-na-cislo-number-parseint-parsefloat",
+        "js-retezce-cisla/cisla#nan-a-number-isnan",
+        "js-retezce-cisla/workshop-kosik-ceny/003"
+      ]
+    },
+    {
+      "text": "Zformátuješ ceny, množné číslo, datum a relativní čas česky přes `Intl`.",
+      "links": [
+        "js-retezce-cisla/intl-a-datum#intl-numberformat-ceny-procenta-a-jednotky",
+        "js-retezce-cisla/intl-a-datum#mnozne-cislo-intl-pluralrules",
+        "js-retezce-cisla/workshop-kosik-ceny/008",
+        "js-retezce-cisla/workshop-kosik-ceny/018"
+      ]
+    },
+    {
+      "text": "Vyhneš se pastem `Date` (měsíce od nuly, přetékání, letní čas) a spočítáš kalendářní dny přes `Temporal.PlainDate`.",
       "links": [
         "js-retezce-cisla/intl-a-datum#pasti-date",
-        "js-retezce-cisla/intl-a-datum#temporal"
+        "js-retezce-cisla/intl-a-datum#temporal-datum-bez-pasti",
+        "js-retezce-cisla/workshop-kosik-ceny/017"
       ]
     },
     {
-      "text": "Napíšeš a přečteš běžný regulární výraz pro ověření nebo úpravu vstupu.",
+      "text": "Napíšeš a přečteš regulární výraz s třídami znaků, kvantifikátory, kotvami a skupinami a víš, kdy ho nepoužít.",
       "links": [
-        "js-retezce-cisla/regularni-vyrazy",
+        "js-retezce-cisla/regularni-vyrazy#kotvy-a-cely-text-ne-kousek",
+        "js-retezce-cisla/regularni-vyrazy#kdy-regularni-vyraz-nepouzit",
         "js-retezce-cisla/lab-validace-vstupu"
       ]
     }

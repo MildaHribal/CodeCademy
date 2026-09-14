@@ -64,7 +64,7 @@ js-retezce-cisla/regularni-vyrazy#vzor-misto-konkretniho-textu
 
 ## Třídy znaků
 
-Třída znaků (*character class*) popisuje **jeden znak** z nějaké skupiny:
+[[Třída znaků]] (*character class*) popisuje **jeden znak** z nějaké skupiny:
 
 | zápis | jeden znak, který je… | příklad shody |
 |---|---|---|
@@ -123,7 +123,7 @@ js-retezce-cisla/regularni-vyrazy#tridy-znaku
 
 ## Kvantifikátory: kolikrát
 
-Kvantifikátor (*quantifier*) stojí **za** znakem nebo třídou a říká, kolikrát se smí opakovat:
+[[Kvantifikátor]] (*quantifier*) stojí **za** znakem nebo třídou a říká, kolikrát se smí opakovat:
 
 | zápis | kolikrát | příklad | shoda v `'Kolo 2026'` |
 |---|---|---|---|
@@ -191,7 +191,7 @@ js-retezce-cisla/regularni-vyrazy#kvantifikatory-kolikrat
 
 `test` i `match` hledají shodu **kdekoli** v textu. Na kontrolu vstupu z formuláře to je špatně: `/\d{5}/` projde u `123456789` i u `PSČ 11000 Praha`.
 
-Kotva (*anchor*) nepopisuje znak, ale **místo**: `^` je začátek textu, `$` konec. `/^\d{5}$/` tedy znamená „začátek, pět číslic, konec" — a nic dalšího.
+[[kotva regulárního výrazu|Kotva]] (*anchor*) nepopisuje znak, ale **místo**: `^` je začátek textu, `$` konec. `/^\d{5}$/` tedy znamená „začátek, pět číslic, konec" — a nic dalšího.
 
 :::live js predict
 ```js
@@ -281,7 +281,7 @@ js-retezce-cisla/regularni-vyrazy#skupiny-vytahni-casti-textu
 
 ## Příznaky `g`, `i` a `u`
 
-Za druhé lomítko patří příznaky (*flags*), které mění chování celého výrazu:
+Za druhé lomítko patří [[příznak regulárního výrazu|příznaky]] (*flags*), které mění chování celého výrazu:
 
 | příznak | co dělá |
 |---|---|
