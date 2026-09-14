@@ -6,7 +6,7 @@
 
 /**
  * @param {{ channel: string, runId: string, mode: 'test'|'page'|'preview'|'inspect', runtime: string,
- *   files: Record<string, string>, test: string|null, timeoutMs: number, loopLimitMs: number,
+ *   libs?: string[], files: Record<string, string>, test: string|null, timeoutMs: number, loopLimitMs: number,
  *   sources: Array<{ name: string, lineOffset: number }>, moduleFiles: string[],
  *   filePrefix: string, guardGlobal: string, settleMs: number, cssVariables: Record<string, string>,
  *   inspect?: Array<{ id, property, selector }>,
@@ -232,6 +232,7 @@ export function frameMain(config, parts) {
   let testStarted = false;
   const guard = parts.createLoopGuard({
     limitMs: config.loopLimitMs,
+    sticky: isTest,
     onTrip(message) {
       if (!loopError) loopError = message;
       // Smyčka už při načítání stránky zasekne stejně i každý další test (runner je pak přeskočí).
@@ -354,6 +355,66 @@ export function frameMain(config, parts) {
     await waitForLayout();
   }
 
+  // --- Knihovny a React: počkat, až stránka doběhne ------------------------------
+
+  const usesTailwind = Array.isArray(config.libs) && config.libs.includes('tailwind');
+
+  function macrotask() {
+    return new Promise((resolve) => setTimer(resolve, 0));
+  }
+
+  /** Úloha přes MessageChannel — tou plánuje práci React (scheduler). */
+  function messageTask() {
+    return new Promise((resolve) => {
+      const channel = new MessageChannel();
+      channel.port1.onmessage = () => {
+        channel.port1.close();
+        resolve();
+      };
+      channel.port2.postMessage(null);
+    });
+  }
+
+  /**
+   * Tailwind (browser) staví CSS asynchronně a každé sestavení značí v performance
+   * (`Build #N (full)` začátek jako mark, konec jako measure). Hotovo = aspoň jedno plné
+   * sestavení a žádné rozpracované.
+   */
+  function tailwindIdle() {
+    if (typeof performance?.getEntriesByType !== 'function') return true;
+    const started = new Set();
+    for (const mark of performance.getEntriesByType('mark')) {
+      const match = /^(Build #\d+ \((?:full|incremental)\)) \(start\)$/.exec(mark.name);
+      if (match) started.add(match[1]);
+    }
+    let fullDone = false;
+    for (const measure of performance.getEntriesByType('measure')) {
+      if (!started.has(measure.name)) continue;
+      started.delete(measure.name);
+      if (measure.name.endsWith('(full)')) fullDone = true;
+    }
+    return fullDone && started.size === 0;
+  }
+
+  async function waitForTailwind(limitMs = 3000) {
+    if (!usesTailwind) return;
+    const deadline = Date.now() + limitMs;
+    while (Date.now() < deadline) {
+      await macrotask(); // MutationObserver Tailwindu musí nejdřív uvidět změny
+      if (tailwindIdle()) return;
+      await new Promise((resolve) => setTimer(resolve, 10));
+    }
+  }
+
+  /** helpers.flush(): doběhnou mikroúlohy, naplánované vykreslení Reactu (i efekty) a Tailwind. */
+  async function flush() {
+    for (let round = 0; round < 3; round++) {
+      await messageTask();
+      await macrotask();
+    }
+    await waitForTailwind();
+  }
+
   function defineTest(source) {
     let testFunction = null;
     const registerName = '__akademieDefineTest';
@@ -378,6 +439,8 @@ export function frameMain(config, parts) {
 
   async function runTest() {
     await waitForViewport();
+    // Stránka s Reactem nebo Tailwindem je hotová, až doběhne první vykreslení a CSS.
+    if (config.runtime === 'react' || usesTailwind) await flush();
     if (finished) return;
     testStarted = true;
     send('test-start');
@@ -400,6 +463,7 @@ export function frameMain(config, parts) {
       requestResize,
       waitForLayout,
       importFile,
+      flush,
     });
     const files = Object.freeze({ ...config.files });
 
@@ -419,11 +483,15 @@ export function frameMain(config, parts) {
     whenPageLoaded(runTest);
   } else if (config.mode === 'page') {
     // Jen načíst stránku a posbírat výpisy (živé ukázky ve verify).
-    whenPageLoaded(() => setTimer(() => send('done'), config.settleMs));
+    whenPageLoaded(async () => {
+      if (config.runtime === 'react' || usesTailwind) await flush();
+      setTimer(() => send('done'), config.settleMs);
+    });
   } else if (config.mode === 'inspect') {
     // Lint: které CSS deklarace na vykreslené stránce nic nedělají.
     whenPageLoaded(async () => {
       await waitForLayout();
+      if (config.runtime === 'react' || usesTailwind) await flush();
       await new Promise((resolve) => setTimer(resolve, config.settleMs));
       let items = [];
       try {

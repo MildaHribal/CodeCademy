@@ -295,3 +295,118 @@ describe('formatValue a stripComments', () => {
     nodeAssert.throws(() => stripComments('x', 'python'), /neznámý jazyk/);
   });
 });
+
+describe('knihovny a runtime react (kap. 6.10, 6.11)', async () => {
+  const { LIBS, LIB_RUNTIMES, parseLibs, parseStep, parseLesson, ParseError } = await import('../shared/parse.js');
+  const { LIB_NAMES, isTailwindCdnUrl, isTailwindCss, normalizeLibs, resolvePageLibs, vendorImports, BUNDLED_MODULES, bundleFileName } = await import('../client/src/runner/vendor-libs.js');
+  const { findReactSyntaxError, transformReactSource } = await import('../client/src/runner/jsx-transform.js');
+  const { resolveReactSpecifier } = await import('../client/src/runner/compose.js');
+  const { resolveVendorFile } = await import('../server/routes/vendor.js');
+  const frame = { runId: 'x', mode: 'test', test: '', timeoutMs: 1000 };
+
+  const step = (frontmatter) => `---\n${frontmatter}\n---\n\n# --description--\n\nPopis.\n\n# --hints--\n\nTest.\n\n\`\`\`js\nassert.ok(true);\n\`\`\`\n\n# --seed--\n\n## --file-- index.html\n\n\`\`\`html\n<p>x</p>\n\`\`\`\n\n# --solution--\n\n## --file-- index.html\n\n\`\`\`html\n<p>y</p>\n\`\`\`\n`;
+
+  test('seznam knihoven je v parseru i v runneru stejný', () => {
+    nodeAssert.deepEqual(LIBS, LIB_NAMES);
+    nodeAssert.deepEqual(LIB_RUNTIMES, ['dom', 'vue', 'react']);
+  });
+
+  test('parseLibs: čárky, závorky, pole, duplicity; neznámé jméno je chyba', () => {
+    nodeAssert.deepEqual(parseLibs('tailwind, gsap'), ['tailwind', 'gsap']);
+    nodeAssert.deepEqual(parseLibs('[gsap, Tailwind, gsap]'), ['gsap', 'tailwind']);
+    nodeAssert.deepEqual(parseLibs(['three']), ['three']);
+    nodeAssert.deepEqual(parseLibs(undefined), []);
+    nodeAssert.throws(() => parseLibs('jquery'), (error) => error instanceof ParseError && /neznámá knihovna "jquery"/.test(error.message));
+    nodeAssert.throws(() => parseLibs(42), /jména knihoven/);
+  });
+
+  test('frontmatter libs a libs z module.json; krok bez knihoven pole libs nemá', () => {
+    const own = parseStep(step('runtime: dom\nlibs: tailwind, gsap'), { id: 'a/b/1' });
+    nodeAssert.deepEqual(own.libs, ['tailwind', 'gsap']);
+    const merged = parseStep(step('libs: gsap'), { id: 'a/b/1', defaultLibs: ['tailwind', 'gsap'] });
+    nodeAssert.deepEqual(merged.libs, ['tailwind', 'gsap']);
+    nodeAssert.equal('libs' in parseStep(step('title: X'), { id: 'a/b/1' }), false);
+    // Krok js v modulu s knihovnami je nedostane; vlastní libs u js je chyba.
+    nodeAssert.equal('libs' in parseStep(step('runtime: js'), { id: 'a/b/1', defaultLibs: ['gsap'] }), false);
+    nodeAssert.throws(() => parseStep(step('runtime: js\nlibs: gsap'), { id: 'a/b/1' }), /libs umí jen runtime dom, vue, react/);
+  });
+
+  test(':::live libs= a :::live react s blokem jsx', () => {
+    const lesson = parseLesson('# Lekce\n\n:::live dom libs=tailwind,gsap\n```html\n<p class="p-4">x</p>\n```\n:::\n\n:::live react\n```jsx\nexport default function App() {\n  return <p>Ahoj</p>;\n}\n```\n```css\np { color: red; }\n```\n:::\n', { id: 'a/b' });
+    const live = lesson.blocks.filter((block) => block.kind === 'live');
+    nodeAssert.deepEqual(live[0].libs, ['tailwind', 'gsap']);
+    nodeAssert.equal(live[1].runtime, 'react');
+    nodeAssert.deepEqual(live[1].files.map((file) => [file.name, file.lang]), [['App.jsx', 'jsx'], ['styles.css', 'css']]);
+    nodeAssert.equal('libs' in live[1], false);
+    nodeAssert.throws(() => parseLesson('# L\n\n:::live js libs=gsap\n```js\n1\n```\n:::\n', { id: 'a/b' }), /libs umí jen runtime/);
+    nodeAssert.throws(() => parseLesson('# L\n\n:::live libs=jquery\n```html\n<p></p>\n```\n:::\n', { id: 'a/b' }), /neznámá knihovna/);
+  });
+
+  test('import map: knihovny v dom a react, v js ne; Tailwind jen s libs nebo z kódu', () => {
+    const imports = vendorImports('http://127.0.0.1:1');
+    nodeAssert.equal(imports.gsap, 'http://127.0.0.1:1/api/vendor/raw/gsap/index.js');
+    nodeAssert.equal(imports['gsap/ScrollTrigger'], 'http://127.0.0.1:1/api/vendor/raw/gsap/ScrollTrigger.js');
+    nodeAssert.equal(imports['react-dom/client'], 'http://127.0.0.1:1/api/vendor/bundle/react-dom__client.js');
+    nodeAssert.equal(bundleFileName('@tanstack/react-query'), 'tanstack__react-query.js');
+    for (const specifier of ['react', 'react/jsx-runtime', 'react-dom/client', 'react-router', '@tanstack/react-query', 'radix-ui', 'clsx', 'class-variance-authority', 'tailwind-merge', 'motion', 'motion/react']) {
+      nodeAssert.ok(BUNDLED_MODULES[specifier], specifier);
+    }
+    const dom = composePage({ runtime: 'dom', libs: ['tailwind'], loopLimitMs: 1000, origin: 'http://127.0.0.1:1', frame, files: [{ name: 'index.html', content: '<p class="p-4">x</p>' }] });
+    nodeAssert.match(dom, /"three":"http:\/\/127\.0\.0\.1:1\/api\/vendor\/raw\/three\/build\/three\.module\.js"/);
+    nodeAssert.match(dom, /<script src="http:\/\/127\.0\.0\.1:1\/api\/vendor\/raw\/tailwindcss-browser\/index\.global\.js"/);
+    const js = composePage({ runtime: 'js', libs: ['tailwind'], loopLimitMs: 1000, origin: '', frame, files: [{ name: 'script.js', content: '1' }] });
+    nodeAssert.doesNotMatch(js, /api\/vendor/);
+    const plain = composePage({ runtime: 'dom', loopLimitMs: 1000, origin: '', frame, files: [{ name: 'index.html', content: '<p class="p-4">x</p>' }] });
+    nodeAssert.doesNotMatch(plain, /tailwindcss-browser/);
+  });
+
+  test('Tailwind se zapne z CSS, <style type="text/tailwindcss"> i ze skriptu z CDN (ten se nahradí místním)', () => {
+    nodeAssert.deepEqual(resolvePageLibs([], [['styles.css', '@import "tailwindcss";']]), ['tailwind']);
+    nodeAssert.deepEqual(resolvePageLibs(['GSAP', 'nic'], [['index.html', '<style type="text/tailwindcss">@theme {}</style>']]), ['tailwind', 'gsap']);
+    nodeAssert.deepEqual(resolvePageLibs([], [['main.js', "import Lenis from 'lenis';"]]), ['lenis']);
+    nodeAssert.deepEqual(normalizeLibs(['three', 'three', 'x']), ['three']);
+    nodeAssert.ok(isTailwindCss('@theme { --color-a: red; }'));
+    nodeAssert.ok(!isTailwindCss('p { color: red; }'));
+    nodeAssert.ok(isTailwindCdnUrl('https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4'));
+    nodeAssert.ok(isTailwindCdnUrl('https://unpkg.com/@tailwindcss/browser@4.1.0/dist/index.global.js'));
+    nodeAssert.ok(!isTailwindCdnUrl('https://cdn.tailwindcss.com'));
+    const cdn = '<!DOCTYPE html>\n<html><head><script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script></head><body><p class="p-4">x</p></body></html>';
+    const html = composePage({ runtime: 'dom', loopLimitMs: 1000, origin: 'http://127.0.0.1:1', frame, files: [{ name: 'index.html', content: cdn }] });
+    nodeAssert.doesNotMatch(html, /<script src="https:\/\/cdn\.jsdelivr/);
+    nodeAssert.match(html, /tailwindcss-browser\/index\.global\.js/);
+  });
+
+  test('react: JSX a TSX se přeloží beze změny řádků; chyba má řádek; importy bez přípony', () => {
+    const code = "import { useState } from 'react';\n\nexport default function App() {\n  const [n, setN] = useState<number>(0);\n  return <button onClick={() => setN(n + 1)}>{n}</button>;\n}\n";
+    const out = transformReactSource(code, 'App.tsx');
+    nodeAssert.equal(out.split('\n').length, code.split('\n').length);
+    nodeAssert.match(out, /from 'react'/);
+    nodeAssert.match(out, /react\/jsx-runtime/);
+    nodeAssert.deepEqual(
+      findReactSyntaxError([{ name: 'App.jsx', content: 'export default function App() {\n  return (\n    <div>\n      <p>Ahoj</div>\n  );\n}' }]).line,
+      4,
+    );
+    nodeAssert.equal(findReactSyntaxError([{ name: 'App.jsx', content: 'export const a = <p>x</p>;' }]), null);
+    const fileMap = new Map([['App.jsx', ''], ['components/index.tsx', ''], ['data.json', '']]);
+    nodeAssert.equal(resolveReactSpecifier('main.jsx', './App', fileMap), '@akademie/files/App.jsx');
+    nodeAssert.equal(resolveReactSpecifier('main.jsx', './components', fileMap), '@akademie/files/components/index.tsx');
+    nodeAssert.equal(resolveReactSpecifier('main.jsx', 'react', fileMap), null);
+  });
+
+  test('react bez index.html: stránka s #root; bez main.jsx vykreslí App', () => {
+    const withApp = composePage({ runtime: 'react', loopLimitMs: 1000, origin: '', frame, files: [{ name: 'App.jsx', content: 'export default function App() { return <p>x</p>; }' }] });
+    nodeAssert.match(withApp, /<div id="root"><\/div>/);
+    nodeAssert.match(withApp, /createRoot/);
+    nodeAssert.match(withApp, /"react":"\/api\/vendor\/bundle\/react\.js"/);
+  });
+
+  test('server vydá jen soubory z povolených kořenů', async () => {
+    nodeAssert.match(await resolveVendorFile('raw/gsap/ScrollTrigger.js'), /node_modules\/gsap\/ScrollTrigger\.js$/);
+    nodeAssert.match(await resolveVendorFile('raw/tailwindcss-browser/index.global.js'), /@tailwindcss\/browser\/dist\/index\.global\.js$/);
+    nodeAssert.equal(await resolveVendorFile('raw/gsap/../../package.json'), null);
+    nodeAssert.equal(await resolveVendorFile('raw/gsap/%2e%2e/%2e%2e/package.json'), null);
+    nodeAssert.equal(await resolveVendorFile('raw/express/index.js'), null);
+    nodeAssert.equal(await resolveVendorFile('bundle/../stamp.json'), null);
+    nodeAssert.equal(await resolveVendorFile('raw/gsap/package.json'), await resolveVendorFile('raw/gsap/package.json'));
+  });
+});

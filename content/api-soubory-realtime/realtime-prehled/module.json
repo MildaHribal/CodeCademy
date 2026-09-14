@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Polling, SSE a WebSocket", "summary": "Tři způsoby, jak dostat čerstvá data ze serveru bez obnovení stránky, a jak mezi nimi vybrat.", "minutes": 20 }

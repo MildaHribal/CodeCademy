@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Hodnota vs. reference", "summary": "Proč se objekt „sám“ změní i jinde: odkazy v paměti, mutace a přiřazení, `===`, objekt v parametru funkce a úprava bez mutace.", "minutes": 30, "runtime": "js" }

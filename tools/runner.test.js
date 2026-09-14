@@ -1,6 +1,8 @@
 // Testy prohlížečového runneru v Playwrightu: sestavená stránka runner.html + statický server.
 import { after, before, describe, test } from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import path from 'node:path';
 import { chromium } from 'playwright';
 import { BROWSER_ARGS } from './lib/runner-pool.js';
 import { sendJson } from './lib/static-app.js';
@@ -581,6 +583,404 @@ describe('úložiště v sandboxu', () => {
     });
     assert.deepEqual(result.results, [{ index: 0, pass: true }, { index: 1, pass: true }]);
     assert.deepEqual(result.errors, []);
+  });
+});
+
+describe('knihovny (libs, kap. 6.10)', () => {
+  test('tailwind: třída se projeví v computed style, @theme v <style type="text/tailwindcss">', async () => {
+    const body = `<style type="text/tailwindcss">@theme { --color-znacka: rgb(255, 0, 128); }</style>
+<button class="rounded-lg bg-znacka px-4 text-white">Koupit</button>`;
+    const result = await run({
+      runtime: 'dom',
+      libs: ['tailwind'],
+      files: [{ name: 'index.html', content: body }],
+      hints: [
+        {
+          text: 'třídy',
+          test: `
+            const button = document.querySelector('button');
+            const style = getComputedStyle(button);
+            assert.equal(style.paddingLeft, '16px');
+            assert.equal(style.backgroundColor, 'rgb(255, 0, 128)');
+            assert.equal(style.color, 'rgb(255, 255, 255)');
+          `,
+        },
+        {
+          text: 'třída přidaná až testem',
+          test: `
+            const button = document.querySelector('button');
+            button.classList.add('mt-8');
+            await helpers.flush();
+            assert.equal(getComputedStyle(button).marginTop, '32px');
+          `,
+        },
+      ],
+    });
+    assert.deepEqual(result.results, [{ index: 0, pass: true }, { index: 1, pass: true }]);
+    assert.deepEqual(result.errors, []);
+  });
+
+  test('bez libs se tailwind nenačte; @import "tailwindcss" v CSS ho zapne sám', async () => {
+    const hint = { text: 'p-4', test: "assert.equal(getComputedStyle(document.querySelector('div')).paddingTop, '16px');" };
+    const without = await run({ runtime: 'dom', files: [{ name: 'index.html', content: '<div class="p-4">x</div>' }], hints: [hint] });
+    assert.equal(without.results[0].pass, false);
+    const withImport = await run({
+      runtime: 'dom',
+      files: [
+        { name: 'index.html', content: '<div class="p-4">x</div>' },
+        { name: 'styles.css', content: '@import "tailwindcss";\n@theme { --spacing: 4px; }' },
+      ],
+      hints: [hint],
+    });
+    assert.equal(withImport.results[0].pass, true, withImport.results[0].error);
+  });
+
+  test('gsap.to změní transform, ScrollTrigger jde naimportovat a zaregistrovat', async () => {
+    const result = await run({
+      runtime: 'dom',
+      libs: ['gsap'],
+      files: [
+        { name: 'index.html', content: '<div class="box" style="width:50px;height:50px"></div>\n<script type="module" src="script.js"></script>' },
+        { name: 'script.js', content: "import gsap from 'gsap';\nimport { ScrollTrigger } from 'gsap/ScrollTrigger';\ngsap.registerPlugin(ScrollTrigger);\ngsap.to('.box', { x: 100, duration: 0.2 });\nwindow.pluginName = ScrollTrigger.name;" },
+      ],
+      hints: [
+        {
+          text: 'animace',
+          test: `
+            const box = document.querySelector('.box');
+            await helpers.waitFor(() => getComputedStyle(box).transform === 'matrix(1, 0, 0, 1, 100, 0)');
+            assert.ok(window.pluginName);
+          `,
+        },
+      ],
+    });
+    assert.equal(result.results[0].pass, true, result.results[0].error);
+    assert.deepEqual(result.errors, []);
+  });
+
+  test('motion animate a lenis scroll, requestAnimationFrame běží', async () => {
+    const result = await run({
+      runtime: 'dom',
+      libs: ['motion', 'lenis'],
+      files: [
+        { name: 'index.html', content: '<div id="box" style="height:40px">x</div><div style="height:3000px"></div>\n<script type="module" src="main.js"></script>' },
+        { name: 'main.js', content: "import { animate } from 'motion';\nimport Lenis from 'lenis';\nanimate('#box', { opacity: 0.5 }, { duration: 0.1 });\nexport const lenis = new Lenis({ autoRaf: true });" },
+      ],
+      hints: [
+        {
+          text: 'motion',
+          test: `
+            const box = document.querySelector('#box');
+            await helpers.waitFor(() => getComputedStyle(box).opacity === '0.5');
+            // requestAnimationFrame v testovacím iframu běží plnou rychlostí i po animaci.
+            const started = performance.now();
+            for (let i = 0; i < 10; i++) await new Promise((resolve) => requestAnimationFrame(resolve));
+            assert.ok(performance.now() - started < 700, \`10 snímků trvalo \${Math.round(performance.now() - started)} ms\`);
+          `,
+        },
+        {
+          text: 'lenis',
+          test: `
+            const { lenis } = await helpers.importFile('main.js');
+            assert.ok(document.documentElement.classList.contains('lenis'));
+            lenis.scrollTo(500, { immediate: true });
+            await helpers.waitFor(() => scrollY === 500);
+          `,
+        },
+      ],
+    });
+    assert.deepEqual(result.results, [{ index: 0, pass: true }, { index: 1, pass: true }]);
+    assert.deepEqual(result.errors, []);
+  });
+
+  test('three vykreslí scénu do canvasu', async () => {
+    const code = `import * as THREE from 'three';
+const renderer = new THREE.WebGLRenderer({ preserveDrawingBuffer: true });
+renderer.setSize(64, 64);
+document.body.append(renderer.domElement);
+const scene = new THREE.Scene();
+scene.background = new THREE.Color('#ff0000');
+const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 10);
+renderer.render(scene, camera);`;
+    const result = await run({
+      runtime: 'dom',
+      libs: ['three'],
+      files: [{ name: 'index.html', content: '' }, { name: 'scene.js', content: code }],
+      hints: [
+        {
+          text: 'canvas',
+          test: `
+            const canvas = await helpers.waitFor(() => document.querySelector('canvas'));
+            assert.equal(canvas.width, 64);
+            const gl = canvas.getContext('webgl2');
+            const pixel = new Uint8Array(4);
+            gl.readPixels(32, 32, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixel);
+            assert.deepEqual([...pixel], [255, 0, 0, 255]);
+          `,
+        },
+      ],
+    });
+    assert.equal(result.results[0].pass, true, result.results[0].error);
+  });
+});
+
+describe('runtime react (kap. 6.11)', () => {
+  const counter = `import { useState } from 'react';
+
+export default function App() {
+  const [count, setCount] = useState(0);
+  return (
+    <button className="px-4" onClick={() => setCount(count + 1)}>
+      Počet: {count}
+    </button>
+  );
+}`;
+
+  test('komponenta s useState, klik a helpers.flush; výchozí stránka s #root', async () => {
+    const result = await run({
+      runtime: 'react',
+      files: [
+        { name: 'main.jsx', content: "import { createRoot } from 'react-dom/client';\nimport App from './App';\n\ncreateRoot(document.getElementById('root')).render(<App />);" },
+        { name: 'App.jsx', content: counter },
+      ],
+      hints: [
+        {
+          text: 'klik',
+          test: `
+            const button = document.querySelector('#root button');
+            assert.equal(button.textContent, 'Počet: 0');
+            button.click();
+            await helpers.flush();
+            assert.equal(button.textContent, 'Počet: 1');
+          `,
+        },
+      ],
+    });
+    assert.equal(result.results[0].pass, true, result.results[0].error);
+    assert.deepEqual(result.errors, []);
+    assert.equal(result.syntaxError, null);
+  });
+
+  test('jen App.tsx s typy: vykreslí se sama; importFile vrátí komponentu', async () => {
+    const result = await run({
+      runtime: 'react',
+      files: [
+        { name: 'App.tsx', content: "type Props = { name?: string };\n\nexport default function App({ name = 'světe' }: Props) {\n  return <h1>Ahoj, {name}!</h1>;\n}" },
+      ],
+      hints: [
+        {
+          text: 'nadpis',
+          test: `
+            assert.equal(document.querySelector('h1').textContent, 'Ahoj, světe!');
+            const { default: App } = await helpers.importFile('App.tsx');
+            assert.equal(typeof App, 'function');
+          `,
+        },
+      ],
+    });
+    assert.equal(result.results[0].pass, true, result.results[0].error);
+  });
+
+  test('react-router MemoryRouter a react-query', async () => {
+    const app = `import { MemoryRouter, Routes, Route, Link } from 'react-router';
+import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
+import { clsx } from 'clsx';
+
+const client = new QueryClient();
+
+function Home() {
+  const { data } = useQuery({ queryKey: ['jmeno'], queryFn: async () => 'Akademie' });
+  return <p className={clsx('home', data && 'ready')}>{data ?? '…'}</p>;
+}
+
+export default function App() {
+  return (
+    <QueryClientProvider client={client}>
+      <MemoryRouter initialEntries={['/']}>
+        <Link to="/o-nas">O nás</Link>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/o-nas" element={<h2>O nás</h2>} />
+        </Routes>
+      </MemoryRouter>
+    </QueryClientProvider>
+  );
+}`;
+    const result = await run({
+      runtime: 'react',
+      files: [{ name: 'App.jsx', content: app }],
+      hints: [
+        {
+          text: 'router',
+          test: `
+            await helpers.waitFor(() => document.querySelector('p.ready')?.textContent === 'Akademie');
+            await helpers.click(document.querySelector('a'));
+            await helpers.flush();
+            assert.equal(document.querySelector('h2')?.textContent, 'O nás');
+          `,
+        },
+      ],
+    });
+    assert.equal(result.results[0].pass, true, result.results[0].error);
+    assert.deepEqual(result.errors, []);
+  });
+
+  test('react + tailwind (libs i import CSS s @import "tailwindcss")', async () => {
+    const hints = [{ text: 'px-4', test: "assert.equal(getComputedStyle(document.querySelector('button')).paddingLeft, '16px');" }];
+    const withLibs = await run({ runtime: 'react', libs: ['tailwind'], files: [{ name: 'App.jsx', content: counter }], hints });
+    assert.equal(withLibs.results[0].pass, true, withLibs.results[0].error);
+    const withCss = await run({
+      runtime: 'react',
+      files: [
+        { name: 'src/main.jsx', content: "import { createRoot } from 'react-dom/client';\nimport App from './App.jsx';\nimport './index.css';\n\ncreateRoot(document.getElementById('root')).render(<App />);" },
+        { name: 'src/App.jsx', content: counter },
+        { name: 'src/index.css', content: '@import "tailwindcss";' },
+      ],
+      hints,
+    });
+    assert.equal(withCss.results[0].pass, true, withCss.results[0].error);
+  });
+
+  test('chyba JSX je syntaxError s řádkem, testy se nespustí', async () => {
+    const result = await run({
+      runtime: 'react',
+      files: [{ name: 'App.jsx', content: 'export default function App() {\n  return (\n    <div>\n      <p>Ahoj</div>\n  );\n}' }],
+      hints: [{ text: 'a', test: 'assert.ok(true);' }],
+    });
+    assert.equal(result.ok, false);
+    assert.equal(result.results[0].skipped, true);
+    assert.equal(result.syntaxError.file, 'App.jsx');
+    assert.equal(result.syntaxError.line, 4);
+  });
+
+  test('nekonečná smyčka v komponentě je zachycená a hlásí řádek; chyba za běhu má řádek z .jsx', async () => {
+    const loop = await run({
+      runtime: 'react',
+      timeoutMs: 1500,
+      files: [{ name: 'App.jsx', content: 'export default function App() {\n  let n = 0;\n  while (true) {\n    n++;\n  }\n}' }],
+      hints: [{ text: 'a', test: 'assert.ok(true);' }],
+    });
+    assert.equal(loop.results[0].pass, false);
+    assert.match(loop.results[0].error, /řádek 3/);
+
+    const crash = await run({
+      runtime: 'react',
+      files: [{ name: 'App.jsx', content: "export default function App() {\n  const user = null;\n\n  return <p>{user.name}</p>;\n}" }],
+      hints: [],
+    });
+    assert.ok(crash.errors.some((error) => /App\.jsx:4/.test(error)), crash.errors.join('\n'));
+  });
+});
+
+describe('knihovny: další případy', () => {
+  test('Tailwind z CDN (<script src="…@tailwindcss/browser@4">) se načte z místního serveru', async () => {
+    const doc = html('<p class="p-4">x</p>', '<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>');
+    const result = await run({
+      runtime: 'dom',
+      files: [{ name: 'index.html', content: doc }],
+      hints: [{ text: 'p-4', test: "assert.equal(getComputedStyle(document.querySelector('p')).paddingTop, '16px');" }],
+    });
+    assert.equal(result.results[0].pass, true, result.results[0].error);
+    assert.deepEqual(result.errors, []);
+  });
+
+  test('react: radix-ui, class-variance-authority, tailwind-merge a motion/react jdou naimportovat', async () => {
+    const app = `import { useState } from 'react';
+import { Slot } from 'radix-ui';
+import { cva } from 'class-variance-authority';
+import { twMerge } from 'tailwind-merge';
+import { motion } from 'motion/react';
+
+const button = cva('rounded px-2', { variants: { size: { lg: 'px-6 text-lg' } } });
+
+export default function App() {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <Slot.Root className={twMerge(button({ size: 'lg' }))}><a href="#">Odkaz</a></Slot.Root>
+      <motion.div animate={{ opacity: 0.5 }} transition={{ duration: 0.05 }}>box</motion.div>
+      <button onClick={() => setOpen(!open)}>{open ? 'zavřít' : 'otevřít'}</button>
+    </>
+  );
+}`;
+    const result = await run({
+      runtime: 'react',
+      libs: ['tailwind'],
+      files: [{ name: 'App.jsx', content: app }],
+      hints: [
+        {
+          text: 'knihovny',
+          test: `
+            const link = document.querySelector('a');
+            assert.equal(link.className, 'rounded px-6 text-lg');
+            assert.equal(getComputedStyle(link).paddingLeft, '24px');
+            const box = [...document.querySelectorAll('div')].find((el) => el.textContent === 'box');
+            await helpers.waitFor(() => getComputedStyle(box).opacity === '0.5');
+            await helpers.click(document.querySelector('button'));
+            await helpers.flush();
+            assert.equal(document.querySelector('button').textContent, 'zavřít');
+          `,
+        },
+      ],
+    });
+    assert.equal(result.results[0].pass, true, result.results[0].error);
+    assert.deepEqual(result.errors, []);
+  });
+});
+
+describe('runtime node s balíčky (kap. 6.6)', () => {
+  test('import express a zod, helpers.run npx tsc / vitest / eslint z node_modules Akademie', async () => {
+    const { runNodeTests, PACKAGES_DIR } = await import('../server/node-runner.js');
+    const files = [
+      { name: 'package.json', content: '{ "type": "module" }' },
+      { name: 'app.js', content: "import express from 'express';\nimport { z } from 'zod';\n\nexport const User = z.object({ name: z.string() });\nexport const app = express();\napp.use(express.json());\napp.post('/users', (req, res) => {\n  const parsed = User.safeParse(req.body);\n  if (!parsed.success) return res.status(400).json({ error: 'špatná data' });\n  res.status(201).json(parsed.data);\n});\n" },
+      { name: 'server.js', content: "import { app } from './app.js';\napp.listen(process.env.PORT);\n" },
+      { name: 'sum.ts', content: 'export function sum(a: number, b: number): number {\n  return a + b;\n}\n' },
+      { name: 'sum.test.ts', content: "import { expect, test } from 'vitest';\nimport { sum } from './sum.ts';\n\ntest('sčítá', () => expect(sum(1, 2)).toBe(3));\n" },
+      { name: 'tsconfig.json', content: '{ "compilerOptions": { "strict": true, "noEmit": true, "module": "nodenext", "target": "es2022", "allowImportingTsExtensions": true }, "include": ["*.ts"] }' },
+      { name: 'eslint.config.js', content: "import js from '@eslint/js';\n\nexport default [js.configs.recommended, { languageOptions: { globals: { process: 'readonly' } } }];\n" },
+    ];
+    const result = await runNodeTests({
+      files,
+      timeoutMs: 30000,
+      hints: [
+        {
+          text: 'express a zod',
+          test: `
+            const { User } = await helpers.importFile('app.js');
+            assert.equal(User.safeParse({ name: 1 }).success, false);
+            const server = await helpers.startServer('server.js');
+            const response = await fetch(server.url + '/users', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ name: 'Eva' }) });
+            assert.equal(response.status, 201);
+          `,
+        },
+        {
+          text: 'tsc bez chyb, s chybou kód 1',
+          test: `
+            const ok = await helpers.run('npx tsc --noEmit');
+            assert.equal(ok.code, 0, ok.stdout + ok.stderr);
+            assert.equal(ok.stderr, '');
+            await helpers.run("echo 'export const n: number = true;' > bad.ts");
+            const bad = await helpers.run('npx tsc --noEmit');
+            assert.notEqual(bad.code, 0);
+            assert.match(bad.stdout, /bad\\.ts\\(1,14\\): error TS2322/);
+          `,
+        },
+        {
+          text: 'vitest a eslint',
+          test: `
+            const tests = await helpers.run('npx vitest run');
+            assert.equal(tests.code, 0, tests.stdout + tests.stderr);
+            assert.match(tests.stdout, /1 passed/);
+            const lint = await helpers.run('npx eslint .');
+            assert.equal(lint.code, 0, lint.stdout + lint.stderr);
+          `,
+        },
+      ],
+    });
+    assert.deepEqual(result.results, [{ index: 0, pass: true }, { index: 1, pass: true }, { index: 2, pass: true }], JSON.stringify(result.results, null, 2));
+    // Úklid smaže jen odkaz, node_modules Akademie zůstanou.
+    assert.ok(fs.existsSync(path.join(PACKAGES_DIR, 'express', 'package.json')));
   });
 });
 

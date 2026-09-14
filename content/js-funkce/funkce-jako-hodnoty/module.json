@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Funkce jako hodnoty", "summary": "Funkce v proměnné, callback, rozdíl mezi fn a fn() a setTimeout jako první funkce, kterou volá někdo jiný.", "minutes": 25, "runtime": "js" }

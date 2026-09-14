@@ -4,7 +4,7 @@ import { createRunId, listenToFrame, sendToFrame } from './protocol.js';
 import { createHiddenFrame, resizeFrame } from './sandbox-frame.js';
 import { startWatchdog } from './watchdog.js';
 
-// Čas navíc pro načtení stránky (parsování, Vue z /vendor…), než začne běžet limit testu.
+// Čas navíc pro načtení stránky (parsování, Vue z /vendor, React a knihovny z /api/vendor…), než začne běžet limit testu.
 const LOAD_GRACE_MS = 2000;
 // Rezerva po startu testu: vlastní časovač iframu (timeoutMs) i ochrana smyček mají doběhnout dřív.
 const TEST_GRACE_MS = 1000;
@@ -13,7 +13,7 @@ export const FRAME_TIMEOUT_MESSAGE = 'Test nedoběhl včas — nekonečná smyč
 export const FRAME_CANCELLED_MESSAGE = 'Kontrola byla zrušena.';
 
 /**
- * @param {{ runtime: 'dom'|'js'|'vue', files: Array<{name: string, content: string}>,
+ * @param {{ runtime: 'dom'|'js'|'vue'|'react', files: Array<{name: string, content: string}>, libs?: string[],
  *   test: string|null, timeoutMs: number, signal?: AbortSignal|null }} options
  *   test = null → jen načíst stránku; signal → zrušení (iframe se hned odstraní)
  *   inspect = deklarace CSS → po načtení najde neaktivní (výsledek v `inspect`)
@@ -23,7 +23,7 @@ export const FRAME_CANCELLED_MESSAGE = 'Kontrola byla zrušena.';
  *   phase (jen u selhání): 'load' = stránka se zasekla ještě před spuštěním testu
  *   details (jen u selhání): errorName, u asercí operator/actual/expected/generatedMessage/diff
  */
-export function runInFrame({ runtime, files, test, timeoutMs, signal = null, inspect = null, storage = null }) {
+export function runInFrame({ runtime, files, libs = [], test, timeoutMs, signal = null, inspect = null, storage = null }) {
   return new Promise((resolve) => {
     if (signal?.aborted) {
       resolve({ pass: false, error: FRAME_CANCELLED_MESSAGE, phase: 'test', logs: [], errors: [] });
@@ -38,6 +38,7 @@ export function runInFrame({ runtime, files, test, timeoutMs, signal = null, ins
     const html = composePage({
       runtime,
       files,
+      libs,
       loopLimitMs: timeoutMs,
       origin: location.origin,
       frame: { runId, mode: inspect ? 'inspect' : test === null ? 'page' : 'test', test, timeoutMs, inspect, storage },

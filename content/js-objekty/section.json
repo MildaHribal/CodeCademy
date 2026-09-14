@@ -1,0 +1,10 @@
+{
+  "title": "Objekty, reference a kopie",
+  "intro": "x",
+  "modules": [
+    "objekty",
+    "workshop-stav-serveru",
+    "reference-a-mutace",
+    "kopie-a-json"
+  ]
+}

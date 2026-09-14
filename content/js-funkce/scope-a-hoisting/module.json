@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Rozsah platnosti, hoisting a TDZ", "summary": "Kde je proměnná vidět, co je stínění, proč jde funkci zavolat před deklarací a proč let před deklarací spadne.", "minutes": 30, "runtime": "js" }

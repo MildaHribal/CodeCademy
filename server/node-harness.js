@@ -1,7 +1,7 @@
 // Harness jednoho testu runtime node (kontrakt kap. 6.6).
 //
 // Rodič (node-runner.js) spustí tento soubor jako samostatný proces s IPC kanálem
-// a pošle mu zprávu { type: 'run', test, files, dir }. Harness připraví
+// a pošle mu zprávu { type: 'run', test, files, dir, timeoutMs }. Harness připraví
 // globály testu, spustí tělo testu jako async funkci a výsledek pošle zpátky zprávou
 // { type: 'result', pass, error, logs }. Pak skončí.
 //
@@ -142,7 +142,11 @@ function canConnect(host, port) {
   });
 }
 
-function createHelpers({ dir, logs }) {
+function createHelpers({ dir, logs, testTimeoutMs = null }) {
+  // Výchozí limit helpers.run = limit testu (frontmatter timeoutMs), nejméně 10 s — `npx tsc`
+  // nebo `npx vitest run` pod zátěží trvá sekundy a nemá skončit dřív než test sám.
+  const defaultRunTimeoutMs = Math.max(10000, Number(testTimeoutMs) || 0);
+
   let importCounter = 0;
 
   async function waitFor(fn, timeoutMs = 2000) {
@@ -170,7 +174,7 @@ function createHelpers({ dir, logs }) {
     return import(`${pathToFileURL(file).href}?import=${Date.now()}-${importCounter}`);
   }
 
-  function run(cmd, { timeoutMs = 10000, input } = {}) {
+  function run(cmd, { timeoutMs = defaultRunTimeoutMs, input } = {}) {
     return new Promise((resolve) => {
       const stdout = outputBuffer();
       const stderr = outputBuffer();
@@ -391,7 +395,7 @@ function finish(pass, error, logs) {
   process.send(message, () => process.exit(0));
 }
 
-process.once('message', async ({ test, files, dir }) => {
+process.once('message', async ({ test, files, dir, timeoutMs }) => {
   const logs = [];
   const errors = [];
   process.on('uncaughtException', (err) => finish(false, err, logs));
@@ -405,7 +409,7 @@ process.once('message', async ({ test, files, dir }) => {
     return;
   }
 
-  const helpers = createHelpers({ dir, logs });
+  const helpers = createHelpers({ dir, logs, testTimeoutMs: timeoutMs });
   // Počkáme, až zpráva opravdu odejde: nekonečná smyčka v testu by jinak zablokovala
   // její odeslání a rodič by nevěděl, že test už běží.
   await new Promise((resolve) => process.send({ type: 'started' }, resolve));

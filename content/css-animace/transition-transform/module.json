@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Přechody, transformace a výkon", "summary": "Plynulá změna stavu přes transition, posun, zvětšení a otočení bez rozbití layoutu, objevení prvku s @starting-style a proč animovat transform a opacity.", "minutes": 40, "runtime": "dom" }

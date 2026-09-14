@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Strom DOM", "summary": "Jak z HTML vznikne strom objektů, jak v něm najdeš prvky a jak bezpečně změníš text, třídy a atributy.", "minutes": 30, "runtime": "dom" }

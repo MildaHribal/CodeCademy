@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Event loop", "summary": "Proč JavaScript dělá jen jednu věc naráz, v jakém pořadí se spouští časovače a Promise a proč dlouhý výpočet zamrazí stránku.", "minutes": 25, "runtime": "js" }

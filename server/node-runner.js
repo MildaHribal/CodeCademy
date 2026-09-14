@@ -46,11 +46,44 @@ async function waitForGroupExit(pgid, maxMs = 2000) {
   }
 }
 
-function childEnv() {
+/** node_modules Akademie: balíčky (express, zod, typescript, vitest, eslint…) pro kód v dočasném adresáři. */
+export const PACKAGES_DIR = path.join(import.meta.dirname, '..', 'node_modules');
+
+/**
+ * Prostředí procesů. V dočasném adresáři navíc `node_modules/.bin` v PATH (`tsc`, `vitest`,
+ * `eslint` jdou i bez npx) a npm offline bez hlášek — `npx tsc` nic nestahuje a nešumí ve výstupu.
+ */
+function childEnv({ packages = false, dir = null } = {}) {
   const env = { ...process.env };
   delete env.NODE_TEST_CONTEXT;
   delete env.NODE_OPTIONS;
+  if (packages && dir) {
+    env.PATH = [path.join(dir, 'node_modules', '.bin'), env.PATH].filter(Boolean).join(path.delimiter);
+    env.npm_config_offline = 'true';
+    env.npm_config_yes = 'false';
+    env.npm_config_update_notifier = 'false';
+    env.npm_config_fund = 'false';
+    env.npm_config_audit = 'false';
+    env.npm_config_loglevel = 'error';
+  }
   return env;
+}
+
+/**
+ * Dočasný adresář dostane `node_modules` jako odkaz na node_modules Akademie, takže
+ * `import express from 'express'` i `npx tsc` fungují bez instalace (kontrakt kap. 6.6).
+ * Když soubory kroku mají vlastní `node_modules/…`, odkaz se nevytváří.
+ * @returns {Promise<boolean>} jestli odkaz vznikl
+ */
+async function linkPackages(dir) {
+  const target = path.join(dir, 'node_modules');
+  if (fs.existsSync(target) || !fs.existsSync(PACKAGES_DIR)) return false;
+  try {
+    await fsp.symlink(PACKAGES_DIR, target, 'dir');
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 /** Ověří, že jméno souboru je relativní cesta, která nevede ven z adresáře. */
@@ -78,7 +111,7 @@ function checkFiles(files) {
 async function prepareWorkspace(files, cwd) {
   if (cwd) {
     const dir = await fsp.realpath(path.resolve(cwd));
-    return { dir, cleanup: async () => {} };
+    return { dir, packages: false, cleanup: async () => {} };
   }
   checkFiles(files);
   const dir = await fsp.realpath(await fsp.mkdtemp(path.join(os.tmpdir(), 'akademie-node-')));
@@ -101,7 +134,9 @@ async function prepareWorkspace(files, cwd) {
     await cleanup();
     throw err;
   }
-  return { dir, cleanup };
+  // fs.rm s recursive odkaz jen odstraní, do node_modules Akademie nesahá.
+  const packages = await linkPackages(dir);
+  return { dir, packages, cleanup };
 }
 
 function tail(text, max = 2000) {
@@ -126,11 +161,11 @@ function pickDetails(message) {
 }
 
 /** Spustí jeden test v novém procesu. → { pass, error?, details?, logs } */
-function runSingleTest({ dir, test, files, timeoutMs, signal }) {
+function runSingleTest({ dir, packages = false, test, files, timeoutMs, signal }) {
   return new Promise((resolve) => {
     const child = spawn(process.execPath, [HARNESS], {
       cwd: dir,
-      env: childEnv(),
+      env: childEnv({ packages, dir }),
       detached: true,
       stdio: ['ignore', 'pipe', 'pipe', 'ipc'],
     });
@@ -195,7 +230,7 @@ function runSingleTest({ dir, test, files, timeoutMs, signal }) {
       }, 50);
     });
 
-    child.send({ type: 'run', test, files, dir }, (err) => {
+    child.send({ type: 'run', test, files, dir, timeoutMs }, (err) => {
       if (err) settle({ pass: false, error: `Test nejde spustit: ${err.message}` });
     });
   });
@@ -235,7 +270,7 @@ export async function runNodeTests({ files = [], hints = [], timeoutMs = 10000, 
         results.push({ index, pass: false, skipped: true, error: CANCELLED_MESSAGE });
         continue;
       }
-      const outcome = await runSingleTest({ dir: workspace.dir, test: hint.test, files: fileMap, timeoutMs, signal });
+      const outcome = await runSingleTest({ dir: workspace.dir, packages: workspace.packages, test: hint.test, files: fileMap, timeoutMs, signal });
       results.push(outcome.pass ? { index, pass: true } : { index, pass: false, error: outcome.error, ...outcome.details });
       // Logy bereme z prvního testu, který uživatelův kód opravdu spustil (jinak by se opakovaly).
       if (logs.length === 0 && outcome.logs.length > 0) logs = outcome.logs;
@@ -259,7 +294,7 @@ export async function runNodeFile({ files = [], main, timeoutMs = 5000, cwd = nu
     return await new Promise((resolve) => {
       const child = spawn(process.execPath, [mainPath], {
         cwd: workspace.dir,
-        env: childEnv(),
+        env: childEnv({ packages: workspace.packages, dir: workspace.dir }),
         detached: true,
         stdio: ['ignore', 'pipe', 'pipe'],
       });

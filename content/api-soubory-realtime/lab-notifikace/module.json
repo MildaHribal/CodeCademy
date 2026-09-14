@@ -1,0 +1,1 @@
+{ "type": "lab", "title": "Lab: notifikace pro přihlášené", "summary": "Samostatně postavíš SSE kanál, který pustí jen přihlášené a každému pošle jen notifikace, které mu patří.", "minutes": 80, "runtime": "node" }

@@ -9,6 +9,9 @@ if [ ! -f dist/index.html ] || [ -n "$(find client shared -newer dist/index.html
   npx vite build --logLevel warn
 fi
 
+# Knihovny pro runtime react a libs (React, Motion…) — jen když chybí nebo jsou po npm install zastaralé.
+node tools/build-vendor.js
+
 PORT="${PORT:-4300}"
 echo "Akademie běží na http://localhost:$PORT"
 exec env PORT="$PORT" node server/index.js

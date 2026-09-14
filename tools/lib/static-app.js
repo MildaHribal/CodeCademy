@@ -1,9 +1,10 @@
-// Malý statický server pro testy runneru: servíruje sestavený klient a /vendor.
+// Malý statický server pro testy runneru: servíruje sestavený klient, /vendor (Vue) a /api/vendor (knihovny).
 // Rozhraním odpovídá createApp ze server/app.js (vrací http.Server, neposlouchá),
 // takže ho testy verify můžou použít místo skutečného serveru.
 import fs from 'node:fs';
 import http from 'node:http';
 import path from 'node:path';
+import { handleVendorRequest } from '../../server/routes/vendor.js';
 import { PROJECT_ROOT } from './build-runner.js';
 
 const TYPES = {
@@ -25,6 +26,14 @@ export function createStaticApp({ distDir, api = null }) {
 
   return http.createServer(async (req, res) => {
     const url = new URL(req.url, 'http://localhost');
+
+    if (req.method === 'GET' || req.method === 'HEAD') {
+      try {
+        if (await handleVendorRequest(req, res, url)) return;
+      } catch (error) {
+        return sendJson(res, 500, { error: error.message });
+      }
+    }
 
     if (url.pathname.startsWith('/api/')) {
       const body = await readJson(req);

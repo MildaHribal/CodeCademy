@@ -10,11 +10,15 @@
  * „Tah" = úsek synchronního běhu. Nový tah poznáme podle toho, že doběhl
  * mikroúkol naplánovaný v tahu předchozím; při nekonečné smyčce nikdy nedoběhne.
  */
-export function createLoopGuard({ limitMs, onTrip }) {
+export function createLoopGuard({ limitMs, onTrip, sticky = false }) {
   const now = Date.now;
   const scheduleMicrotask = queueMicrotask;
   let turn = 0;
   let turnOpen = false;
+  // sticky (běh testu): po prvním zásahu končí hned každá další smyčka. Jinak by kód, který
+  // chybu zachytí a zkusí znovu (React po chybě vykreslí komponentu ještě jednou), zasekl
+  // stránku na další limit a test by skončil jen obecným timeoutem watchdogu.
+  let tripped = false;
 
   function currentTurn() {
     if (!turnOpen) {
@@ -35,6 +39,7 @@ export function createLoopGuard({ limitMs, onTrip }) {
     },
     /** Vrátí true, když smyčka běží moc dlouho; chybu pak vyhodí kód smyčky přes error(). */
     check(state, line) {
+      if (tripped && sticky) return true;
       const turnNow = currentTurn();
       if (turnNow !== state.turn) {
         state.turn = turnNow;
@@ -42,6 +47,7 @@ export function createLoopGuard({ limitMs, onTrip }) {
         return false;
       }
       if (now() - state.startedAt <= limitMs) return false;
+      tripped = true;
       onTrip(messageFor(line));
       return true;
     },

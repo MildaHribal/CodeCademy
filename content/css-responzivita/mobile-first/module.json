@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Mobile-first", "summary": "Meta viewport, media dotazy se syntaxí rozsahů, body zlomu podle obsahu, plynulé velikosti přes clamp(), obrázky se srcset a dotykové cíle.", "minutes": 35, "runtime": "dom" }

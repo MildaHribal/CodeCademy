@@ -6,15 +6,16 @@ const INSPECT_TIMEOUT_MS = 3000;
 const RESULT_FIELDS = ['container', 'flex-container', 'grid-container', 'flex-parent', 'flex-or-grid-parent', 'grid-parent', 'static', 'inline'];
 
 /**
- * @param {{ runtime: 'dom'|'vue', files: Array<{ name: string, content: string }>,
+ * @param {{ runtime: 'dom'|'vue'|'react', libs?: string[], files: Array<{ name: string, content: string }>,
  *   declarations: Array<{ id: number, property: string, selector: string }>, signal?: AbortSignal }} request
  * @returns {Promise<Array<{ id: number, property: string, reason: string, elements: number }>>}
  *   prázdné pole, když stránka nejde načíst (zaseknutá, zrušená)
  */
-export async function inspectCss({ runtime = 'dom', files, declarations, signal = null }) {
-  if (!['dom', 'vue'].includes(runtime) || !declarations?.length) return [];
+export async function inspectCss({ runtime = 'dom', files, libs = [], declarations, signal = null }) {
+  if (!['dom', 'vue', 'react'].includes(runtime) || !declarations?.length) return [];
   const outcome = await runInFrame({
     runtime,
+    libs,
     files: files.map((file) => ({ name: String(file.name), content: String(file.content ?? '') })),
     test: null,
     timeoutMs: INSPECT_TIMEOUT_MS,

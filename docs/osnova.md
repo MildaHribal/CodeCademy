@@ -1,10 +1,11 @@
 # Osnova Akademie
 
-Detailní plán celého kurzu: **6 částí, 44 sekcí** (41 jádro, 3 rozšíření).
+Detailní plán celého kurzu: **6 částí, 48 sekcí** (44 jádro, 4 rozšíření).
 U každé sekce je úroveň, odhad hodin, předpoklady, cíl „Po sekci umíš" a moduly
-v pořadí. Strojová podoba (části, sekce, úroveň a doporučená trasa) je
-v `content/osnova.json`. Když se tyto dva soubory rozcházejí ve slugách sekcí,
-v úrovni nebo v pořadí trasy, platí `osnova.json` a rozpor se opraví.
+v pořadí. Strojová podoba (části, sekce, úroveň, doporučená trasa a plánované
+moduly sekcí, které ještě nejsou na disku) je v `content/osnova.json`. Když se
+tyto dva soubory rozcházejí ve slugách sekcí nebo modulů, v úrovni nebo
+v pořadí trasy, platí `osnova.json` a rozpor se opraví.
 
 Formát modulů a pravidla psaní jsou v `docs/kontrakt.md` a `docs/styl-obsahu.md`.
 Tahle osnova říká **co** se učí, **v jakém pořadí** a **kde použít který typ
@@ -61,27 +62,31 @@ Sloupec „Σ jádro" je kumulativní odhad hodin jádra.
 | 21 | `js-dom` | JavaScript | jádro | 16 | 174 |
 | 22 | `css-animace` | Web a CSS | jádro | 14 | 188 |
 | 23 | `js-async` | JavaScript | jádro | 17 | 205 |
-| 24 | `nastroje-git-terminal` | Nástroje a řemeslo | jádro | 6 | 211 |
-| 25 | `nastroje-moduly-vite` | Nástroje a řemeslo | jádro | 7 | 218 |
-| 26 | `nastroje-devtools-vykon` | Nástroje a řemeslo | jádro | 6 | 224 |
-| 27 | `nastroje-typescript` | Nástroje a řemeslo | jádro | 10 | 234 |
-| 28 | `nastroje-testovani` | Nástroje a řemeslo | jádro | 11 | 245 |
-| 29 | `react-zaklady` | React | jádro | 12 | 257 |
-| 30 | `react-hloubka` | React | jádro | 14 | 271 |
-| 31 | `node-zaklady` | Backend a fullstack | jádro | 7 | 278 |
-| 32 | `api-http-rest` | Backend a fullstack | jádro | 10 | 288 |
-| 33 | `react-aplikace` | React | jádro | 26 | 314 |
-| 34 | `sql-databaze` | Backend a fullstack | jádro | 11 (+1 R) | 325 |
-| 35 | `auth-bezpecnost` | Backend a fullstack | jádro | 11 | 336 |
-| 36 | `nasazeni-provoz` | Backend a fullstack | jádro | 9 (+2 R) | 345 |
-| 37 | `next-fullstack` | Backend a fullstack | jádro | 27 | 372 |
-| 38 | `vue-nuxt-druhy-framework` | React | **rozšíření** | 12 | — |
-| 39 | `api-soubory-realtime` | Backend a fullstack | **rozšíření** | 10 | — |
-| 40 | `prohlizec-navic` | Backend a fullstack | **rozšíření** | 10 | — |
-| 41 | `nastroje-cizi-kod` | Nástroje a řemeslo | jádro | 10 | 382 |
-| 42 | `prace-s-ai` | Nástroje a řemeslo | jádro | 7 | 389 |
-| 43 | `js-algoritmy` | Nástroje a řemeslo | jádro | 15 | 404 |
-| 44 | `kariera-pohovor` | Kariéra | jádro | 15 | 419 |
+| 24 | `css-tailwind` | Web a CSS | jádro | 10 | 215 |
+| 25 | `nastroje-git-terminal` | Nástroje a řemeslo | jádro | 6 | 221 |
+| 26 | `css-efekty-animace` | Web a CSS | jádro | 14 | 235 |
+| 27 | `web-3d-efekty` | Web a CSS | **rozšíření** | 9 | — |
+| 28 | `nastroje-moduly-vite` | Nástroje a řemeslo | jádro | 7 | 242 |
+| 29 | `nastroje-devtools-vykon` | Nástroje a řemeslo | jádro | 6 | 248 |
+| 30 | `nastroje-typescript` | Nástroje a řemeslo | jádro | 10 | 258 |
+| 31 | `nastroje-testovani` | Nástroje a řemeslo | jádro | 11 | 269 |
+| 32 | `react-zaklady` | React | jádro | 12 | 281 |
+| 33 | `react-hloubka` | React | jádro | 14 | 295 |
+| 34 | `node-zaklady` | Backend a fullstack | jádro | 7 | 302 |
+| 35 | `react-ui-knihovny` | React | jádro | 12 | 314 |
+| 36 | `api-http-rest` | Backend a fullstack | jádro | 10 | 324 |
+| 37 | `react-aplikace` | React | jádro | 26 | 350 |
+| 38 | `sql-databaze` | Backend a fullstack | jádro | 11 (+1 R) | 361 |
+| 39 | `auth-bezpecnost` | Backend a fullstack | jádro | 11 | 372 |
+| 40 | `nasazeni-provoz` | Backend a fullstack | jádro | 9 (+2 R) | 381 |
+| 41 | `next-fullstack` | Backend a fullstack | jádro | 27 | 408 |
+| 42 | `vue-nuxt-druhy-framework` | React | **rozšíření** | 12 | — |
+| 43 | `api-soubory-realtime` | Backend a fullstack | **rozšíření** | 10 | — |
+| 44 | `prohlizec-navic` | Backend a fullstack | **rozšíření** | 10 | — |
+| 45 | `nastroje-cizi-kod` | Nástroje a řemeslo | jádro | 10 | 418 |
+| 46 | `prace-s-ai` | Nástroje a řemeslo | jádro | 7 | 425 |
+| 47 | `js-algoritmy` | Nástroje a řemeslo | jádro | 15 | 440 |
+| 48 | `kariera-pohovor` | Kariéra | jádro | 15 | 455 |
 
 **Proč právě takhle:**
 
@@ -92,6 +97,16 @@ Sloupec „Σ jádro" je kumulativní odhad hodin jádra.
   (portfolio) se nasazuje na URL a smí používat základní styly.
 - Nástroje (Git do hloubky, Vite, TypeScript, testy) přijdou až po celém
   JavaScriptu. Do té doby stačí minimum ze `start-nastroje`.
+- `css-tailwind` až po vlajkovém projektu 1: uživatel nejdřív postaví landing
+  page v čistém CSS a rozumí kaskádě, vrstvám a tokenům. Tailwind pak čte jako
+  zkratku za věci, které zná, ne jako magii. Prokládá se s JavaScriptem
+  a nástroji, aby CSS neběželo několik sekcí v kuse.
+- `css-efekty-animace` přichází po `js-async`: GSAP, Motion a Lenis se ovládají
+  z JavaScriptu (posluchače, `requestAnimationFrame`, `await animation.finished`)
+  a výkon animací staví na pipeline z `css-animace`. Rozšíření `web-3d-efekty`
+  stojí hned za ním, dokud je téma čerstvé.
+- `react-ui-knihovny` je mezi `react-hloubka` a `react-aplikace`: vlajkový
+  projekt 2 už může stavět na vlastní sadě komponent, Tailwindu a Motion.
 - Backend se prokládá s Reactem: `node-zaklady` a `api-http-rest` jsou před
   `react-aplikace`, takže vlajkový projekt 2 volá API, kterému uživatel rozumí
   zevnitř.
@@ -106,15 +121,15 @@ Sloupec „Σ jádro" je kumulativní odhad hodin jádra.
 
 | část | sekcí jádra | rozšíření | hodin jádra | hodin rozšíření |
 |---|---|---|---|---|
-| 1. Web a CSS | 13 | 0 | 105 | 0 |
+| 1. Web a CSS | 15 | 1 | 129 | 9 |
 | 2. JavaScript | 10 | 0 | 100 | 1 (modul) |
 | 3. Nástroje a řemeslo | 8 | 0 | 72 | 0 |
-| 4. Frontend framework — React | 3 | 1 | 52 | 12 |
+| 4. Frontend framework — React | 4 | 1 | 64 | 12 |
 | 5. Backend a fullstack | 6 | 2 | 75 | 23 (2 sekce + 2 moduly) |
 | 6. Kariéra | 1 | 0 | 15 | 0 |
-| **celkem** | **41** | **3** | **~419 h** | **~36 h** |
+| **celkem** | **44** | **4** | **~455 h** | **~45 h** |
 
-Celkem ~455 h. Při 10 h týdně je jádro zhruba na 10 měsíců.
+Celkem ~500 h. Při 10 h týdně je jádro zhruba na 11 měsíců.
 
 **Kontrolní laby na konci částí** (samostatné zadání přes celou část, zadání
 neříká, ze které sekce co použít):
@@ -154,7 +169,9 @@ Každý má oddíl „Rozšíření do portfolia" (skutečné API, nasazení, RE
 - **Sekce** má slug (= adresář v `content/`), název, **úroveň** (`jádro` nebo
   `rozšíření`, v JSON `jadro` / `rozsireni`), odhad hodin, **předpoklady**
   (slugy sekcí, které je dobré mít za sebou; vždy jsou v trase dřív)
-  a volitelně **doporučeno předem** (pomůže, ale není nutné).
+  a volitelně **doporučeno předem** (pomůže, ale není nutné). **Navazuje**
+  a **Související** jen odkazují na sekci, která téma rozvíjí dál; na
+  předpoklady ani trasu nemají vliv.
 - **Po sekci umíš** jsou 3–6 odrážek. Autor sekce z nich udělá `outcomes`
   v `section.json` (A13) a obrazovku „Umím / Nejistý / Neumím" (B16).
 - **Moduly** jsou v pořadí průchodu. U každého je typ, slug, název, výchozí
@@ -211,11 +228,26 @@ místa, která autor nemá vynechat.
   `allow-same-origin`, takže `localStorage`, `sessionStorage`, IndexedDB,
   cookies a service worker v něm nefungují bez podpory runneru (viz Otevřené
   body na konci).
+- `dom` s knihovnami — **rozšíření runtime `dom`** (staví se, popis dodá
+  kontrakt kap. 6): stejný iframe, navíc import map na předsestavené vendor
+  soubory GSAP s pluginy (`gsap/ScrollTrigger`, `gsap/SplitText`, `gsap/Flip`),
+  Motion (`motion`), Lenis a Three.js (včetně `three/addons/…`). Uživatel píše
+  `import { gsap } from 'gsap'` jako v projektu, bez CDN. Knihovny, které mění
+  stránku samy od sebe, se zapínají polem `libs` v modulu nebo kroku:
+  `tailwind` (prohlížečová verze Tailwindu generuje CSS z tříd; zapne se
+  i sama, když CSS obsahuje `@import "tailwindcss"`) a `lenis` (styly Lenis;
+  zapnou se i samy při importu `lenis`). GSAP, Motion a Three.js jsou jen
+  ES moduly a načtou se až importem. Značka `[dom + tailwind]` v popisu modulu
+  = runtime `dom` s `libs: ["tailwind"]`. Používají ho `css-tailwind`,
+  `css-efekty-animace` a `web-3d-efekty`.
 - `js` — čistý JavaScript bez stránky (konzole, REPL B15).
 - `react` — **nový runtime (B22)**: React 19 přes import map z předsestavených
   vendor souborů, JSX a TSX přes Sucrase, `helpers.flush()` po změně stavu.
   Knihovny, které React sekce potřebují v prohlížeči (React Router, TanStack
   Query), musí být ve vendoru také; bez nich se daný workshop píše jako projekt.
+  Ve vendoru se staví i `radix-ui`, `clsx`, `class-variance-authority`,
+  `tailwind-merge` a `motion/react` pro `react-ui-knihovny`. Tailwind se
+  v runtime `react` zapíná stejně jako v `dom` (značka `[react + tailwind]`).
 - `vue` — jen rozšíření `vue-nuxt-druhy-framework` (Vue 3 přes import map, bez SFC).
 - `node` — Node na serveru: `fs`, `http`, `node:sqlite`, `node:test`, Git přes
   `helpers.run`, TypeScript přes vestavěné odstraňování typů (jen „erasable"
@@ -223,8 +255,8 @@ místa, která autor nemá vynechat.
   jsou v krocích k dispozici, jen když je koordinátor předinstaluje a node
   runtime je zpřístupní — viz „Balíčky pro kroky" na konci.
 - **Projekty ve VS Code** si závislosti instalují samy (`npm install`): Vite,
-  Vitest, Playwright, MSW, React Router, TanStack Query, Tailwind, Next.js,
-  Drizzle, Better Auth.
+  Vitest, Playwright, MSW, React Router, TanStack Query, Tailwind, GSAP,
+  Motion, Lenis, Three.js, shadcn/ui, Next.js, Drizzle, Better Auth.
 
 ### Stav technologií (září 2026)
 
@@ -247,7 +279,23 @@ Ověřeno k 13. 9. 2026; autor sekce ověří znovu v době psaní.
   v režimu údržby (převzal ho tým Better Auth) a zmíní se jako „potkáš v cizím kódu".
 - **Drizzle ORM** nad SQLite a PostgreSQL, migrace přes `drizzle-kit`.
 - **Express 5** jako ukázka frameworku nad `node:http`.
-- **Tailwind CSS v4**, **ESLint flat config**, Vitest, Playwright, MSW.
+- **Tailwind CSS v4** (v Akademii 4.3): konfigurace v CSS (`@import "tailwindcss"`,
+  `@theme`, `@utility`, `@custom-variant`, `@source`), bez `tailwind.config.js`;
+  v projektech přes `@tailwindcss/vite`, v krocích prohlížečová verze
+  `@tailwindcss/browser` (jen pro výuku a prototypy, ne do produkce).
+- **GSAP 3.15** — od roku 2025 zdarma včetně dřívějších placených pluginů
+  (SplitText, MorphSVG); ScrollTrigger, Flip a SplitText se učí jako standard.
+- **Motion 13** (dříve Framer Motion): `motion` pro čistý JS (`animate`,
+  `scroll`, `inView`), `motion/react` pro React. **Lenis 1.3** pro plynulé scrollování.
+- **Three.js r186** s `WebGLRenderer`; `WebGPURenderer` a TSL se zmíní jako směr,
+  do kterého knihovna jde.
+- **shadcn/ui** (CLI `shadcn`, Tailwind v4, jednotný balíček `radix-ui`),
+  `class-variance-authority`, `tailwind-merge` 3, `clsx`.
+- **View Transitions API** v rámci jednoho dokumentu je Baseline; přechody mezi
+  dokumenty a CSS animace řízené scrollem (`animation-timeline`) nemají
+  podporu ve všech prohlížečích — autor ověří stav a vždy učí jako progresivní
+  vylepšení.
+- **ESLint flat config**, Vitest, Playwright, MSW.
 - **Node 24 LTS** jako cílová verze v zadáních (Akademie sama běží na novějším).
 
 ---
@@ -257,6 +305,8 @@ Ověřeno k 13. 9. 2026; autor sekce ověří znovu v době psaní.
 Od prázdného souboru k responzivní, přístupné, dobře navržené a animované
 stránce. CSS má největší hloubku: uživatel musí umět vysvětlit, **proč** se
 prvek chová, jak se chová, ne jen zkoušet vlastnosti, dokud to nevypadá dobře.
+Na čisté CSS navazuje Tailwind a efekty řízené JavaScriptem (GSAP, Motion,
+Lenis); 3D přes Three.js je rozšíření.
 
 ## 1.1 `html-zaklady` — HTML a jak funguje web
 
@@ -781,6 +831,7 @@ Stav na disku (`content/css-flexbox/section.json`) a plánované úpravy D4, D5:
 **Úroveň:** jádro *(nová)*
 **Odhad:** ~9 h
 **Předpoklady:** `css-responzivita`
+**Navazuje:** `css-tailwind` (tokeny a stupnice z této sekce v `@theme`)
 
 **Po sekci umíš:**
 - vytvořit vizuální hierarchii (velikost, váha, barva, rozestupy) a zdůvodnit ji,
@@ -824,11 +875,130 @@ Stav na disku (`content/css-flexbox/section.json`) a plánované úpravy D4, D5:
 - **quiz** `kviz` — *Kvíz: design* — kontrast, `oklch()`, převod auto layoutu,
   přístupnost SVG, hierarchie. Cvičení: `code` (stylopis komponenty s chybami v tokenech).
 
-## 1.13 `css-animace` — Přechody, transformace a animace
+## 1.13 `css-tailwind` — Tailwind CSS v4
+
+**Úroveň:** jádro *(nová)*
+**Odhad:** ~10 h
+**Předpoklady:** `css-design`
+**Doporučeno předem:** `css-animace` (vlajkový projekt 1 napřed v čistém CSS)
+
+Tailwind se učí jako zkratka za CSS, které uživatel už zná: u každé utility
+má umět říct, jakou deklaraci vytvoří. Kroky běží v runtime `dom`
+s `libs: ["tailwind"]` (prohlížečová verze generuje CSS z tříd v náhledu
+a z `<style type="text/tailwindcss">`). Testy ověřují hlavně spočtené styly
+(`getComputedStyle`) v několika šířkách a motivech, ne názvy tříd; regex na
+třídu jen tam, kde krok učí konkrétní variantu. Projekty používají
+`@tailwindcss/vite`.
+
+**Po sekci umíš:**
+- vysvětlit, jak z třídy `px-4` vznikne CSS, a číst dlouhý atribut `class` jako zkratky za vlastnosti, které znáš,
+- přenést design tokeny (paleta v `oklch()`, písmo, rozestupy, stíny) do `@theme` a používat je v utilitách i v čistém CSS,
+- postavit responzivní stránku s variantami `md:`, `@container`, `hover:`, `focus-visible:`, `dark:`, `group-*` a `peer-*`,
+- zvolit mezi smyčkou v šabloně, `@utility`, `@apply` a opakovanou třídou tak, aby markup nebyl kopírovaný,
+- rozhodnout pro konkrétní projekt mezi Tailwindem a čistým CSS a zdůvodnit to.
+
+**Moduly:**
+- **lesson** `utility-first` — *Utility-first myšlení* — problém: vymýšlení
+  jmen tříd, mrtvé CSS a stylopis, který roste s každou stránkou; utilita =
+  jedna deklarace nad tokenem (`p-4` = `padding: calc(var(--spacing) * 4)`);
+  Tailwind najde třídy ve zdrojích a vygeneruje jen použité (proto se
+  nevygeneruje složená `` `bg-${barva}-500` ``); `@import "tailwindcss"`
+  a vrstvy `theme, base, components, utilities` (navazuje na `@layer`
+  z `css-kaskada`), preflight místo resetu; čtení dlouhého `class` po skupinách
+  (layout → box → typografie → barvy → stavy); libovolné hodnoty `w-[37rem]`
+  a vlastnosti `[mask-type:luminance]` jako únikový ventil; Tailwind v projektu
+  vs. v náhledu. Cvičení: `pretest` („zvětší se stylopis s každou novou
+  stránkou?"), `predict` (jaké CSS vznikne z `px-6 py-2 rounded-lg`),
+  `compare` (stejná karta v čistém CSS a v utilitách), `explain` (proč
+  dynamicky složená třída nefunguje).
+- **workshop** `workshop-karta-v-utilitach` [dom + tailwind] — *Vstupenka na
+  koncert v utilitách* — staví: kartu koncertu s fotkou, datem, cenou, štítkem
+  „Poslední místa" a tlačítkem. Učí: rozestupy a velikosti na stupnici, flex
+  a grid utility, typografie (`text-*`, `font-*`, `leading-*`, `tracking-*`),
+  barvy s průhledností (`bg-sky-500/20`), `rounded-*`, `shadow-*`, `ring-*`,
+  `aspect-*` a `object-cover`, libovolná hodnota, `hover:` a `focus-visible:`
+  s `transition`. ~16 kroků. Cvičení: `debug` (štítek bez barvy — třída
+  složená v šabloně z proměnné se nevygenerovala), `vyber-sam` (cena
+  a tlačítko u dna karty bez jmenování utilit), `explain` (proč `/20` místo
+  nové barvy).
+- **lesson** `theme-a-tokeny` — *`@theme` a design tokeny* — `@theme` vytvoří
+  zároveň CSS proměnnou i utility; jmenné prostory (`--color-*`, `--font-*`,
+  `--text-*`, `--spacing`, `--radius-*`, `--shadow-*`, `--breakpoint-*`,
+  `--ease-*`, `--animate-*`); přepsání a vypnutí výchozí palety
+  (`--color-*: initial`); `@theme inline` pro token odkazující na jinou
+  proměnnou; sémantické tokeny (`--color-surface`, `--color-primary`) nad
+  primitivními; `var(--color-primary)` v čistém CSS i v libovolné hodnotě;
+  paleta v `oklch()` z `css-design`; tmavý motiv přepnutím sémantických tokenů
+  místo `dark:` u každého prvku. Cvičení: `predict` (vznikne utilita
+  z proměnné na `:root` mimo `@theme`?), `controls` (posuvník odstínu značky
+  přebarví celou ukázku), `explain` (primitivní vs. sémantický token).
+- **workshop** `workshop-motiv-znacky` [dom + tailwind] — *Motiv pražírny kávy* —
+  staví: vzhled ceníku a objednávky pražírny z tokenů značky. Učí: paleta
+  v `@theme`, vlastní písmo a stupnice `--text-*`, zaoblení a stíny, sémantické
+  tokeny, tmavý motiv přepnutím tokenů, token v čistém CSS pro SVG ilustraci.
+  ~15 kroků. Cvičení: `debug` (třída `bg-crema` nic nedělá — token je na
+  `:root`, ne v `@theme`), `parsons` (blok `@theme` s primitivními
+  a sémantickými tokeny).
+- **lesson** `responzivita-a-stavy` — *Responzivita a stavy* — varianta =
+  podmínka před utilitou; breakpointy jsou `min-width`, proto třída bez
+  prefixu platí na mobilu (past: `sm:` neznamená „na malé obrazovce");
+  `max-md:` a rozsah `md:max-lg:`; container queries `@container` a `@md:`;
+  stavy `hover:` (ve v4 jen na zařízeních s myší), `focus-visible:`,
+  `active:`, `disabled:`, `aria-expanded:`, `data-[state=open]:`, `open:`;
+  `dark:` a `@custom-variant dark` pro ruční přepínač motivu; `group`
+  a `group-hover:`, `peer` a `peer-invalid:` (ovlivněný prvek musí být v DOM
+  **za** peerem), `has-[:checked]:`, `motion-safe:` a `motion-reduce:`;
+  skládání více variant. Cvičení: `pretest`, `predict` ×2 (která třída platí
+  na 375 px; proč nereaguje `peer-invalid:` na hlášce nad polem), `compare`
+  (media vs. container varianta u karty v úzkém panelu).
+- **workshop** `workshop-landing-sekce` [dom + tailwind] — *Landing sekce
+  herního serveru* — staví: úvodní stránku herního serveru s hero sekcí
+  (stav serveru a počet hráčů), mřížkou funkcí, ceníkem VIP balíčků, FAQ
+  a přihláškou do novinek. Učí: mobile-first rozvržení s `md:` a `lg:`,
+  responzivní navigace, karty s `@container`, `group-hover:` na kartě,
+  zvýrazněný tarif, `dark:` s přepínačem přes `@custom-variant`, formulář
+  s `peer-invalid:` a `has-[:user-invalid]:`, vlastní `--animate-*` v `@theme`
+  s `motion-safe:`, viditelný fokus. ~22 kroků, mezistav po kroku 11 (hotové
+  hero a navigace). Cvičení: `debug` (menu zmizí na desktopu místo na mobilu —
+  `sm:hidden` pochopené jako „skryj na malé obrazovce"), `debug` (tmavý motiv
+  reaguje jen na systém, ne na přepínač — chybí `@custom-variant`), `vyber-sam`
+  (tarify se na úzké obrazovce skládají pod sebe), `explain` (proč třída bez
+  prefixu = mobil).
+- **lesson** `komponenty-bez-duplicit` — *Komponenty bez duplicit a Tailwind
+  vs. čisté CSS* — opakované třídy jsou problém údržby, ne vzhledu; pořadí
+  řešení: smyčka a šablona (`template` z `js-dom`, později komponenta
+  v Reactu) → víc kurzorů v editoru → `@utility` pro malý opakovaný vzor →
+  `@apply` jen pro markup, který nevlastníš (obsah z CMS, Markdown) →
+  `@layer components`; proč `@apply` všude vrací problémy čistého CSS; dvě
+  utility pro tutéž vlastnost v jednom `class` (rozhoduje pořadí ve
+  vygenerovaném CSS, ne v atributu — příprava na `tailwind-merge`);
+  `@reference` ve stylech komponent; řazení tříd přes
+  `prettier-plugin-tailwindcss`; **Tailwind vs. čisté CSS**: tabulka kdy co
+  (tým a rychlá iterace, knihovna komponent, složité `@keyframes` a efekty,
+  obsah z CMS, velikost CSS) a kombinace obojího v jednom projektu. Cvičení:
+  `predict` (dvě utility pro `padding` v jednom atributu), `explain` (kdy
+  `@apply` ano a kdy ne), `check` (vyber řešení duplicity pro čtyři situace).
+- **lab** `lab-prestavba-podle-navrhu` [dom + tailwind] — *Přestavba stránky
+  podle návrhu* — samostatně: stránku akce napsanou v čistém CSS (seed)
+  přestavět do Tailwindu podle přiloženého návrhu a specifikace tokenů; tokeny
+  v `@theme`, světlý i tmavý motiv, šířky 1024, 768 a 375 px, žádné kopírované
+  bloky tříd u opakovaných karet. Texty jsou volba uživatele. Cvičení:
+  `pred-startem`, `layout`, `approaches` (`md:` vs. `@container` u karet;
+  `@utility` vs. smyčka v šabloně).
+- **quiz** `kviz` — *Kvíz: Tailwind* — co vygeneruje třída, mobile-first
+  varianty, `group` a `peer`, jmenné prostory `@theme`, dynamicky složené
+  třídy, `@apply` vs. komponenta, Tailwind vs. čisté CSS. 20–30 %
+  z `css-design` a `css-responzivita`. Cvičení: `code` (šablona stránky
+  ~100 řádků s chybami ve variantách a tokenech).
+- **Soubory sekce:** `tahak.md` s tabulkou „utilita → deklarace" pro nejčastější
+  skupiny a tabulkou variant (breakpointy, stavy, `group`/`peer`, `dark`).
+
+## 1.14 `css-animace` — Přechody, transformace a animace
 
 **Úroveň:** jádro
 **Odhad:** ~14 h (z toho vlajkový projekt ~6 h, kontrolní bod ~2 h)
 **Předpoklady:** `css-pozicovani`, `css-design`, `html-pristupnost`
+**Navazuje:** `css-efekty-animace` (GSAP, Motion, Lenis a efekty řízené z JavaScriptu)
 
 **Po sekci umíš:**
 - animovat rozhraní přechody, transformacemi a klíčovými snímky,
@@ -878,6 +1048,271 @@ Stav na disku (`content/css-flexbox/section.json`) a plánované úpravy D4, D5:
   z `html-pristupnost`, nasadit obojí na GitHub Pages, view transitions mezi
   stránkami portfolia. (Projekt `projekt-portfolio-css` je zrušený a nahrazuje
   ho toto rozšíření.)
+
+## 1.15 `css-efekty-animace` — Animace a efekty pro „wow" web
+
+**Úroveň:** jádro *(nová)*
+**Odhad:** ~14 h
+**Předpoklady:** `css-animace`, `js-async`
+**Doporučeno předem:** `css-tailwind`
+**Navazuje:** `web-3d-efekty` (3D pozadí a shadery), `react-ui-knihovny` (Motion for React)
+
+Efekty, kvůli kterým si lidé web pamatují: odhalení nadpisu, pinovaná sekce,
+parallax, plynulé scrollování, přeskupení karet, magnetické tlačítko. Sekce
+navazuje na výkon a `prefers-reduced-motion` z `css-animace` a každý efekt
+učí i s tím, jak ho vypnout a jak neshodit 60 fps. Kroky běží v runtime `dom`
+s knihovnami: `import { gsap } from 'gsap'`, `gsap/ScrollTrigger`,
+`gsap/SplitText`, `gsap/Flip`, `motion` a `lenis` (`libs: ["lenis"]`).
+Testy neměří čas: přeskočí timeline na konec (`progress(1)`) a čtou spočtené
+styly, kontrolují nastavení ScrollTriggerů (`ScrollTrigger.getAll()`), stav
+po scrollu v iframu a variantu s omezeným pohybem (viz Otevřené body na konci).
+GSAP je od roku 2025 zdarma včetně SplitText a Flip, takže se učí bez výhrad
+k licenci.
+
+**Po sekci umíš:**
+- vybrat pro efekt nástroj (CSS, Web Animations API, GSAP, Motion, View Transitions API) a zdůvodnit to,
+- složit animaci do timeline s easingem, přesahy a štítky a ovládat ji (pauza, návrat, `scrub`),
+- postavit efekty řízené scrollem: ScrollTrigger s pinem, parallax, CSS `animation-timeline` jako progresivní vylepšení a plynulé scrollování přes Lenis,
+- animovat text a změny layoutu (SplitText, Flip, `document.startViewTransition`),
+- udělat mikrointerakce a magnetické tlačítko, které fungují myší, dotykem i klávesnicí,
+- udržet animace na 60 fps (jen `transform` a `opacity`, `will-change` s rozvahou, Performance) a respektovat `prefers-reduced-motion`.
+
+**Moduly:**
+- **lesson** `gsap-zaklady` — *Kdy knihovna a základy GSAP* — co CSS
+  animace neumí (sekvence závislé na sobě, přerušení a návrat z libovolného
+  místa, animace hodnoty mimo CSS, scroll s pinem); Web Animations API
+  (`element.animate`, `await animation.finished`) jako most mezi CSS
+  a knihovnou; tabulka CSS × WAAPI × GSAP × Motion (velikost, API, React,
+  scroll); `gsap.to`, `from`, `fromTo`, `set`; zkratky `x`, `y`, `scale`,
+  `rotation`, `autoAlpha` (proč ne `left` a `top`); `duration` a `ease`
+  (`power2.out`, `back`, `expo`, `elastic`, CustomEase zmínkou); `stagger`
+  jako objekt (`each`, `from: 'center'`); `gsap.timeline` s `defaults`,
+  pozice `'<'`, `'>'`, `'-=0.2'` a štítky; ovládání (`play`, `pause`,
+  `reverse`, `progress`, `timeScale`); `gsap.context()` a `revert()` pro úklid;
+  délky: UI 150–400 ms, úvodní animace do ~1,2 s. Cvičení: `pretest`
+  („proč by animace přes `left` měla být horší než přes `transform`?"),
+  `predict` (kdy začne třetí tween s pozicí `'<0.1'`), `controls` (easing
+  a délka nad stejným pohybem), `compare` (vyjíždějící panel přerušený
+  v půlce: CSS `@keyframes` × `gsap.to`), `explain` (proč sekvence patří do
+  timeline, ne do řetězu `delay`).
+- **workshop** `workshop-animovana-hero` [dom] — *Hero sekce hudebního
+  festivalu* — staví: úvodní obrazovku festivalu s navigací, nadpisem, který se
+  odhalí po řádcích, datem a místem, tlačítkem na vstupenky, fotkami
+  interpretů a plovoucími tvary v pozadí. Učí: úvodní timeline s `defaults`
+  a pozicemi, `stagger` na položkách menu, reveal textu přes SplitText
+  (`type: 'lines, words'`, `mask: 'lines'`, `autoSplit` s `onSplit` po změně
+  šířky), `autoAlpha` a CSS proti probliknutí obsahu před animací, jemná
+  nekonečná animace tvarů (`repeat: -1`, `yoyo`, `sine.inOut`), hover efekt
+  fotek, magnetické tlačítko (`pointermove`, `gsap.quickTo`, návrat
+  v `pointerleave`, jen pro `(hover: hover)`), `gsap.matchMedia()`
+  s `prefers-reduced-motion` (místo pohybu jen prolnutí), úklid přes
+  `revert()`. ~24 kroků, mezistav po kroku 12 (hotová úvodní timeline).
+  Cvičení: `debug` (nadpis na zlomek sekundy blikne před animací — obsah není
+  skrytý do startu timeline), `debug` (magnetické tlačítko po odjetí myši
+  zůstane posunuté — chybí návrat v `pointerleave`), `parsons` (timeline
+  s pozicemi `'<'` a `'-=0.3'`), `vyber-sam` (pořadí vstupu prvků podle
+  vlastního návrhu; test ověří jen konečný stav a viditelný obsah), `explain`
+  (proč `quickTo` místo nového tweenu na každý `pointermove`).
+- **lesson** `scroll-efekty` — *Animace řízené scrollem a Lenis* — tři cesty
+  podle potřeby: jednorázové odhalení přes Motion `inView` (nebo
+  `IntersectionObserver` z `js-dom`), CSS `animation-timeline: view()`
+  a `scroll()` s `animation-range` jako progresivní vylepšení (`@supports`),
+  GSAP ScrollTrigger (`trigger`, `start` a `end` jako „horní okraj prvku ×
+  místo v okně", `toggleActions`, `scrub` jako `true` i číslo, `pin`
+  a `pinSpacing`, `snap`, `markers` pro ladění, `refresh()` po načtení
+  obrázků, `invalidateOnRefresh`); Motion `scroll()` s průběhem 0–1; parallax
+  jako rozdílná rychlost vrstev (`yPercent` se `scrub`) a proč ne posluchač
+  `scroll` bez `requestAnimationFrame`; Lenis: co dělá (interpoluje scroll,
+  nativní posuvník a kotvy zůstávají), `autoRaf`, napojení na ScrollTrigger
+  (`lenis.on('scroll', ScrollTrigger.update)` a `gsap.ticker`),
+  `data-lenis-prevent`, `lenis.scrollTo`; kdy scroll efekt škodí
+  (scrolljacking, obsah skrytý bez JavaScriptu, dlouhé texty). Cvičení:
+  `pretest`, `predict` (kdy se spustí animace se `start: 'top 80%'`),
+  `controls` (`scrub`: `true`, 0,5 a 2 nad stejnou animací), `compare`
+  (odhalení karet v CSS `view()` × ScrollTrigger), `explain` (co udělá `pin`
+  se zbytkem stránky a proč).
+- **workshop** `workshop-produktova-stranka` [dom] — *Prezentace
+  bezdrátových sluchátek* — staví: produktovou stránku sluchátek s plynulým
+  scrollováním, pinovanou sekcí, kde se při scrollu střídají funkce
+  a natáčí fotka, parallaxem fotek, počítadly parametrů (výdrž baterie,
+  hmotnost, cena v Kč), vodorovným pásem barevných variant a ukazatelem
+  průběhu čtení. Učí: Lenis a jeho napojení na ScrollTrigger, navigace
+  kotvami přes `lenis.scrollTo`, ScrollTrigger se `scrub` a `pin`, timeline
+  navázaná na scroll se štítky a `snap`, vodorovný pás v pinované sekci
+  (posun spočtený funkcí a `invalidateOnRefresh`), počítadlo přes tween
+  objektu s `onUpdate` a `Intl.NumberFormat`, odhalení karet přes Motion
+  `inView` se zpožděním, ukazatel průběhu v CSS `animation-timeline: scroll()`
+  s JS záložní variantou, `gsap.matchMedia()` (na úzké obrazovce bez pinu,
+  s omezeným pohybem bez parallaxu a bez Lenis). ~26 kroků, mezistav po kroku
+  13 (Lenis a pinovaná sekce hotové). Cvičení: `debug` (vodorovný pás po
+  změně šířky okna přejede konec — posun spočtený jednou číslem), `debug`
+  (s Lenis se pinovaná sekce trhá a zpožďuje — ScrollTrigger neví o scrollu
+  Lenis), `vyber-sam` (ukazatel průběhu čtení — CSS, nebo JS), `explain`
+  (proč `pin` přidá pod sekci místo a jak to souvisí se `scrub`).
+- **lesson** `layout-a-view-transitions` — *Flip, View Transitions a Motion* —
+  animace změny layoutu: technika FLIP (First, Last, Invert, Play) ručně na
+  jednom prvku, GSAP Flip (`Flip.getState` → změna DOM → `Flip.from`
+  s `absolute`, `onEnter`, `onLeave`); View Transitions API v jednom dokumentu
+  (`document.startViewTransition` s funkcí, která mění DOM,
+  `view-transition-name`, `::view-transition-old()` a `::view-transition-new()`
+  s vlastní animací, `view-transition-class`, `await transition.finished`,
+  detekce podpory a varianta bez ní), přechody mezi dokumenty zmínkou jako
+  progresivní vylepšení; Motion pro čistý JavaScript (`animate` s pružinou,
+  sekvence, `stagger`, gesta `hover` a `press`) jako lehčí alternativa; kdy
+  co. Cvičení: `predict` (co se stane, když dva prvky mají stejné
+  `view-transition-name` — přechod se přeskočí a v konzoli je chyba),
+  `compare` (filtr karet bez animace × s Flip), `controls` (pružina:
+  `stiffness`, `damping`).
+- **workshop** `workshop-galerie-flip` [dom] — *Portfolio fotografky* —
+  staví: galerii zakázek s filtrem kategorií, kde se fotky plynule přeskupí,
+  detail, který se z miniatury roztáhne přes celou obrazovku, tlačítko „Líbí
+  se mi" se srdíčkem, vlastní kurzor nad galerií a kopírování odkazu
+  s potvrzením. Učí: `Flip.getState`/`Flip.from` při filtru s `onEnter`
+  a `onLeave`, `startViewTransition` pro otevření a zavření detailu se
+  sdíleným `view-transition-name` a varianta bez podpory, Motion `animate`
+  s pružinou pro srdíčko, gesta `hover` a `press`, vlastní kurzor přes
+  `gsap.quickTo` (skrytý na dotykových zařízeních a pro čtečky),
+  mikrointerakce s potvrzením v `aria-live`, omezený pohyb (Flip
+  s `duration: 0`, přechod jen prolnutím). ~22 kroků, mezistav po kroku 11
+  (hotový filtr). Cvičení: `debug` (filtr skočí bez animace — `Flip.getState`
+  zavolaný až po změně DOM), `debug` (detail se otevře bez přechodu a konzole
+  hlásí duplicitní `view-transition-name`), `parsons` (stav → změna →
+  `Flip.from`), `vyber-sam` (zavření detailu stejným přechodem zpět).
+- **lesson** `vykon-a-pristupnost-animaci` — *Výkon a přístupnost animací* —
+  rozpočet 16,7 ms na snímek, co animovat (`transform`, `opacity`, `filter`
+  s rozvahou), `will-change` jen po dobu animace a cena vrstev v paměti
+  mobilu, čtení `getBoundingClientRect` v animační smyčce (layout thrashing),
+  `requestAnimationFrame` místo `setInterval`, panel Performance se
+  zpomaleným CPU (dlouhé snímky, layout v každém snímku), pauza animací mimo
+  obrazovku a na skryté kartě; `prefers-reduced-motion`: co zachovat
+  (prolnutí, změna barvy) a co vypnout (parallax, pin, pohyb přes obrazovku,
+  nekonečné smyčky), přepínač „Omezit pohyb" na stránce, WCAG 2.2.2
+  (pohyb delší než 5 s jde zastavit) a 2.3.3; obsah dostupný bez JavaScriptu
+  a před animací (skrytí jen třídou přidanou skriptem), čtečka a SplitText
+  (`aria-label` na původním textu). Cvičení: `pretest`, `predict` (která ze
+  tří animací spouští layout v každém snímku), `check` (co vypnout při
+  omezeném pohybu — pět efektů), `explain` (proč `will-change` na všech
+  prvcích škodí).
+- **lab** `lab-scroll-pribeh` [dom] — *Scroll příběh* — samostatně: stránka,
+  která vypráví příběh po kapitolách (seed nabízí historii stavby Karlova
+  mostu; téma, texty a vzhled jsou volba uživatele): úvodní odhalení nadpisu,
+  kapitoly odhalené při scrollu, aspoň jedna pinovaná sekce s timeline na
+  `scrub`, parallax vrstev, ukazatel průběhu, plynulé scrollování a navigace
+  kotvami, s omezeným pohybem bez pinu a parallaxu a se vším obsahem viditelným,
+  ovládání klávesnicí, na 375 px bez vodorovného přetečení. Cvičení:
+  `pred-startem`, `approaches` (odhalení kapitol ScrollTriggerem × CSS
+  `animation-timeline`; Lenis × nativní `scroll-behavior: smooth`).
+- **quiz** `kviz` — *Kvíz: efekty a animace* — pozice v timeline, `start`
+  a `end` ScrollTriggeru, co udělá `pin`, pořadí kroků Flip,
+  `view-transition-name`, co je levné animovat, co vypnout při omezeném
+  pohybu. 20–30 % z `css-animace` a `css-tailwind`. Cvičení: `code` (skript
+  stránky ~100 řádků se třemi problémy: čtení layoutu v posluchači `scroll`,
+  chybějící úklid timeline, animace bez varianty pro omezený pohyb).
+- **Soubory sekce:** `tahak.md` s tabulkou „kdy CSS, WAAPI, GSAP, Motion,
+  View Transitions", pozicemi v timeline, zápisem `start`/`end`
+  ScrollTriggeru a tabulkou easingů. „Rozšíření do portfolia" v labu:
+  přidat úvodní animaci a odhalení sekcí do landing page z vlajkového
+  projektu 1.
+
+## 1.16 `web-3d-efekty` — 3D a vizuální efekty
+
+**Úroveň:** rozšíření *(nová)*
+**Odhad:** ~9 h
+**Předpoklady:** `css-efekty-animace`
+
+3D pozadí, interaktivní náhled produktu a animované gradienty přes Three.js
+(r186, `WebGLRenderer`). Kroky běží v runtime `dom` s importem `three`
+a `three/addons/…`. Testy nesrovnávají pixely: čtou graf scény
+(`scene.children`, materiály, světla), nastavení kamery a rendereru po změně
+velikosti, počet vykreslení (`renderer.info`), hodnoty uniform a úklid
+(`dispose`). Headless prohlížeč musí mít WebGL (viz Otevřené body na konci).
+Modely a textury nejsou potřeba: geometrie se skládají z primitiv
+a textury vznikají v kódu. `WebGPURenderer` a TSL se zmíní jako směr, kam
+knihovna jde.
+
+**Po sekci umíš:**
+- postavit Three.js scénu s kamerou, objekty, materiály, světly a render loopem, která se přizpůsobí velikosti okna,
+- reagovat na myš a scroll (natočení scény, `Raycaster` pro najetí a klik na objekt),
+- vytvořit a animovat částice z `BufferGeometry` a vykreslit stovky objektů přes `InstancedMesh`,
+- napsat jednoduchý shader (`ShaderMaterial`, uniformy, gradient a noise) a řídit ho z JavaScriptu,
+- udržet 3D efekt plynulý i na mobilu (pixel ratio, draw calls, pauza mimo obrazovku, úklid) a mít variantu bez WebGL a s omezeným pohybem.
+
+**Moduly:**
+- **lesson** `threejs-zaklady` — *Scéna, kamera a render loop* — kdy 3D na
+  webu dává smysl a kdy stačí CSS 3D (`perspective`, `rotateY`) nebo video;
+  souřadnice (x doprava, y nahoru, z k divákovi); `Scene`,
+  `PerspectiveCamera` (`fov`, `aspect`, `near`, `far`), `WebGLRenderer`
+  (`antialias`, `alpha` pro průhledné pozadí,
+  `setPixelRatio(Math.min(devicePixelRatio, 2))`), `Mesh` = geometrie
+  + materiál, `MeshBasicMaterial` × `MeshStandardMaterial` (potřebuje světlo:
+  `AmbientLight`, `DirectionalLight`), `renderer.setAnimationLoop` a `Timer`
+  pro rychlost nezávislou na fps, změna velikosti (`camera.aspect`,
+  `updateProjectionMatrix`, `setSize`), `OrbitControls` z `three/addons`,
+  canvas jako pozadí za textem (`position: fixed`, `pointer-events`).
+  Cvičení: `pretest`, `predict` (proč je kostka s `MeshStandardMaterial`
+  černá), `controls` (`fov` a vzdálenost kamery), `explain` (proč pohyb
+  násobit časem snímku).
+- **workshop** `workshop-konfigurator-lampy` [dom] — *Konfigurátor designové
+  lampy* — staví: 3D náhled stolní lampy v e-shopu složený z primitiv (podstava,
+  rameno, stínidlo), otáčení myší, výběr barvy stínidla a materiálu, zapnutí
+  světla a kliknutí na část lampy s popiskem. Učí: skupiny `Group`
+  a hierarchie transformací, `CylinderGeometry` a `SphereGeometry`, materiál
+  s `roughness` a `metalness`, `PointLight` a stíny zmínkou, `OrbitControls`
+  s omezením úhlů, změna barvy z tlačítek mimo canvas, `Raycaster` pro klik
+  na část, resize a pixel ratio. ~16 kroků. Cvičení: `debug` (po změně šířky
+  okna je lampa zdeformovaná — chybí `updateProjectionMatrix`), `vyber-sam`
+  (zvýraznění části lampy při najetí myší), `explain` (proč se rameno otáčí
+  i se stínidlem).
+- **lesson** `interakce-a-castice` — *Interakce, částice a výkon* — pozice
+  myši převedená na −1 až 1, plynulé natočení scény (lineární interpolace
+  v každém snímku), `Raycaster` pro najetí a klik, napojení kamery na scroll
+  přes ScrollTrigger z `css-efekty-animace`; `BufferGeometry` s atributem
+  pozic z `Float32Array`, `Points` a `PointsMaterial` (`size`,
+  `sizeAttenuation`, `AdditiveBlending`), animace částic přes atribut × rotace
+  celé skupiny; `InstancedMesh` pro stovky stejných objektů; výkon: draw calls
+  a `renderer.info`, pixel ratio, pauza přes `IntersectionObserver`
+  a `visibilitychange`, `dispose()` geometrií a materiálů, detekce WebGL
+  a záložní obrázek, omezený pohyb (statický snímek); `GLTFLoader` a modely
+  zmínkou. Cvičení: `predict` (souřadnice myši v pravém horním rohu),
+  `compare` (1000 × `Mesh` × jeden `InstancedMesh` — počet draw calls),
+  `controls` (počet a velikost částic).
+- **workshop** `workshop-3d-pozadi` [dom] — *3D pozadí hero sekce
+  planetária* — staví: úvodní sekci planetária, kde za nadpisem a tlačítkem
+  rotuje planeta s prstencem, kolem je hvězdné pole z tisíců částic, scéna se
+  jemně natáčí za myší a při scrollu kamera odjíždí. Učí: canvas jako pozadí
+  s průhledným rendererem, planeta s texturou vytvořenou v `CanvasTexture`,
+  prstenec z `RingGeometry`, hvězdné pole z `BufferGeometry` a `Points`,
+  natočení za myší s interpolací, kamera na scroll přes ScrollTrigger,
+  pauza mimo obrazovku, `dispose` při odchodu, varianta bez WebGL
+  a s omezeným pohybem, pixel ratio na mobilu. ~22 kroků, mezistav po kroku 11
+  (planeta a hvězdy hotové). Cvičení: `debug` (planeta se na 144Hz monitoru
+  točí dvakrát rychleji — rotace bez času snímku), `debug` (po návratu na
+  kartu scéna poskočí — chybí pauza a omezení kroku času), `parsons` (smyčka
+  s časem, interpolací a vykreslením), `vyber-sam` (hvězdy blíž kameře se
+  pohybují rychleji).
+- **lesson** `shadery` — *Shadery: uniformy, gradienty a noise* — co je
+  vertex a fragment shader (běží na GPU pro každý vrchol a každý pixel
+  zvlášť), `ShaderMaterial`, GLSL minimum (`float`, `vec2`, `vec3`, `vec4`,
+  desetinná tečka `1.0` povinná), `varying vUv`, uniformy (`uTime`, `uMouse`,
+  `uColorA`) a jejich změna z JavaScriptu v každém snímku, gradient přes `mix`
+  a `smoothstep`, vlnění vrcholů přes `sin`, noise jako hotová funkce
+  a vrstvení (fBm), celoobrazovková plocha pro pozadí, čtení chyby kompilace
+  shaderu v konzoli, výkon (fragment shader na 4K = miliony pixelů za snímek).
+  Cvičení: `predict` (`float x = 1;` — chyba kompilace a její hláška),
+  `controls` (barvy a rychlost přes uniformy), `explain` (proč shader nevidí
+  sousední pixely).
+- **lab** `lab-shader-pozadi` [dom] — *Animované gradientní pozadí* —
+  samostatně: celoobrazovkové pozadí stránky ve vlastním shaderu s plynoucím
+  gradientem z noise, barvy převzaté z CSS proměnných, reakce na pozici myši,
+  zastavený čas při omezeném pohybu, pauza mimo obrazovku, záložní CSS
+  gradient bez WebGL a úklid při odchodu. Téma a barvy jsou volba uživatele.
+  Cvičení: `pred-startem`, `approaches` (gradient ve fragment shaderu ×
+  deformace vrcholů).
+- **quiz** `kviz` — *Kvíz: 3D a shadery* — souřadnice a kamera po změně
+  velikosti, proč je objekt černý, `Points` × `InstancedMesh`, uniforma ×
+  varying, co zpomalí scénu. 20–30 % z `css-efekty-animace`. Cvičení: `code`
+  (scéna ~100 řádků se třemi problémy: chybějící resize, rotace bez času,
+  únik geometrií).
 
 ---
 
@@ -1697,8 +2132,10 @@ Pull request a code review se přesunuly do `nastroje-cizi-kod`.
 
 Hlavní framework kurzu (E1). React 19 v prohlížečovém runtime `react` (B22)
 pro lekce, workshopy a laby; Vite + TypeScript, React Router, TanStack Query,
-testy a styly v projektech. Vue a Nuxt jsou jen rozšíření na konci části.
-Runtime `react` musí být hotový před `react-zaklady`.
+testy a styly v projektech. Mezi `react-hloubka` a `react-aplikace` stojí
+`react-ui-knihovny`: Tailwind, shadcn/ui s Radix primitivy a Motion for React.
+Vue a Nuxt jsou jen rozšíření na konci části. Runtime `react` musí být hotový
+před `react-zaklady`.
 
 ## 4.1 `react-zaklady` — React: základy
 
@@ -1805,12 +2242,182 @@ Runtime `react` musí být hotový před `react-zaklady`.
   úklid, kontext, Suspense. Cvičení: `code` (komponenta ~100 řádků se třemi
   problémy v efektech).
 
-## 4.3 `react-aplikace` — React aplikace
+## 4.3 `react-ui-knihovny` — UI knihovny a animace v Reactu
+
+**Úroveň:** jádro *(nová)*
+**Odhad:** ~12 h
+**Předpoklady:** `react-hloubka`, `css-tailwind`
+**Doporučeno předem:** `css-efekty-animace`
+**Navazuje:** `react-aplikace` (styly a komponenty ve vlajkovém projektu 2)
+
+Jak se v React projektech dnes skutečně staví rozhraní: Tailwind v komponentách,
+vlastní sada komponent ve stylu shadcn/ui nad přístupnými primitivy Radix
+a animace přes Motion for React. Knihovny se neučí jako černá skříňka: u každé
+komponenty uživatel ví, co by musel napsat sám (fokus, Escape, ARIA, portál)
+a proč to přenechá primitivu. Kroky běží v runtime `react` s `libs:
+["tailwind"]` a importy `radix-ui`, `clsx`, `class-variance-authority`,
+`tailwind-merge` a `motion/react` z vendoru. Testy hledají prvky podle role
+a názvu, ovládají je myší i klávesnicí (`Tab`, šipky, `Escape`), čtou
+atributy `data-state` a `aria-*`, spočtené styly a návrat fokusu; animace
+Motion v testech přeskakují na konečný stav (`MotionGlobalConfig.skipAnimations`)
+a u `AnimatePresence` se čeká na odstranění prvku (viz Otevřené body na konci).
+CLI `shadcn` se v krocích nespouští: komponenty jsou v seedu jako soubory
+`components/ui/*.tsx`, stejně jako by je CLI zkopírovalo; instalace přes CLI je
+v lekci ukázaná a zkouší se v projektu.
+
+**Po sekci umíš:**
+- stylovat React komponenty Tailwindem a skládat třídy podle props přes `clsx` a `tailwind-merge` (`cn()`) bez konfliktů,
+- navrhnout API komponenty s variantami přes `class-variance-authority` a přijmout `className` a `ref` zvenku,
+- vysvětlit, co shadcn/ui je a není (kód v repozitáři, ne závislost), přidat komponentu a upravit ji pro projekt,
+- postavit přístupný dialog, rozbalovací menu, záložky a výběr nad Radix primitivy a ověřit je klávesnicí,
+- animovat vstup, odchod, změnu layoutu a gesta přes Motion for React s ohledem na `prefers-reduced-motion`,
+- založit malý design systém projektu: tokeny, primitivy, komponenty a pravidla, kdy přidat variantu a kdy novou komponentu.
+
+**Moduly:**
+- **lesson** `tailwind-v-reactu` — *Tailwind v komponentách* — `className`
+  místo `class`, proč komponenta nahrazuje `@apply` a opakované bloky tříd
+  (navazuje na `css-tailwind/komponenty-bez-duplicit`); podmíněné třídy přes
+  `clsx` (objekt, pole, `false` a `undefined` se zahodí); konflikt dvou utilit
+  pro stejnou vlastnost při přepsání zvenku (`px-4` z komponenty
+  a `px-8` z props — rozhoduje pořadí ve vygenerovaném CSS, ne v atributu)
+  a jeho řešení přes `tailwind-merge`; helper `cn(...inputs)`
+  = `twMerge(clsx(inputs))`; celé názvy tříd v mapě variant místo skládání
+  řetězce (`` `bg-${tone}-500` `` se nevygeneruje); stav jako `data-*`
+  atribut a varianta `data-[active=true]:`; `style` jen pro hodnoty spočtené
+  za běhu (šířka ukazatele průběhu) přes CSS proměnnou. Cvičení: `pretest`
+  („proč nestačí `className={base + ' ' + className}`?"), `predict` (která
+  z tříd `px-4 px-8` vyhraje bez a s `twMerge`), `compare` (tlačítko
+  s podmínkami v šablonovém řetězci × `cn()`), `explain` (co dělá `clsx` a co
+  `tailwind-merge`).
+- **workshop** `workshop-sada-komponent` [react + tailwind] — *Komponenty
+  rezervačního systému kadeřnictví* — staví: sadu `Button`, `Badge`, `Card`,
+  `Input` a `Avatar` a z nich stránku výběru kadeřnice s volnými termíny,
+  cenou v Kč a tlačítkem „Rezervovat". Učí: `cn()` v každé komponentě,
+  `cva` s `variants` (`variant`, `size`), `defaultVariants`
+  a `compoundVariants`, typ props přes `VariantProps` a `ComponentProps<'button'>`,
+  `className` a zbytek props (`...props`) předané dál, `ref` jako prop
+  (React 19), `asChild` přes `Slot` z `radix-ui` (tlačítko, které je odkazem),
+  stav `disabled` a `aria-invalid` stylovaný variantami `disabled:`
+  a `aria-invalid:`, viditelný fokus. ~18 kroků, mezistav po kroku 9 (hotové
+  `Button` a `Badge`). Cvičení: `parsons` (komponenta s `cva` a `cn`),
+  `debug` (`className="w-full"` z rodiče tlačítko neroztáhne — komponenta
+  props `className` nepředává), `debug` (varianta `destructive` je modrá —
+  výchozí `bg-*` přebije přepsání, protože chybí `twMerge`), `vyber-sam`
+  (štítek „Obsazeno" jako nová varianta, nebo nová komponenta), `explain`
+  (proč `asChild` místo `<a>` uvnitř `<button>`).
+- **lesson** `shadcn-a-radix` — *shadcn/ui a Radix primitivy* — co musí
+  umět přístupný dialog, menu a záložky (fokus uvnitř, návrat fokusu,
+  `Escape`, šipky, `role`, `aria-expanded`, `aria-controls`, portál, zamčený
+  scroll) a proč to nepsat pokaždé znovu (navazuje na
+  `react-hloubka/workshop-modal-a-toasty`); headless primitivy Radix
+  (jednotný balíček `radix-ui`, `import { Dialog } from 'radix-ui'`, části
+  `Root`, `Trigger`, `Portal`, `Overlay`, `Content`, `Title`, `Description`,
+  `Close`); řízený a neřízený režim (`open` a `onOpenChange` × `defaultOpen`);
+  styl podle stavu přes `data-state` a `data-side` (`data-[state=open]:`);
+  shadcn/ui jako **kód ve tvém repozitáři, ne závislost**: `npx shadcn@latest
+  init` a `add`, `components.json`, složka `components/ui`, `lib/utils.ts`
+  s `cn`, tokeny `--background`, `--primary`, `--ring` v `@theme inline`
+  a tmavý motiv; úprava zkopírované komponenty a cena za to (aktualizace
+  ručně); Base UI a React Aria zmínkou jako alternativy. Cvičení: `pretest`,
+  `predict` (kam se vrátí fokus po zavření dialogu otevřeného z menu),
+  `check` (co ze seznamu řeší primitivum a co zůstává na tobě — texty,
+  vzhled, `Title`), `explain` (proč shadcn/ui kopíruje kód místo balíčku).
+- **workshop** `workshop-pristupne-komponenty` [react + tailwind] —
+  *Nastavení účtu hudební streamovací služby* — staví: stránku nastavení se
+  záložkami Profil, Předplatné a Zařízení, menu u každého zařízení
+  (přejmenovat, odhlásit), dialog pro zrušení předplatného s potvrzením,
+  výběr jazyka a přepínač explicitního obsahu. Učí: `Tabs` (šipky mezi
+  záložkami, `value` v URL zmínkou), `DropdownMenu` s položkami, oddělovačem
+  a `onSelect`, `Dialog` řízený stavem s `Title` a `Description`, `AlertDialog`
+  pro nevratnou akci, `Select`, `Switch` s `Label`, `Tooltip` u ikonového
+  tlačítka, styly stavů přes `data-[state=…]:`, vstupní animace obsahu
+  přes `data-[state=open]:animate-*` z `@theme`, ověření klávesnicí.
+  ~20 kroků, mezistav po kroku 10 (hotové záložky a menu). Cvičení: `debug`
+  (čtečka ohlásí dialog bez názvu a konzole varuje — chybí `Dialog.Title`),
+  `debug` (po smazání zařízení z menu zůstane fokus na `body` — dialog se
+  otevírá z odmontované položky místo řízeného stavu mimo menu), `parsons`
+  (skladba `Dialog.Root` → `Portal` → `Overlay` → `Content`), `vyber-sam`
+  (potvrzení odhlášení všech zařízení — `Dialog`, nebo `AlertDialog`),
+  `explain` (proč `AlertDialog` nezavře klik mimo).
+- **lesson** `motion-for-react` — *Motion for React* — kdy animovat
+  v Reactu přes Motion a kdy stačí CSS `transition` nebo `data-state`
+  s `@keyframes`; `motion.div` a props `initial`, `animate`, `transition`
+  (pružina × `tween`, `duration`, `ease`); animace mimo render (Motion mění
+  styly přímo, komponenta se nepřekresluje v každém snímku); `variants`
+  s `staggerChildren` a `delayChildren`; `AnimatePresence` a `exit` (proč
+  potřebuje stabilní `key` a přímého potomka, `mode="wait"`
+  a `"popLayout"`, `onExitComplete`); `layout` a `layoutId` pro plynulou změnu
+  layoutu a sdílený prvek (ukazatel aktivní záložky), `LayoutGroup`; gesta
+  `whileHover`, `whileTap`, `whileFocus`, `drag` s `dragConstraints`;
+  `useScroll`, `useTransform` a `useSpring` pro efekt řízený scrollem;
+  `MotionConfig reducedMotion="user"` a `useReducedMotion`; velikost
+  balíčku (`LazyMotion` a `m` zmínkou); vazba na GSAP a Motion z
+  `css-efekty-animace`. Cvičení: `pretest`, `predict` (odchodová animace se
+  nespustí, když podmínka stojí mimo `AnimatePresence`), `controls`
+  (`stiffness`, `damping` a `mass` pružiny), `compare` (přeskupení seznamu
+  bez a s `layout`), `explain` (proč `exit` potřebuje `AnimatePresence`).
+- **workshop** `workshop-dashboard-s-animacemi` [react + tailwind] —
+  *Dashboard půjčovny elektrokol* — staví: přehled půjčovny s bočním menu,
+  kartami statistik (vypůjčená kola, tržba dne v Kč, stav baterií), seznamem
+  výpůjček s filtrem, panelem detailu kola a oznámeními. Učí: vstup karet
+  přes `variants` se `staggerChildren`, počítadlo tržby přes `animate`
+  a `useMotionValue` s `Intl.NumberFormat`, ukazatel aktivní položky menu
+  a filtru přes `layoutId`, přidání a odebrání výpůjčky v `AnimatePresence`
+  s `layout` u zbylých řádků (`mode="popLayout"`), panel detailu jako Radix
+  `Dialog` s animací vstupu a odchodu (`forceMount` s `AnimatePresence`),
+  oznámení, která jdou odtáhnout (`drag="x"`, zavření podle posunu), gesta
+  `whileHover` a `whileTap` na kartách, `MotionConfig reducedMotion="user"`,
+  komponenty z `workshop-sada-komponent` v nové doméně. ~24 kroků, mezistav
+  po kroku 12 (hotové karty a menu). Cvičení: `debug` (smazaný řádek zmizí
+  bez animace — `key` je index pole, takže odchází poslední řádek), `debug`
+  (panel detailu se zavře bez odchodové animace — Radix odmontuje obsah
+  dřív, než Motion doanimuje), `parsons` (`AnimatePresence` s podmínkou
+  a `exit`), `vyber-sam` (zvýraznění kola s vybitou baterií — CSS animace,
+  nebo Motion), `explain` (co dělá `layoutId`).
+- **lesson** `design-system-projektu` — *Design systém projektu
+  a formulářové komponenty* — vrstvy: tokeny v `@theme` (primitivní
+  a sémantické z `css-tailwind`) → primitivy (Radix) → komponenty
+  (`components/ui`) → vzory (formulářové pole, prázdný stav, karta
+  s akcemi); pojmenování variant (`variant`, `size`, `tone`) napříč sadou;
+  kdy přidat variantu, kdy novou komponentu a kdy skládání přes `children`
+  (složené komponenty `Card`, `CardHeader`, `CardContent` místo desíti
+  boolean props); formulářové pole jako vzor: `Label`, `Input`, popis a chyba
+  propojené přes `useId`, `aria-describedby` a `aria-invalid`, zobrazení chyby
+  s `AnimatePresence`; `Checkbox`, `RadioGroup` a `Select` z Radix proti
+  nativním prvkům (kdy nativní stačí); stránka s ukázkami komponent místo
+  dokumentace (Storybook zmínkou); jednotné stavy `hover`, `focus-visible`,
+  `disabled` a tmavý motiv; údržba zkopírovaných komponent. Cvičení:
+  `predict` (ohlásí čtečka chybu pole, když `aria-describedby` odkazuje na
+  neexistující `id`?), `check` (varianta × nová komponenta × `children` pro
+  čtyři situace), `explain` (proč složené komponenty místo boolean props).
+- **lab** `lab-formular-s-komponentami` [react + tailwind] — *Přihláška
+  s komponentami* — samostatně: vícekrokový přihlašovací formulář (seed nabízí
+  přihlášku na letní kurz lezení; téma, texty a vzhled jsou volba uživatele)
+  poskládaný z vlastních komponent: pole s popisem a chybou, výběr termínu,
+  volba varianty kurzu, souhlas, přechod mezi kroky s animací a návratem
+  fokusu na nadpis kroku, souhrn před odesláním v dialogu, oznámení po
+  odeslání, s omezeným pohybem bez posunu, ovladatelné klávesnicí. Testy
+  ověřují role, názvy, chování a přístupnost, ne třídy ani texty. Cvičení:
+  `pred-startem`, `approaches` (Radix `Select` × nativní `select`; varianty
+  přes `cva` × podmínky v `cn()`).
+- **quiz** `kviz` — *Kvíz: UI knihovny v Reactu* — `clsx` × `tailwind-merge`,
+  varianty `cva`, co řeší primitivum Radix, řízený dialog, `data-state`,
+  shadcn/ui jako kód v repozitáři, `AnimatePresence` a `key`, `layoutId`,
+  omezený pohyb. 20–30 % z `react-hloubka` a `css-tailwind`. Cvičení: `code`
+  (komponenta dialogu a seznamu ~100 řádků se třemi problémy: chybějící
+  `Title`, `key` z indexu v `AnimatePresence`, `className` bez `cn()`).
+- **Soubory sekce:** `tahak.md` s kostrou `cn()` a `cva`, skladbou Radix
+  `Dialog`, `DropdownMenu` a `Tabs`, tabulkou props Motion (`initial`,
+  `animate`, `exit`, `layout`, `layoutId`, `while*`) a pastmi
+  `AnimatePresence`.
+
+## 4.4 `react-aplikace` — React aplikace
 
 **Úroveň:** jádro *(nová)*
 **Odhad:** ~26 h (z toho vlajkový projekt ~12 h, kontrolní bod ~2 h)
 **Předpoklady:** `react-hloubka`, `nastroje-typescript`, `nastroje-testovani`
 **Doporučeno předem:** `api-http-rest`
+**Související:** `react-ui-knihovny` (Tailwind, shadcn/ui a Motion v Reactu do hloubky)
 
 **Po sekci umíš:**
 - založit React projekt ve Vite s TypeScriptem, lintem a rozumnou strukturou,
@@ -1879,7 +2486,7 @@ Runtime `react` musí být hotový před `react-zaklady`.
   s rozhodnutími), „Rozšíření do portfolia" (nasazení frontendu, vlastní
   backend z části 5).
 
-## 4.4 `vue-nuxt-druhy-framework` — Vue a Nuxt jako druhý framework
+## 4.5 `vue-nuxt-druhy-framework` — Vue a Nuxt jako druhý framework
 
 **Úroveň:** rozšíření *(nová)*
 **Odhad:** ~12 h
@@ -2396,14 +3003,18 @@ runtime, nebo se modul napíše jako projekt ve VS Code.
 | `react`, `react-dom` (vendor, B22), `sucrase` | `react` | všechny `[react]` moduly v `react-*`, `kariera-pohovor/lab-domaci-ukol` |
 | `react-router` (vendor) | `react` | `react-aplikace/workshop-routovani` |
 | `@tanstack/react-query` (vendor) | `react` | `react-aplikace/workshop-data-z-api` |
+| `@tailwindcss/browser` (vendor, `libs: ["tailwind"]`) | `dom`, `react` | `[dom + tailwind]` moduly v `css-tailwind`, `[react + tailwind]` moduly v `react-ui-knihovny` |
+| `gsap` s pluginy ScrollTrigger, SplitText a Flip, `motion`, `lenis` (vendor) | `dom` | `[dom]` moduly v `css-efekty-animace`, `interakce-a-castice` a `workshop-3d-pozadi` ve `web-3d-efekty` (ScrollTrigger) |
+| `three` včetně `three/addons` (vendor) | `dom` | `[dom]` moduly ve `web-3d-efekty` |
+| `radix-ui`, `clsx`, `class-variance-authority`, `tailwind-merge`, `motion/react` (vendor) | `react` | `[react + tailwind]` moduly v `react-ui-knihovny` |
 | `vite`, `eslint` (dostupné z dočasného adresáře node runtime) | `node` | `nastroje-moduly-vite/workshop-vite-projekt`, `lab-knihovna-utilit` |
 | `typescript` (kontrola typů `tsc --noEmit`) | `node` | `nastroje-typescript/workshop-typy-kosiku`, `lab-typy-udalosti` |
 | `zod` | `node` | `nastroje-typescript/workshop-api-klient`, `api-http-rest` (validace) |
 | `express` | `node` | `api-http-rest/workshop-api-ve-frameworku` |
 | `ws` | `node` | ukázky v `api-soubory-realtime/websockety` (jen lekce, bez testů je to v pořádku) |
 
-Drizzle, Better Auth, Next.js, Vitest, MSW, Playwright a Tailwind jsou jen
-v projektech, kde si je uživatel instaluje sám.
+Drizzle, Better Auth, Next.js, Vitest, MSW, Playwright, `@tailwindcss/vite`
+a CLI `shadcn` jsou jen v projektech, kde si je uživatel instaluje sám.
 
 ---
 
@@ -2427,3 +3038,27 @@ v projektech, kde si je uživatel instaluje sám.
   rozhodnutí o vendoru pro React Router a TanStack Query.
 - **Projekty s `helpers.run('npm …')`** v Next.js a Vite potřebují vyšší
   `timeoutMs` (build Next.js běžně trvá desítky sekund).
+- **Runtime s knihovnami** (`dom` s `libs`, vendor pro `react-ui-knihovny`)
+  staví jiný agent; popis patří do kontraktu kap. 6. Pro autory sekcí
+  `css-tailwind`, `css-efekty-animace`, `web-3d-efekty` a `react-ui-knihovny`
+  je potřeba potvrdit:
+  - **Tailwind v testech:** prohlížečová verze generuje CSS asynchronně po
+    změně DOM. Testy musí mít způsob, jak počkat na vygenerované styly (např.
+    `await helpers.flush()` nebo `helpers.waitForStyles()`), jinak
+    `getComputedStyle` čte stav před vygenerováním.
+  - **Scroll v iframu:** testy ScrollTriggeru, Motion `scroll`/`inView`
+    a Lenis potřebují náhled s obsahem vyšším než okno, programový scroll
+    (`scrollTo` a počkání na snímek) a `ScrollTrigger.refresh()` po změně
+    šířky přes `helpers.resize`.
+  - **Čas animací:** testy nesmí čekat na reálný čas; GSAP přes
+    `progress(1)` nebo `gsap.globalTimeline.timeScale`, Motion přes
+    `MotionGlobalConfig.skipAnimations`, CSS přes `helpers` s vypnutými
+    přechody. Runner by měl umět zapnout `prefers-reduced-motion: reduce`
+    v náhledu i v testech (varianta s omezeným pohybem se testuje v každé
+    sekci s efekty).
+  - **WebGL v headless Chromiu:** `web-3d-efekty` potřebuje WebGL
+    v prohlížeči verify (SwiftShader nebo `--use-angle=swiftshader`). Bez něj
+    se testy scény omezí na graf scény bez vykreslení a sekce to uvede.
+  - **Radix a portály:** dialogy a menu se vykreslují do `document.body`
+    mimo kořen aplikace; testovací pomocníci runtime `react` je musí najít
+    (dotazy nad celým dokumentem, ne jen nad kontejnerem komponenty).

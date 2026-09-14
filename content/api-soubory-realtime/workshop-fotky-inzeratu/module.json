@@ -1,0 +1,1 @@
+{ "type": "workshop", "title": "Fotky k inzerátu v bazaru kol", "summary": "Postavíš nahrávání fotek k inzerátu: limit velikosti, kontrolu obsahu, uložení mimo web a galerii, která fotky bezpečně ukáže.", "minutes": 120, "runtime": "node" }

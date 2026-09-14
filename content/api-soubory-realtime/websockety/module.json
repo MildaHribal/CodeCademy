@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "WebSockety", "summary": "Obousměrné spojení pro chat a spolupráci: handshake, API v prohlížeči, server s knihovnou ws, ověření, znovupřipojení a škálování.", "minutes": 25 }

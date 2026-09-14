@@ -22,7 +22,35 @@ export class ParseError extends Error {
   }
 }
 
-export const RUNTIMES = ['dom', 'js', 'vue', 'node'];
+export const RUNTIMES = ['dom', 'js', 'vue', 'react', 'node'];
+/**
+ * Knihovny prohlížečových runtime (frontmatter a module.json `libs`, `:::live … libs=`; kap. 6.10).
+ * Stejný seznam jako LIB_NAMES v client/src/runner/vendor-libs.js (hlídá tools/runner-unit.test.js).
+ */
+export const LIBS = ['tailwind', 'gsap', 'motion', 'lenis', 'three'];
+/** Runtime, ve kterých jde `libs` použít. */
+export const LIB_RUNTIMES = ['dom', 'vue', 'react'];
+
+/**
+ * `libs` z frontmatteru (`tailwind, gsap`), z module.json (pole nebo text) nebo z `libs=` u :::live.
+ * @returns {string[]} známá jména bez duplicit v pořadí zápisu; neznámé jméno = ParseError
+ */
+export function parseLibs(value, { id, line, where = 'libs' } = {}) {
+  if (value === undefined || value === null || value === '') return [];
+  // Frontmatter bere i zápis se závorkami: `libs: [tailwind, gsap]`.
+  const items = Array.isArray(value) ? value : typeof value === 'string' ? value.replace(/^\s*\[(.*)\]\s*$/, '$1').split(',') : null;
+  if (!items || !items.every((item) => typeof item === 'string')) {
+    throw new ParseError(`${where} musí být jména knihoven oddělená čárkou (${LIBS.join(', ')})`, { id, line });
+  }
+  const libs = [];
+  for (const raw of items) {
+    const name = raw.trim().toLowerCase();
+    if (!name) continue;
+    if (!LIBS.includes(name)) throw new ParseError(`neznámá knihovna "${raw.trim()}" v ${where} (povolené: ${LIBS.join(', ')})`, { id, line });
+    if (!libs.includes(name)) libs.push(name);
+  }
+  return libs;
+}
 /** Druhy kroku (frontmatter `kind`, kap. 3.1). */
 export const STEP_KINDS = ['step', 'debug', 'parsons', 'recall', 'choose'];
 
@@ -569,11 +597,12 @@ function checkDebugDescription(rows, id) {
 
 /**
  * Krok workshopu, lab nebo projekt.
- * @param {{ id, defaultRuntime?, defaultTitle?, requireSeed?, fileKind?: 'step'|'lab'|'project' }} options
+ * @param {{ id, defaultRuntime?, defaultTitle?, defaultLibs?: string[], requireSeed?, fileKind?: 'step'|'lab'|'project' }} options
  *   requireSeed: seed a řešení jsou povinné (výchozí jen u kroku workshopu)
+ *   defaultLibs: `libs` z module.json — sečtou se s `libs` z frontmatteru (kap. 6.10)
  * @returns tvar z kontraktu kap. 3.2
  */
-export function parseStep(src, { id, defaultRuntime = 'dom', defaultTitle = '', fileKind = 'step', requireSeed = fileKind === 'step' } = {}) {
+export function parseStep(src, { id, defaultRuntime = 'dom', defaultTitle = '', defaultLibs = [], fileKind = 'step', requireSeed = fileKind === 'step' } = {}) {
   if (!STEP_SECTIONS[fileKind]) throw new ParseError(`neznámý typ souboru "${fileKind}"`, { id });
   const { meta, rows } = readRows(src, id);
   const { preamble, sections } = splitSections(rows, 1);
@@ -609,6 +638,13 @@ export function parseStep(src, { id, defaultRuntime = 'dom', defaultTitle = '', 
 
   const runtime = meta.runtime ?? defaultRuntime;
   if (!RUNTIMES.includes(runtime)) throw new ParseError(`neznámý runtime "${runtime}"`, { id });
+  const ownLibs = parseLibs(meta.libs, { id, line: 1, where: 'frontmatteru libs' });
+  if (ownLibs.length && !LIB_RUNTIMES.includes(runtime)) {
+    throw new ParseError(`libs umí jen runtime ${LIB_RUNTIMES.join(', ')}, ne ${runtime}`, { id, line: 1 });
+  }
+  // Knihovny modulu platí jen pro kroky, jejichž runtime je umí (krok js v modulu dom je nedostane).
+  const moduleLibs = LIB_RUNTIMES.includes(runtime) ? parseLibs(defaultLibs, { id, where: 'module.json libs' }) : [];
+  const libs = [...new Set([...moduleLibs, ...ownLibs])];
 
   const description = joinText(byName.description.rows);
   if (!description) throw new ParseError('prázdný popis', { id });
@@ -663,6 +699,8 @@ export function parseStep(src, { id, defaultRuntime = 'dom', defaultTitle = '', 
     approaches,
     review,
     see,
+    // Jen když krok nějaké knihovny má — výstup kroků bez knihoven se nemění.
+    ...(libs.length ? { libs } : {}),
     meta,
   };
 }
@@ -727,14 +765,20 @@ export function parseQuiz(src, { id } = {}) {
 // ===========================================================================
 
 const LIVE_NAMES = { html: 'index.html', css: 'styles.css', js: 'script.js', javascript: 'script.js' };
+/** :::live react: komponenta s výchozím exportem se vykreslí do #root sama (kap. 6.11). */
+const REACT_LIVE_NAMES = { jsx: 'App.jsx', tsx: 'App.tsx', css: 'styles.css' };
 const LESSON_BLOCKS = ['live', 'check', 'explain', 'memory', 'compare'];
 
-/** Bloky kódu html/css/js jako soubory (každý jazyk nejvýš jednou). */
-function liveFiles(blocks, { id, line, where }) {
+/** Bloky kódu html/css/js (u react jsx/tsx/css) jako soubory (každý jazyk nejvýš jednou). */
+function liveFiles(blocks, { id, line, where, runtime = 'dom' }) {
   const files = [];
+  const names = runtime === 'react' ? REACT_LIVE_NAMES : LIVE_NAMES;
   for (const b of blocks) {
-    const name = LIVE_NAMES[b.lang];
-    if (!name) throw new ParseError(`${where} umí jen bloky html, css a js, ne "${b.lang || 'bez jazyka'}"`, { id, line: b.line });
+    const name = names[b.lang];
+    if (!name) throw new ParseError(`${where} umí jen bloky ${runtime === 'react' ? 'jsx (nebo tsx) a css' : 'html, css a js'}, ne "${b.lang || 'bez jazyka'}"`, { id, line: b.line });
+    if (runtime === 'react' && /\.[jt]sx$/.test(name) && files.some((f) => /\.[jt]sx$/.test(f.name))) {
+      throw new ParseError(`${where} má dva bloky komponenty (jsx a tsx) — patří tam jen jeden`, { id, line: b.line });
+    }
     if (files.some((f) => f.name === name)) throw new ParseError(`${where} má dva bloky stejného jazyka (${b.lang})`, { id, line: b.line });
     files.push({ name, lang: langOf(name), content: b.content });
   }
@@ -864,7 +908,7 @@ function parsePredict(markers, { id, line, runtime, nextKey }) {
     single[m.name] = m;
     // Blok souboru (html/css/js/controls) za první značkou nepatří do obsahu hodnot.
     if (['expected', 'accept', 'output', 'see'].includes(m.name)) {
-      const fileBlock = fences(m.rows).find((b) => LIVE_NAMES[b.lang] || b.lang === 'controls');
+      const fileBlock = fences(m.rows).find((b) => LIVE_NAMES[b.lang] || REACT_LIVE_NAMES[b.lang] || b.lang === 'controls');
       if (fileBlock) throw new ParseError(`blok souboru (${fileBlock.lang}) za první značkou předpovědi — soubory patří před --question--`, { id, line: fileBlock.line });
     }
   }
@@ -890,7 +934,7 @@ function parsePredict(markers, { id, line, runtime, nextKey }) {
     // `why` předpovědi s výběrem vysvětluje celou otázku, ne jednu možnost.
     question = { type: 'choice', text, multiple: options.filter((o) => o.correct).length > 1, answers: options, why, see };
   } else {
-    if (runtime === 'dom' || runtime === 'vue') {
+    if (runtime === 'dom' || runtime === 'vue' || runtime === 'react') {
       throw new ParseError(`předpověď ${runtime} umí jen otázku s výběrem (--option--), ne --expected--`, { id, line });
     }
     if (!single.expected && !output) throw new ParseError('předpověď nemá --expected-- ani --option--', { id, line });
@@ -905,12 +949,21 @@ function parseLiveBlock(block, { id, nextKey }) {
   const tokens = (block.arg ?? '').split(/\s+/).filter(Boolean);
   let runtime = 'dom';
   let predict = false;
+  let libs = [];
+  let libsSeen = false;
   tokens.forEach((token, i) => {
     if (token === 'predict' && i === tokens.length - 1) predict = true;
     else if (RUNTIMES.includes(token) && i === 0) runtime = token;
-    else throw new ParseError(`neznámý argument "${token}" u :::live (čekám :::live [dom|js|vue|node] [predict])`, { id, line: block.line });
+    else if (/^libs=/.test(token) && !libsSeen) {
+      libsSeen = true;
+      libs = parseLibs(token.slice('libs='.length), { id, line: block.line, where: ':::live libs=' });
+      if (libs.length === 0) throw new ParseError(':::live libs= bez knihoven', { id, line: block.line });
+    } else throw new ParseError(`neznámý argument "${token}" u :::live (čekám :::live [dom|js|vue|react|node] [libs=tailwind,gsap] [predict])`, { id, line: block.line });
   });
   if (runtime === 'node' && !predict) throw new ParseError(':::live node je povolené jen s predict', { id, line: block.line });
+  if (libs.length && !LIB_RUNTIMES.includes(runtime)) {
+    throw new ParseError(`libs umí jen runtime ${LIB_RUNTIMES.join(', ')}, ne ${runtime}`, { id, line: block.line });
+  }
 
   const { fileRows, markers } = predict ? splitPredictMarkers(block.rows) : { fileRows: block.rows, markers: [] };
   const stray = proseRows(fileRows)[0];
@@ -936,13 +989,15 @@ function parseLiveBlock(block, { id, nextKey }) {
     }
     files = [{ name: 'index.js', lang: 'js', content: fileBlocks[0].content }];
   } else {
-    files = liveFiles(fileBlocks, { id, line: block.line, where: ':::live' });
+    files = liveFiles(fileBlocks, { id, line: block.line, where: ':::live', runtime });
   }
   if (files.length === 0) throw new ParseError(':::live bez kódu', { id, line: block.line });
+  // Jen když ukázka nějaké knihovny má — výstup ostatních ukázek se nemění.
+  const withLibs = libs.length ? { libs } : {};
 
-  if (!predict) return { kind: 'live', runtime, files, controls, predict: null, output: null };
+  if (!predict) return { kind: 'live', runtime, files, controls, predict: null, output: null, ...withLibs };
   const { question, output } = parsePredict(markers, { id, line: block.line, runtime, nextKey });
-  return { kind: 'live', runtime, files, controls, predict: question, output };
+  return { kind: 'live', runtime, files, controls, predict: question, output, ...withLibs };
 }
 
 function parseMemoryBlock(block, { id }) {

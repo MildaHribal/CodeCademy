@@ -2,6 +2,7 @@
 // nebo celá aplikace (E2E).
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { ensureVendor } from '../build-vendor.js';
 
 export const PROJECT_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
 
@@ -19,6 +20,8 @@ export async function buildRunner(outDir) {
  * @param {{ input?: object }} options  jiné vstupy než ve vite.config.js
  */
 export async function buildClient(outDir, { input = null } = {}) {
+  // Knihovny pro runtime (React, Motion…) — server je vydává z node_modules/.cache (kap. 6.10).
+  await ensureVendor();
   const vite = await import('vite');
   const configFile = path.join(PROJECT_ROOT, 'vite.config.js');
   const loaded = await vite.loadConfigFromFile({ command: 'build', mode: 'production' }, configFile, PROJECT_ROOT, 'silent');

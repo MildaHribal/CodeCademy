@@ -21,7 +21,7 @@ const NEW_TAB_URL_LIFETIME_MS = 60_000;
 
 /**
  * @param {HTMLElement} container
- * @param {{ runtime?: 'dom'|'js'|'vue'|'node', files?: Array<{ name: string, content: string }>,
+ * @param {{ runtime?: 'dom'|'js'|'vue'|'react'|'node', files?: Array<{ name: string, content: string }>, libs?: string[],
  *   viewport?: { width: number, height: number } | null }} initial
  * @returns {Preview}
  *
@@ -29,14 +29,14 @@ const NEW_TAB_URL_LIFETIME_MS = 60_000;
  * (`{ level: 'error', text, uncaught: true, file?, line?, column? }`).
  * Před každým novým spuštěním přijde `{ level: 'clear' }`.
  */
-export function mountPreview(container, { runtime = 'dom', files = [], viewport = null } = {}) {
+export function mountPreview(container, { runtime = 'dom', files = [], libs = [], viewport = null } = {}) {
   const listeners = new Set();
   const root = document.createElement('div');
   root.className = 'akademie-preview';
   Object.assign(root.style, { width: '100%', height: '100%', position: 'relative' });
   container.append(root);
 
-  let current = { runtime, files };
+  let current = { runtime, files, libs };
   let currentViewport = normalizeViewport(viewport);
   const cssVariables = {};
   let session = null;
@@ -71,6 +71,7 @@ export function mountPreview(container, { runtime = 'dom', files = [], viewport 
     return composePage({
       runtime: current.runtime,
       files: current.files,
+      libs: current.libs,
       loopLimitMs: PREVIEW_LOOP_LIMIT_MS,
       origin: location.origin,
       frame: { runId, mode: 'preview', cssVariables: { ...cssVariables } },
@@ -149,7 +150,7 @@ export function mountPreview(container, { runtime = 'dom', files = [], viewport 
   return {
     update(next = {}) {
       if (destroyed) return;
-      current = { runtime: next.runtime ?? current.runtime, files: next.files ?? current.files };
+      current = { runtime: next.runtime ?? current.runtime, files: next.files ?? current.files, libs: next.libs ?? current.libs };
       clearTimeout(debounceTimer);
       debounceTimer = setTimeout(render, UPDATE_DEBOUNCE_MS);
     },

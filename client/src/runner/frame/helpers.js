@@ -6,7 +6,7 @@
  * @param {{ stripComments: Function, findCssRules: Function, setTimeout: Function,
  *   requestResize: (width: number, height: number) => Promise<void>,
  *   waitForLayout: (limitMs: number) => Promise<void>,
- *   importFile: (name: string) => Promise<object> }} bridge
+ *   importFile: (name: string) => Promise<object>, flush?: () => Promise<void> }} bridge
  */
 export function createHelpers(bridge) {
   const setTimer = bridge.setTimeout;
@@ -139,5 +139,8 @@ export function createHelpers(bridge) {
     },
 
     importFile: (name) => bridge.importFile(name),
+
+    /** Počká, až React dokončí vykreslení (i efekty) a doběhnou mikroúlohy a Tailwind. */
+    flush: () => (bridge.flush ? bridge.flush() : wait(0)),
   };
 }

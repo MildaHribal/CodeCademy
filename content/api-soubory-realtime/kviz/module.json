@@ -1,0 +1,1 @@
+{ "type": "quiz", "title": "Kvíz: soubory, realtime a úlohy na pozadí", "summary": "Ověř si bezpečné nahrávání, volbu mezi SSE a WebSocketem a idempotenci — i v cizím kódu.", "minutes": 30 }

@@ -1,10 +1,12 @@
 // runTests(request) → RunResult (kontrakt kap. 6.1).
 import { findSyntaxError, syntaxErrorResult } from '../../../shared/syntax-check.js';
+import { findReactSyntaxError } from './jsx-transform.js';
 import { runNodeTestsRemote } from './node-client.js';
 import { runInFrame } from './run-in-frame.js';
+import { normalizeLibs } from './vendor-libs.js';
 
-export const RUNTIMES = ['dom', 'js', 'vue', 'node'];
-const DEFAULT_TIMEOUT_MS = { dom: 5000, js: 5000, vue: 5000, node: 10000 };
+export const RUNTIMES = ['dom', 'js', 'vue', 'react', 'node'];
+const DEFAULT_TIMEOUT_MS = { dom: 5000, js: 5000, vue: 5000, react: 5000, node: 10000 };
 
 export const SKIPPED_MESSAGE = 'Neověřeno — stránka se už při načítání zasekla (nekonečná smyčka?), další testy se proto nespouštěly.';
 export const CANCELLED_MESSAGE = 'Neověřeno — kontrola byla zrušena.';
@@ -34,14 +36,16 @@ export async function runTests(request) {
   const signal = request.signal ?? null;
   // Nepovinné: počáteční obsah localStorage/sessionStorage v sandboxu (kontrakt kap. 13, návrh).
   const storage = normalizeStorage(request.storage);
+  // Nepovinné: knihovny stránky (kontrakt kap. 6.10), např. ['tailwind', 'gsap'].
+  const libs = normalizeLibs(request.libs);
 
   if (runtime === 'node') return runNodeTestsRemote({ files, hints, timeoutMs, signal });
 
-  // Runtime js žádné HTML neskládá, inline skripty v něm se nespustí.
-  const syntaxError = findSyntaxError(files, { includeHtml: runtime !== 'js' });
+  // Runtime js žádné HTML neskládá, inline skripty v něm se nespustí. React překládá JSX.
+  const syntaxError = runtime === 'react' ? findReactSyntaxError(files) : findSyntaxError(files, { includeHtml: runtime !== 'js' });
 
   if (hints.length === 0) {
-    const page = await runInFrame({ runtime, files, test: null, timeoutMs, signal, storage });
+    const page = await runInFrame({ runtime, files, libs, test: null, timeoutMs, signal, storage });
     return { ok: page.pass, results: [], logs: page.logs, errors: page.pass ? page.errors : [...page.errors, page.error], syntaxError };
   }
 
@@ -55,7 +59,7 @@ export async function runTests(request) {
       results.push({ index, pass: false, skipped: true, error: pageStuck ? SKIPPED_MESSAGE : CANCELLED_MESSAGE });
       continue;
     }
-    const outcome = await runInFrame({ runtime, files, test: String(hint.test ?? ''), timeoutMs, signal, storage });
+    const outcome = await runInFrame({ runtime, files, libs, test: String(hint.test ?? ''), timeoutMs, signal, storage });
     first ??= outcome;
     results.push(outcome.pass ? { index, pass: true } : { index, pass: false, error: outcome.error, ...outcome.details });
     pageStuck = !outcome.pass && outcome.phase === 'load';

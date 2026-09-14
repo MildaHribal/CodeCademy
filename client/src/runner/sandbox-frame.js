@@ -8,7 +8,9 @@ export const TEST_VIEWPORT = { width: 1024, height: 768 };
 /**
  * Neviditelný iframe pro testy. Záměrně leží v okně (průhledný, pod obsahem), ne mimo
  * obrazovku: iframe mimo viditelnou oblast Chrome přestane vykreslovat, a pak nefungují
- * requestAnimationFrame, ResizeObserver ani CSS přechody.
+ * requestAnimationFrame, ResizeObserver ani CSS přechody. Průhlednost je 0.01, ne 0: úplně
+ * průhledný iframe z cizího originu Chrome po první animaci (Web Animations, Motion, GSAP
+ * přes CSS) přiškrtí na pár snímků za sekundu a animace v testu by trvaly sekundy.
  */
 export function createHiddenFrame({ width = TEST_VIEWPORT.width, height = TEST_VIEWPORT.height } = {}) {
   const frame = createFrame('Běh testu');
@@ -21,7 +23,7 @@ export function createHiddenFrame({ width = TEST_VIEWPORT.width, height = TEST_V
     width: `${width}px`,
     height: `${height}px`,
     border: '0',
-    opacity: '0',
+    opacity: '0.01',
     pointerEvents: 'none',
     zIndex: '-1',
   });

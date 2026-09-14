@@ -59,7 +59,13 @@ function languageFor(lang) {
     case 'json':
       return javascript();
     case 'ts':
+    case 'mts':
+    case 'cts':
       return javascript({ typescript: true });
+    case 'jsx':
+      return javascript({ jsx: true });
+    case 'tsx':
+      return javascript({ jsx: true, typescript: true });
     default:
       return [];
   }

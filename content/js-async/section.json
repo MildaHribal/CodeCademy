@@ -1,0 +1,5 @@
+{
+  "title": "Asynchronní JavaScript a fetch",
+  "intro": "draft",
+  "modules": ["event-loop"]
+}

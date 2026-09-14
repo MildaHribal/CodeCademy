@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Funkce", "summary": "Deklarace, šipka, parametry a argumenty, return, výchozí a zbytkové parametry a čistá funkce.", "minutes": 30, "runtime": "js" }
