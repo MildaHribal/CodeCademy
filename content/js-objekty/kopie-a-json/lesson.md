@@ -361,7 +361,7 @@ console.log(JSON.stringify(event));
 | `undefined`, funkce | vlastnost zmizí (v poli `null`) | chybí |
 | `Map`, `Set` | `{}` | prázdný objekt |
 
-Proto `JSON.parse(JSON.stringify(data))` není univerzální hluboká kopie, i když ji tak uvidíš používat ve starším kódu. Funguje jen pro data bez dat, `undefined` a speciálních hodnot. Datum si po načtení obnovíš sám: `new Date(text)`.
+Proto `JSON.parse(JSON.stringify(data))` není univerzální hluboká kopie, i když ji tak uvidíš používat ve starším kódu. Funguje jen pro data bez `Date`, `undefined`, funkcí a speciálních hodnot jako `NaN`. Datum si po načtení obnovíš sám: `new Date(text)`.
 
 :::check
 Po načtení nastavení z JSON je v `settings.lastSynced` text `'2026-09-14T08:00:00.000Z'`. Napiš výraz, který z něj vytvoří zpátky datum.
@@ -500,7 +500,7 @@ js-objekty/kopie-a-json#kterou-kopii-vybrat
 ### Datum po JSON
 
 > [!PITFALL]
-> **Po `JSON.parse` je datum text.** Příznak: `TypeError: settings.lastSynced.getFullYear is not a function`, nebo řazení podle data řadí texty. Oprava: po načtení `new Date(settings.lastSynced)`.
+> **Po `JSON.parse` je datum text.** Příznak: `TypeError: settings.lastSynced.getFullYear is not a function`, nebo rozdíl dvou dat (`b.lastSynced - a.lastSynced`) vyjde `NaN`. Oprava: po načtení `new Date(settings.lastSynced)`.
 
 ### Porovnání objektů přes JSON
 

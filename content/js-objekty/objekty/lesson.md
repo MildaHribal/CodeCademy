@@ -383,6 +383,8 @@ const { rank = 'nováček' } = player;     // výchozí hodnota, když rank chyb
 const { stats: { kills } = {} } = player; // zanoření s pojistkou
 ```
 
+Poslední řádek sáhne o patro níž: z objektu v `player.stats` vytáhne `kills`. Hráč ale `stats` nemá, a proto je za vnořenými složenými závorkami `= {}` — pojistka, díky které se čte z prázdného objektu, a ne z `undefined`. Proměnná `stats` přitom nevznikne, jen `kills`.
+
 Tři tečky na konci posbírají [[zbytek vlastností]] (*rest*) do nového objektu: `const { clan, ...publicInfo } = player` dá do `publicInfo` všechny vlastnosti kromě `clan`. Hodí se, když chceš z objektu něco vynechat, třeba heslo.
 
 Nejčastěji uvidíš destrukturalizaci **v parametrech funkce**. Funkce pak rovnou říká, které vlastnosti z objektu potřebuje:

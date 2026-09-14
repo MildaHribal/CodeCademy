@@ -321,7 +321,7 @@ Spread kopíruje i vlastnost s hodnotou `undefined`, a pozdější vlastnost př
 
 ### --see--
 
-js-objekty/kopie-a-json#kopie-po-patrech
+js-objekty/workshop-nastaveni-aplikace/008
 
 ## --card-- code js
 
@@ -503,15 +503,15 @@ js-objekty/reference-a-mutace#const-nezamrazi-obsah
 
 ## --card-- free
 
-Předává JavaScript objekty do funkce „odkazem"? Vysvětli, co se doopravdy předá.
+Proč `Object.freeze` nestačí, když chceš data v aplikaci chránit před nechtěnou změnou?
 
 ### --back--
 
-Parametr dostane kopii hodnoty argumentu, a u objektu je tou hodnotou odkaz. Parametr i proměnná volajícího tak ukazují na tentýž objekt: zápis do vlastnosti je vidět u volajícího. Přiřazení do parametru ale přesměruje jen parametr a volajícího nezmění. Proto se tomu někdy říká předávání sdílením, ne „odkazem".
+`Object.freeze` zamkne jen první patro, vnořené objekty jde měnit dál. Zápis do zmrazené vlastnosti v obyčejném skriptu navíc nic nehlásí, jen se tiše neprovede, takže chybu hledáš dlouho. A zmrazení nic nekopíruje: zamkne originál, takže ho nezměníš ani tam, kde změnit chceš. V praxi se data chrání tím, že je funkce nemutují a místo zápisu vracejí nový objekt.
 
 ### --see--
 
-js-objekty/reference-a-mutace#objekt-v-parametru-funkce
+js-objekty/reference-a-mutace#object-freeze-tise-selze
 
 ## --card-- free
 
@@ -527,15 +527,15 @@ js-objekty/kopie-a-json#kterou-kopii-vybrat
 
 ## --card-- free
 
-Proč `JSON.parse(JSON.stringify(data))` není spolehlivá hluboká kopie?
+Aplikace při startu načítá nastavení z `localStorage`. Na jaké situace musí kód myslet, aby nespadl ani nepřišel o data?
 
 ### --back--
 
-JSON zná jen texty, čísla, booleany, `null`, pole a obyčejné objekty. Datum se změní na text, `undefined` a funkce zmizí, `NaN` se stane `null` a `Map` nebo `Set` prázdným objektem — a nic z toho nehlásí chybu. `structuredClone` kopíruje hodnoty bez převodu na text a data i `Map` zachová. JSON patří na uložení a posílání dat, ne na kopii.
+Pod klíčem nemusí být nic: `getItem` vrátí `null` a použije se výchozí nastavení. Text může být poškozený: `JSON.parse` vyhodí `SyntaxError`, proto patří do `try…catch` s náhradní hodnotou. Platný JSON nemusí být objekt (`42`, `null`), a to je potřeba zkontrolovat zvlášť. Uložená data můžou být neúplná nebo ze starší verze, proto se slučují s výchozím nastavením po skupinách. A datum je po načtení text, takže se obnoví přes `new Date(…)`.
 
 ### --see--
 
-js-objekty/kopie-a-json#co-json-ztrati
+js-objekty/kopie-a-json#bezpecne-nacteni-json
 
 ## --card-- free
 
@@ -551,15 +551,15 @@ js-objekty/reference-a-mutace#porovnani-se-pta-na-identitu
 
 ## --card-- free
 
-Kdy čteš vlastnost objektu tečkou a kdy hranatými závorkami?
+Proč je dobré ukládat jen to, čím se nastavení liší od výchozího, a při načtení ho slučovat s výchozím nastavením po skupinách?
 
 ### --back--
 
-Tečku píšu, když jméno klíče znám při psaní kódu: `product.price`. Hranaté závorky potřebuju, když je jméno klíče v proměnné nebo ho počítám (`product[field]`), a pro klíče, které nejsou platné jméno, třeba s mezerou nebo pomlčkou. Tečka totiž bere jméno doslova, kdežto výraz v závorkách se nejdřív vyhodnotí.
+Uložený text je kratší a hlavně nezamrazí výchozí hodnoty: když nová verze aplikace změní výchozí hodnotu, kterou uživatel nikdy neměnil, dostane ji taky. Při načtení se chybějící hodnoty doplní z výchozího nastavení. Slučovat se musí po skupinách, protože spread slučuje jen první patro a uložená skupina s jedinou hodnotou by jinak nahradila celou výchozí skupinu.
 
 ### --see--
 
-js-objekty/objekty#hranate-zavorky-klic-v-promenne
+js-objekty/workshop-nastaveni-aplikace/016
 
 ## --card-- free
 

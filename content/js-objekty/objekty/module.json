@@ -1,1 +1,1 @@
-{ "type": "lesson", "title": "Objekty", "summary": "Tečka a hranaté závorky, metody, chybějící vlastnosti, destrukturalizace a procházení objektu.", "minutes": 30, "runtime": "js" }
+{ "type": "lesson", "title": "Objekty", "summary": "Tečka a hranaté závorky, metody, chybějící vlastnosti, destrukturalizace a procházení objektu.", "minutes": 50, "runtime": "js" }

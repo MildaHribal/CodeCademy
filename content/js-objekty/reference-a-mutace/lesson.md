@@ -697,21 +697,25 @@ js-objekty/reference-a-mutace#funkce-ktera-ma-vracet-zmutuje-vstup
 
 ## --question--
 
-Napiš výraz, který vrátí `true`, když proměnné `a` a `b` ukazují na **tentýž** objekt.
+Co vypíše poslední řádek?
+
+```js
+const limits = Object.freeze({ perDay: 5000 });
+const raised = { ...limits, perDay: 8000 };
+
+raised.perDay = 9000;
+
+console.log(limits.perDay, raised.perDay);
+```
 
 ### --expected--
 
-a === b
-
-### --accept--
-
-b === a
-Object.is(a, b)
+5000 9000
 
 ### --why--
 
-U objektů `===` porovnává identitu, tedy jestli obě strany ukazují na jeden objekt. Pro obsah bys musel porovnat vlastnosti.
+Spread nevrací zmrazený objekt, ale **nový** obyčejný objekt, do kterého jen zkopíruje vlastnosti. `Object.freeze` platí pro objekt `limits`, ne pro jeho kopie, takže `raised` jde měnit dál. Zmrazený `limits` zůstal beze změny.
 
 ### --see--
 
-js-objekty/reference-a-mutace#porovnani-se-pta-na-identitu
+js-objekty/reference-a-mutace#object-freeze-je-melke

@@ -1,1 +1,1 @@
-{ "type": "lesson", "title": "Mělká a hluboká kopie, JSON", "summary": "Kolik pater zkopíruje spread, kdy sáhnout po `structuredClone`, jak data uložit a načíst přes JSON a co při tom ztratíš.", "minutes": 30, "runtime": "js" }
+{ "type": "lesson", "title": "Mělká a hluboká kopie, JSON", "summary": "Kolik pater zkopíruje spread, kdy sáhnout po `structuredClone`, jak data uložit a načíst přes JSON a co při tom ztratíš.", "minutes": 45, "runtime": "js" }

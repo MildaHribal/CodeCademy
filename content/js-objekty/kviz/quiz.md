@@ -188,25 +188,31 @@ js-objekty/reference-a-mutace#objekt-v-parametru-funkce
 
 ## --question--
 
-Co vypíše tenhle kód?
+Co vypíše poslední řádek?
 
 ```js
-const make = () => ({ ok: true });
-const broken = () => { ok: true };
-console.log(make().ok, broken());
+const prices = { kava: 49, caj: 39 };
+const pairs = [];
+
+for (const [drink, price] of Object.entries(prices)) {
+  pairs.push([drink.toUpperCase(), price + 10]);
+}
+
+const menu = Object.fromEntries(pairs);
+console.log(menu.KAVA, prices.kava);
 ```
 
 ### --expected--
 
-true undefined
+59 49
 
 ### --why--
 
-V `make` jsou složené závorky obalené kulatými, takže jde o objekt a funkce ho vrátí. V `broken` začíná složená závorka tělo funkce: `ok:` je tam návěští a `true` obyčejný výraz, funkce nemá `return`, a vrací `undefined`. Chybu kód nehlásí, protože je platný.
+`Object.entries` vrátí nové pole dvojic, cyklus z nich poskládá další nové pole s upravenými klíči i cenami a `Object.fromEntries` z něj postaví nový objekt `{ KAVA: 59, CAJ: 49 }`. Do objektu `prices` nikdo nezapisoval, takže káva v něm stojí pořád `49`.
 
 ### --see--
 
-js-objekty/objekty#sipkova-funkce-ktera-ma-vratit-objekt
+js-objekty/objekty#prochazeni-objektu-object-keys-values-a-entries
 
 ## --question--
 
