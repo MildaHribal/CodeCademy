@@ -1,1 +1,1 @@
-{ "type": "workshop", "title": "Uložené hry", "summary": "Postavíš menu Nahrát hru pro farmářskou hru: poškozené pozice nespadnou, ale ukážou srozumitelný důvod, a záloha, import i souhrn chyb fungují i na rozbitých datech.", "minutes": 70, "runtime": "js" }
+{ "type": "workshop", "title": "Uložené hry", "summary": "Postavíš menu Nahrát hru pro farmářskou hru: poškozené pozice nespadnou, ale ukážou srozumitelný důvod, a záloha, import i souhrn chyb fungují i na rozbitých datech.", "minutes": 80, "runtime": "js" }

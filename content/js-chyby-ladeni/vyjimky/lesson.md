@@ -392,7 +392,7 @@ js-chyby-ladeni/vyjimky#chyba-uzivatele-a-chyba-programu
 
 ## Obalení chyby přes `cause`
 
-Zpráva `Unexpected end of JSON input` říká, **co** selhalo, ale ne **při čem**.
+Zpráva `Unexpected end of JSON input` říká, ==co== selhalo, ale ne ==při čem==.
 Kdyby hra načítala deset pozic, nevíš, která z nich je poškozená. Proto chybu
 chytíš, vyhodíš novou se zprávou, která dává smysl na tvé úrovni, a původní přidáš
 jako [[příčina chyby|příčinu]] (*cause*): `new Error(zpráva, { cause: původníChyba })`.

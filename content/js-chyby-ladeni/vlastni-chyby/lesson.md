@@ -237,6 +237,9 @@ class NotFoundError extends AppError {}
 nastaví samo i u potomků. `error instanceof AppError` platí pro `ValidationError`
 i `NotFoundError`, ale ne pro `TypeError` z překlepu v kódu.
 
+> [!NOTE]
+> Nástroje, které aplikaci před nasazením zmenšují (minifikace), umí jména tříd zkrátit na `a` nebo `e`, a pak by `this.constructor.name` vrátilo nesmysl. Knihovny proto `name` často píšou v každé třídě ručně. K sestavení aplikace se dostaneš v sekci o modulech a Vite.
+
 Hierarchii nepřeháněj. Třída se vyplatí jen tehdy, když na ni nějaký `catch`
 reaguje jinak než na ostatní. Dvě až čtyři třídy na menší aplikaci stačí.
 

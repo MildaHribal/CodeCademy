@@ -1,0 +1,1 @@
+{ "type": "quiz", "title": "Kvíz: chyby a ladění", "summary": "Čtení kódu s výjimkami: co se vypíše s finally, kde chybu chytit, jak číst hlášku a stack trace a co se stane v cizím importu přihlášek.", "minutes": 30 }

@@ -1,10 +1,72 @@
 {
   "title": "Chyby a systematické ladění",
-  "intro": "draft",
+  "intro": "Každá aplikace, která čte data odjinud — formulář, uložený soubor, odpověď serveru —, jednou dostane nesmysl. Rozdíl mezi amatérským a profesionálním kódem není v tom, jestli chyby nastanou, ale co se pak stane: spadne celá stránka, tiše projde objednávka za `NaN` Kč, nebo uživatel uvidí srozumitelnou hlášku a vývojář v konzoli přesnou příčinu. V téhle sekci se naučíš chyby **vyhodit, chytit na správném místě a obalit tak, aby šly dohledat** — a hlavně hledat chyby v cizím kódu systematicky, bez hádání.\n\nPostup: lekce o výjimkách a workshop, ve kterém postavíš menu uložených her odolné vůči poškozeným datům. Pak lekce o vlastních třídách chyb a workshop s validací objednávky pro e-shop s kávou, zakončený skutečným formulářem s hláškami u políček. Lab s formulářem na téma podle tebe, lekce o systematickém ladění, lab s pěti skrytými chybami bez nápověd a kvíz nad cizím importem přihlášek. Karty z téhle sekce se ti pak budou vracet v opakování.\n\n**Předpoklady:** funkce a closures, objekty a pole, třídy a dědičnost (`extends`, `super`), JSON a základy debuggeru ze sekce Základy JavaScriptu.",
   "modules": [
     "vyjimky",
     "workshop-ulozene-hry",
     "vlastni-chyby",
-    "workshop-validace-dat"
+    "workshop-validace-dat",
+    "lab-formular-podle-tebe",
+    "ladeni-systematicky",
+    "lab-oprav-chyby",
+    "kviz"
+  ],
+  "outcomes": [
+    {
+      "text": "Rozlišíš očekávanou chybu (špatný vstup, poškozená data) od chyby programu a u každé víš, jestli ji chytit, nebo nechat spadnout.",
+      "links": [
+        "js-chyby-ladeni/vyjimky#chyba-uzivatele-a-chyba-programu",
+        "js-chyby-ladeni/workshop-ulozene-hry/011",
+        "js-chyby-ladeni/workshop-validace-dat/017"
+      ]
+    },
+    {
+      "text": "Vyhodíš chybu správného druhu se srozumitelnou zprávou, chytíš ji v `try…catch` a úklid dáš do `finally` bez `return`.",
+      "links": [
+        "js-chyby-ladeni/vyjimky#co-vyhodit-objekt-error-se-srozumitelnou-zpravou",
+        "js-chyby-ladeni/vyjimky#finally-uklid-at-to-dopadne-jakkoli",
+        "js-chyby-ladeni/workshop-ulozene-hry/016"
+      ]
+    },
+    {
+      "text": "Obalíš chybu přes `cause`, aby šla dohledat, a víc chyb najednou nahlásíš přes `AggregateError`.",
+      "links": [
+        "js-chyby-ladeni/vyjimky#obaleni-chyby-pres-cause",
+        "js-chyby-ladeni/vyjimky#vic-chyb-najednou-aggregateerror",
+        "js-chyby-ladeni/workshop-ulozene-hry/013"
+      ]
+    },
+    {
+      "text": "Napíšeš vlastní třídu chyby s `name` a údaji navíc a v `catch` přes `instanceof` zpracuješ jen to, co umíš vyřešit.",
+      "links": [
+        "js-chyby-ladeni/vlastni-chyby#vlastni-trida-chyby",
+        "js-chyby-ladeni/vlastni-chyby#instanceof-v-catch-chyt-jen-to-co-umis-vyresit",
+        "js-chyby-ladeni/workshop-validace-dat/013"
+      ]
+    },
+    {
+      "text": "Rozhodneš mezi výjimkou a výsledkovým objektem `{ ok, value, errors }` a postavíš validaci, která vrátí všechny chyby formuláře najednou.",
+      "links": [
+        "js-chyby-ladeni/vlastni-chyby#vyjimka-nebo-navratova-hodnota",
+        "js-chyby-ladeni/workshop-validace-dat/016",
+        "js-chyby-ladeni/lab-formular-podle-tebe"
+      ]
+    },
+    {
+      "text": "Vysvětlíš, kde v aplikaci chyby chytat, a nahoře postavíš záchrannou síť, která chybu zapíše do konzole a uživateli ukáže hlášku.",
+      "links": [
+        "js-chyby-ladeni/vyjimky#kde-chybu-chytat",
+        "js-chyby-ladeni/workshop-validace-dat/023"
+      ]
+    },
+    {
+      "text": "Najdeš chybu v cizím kódu systematicky: zopakuješ ji, vyslovíš hypotézu, zúžíš místo bisekcí a použiješ breakpoint na výjimce, podmíněný breakpoint, logpoint a `console.assert`.",
+      "links": [
+        "js-chyby-ladeni/ladeni-systematicky#nejdriv-chybu-spolehlive-zopakuj",
+        "js-chyby-ladeni/ladeni-systematicky#bisekce-pul-kodu-pryc",
+        "js-chyby-ladeni/ladeni-systematicky#podmineny-breakpoint-a-logpoint",
+        "js-chyby-ladeni/lab-oprav-chyby"
+      ]
+    }
   ]
 }

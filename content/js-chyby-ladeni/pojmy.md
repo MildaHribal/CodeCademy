@@ -64,3 +64,43 @@ aliases: validaci na hranici, validací na hranici, hranice aplikace, hranici ap
 lekce: js-chyby-ladeni/vlastni-chyby#validace-na-hranici
 
 Data se zkontrolují a převedou do správného tvaru jednou, v místě, kde vstupují do aplikace (formulář, JSON, adresa). Zbytek programu jim pak věří.
+
+## --term-- minimální reprodukce
+
+en: minimal reproducible example
+aliases: minimální reprodukci, minimální reprodukcí, minimální reprodukce chyby
+lekce: js-chyby-ladeni/ladeni-systematicky#nejdriv-chybu-spolehlive-zopakuj
+
+Nejmenší kód a data, na kterých se chyba ještě spolehlivě ukáže. Čím menší reprodukce, tím méně kódu zbývá podezírat; hodí se i do otázky pro kolegu.
+
+## --term-- bisekce
+
+en: bisection
+aliases: bisekci, bisekcí, půlení kódu
+lekce: js-chyby-ladeni/ladeni-systematicky#bisekce-pul-kodu-pryc
+
+Hledání chyby půlením: zkontroluješ mezivýsledek uprostřed a polovinu, kde je všechno v pořádku, vyřadíš. Z 64 kroků najdeš chybný na šest kontrol.
+
+## --term-- podmíněný breakpoint
+
+en: conditional breakpoint
+aliases: podmíněného breakpointu, podmíněným breakpointem, podmíněné breakpointy
+lekce: js-chyby-ladeni/ladeni-systematicky#podmineny-breakpoint-a-logpoint
+
+Breakpoint s podmínkou (`order.id === 337`): program se na řádku zastaví, jen když podmínka platí. V Chrome ho přidáš pravým tlačítkem na číslo řádku v panelu Sources.
+
+## --term-- logpoint
+
+en: logpoint
+aliases: logpointu, logpointem, logpointy
+lekce: js-chyby-ladeni/ladeni-systematicky#podmineny-breakpoint-a-logpoint
+
+Značka na řádku v DevTools, která místo zastavení vypíše do konzole zprávu. Do souboru nic nepřidá, takže na výpis nezapomeneš v kódu.
+
+## --term-- gumová kachna
+
+en: rubber duck debugging
+aliases: gumové kachně, gumovou kachnu, rubber duck
+lekce: js-chyby-ladeni/ladeni-systematicky#kdyz-se-zaseknes-gumova-kachna-a-dobra-otazka
+
+Technika ladění: vysvětluješ kód nahlas řádek po řádku, co opravdu dělá. Chyba se často ukáže uprostřed věty, protože musíš říct, co kód dělá, ne co si myslíš, že dělá.

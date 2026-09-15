@@ -1,1 +1,1 @@
-{ "type": "lesson", "title": "Výjimky", "summary": "Jak chybu vyhodit, chytit a uklidit po ní, jak ji obalit přes cause, aby šla dohledat, a kde ji chytat, aby se neztratila.", "minutes": 30, "runtime": "js" }
+{ "type": "lesson", "title": "Výjimky", "summary": "Jak chybu vyhodit, chytit a uklidit po ní, jak ji obalit přes cause, aby šla dohledat, a kde ji chytat, aby se neztratila.", "minutes": 45, "runtime": "js" }

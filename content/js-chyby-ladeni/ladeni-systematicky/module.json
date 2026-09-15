@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Ladění systematicky", "summary": "Jak najít chybu v cizím kódu bez hádání: zopakovat ji, vyslovit hypotézu, půlit kód a použít breakpoint na výjimce, podmíněný breakpoint, logpoint a konzoli naplno.", "minutes": 45, "runtime": "js" }

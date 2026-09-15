@@ -1,0 +1,1 @@
+{ "type": "lab", "title": "Formulář podle tebe", "summary": "Samostatně napíšeš validaci formuláře na téma, které si vybereš: vlastní třídu chyby, sbírání chyb políček, čtení JSON, záchrannou síť a zprávu pro uživatele.", "minutes": 70, "runtime": "js" }

@@ -1,0 +1,1 @@
+{ "type": "lab", "title": "Oprav pět chyb", "summary": "Kolegův rezervační systém tenisového klubu má pět chyb z pětice pastí: mutaci, ztracené this, cyklus o jedna delší, volnou rovnost a desetinná čísla. Najdi je bez nápověd a nic dalšího nerozbij.", "minutes": 50, "runtime": "js" }
