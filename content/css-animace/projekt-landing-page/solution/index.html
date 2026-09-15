@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="cs">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Dělenka — kdo komu kolik dluží</title>
+    <meta name="description" content="Dělenka spočítá společné výdaje spolubydlících, party na chatě i výletu a vyrovná je jedním QR kódem.">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#obsah">Přeskočit na obsah</a>
+
+    <header class="site-header">
+      <a class="logo" href="#">
+        <span class="logo__mark" aria-hidden="true">÷</span>
+        Dělenka
+      </a>
+      <nav class="site-nav" aria-label="Hlavní navigace">
+        <ul class="site-nav__list">
+          <li><a href="#funkce">Funkce</a></li>
+          <li><a href="#recenze">Recenze</a></li>
+          <li><a href="#cenik">Ceník</a></li>
+          <li><a href="#faq">Otázky</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="obsah">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero__content">
+          <p class="hero__eyebrow">Pro spolubydlící, chaty i výlety</p>
+          <h1 class="hero__title" id="hero-title">Kdo komu kolik dluží? Dělenka to ví.</h1>
+          <p class="hero__lead">Zapisuj společné nákupy, nájem i benzín. Dělenka spočítá, kdo má komu poslat kolik, a vyrovnání zaplatíš jedním QR kódem v bance.</p>
+          <div class="hero__actions">
+            <button class="button download-button" type="button" popovertarget="download-menu">Stáhnout aplikaci</button>
+            <a class="button button--ghost" href="#cenik">Zobrazit ceník</a>
+          </div>
+          <div class="download-menu" id="download-menu" popover>
+            <p class="download-menu__title">Kde chceš Dělenku mít?</p>
+            <ul class="download-menu__list">
+              <li><a href="#">App Store pro iPhone</a></li>
+              <li><a href="#">Google Play pro Android</a></li>
+              <li><a href="#">Webová verze v prohlížeči</a></li>
+            </ul>
+          </div>
+          <p class="hero__note">Zdarma pro tři skupiny. Bez reklam.</p>
+        </div>
+
+        <div class="phone" aria-hidden="true">
+          <div class="phone__screen">
+            <p class="phone__group">Chata Jizerky 2026</p>
+            <p class="phone__total">Celkem 14 820 Kč</p>
+            <ul class="phone__debts">
+              <li><span>Marek → Tereza</span><strong>1 240 Kč</strong></li>
+              <li><span>Ondra → Tereza</span><strong>860 Kč</strong></li>
+              <li><span>Lucie → Petr</span><strong>415 Kč</strong></li>
+            </ul>
+            <p class="phone__cta">Vyrovnat QR kódem</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="funkce" aria-labelledby="features-title">
+        <h2 class="section__title" id="features-title">Všechno, co parta potřebuje</h2>
+        <p class="section__lead">Žádné tabulky, žádné „pošlu ti to pak“. Dělenka hlídá účty za vás.</p>
+        <ul class="features">
+          <li class="feature">
+            <div class="feature__card">
+              <span class="feature__icon" aria-hidden="true">◎</span>
+              <div class="feature__body">
+                <h3 class="feature__title">Skupiny pro každou partu</h3>
+                <p class="feature__text">Byt, chata, dovolená u moře. Každá skupina má vlastní přehled a vlastní lidi.</p>
+              </div>
+            </div>
+          </li>
+          <li class="feature">
+            <div class="feature__card">
+              <span class="feature__icon" aria-hidden="true">▤</span>
+              <div class="feature__body">
+                <h3 class="feature__title">Účtenka z fotky</h3>
+                <p class="feature__text">Vyfoť účtenku z Lidlu a Dělenka přečte částku i obchod. Položky rozdělíš tažením.</p>
+              </div>
+            </div>
+          </li>
+          <li class="feature">
+            <div class="feature__card">
+              <span class="feature__icon" aria-hidden="true">▦</span>
+              <div class="feature__body">
+                <h3 class="feature__title">Vyrovnání QR kódem</h3>
+                <p class="feature__text">Na konci výletu dostane každý QR platbu s přesnou částkou a číslem účtu.</p>
+              </div>
+            </div>
+          </li>
+          <li class="feature">
+            <div class="feature__card">
+              <span class="feature__icon" aria-hidden="true">€</span>
+              <div class="feature__body">
+                <h3 class="feature__title">Eura, zloté i forinty</h3>
+                <p class="feature__text">Platby v cizí měně přepočítá kurzem ČNB ze dne nákupu.</p>
+              </div>
+            </div>
+          </li>
+          <li class="feature">
+            <div class="feature__card">
+              <span class="feature__icon" aria-hidden="true">↻</span>
+              <div class="feature__body">
+                <h3 class="feature__title">Pravidelné platby</h3>
+                <p class="feature__text">Nájem, internet a Netflix se připíšou samy každý měsíc.</p>
+              </div>
+            </div>
+          </li>
+          <li class="feature">
+            <div class="feature__card">
+              <span class="feature__icon" aria-hidden="true">✓</span>
+              <div class="feature__body">
+                <h3 class="feature__title">Připomínka bez trapných zpráv</h3>
+                <p class="feature__text">Když někdo dluží déle než dva týdny, Dělenka mu slušně připomene sama.</p>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </section>
+
+      <section class="section section--tinted" id="recenze" aria-labelledby="reviews-title">
+        <h2 class="section__title" id="reviews-title">Co říkají party, které už nepočítají</h2>
+        <ul class="reviews">
+          <li class="review">
+            <blockquote class="review__quote">
+              <p>Bydlíme ve třech v Brně a konečně se nehádáme, kdo koupil jar. Nájem se připíše sám a na konci měsíce jen naskenujeme QR kód.</p>
+            </blockquote>
+            <p class="review__author">Tereza, spolubydlící v Brně</p>
+          </li>
+          <li class="review">
+            <blockquote class="review__quote">
+              <p>Na chatě nás bylo jedenáct. Dřív jsem účty dával dohromady týden, teď to bylo hotové v neděli u snídaně.</p>
+            </blockquote>
+            <p class="review__author">Marek, organizátor chaty v Jizerkách</p>
+          </li>
+          <li class="review">
+            <blockquote class="review__quote">
+              <p>Roadtrip po Chorvatsku v eurech a v kunách z minula. Dělenka to přepočítala líp než my.</p>
+            </blockquote>
+            <p class="review__author">Lucie a Petr, Olomouc</p>
+          </li>
+        </ul>
+      </section>
+
+      <section class="section" id="cenik" aria-labelledby="pricing-title">
+        <h2 class="section__title" id="pricing-title">Ceník</h2>
+        <p class="section__lead">Platíš jen ty, ostatní ve skupině mají všechno s tebou.</p>
+        <ul class="plans">
+          <li class="plan">
+            <h3 class="plan__name">Zdarma</h3>
+            <p class="plan__price"><strong>0&nbsp;Kč</strong> navždy</p>
+            <ul class="plan__features">
+              <li>Tři skupiny</li>
+              <li>Vyrovnání QR kódem</li>
+            </ul>
+            <a class="button button--ghost plan__button" href="#">Začít zdarma</a>
+          </li>
+          <li class="plan plan--featured">
+            <p class="plan__badge">Nejoblíbenější</p>
+            <h3 class="plan__name">Plus</h3>
+            <p class="plan__price"><strong>59&nbsp;Kč</strong> / měsíc</p>
+            <ul class="plan__features">
+              <li>Neomezeně skupin</li>
+              <li>Účtenka z fotky</li>
+              <li>Cizí měny kurzem ČNB</li>
+              <li>Pravidelné platby</li>
+            </ul>
+            <a class="button plan__button" href="#">Vyzkoušet 30 dní</a>
+          </li>
+          <li class="plan">
+            <h3 class="plan__name">Parta</h3>
+            <p class="plan__price"><strong>149&nbsp;Kč</strong> / měsíc</p>
+            <ul class="plan__features">
+              <li>Plus až pro 10 lidí</li>
+              <li>Export do tabulky</li>
+              <li>Přednostní podpora</li>
+            </ul>
+            <a class="button button--ghost plan__button" href="#">Koupit pro partu</a>
+          </li>
+        </ul>
+      </section>
+
+      <section class="section" id="faq" aria-labelledby="faq-title">
+        <h2 class="section__title" id="faq-title">Časté otázky</h2>
+        <div class="faq">
+          <details class="faq__item" name="faq">
+            <summary>Musí mít Dělenku všichni ve skupině?</summary>
+            <p>Nemusí. Kdo aplikaci nemá, dostane odkaz na přehled v prohlížeči a QR kód pro platbu.</p>
+          </details>
+          <details class="faq__item" name="faq">
+            <summary>Posílá Dělenka peníze za mě?</summary>
+            <p>Ne. Jen spočítá částky a připraví QR platbu, kterou zaplatíš ve své bance. K tvému účtu nemá přístup.</p>
+          </details>
+          <details class="faq__item" name="faq">
+            <summary>Co když někdo z party odejde?</summary>
+            <p>Jeho dluhy a pohledávky se vyrovnají, historie zůstane ve skupině a nikdo o nic nepřijde.</p>
+          </details>
+          <details class="faq__item" name="faq">
+            <summary>Jde předplatné zrušit kdykoli?</summary>
+            <p>Ano, jedním tlačítkem v nastavení. Do konce zaplaceného měsíce máš Plus dál.</p>
+          </details>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p class="site-footer__brand">Dělenka</p>
+      <ul class="site-footer__links">
+        <li><a href="#">Ochrana osobních údajů</a></li>
+        <li><a href="#">Obchodní podmínky</a></li>
+        <li><a href="mailto:ahoj@delenka.cz">ahoj@delenka.cz</a></li>
+      </ul>
+      <p class="site-footer__copy">© 2026 Dělenka, Brno</p>
+    </footer>
+  </body>
+</html>

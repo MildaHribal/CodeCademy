@@ -25,6 +25,18 @@ Ověř si výsledek v DevTools s emulací `prefers-reduced-motion: reduce` (pane
 Obě kolečka `.spinner` mají nekonečnou animaci, která je otáčí.
 
 ```js
+// Test nasimuluje, že uživatel nemá v systému zapnuté omezení pohybu.
+const allowMotion = (rules) => {
+  for (const rule of rules) {
+    if (rule.media && /prefers-reduced-motion/.test(rule.media.mediaText)) {
+      rule.media.mediaText = rule.media.mediaText
+        .replace(/\(\s*prefers-reduced-motion\s*:\s*reduce\s*\)/g, '(max-width: 0px)')
+        .replace(/\(\s*prefers-reduced-motion\s*:\s*no-preference\s*\)/g, '(min-width: 0px)');
+    }
+    if (rule.cssRules) allowMotion(rule.cssRules);
+  }
+};
+for (const sheet of document.styleSheets) allowMotion(sheet.cssRules);
 // Všechny přechody a animace prvku včetně jeho pseudoprvků.
 const animationsOf = (element) => document.getAnimations().filter((animation) => animation.effect?.target === element);
 // Z nich ty, které hýbou, zvětšují, otáčejí nebo posouvají pozadí.
@@ -47,6 +59,18 @@ spinners.forEach((spinner, i) => {
 Jedna otáčka kolečka trvá 0,5–1,5 s a kolečko se točí rovnoměrně (`linear` nebo `steps()`).
 
 ```js
+// Test nasimuluje, že uživatel nemá v systému zapnuté omezení pohybu.
+const allowMotion = (rules) => {
+  for (const rule of rules) {
+    if (rule.media && /prefers-reduced-motion/.test(rule.media.mediaText)) {
+      rule.media.mediaText = rule.media.mediaText
+        .replace(/\(\s*prefers-reduced-motion\s*:\s*reduce\s*\)/g, '(max-width: 0px)')
+        .replace(/\(\s*prefers-reduced-motion\s*:\s*no-preference\s*\)/g, '(min-width: 0px)');
+    }
+    if (rule.cssRules) allowMotion(rule.cssRules);
+  }
+};
+for (const sheet of document.styleSheets) allowMotion(sheet.cssRules);
 // Všechny přechody a animace prvku včetně jeho pseudoprvků.
 const animationsOf = (element) => document.getAnimations().filter((animation) => animation.effect?.target === element);
 // Z nich ty, které hýbou, zvětšují, otáčejí nebo posouvají pozadí.
@@ -67,6 +91,18 @@ assert.ok(easings.every((easing) => easing === 'linear' || easing.startsWith('st
 Každý blok skeletonu má nekonečnou animaci (na sobě nebo na pseudoprvku).
 
 ```js
+// Test nasimuluje, že uživatel nemá v systému zapnuté omezení pohybu.
+const allowMotion = (rules) => {
+  for (const rule of rules) {
+    if (rule.media && /prefers-reduced-motion/.test(rule.media.mediaText)) {
+      rule.media.mediaText = rule.media.mediaText
+        .replace(/\(\s*prefers-reduced-motion\s*:\s*reduce\s*\)/g, '(max-width: 0px)')
+        .replace(/\(\s*prefers-reduced-motion\s*:\s*no-preference\s*\)/g, '(min-width: 0px)');
+    }
+    if (rule.cssRules) allowMotion(rule.cssRules);
+  }
+};
+for (const sheet of document.styleSheets) allowMotion(sheet.cssRules);
 // Všechny přechody a animace prvku včetně jeho pseudoprvků.
 const animationsOf = (element) => document.getAnimations().filter((animation) => animation.effect?.target === element);
 // Z nich ty, které hýbou, zvětšují, otáčejí nebo posouvají pozadí.
@@ -127,6 +163,18 @@ assert.equal(getComputedStyle(toast).opacity, '1', 'Otevřené oznámení má b�
 Oznámení při objevení vyjede zdola nahoru.
 
 ```js
+// Test nasimuluje, že uživatel nemá v systému zapnuté omezení pohybu.
+const allowMotion = (rules) => {
+  for (const rule of rules) {
+    if (rule.media && /prefers-reduced-motion/.test(rule.media.mediaText)) {
+      rule.media.mediaText = rule.media.mediaText
+        .replace(/\(\s*prefers-reduced-motion\s*:\s*reduce\s*\)/g, '(max-width: 0px)')
+        .replace(/\(\s*prefers-reduced-motion\s*:\s*no-preference\s*\)/g, '(min-width: 0px)');
+    }
+    if (rule.cssRules) allowMotion(rule.cssRules);
+  }
+};
+for (const sheet of document.styleSheets) allowMotion(sheet.cssRules);
 // Všechny přechody a animace prvku včetně jeho pseudoprvků.
 const animationsOf = (element) => document.getAnimations().filter((animation) => animation.effect?.target === element);
 // Z nich ty, které hýbou, zvětšují, otáčejí nebo posouvají pozadí.
@@ -179,9 +227,11 @@ await helpers.click(document.querySelector('#save-button'));
 await helpers.wait(600);
 toast.hidePopover();
 getComputedStyle(toast).opacity;
+const animationsOf = (element) => document.getAnimations().filter((animation) => animation.effect?.target === element);
+const closing = animationsOf(toast).filter((animation) => animation.transitionProperty === 'opacity' || (!animation.transitionProperty && animation.effect.getKeyframes().some((frame) => 'opacity' in frame)));
+assert.ok(closing.length > 0, 'Při zavírání oznámení neběží žádný přechod ani animace průhlednosti');
 await helpers.wait(60);
 assert.notEqual(getComputedStyle(toast).display, 'none', '60 ms po zavření má být oznámení pořád vykreslené');
-assert.ok(Number(getComputedStyle(toast).opacity) < 1, 'Oznámení má při zavírání mizet (opacity pod 1)');
 const hidden = await helpers.waitFor(() => getComputedStyle(toast).display === 'none', 2000).catch(() => false);
 assert.ok(hidden, `Oznámení 2 s po zavření pořád má display ${getComputedStyle(toast).display} — nepřebíjí nějaké pravidlo s display skrytí zavřeného popoveru?`);
 ```

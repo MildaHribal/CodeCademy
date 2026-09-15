@@ -1,5 +1,39 @@
 {
   "title": "Přechody, transformace a animace",
-  "intro": "rozpracováno",
-  "modules": ["transition-transform", "workshop-interakce", "keyframes", "lab-loader-a-toast", "view-transitions-scroll", "kviz"]
+  "intro": "Tlačítko, které pod prstem povolí, karta, která se nadzvedne, nabídka, která vyjede, načítací kolečko, ukazatel čtení nahoře na stránce. Tyhle drobnosti dělají rozdíl mezi webem, který „funguje\", a webem, který působí hotově.\n\nV sekci se naučíš přechody, transformace a klíčové snímky, pochopíš, proč některé animace zadrhávají a jiné běží plynule i na slabém telefonu, a vyzkoušíš view transitions a animace řízené scrollem jako progresivní vylepšení. Všude počítáš s lidmi, kteří mají v systému zapnuté omezení pohybu.\n\nNa konci sekce samostatně postavíš dvě celé stránky: kontrolní bod celé části o CSS (stránku jazzového festivalu) a vlajkový projekt, landing page aplikace, kterou nasadíš a dáš do portfolia.\n\nPředpoklad: umíš rozvrhnout stránku flexboxem a gridem, znáš pozicování, popover, media dotazy, tokeny v `oklch()` a základy přístupnosti.",
+  "modules": ["transition-transform", "workshop-interakce", "keyframes", "lab-loader-a-toast", "view-transitions-scroll", "kviz", "lab-kontrolni-bod-1", "projekt-landing-page"],
+  "outcomes": [
+    {
+      "text": "Napíšeš přechod na hover, fokus i stisk tak, aby se animoval oběma směry, a vybereš délku a časovací funkci podle toho, co prvek dělá.",
+      "links": ["css-animace/transition-transform#zapis-transition-vlastnost-delka-krivka-zpozdeni", "css-animace/transition-transform#casovaci-funkce-jak-se-pohyb-zrychluje", "css-animace/workshop-interakce/003"]
+    },
+    {
+      "text": "Posuneš, zvětšíš a otočíš prvek samostatnými vlastnostmi `translate`, `scale` a `rotate` a opravíš prvek, který po přepsání `transform` uskočí.",
+      "links": ["css-animace/transition-transform#transformace-posun-zvetseni-otoceni", "css-animace/workshop-interakce/014"]
+    },
+    {
+      "text": "Rozpohybuješ objevení a zmizení popoveru, dialogu i akordeonu přes `@starting-style`, `allow-discrete` a `interpolate-size`.",
+      "links": ["css-animace/transition-transform#objeveni-a-zmizeni-starting-style-a-allow-discrete", "css-animace/workshop-interakce/009", "css-animace/workshop-interakce/011"]
+    },
+    {
+      "text": "Vysvětlíš cestu k pixelům, poznáš, která animace spouští rozvržení, a ověříš to v DevTools v panelu Performance a přes Paint flashing.",
+      "links": ["css-animace/transition-transform#proc-transform-a-opacity-cesta-k-pixelum", "css-animace/workshop-interakce/006"]
+    },
+    {
+      "text": "Napíšeš animaci s `@keyframes`, nastavíš `fill-mode`, směr, opakování a `steps()` a vybereš mezi přechodem a animací.",
+      "links": ["css-animace/keyframes#keyframes-a-vlastnost-animation", "css-animace/keyframes#prechod-nebo-animace", "css-animace/lab-loader-a-toast"]
+    },
+    {
+      "text": "Použiješ view transition a animaci řízenou scrollem jako progresivní vylepšení, které nic neschová v prohlížeči bez podpory.",
+      "links": ["css-animace/view-transitions-scroll#document-startviewtransition-a-detekce-podpory", "css-animace/view-transitions-scroll#progresivni-vylepseni-a-omezeny-pohyb"]
+    },
+    {
+      "text": "Při `prefers-reduced-motion: reduce` odebereš pohyb a necháš zpětnou vazbu, kterou uživatel potřebuje.",
+      "links": ["css-animace/transition-transform#omezeny-pohyb-prefers-reduced-motion", "css-animace/workshop-interakce/019", "css-animace/keyframes#vykon-a-omezeny-pohyb-u-animaci"]
+    },
+    {
+      "text": "Samostatně postavíš a nasadíš celou přístupnou a responzivní stránku s motivem, formulářem a animacemi.",
+      "links": ["css-animace/lab-kontrolni-bod-1", "css-animace/projekt-landing-page"]
+    }
+  ]
 }

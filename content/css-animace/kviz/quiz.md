@@ -160,31 +160,22 @@ css-animace/transition-transform#omezeny-pohyb-prefers-reduced-motion
 
 ## --question--
 
-Dialog `<dialog>` se otevírá plynule díky `@starting-style`, ale zavře se skokem. V `transition` má jen `opacity 200ms, scale 200ms`. Co do seznamu přidáš?
+Dialog `<dialog>` se otevírá plynule díky `@starting-style`, ale zavře se skokem. Pravidlo dialogu má `transition: opacity 200ms, scale 200ms`. Napiš položku, kterou do seznamu přidáš, aby se `display: none` přepnulo až po doběhnutí prolnutí.
 
-### --answer--
+### --expected--
 
-`visibility 200ms`, aby se dialog skryl až po animaci.
+display 200ms allow-discrete
 
-#### --why--
+### --accept--
 
-Zavřený dialog neskrývá `visibility`, ale `display: none`. Ten se přepne okamžitě, ať je `visibility` jakákoli.
+display 0.2s allow-discrete
+display .2s allow-discrete
+display allow-discrete 200ms
+display 200ms allow-discrete, overlay 200ms allow-discrete
 
-### --correct--
+### --why--
 
-`display 200ms allow-discrete` (a v Chromiu ještě `overlay 200ms allow-discrete`).
-
-#### --why--
-
-`allow-discrete` odloží přepnutí `display: none` na konec přechodu, takže je zavírání vidět. `overlay` podrží dialog do konce animace ve vrstvě nad stránkou.
-
-### --answer--
-
-Druhý blok `@starting-style` pro zavřený stav.
-
-#### --why--
-
-`@starting-style` platí jen pro první vykreslení prvku. Při zavírání se nepoužije.
+Zavřený dialog má `display: none` a to se bez `allow-discrete` přepne hned v prvním snímku, takže prolnutí běží na neviditelném prvku. `allow-discrete` odloží přepnutí na konec přechodu. V Chromiu přidej ještě `overlay 200ms allow-discrete`, které dialog do konce animace podrží ve vrstvě nad stránkou. `@starting-style` pro zavírání nepomůže, platí jen pro první vykreslení.
 
 ### --see--
 
@@ -398,6 +389,39 @@ Zmenšování (`flex-shrink`) počítá s velikostí v rozvržení. Tu `scale` n
 
 css-flexbox/uvod-do-flexboxu#align-items-zarovnani-na-vedlejsi-ose
 css-animace/transition-transform#transformace-posun-zvetseni-otoceni
+
+## --question--
+
+Hlavička má `position: sticky; top: 0` a žádný `z-index`. Karty v obsahu mají `position: relative` a při najetí myší se zvedají přes `translate`. Při posouvání stránky projíždějí karty **přes** hlavičku, ne pod ní. Proč?
+
+### --answer--
+
+Protože `translate` vytáhne kartu z normálního toku, a tím i nad hlavičku.
+
+#### --why--
+
+Transformace prvek z toku nevytahuje, jen ho jinak nakreslí. Karta by projížděla přes hlavičku i bez najetí myší.
+
+### --correct--
+
+Protože hlavička i karty jsou pozicované prvky bez `z-index` a ty se kreslí v pořadí dokumentu — karty jsou v HTML za hlavičkou.
+
+#### --why--
+
+Stejná vrstva, stejné pořadí jako v HTML. Hlavička potřebuje `z-index`, aby se dostala nad obsah, který je v dokumentu za ní.
+
+### --answer--
+
+Protože `position: sticky` funguje jen v rodiči s `overflow: hidden`.
+
+#### --why--
+
+`sticky` v obyčejném rodiči funguje, `overflow: hidden` na předkovi ho naopak často rozbije. Chyba je jinde než v přilepení.
+
+### --see--
+
+css-pozicovani/stacking-context
+css-animace/transition-transform#proc-transform-a-opacity-cesta-k-pixelum
 
 # --code-- Kolegovy styly blogu cestovní kanceláře
 

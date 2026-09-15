@@ -421,7 +421,7 @@ body { font-family: system-ui, sans-serif; margin: 2rem; background: #0f172a; }
 ```
 :::
 
-Bez registrace světlo v polovině animace skočí na druhou stranu a zase zpátky: text se přepíná jen v půlce, stejně jako `display`. S `@property` obíhá plynule.
+Bez registrace se světlo nehne ani o stupeň. Neregistrovaná custom property je pro prohlížeč text a ten se přepíná skokem v polovině animace, stejně jako `display`: první polovinu drží `0deg`, druhou `360deg` — a to je u kónického gradientu tentýž obrázek. S `@property` úhel plynule roste a světlo obíhá.
 
 > [!NOTE]
 > Tahle animace mění gradient, a to je fáze kreslení, ne jen skládání. U jedné karty to nevadí. Kdyby takhle svítilo padesát karet v mřížce, sleduj Performance — nebo animuj jen kartu, na kterou uživatel najede.
@@ -433,7 +433,7 @@ Proč se bez `@property` custom property `--angle` v `@keyframes` neanimuje plyn
 Custom properties se nesmí používat v `@keyframes`.
 
 #### --why--
-V ukázce bez `@property` se `--angle` v `@keyframes` použít dá, jen skáče. Problém není v tom, jestli ji použít smíš.
+V ukázce bez `@property` se `--angle` v `@keyframes` použít dá, jen z ní nic plynulého nevznikne. Problém není v tom, jestli ji použít smíš.
 
 ### --correct--
 Neregistrovaná custom property je pro prohlížeč text bez typu, a text neumí dopočítat mezi dvěma hodnotami, tak ho přepne skokem.
@@ -575,6 +575,8 @@ transform: translate(-50%,-50%) scale(0.9)
 Snímek s `transform` nahradí celý seznam funkcí z pravidla, takže centrování během animace zmizí. Buď ho ve snímku zopakuješ, nebo centruješ přes `translate: -50% -50%` a ve snímku animuješ jen `scale`.
 :::
 
+V labu z klíčových snímků samostatně postavíš načítací kolečko, lesknoucí se skeleton a oznámení po uložení objednávky, všechno i pro lidi s omezeným pohybem.
+
 ## Kde to najdeš v MDN
 
 - [Using CSS animations](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_animations/Using_CSS_animations) — `@keyframes`, všechny dílčí vlastnosti `animation` a události `animationend`.
@@ -671,7 +673,7 @@ css-animace/keyframes#casovani-cubic-bezier-steps-a-linear
 
 ## --question--
 
-Karta má gradient s úhlem z `--angle` a animaci, která `--angle` mění z `0deg` na `360deg`. Světlo ale v půlce skočí. Napiš hodnotu deskriptoru `syntax` v bloku `@property --angle`, která to spraví.
+Karta má gradient s úhlem z `--angle` a animaci, která `--angle` mění z `0deg` na `360deg`. Světlo ale stojí: úhel se v polovině animace přepne skokem z `0deg` na `360deg` a to je tentýž obrázek. Napiš hodnotu deskriptoru `syntax` v bloku `@property --angle`, která to spraví.
 
 ### --expected--
 
@@ -679,8 +681,6 @@ Karta má gradient s úhlem z `--angle` a animaci, která `--angle` mění z `0d
 
 ### --accept--
 
-'<angle>'
-<angle>
 syntax: "<angle>"
 
 ### --why--

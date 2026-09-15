@@ -1,0 +1,1 @@
+{ "type": "project", "title": "Landing page aplikace Dělenka", "summary": "Vlajkový projekt do portfolia: podle textů klienta a popisu návrhu postavíš ve VS Code celou úvodní stránku aplikace — mobile-first, s vrstvami, tokeny v oklch, tmavým motivem, container query kartami, popoverem a pohybem, který respektuje omezení pohybu.", "minutes": 360, "runtime": "dom" }

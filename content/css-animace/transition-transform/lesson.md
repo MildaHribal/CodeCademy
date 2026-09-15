@@ -270,7 +270,7 @@ body { font-family: system-ui, sans-serif; margin: 2rem; }
 ```
 :::
 
-Větší padding odtlačí „Zaplať" dolů, protože se změnilo rozvržení. `scale` položku zvětší jen při kreslení a přeteče přes sousedy.
+Větší padding odtlačí „Zaplať" dolů, protože ==změnil rozvržení==. `scale` položku zvětší až při vykreslení na obrazovku, ==rozvržení nemění==, a tak přeteče přes sousedy.
 
 Transformace se provádí kolem **počátku** (*transform origin*), výchozí je střed prvku. Mění ho `transform-origin`:
 
@@ -721,6 +721,8 @@ focus-within
 ### --why--
 `:focus-within` platí pro prvek, když má fokus on sám nebo kterýkoli jeho potomek. `:focus` nebo `:focus-visible` na kartě by nezabral, fokus má odkaz, ne karta.
 :::
+
+Ve workshopu z přechodů a transformací postavíš mikrointerakce webu horské chaty: tlačítka, která povolí pod prstem, karty pokojů, vysouvací nabídku sdílení a akordeon s dotazy.
 
 ## Kde to najdeš v MDN
 

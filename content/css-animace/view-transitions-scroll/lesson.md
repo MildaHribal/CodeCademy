@@ -202,6 +202,7 @@ document.startViewTransition(renderCart);
 
 ### --accept--
 typeof document.startViewTransition !== 'function'
+typeof document.startViewTransition === 'undefined'
 !('startViewTransition' in document)
 document.startViewTransition === undefined
 
@@ -611,7 +612,7 @@ Podle jména prohlížeče se podpora nepozná spolehlivě a zítra může být 
 ## Typické chyby a pasti
 
 > [!PITFALL] Stejné `view-transition-name` dvakrát
-> *Příznak:* view transition se vůbec nespustí, změna proběhne skokem a v konzoli DevTools je hláška o duplicitním `view-transition-name`; promise `ready` skončí chybou `InvalidStateError: Transition was aborted because of invalid state`.
+> *Příznak:* view transition se vůbec nespustí, změna proběhne skokem a v konzoli DevTools je hláška o duplicitním `view-transition-name`; promise `ready` skončí chybou `InvalidStateError: Transition was aborted because of invalid state. Snapshot capture failed`.
 >
 > *Oprava:* jméno musí být jedinečné. U seznamů ho skládej z `id` položky, nebo ho dávej jen prvku, který se právě mění.
 
@@ -643,6 +644,11 @@ jedna
 ### --why--
 Shorthand `animation` stojí poslední, a tak `animation-timeline` i `animation-range` přepíše na výchozí hodnoty. Použije se jen `animation` s obyčejnou časovou osou.
 :::
+
+Na konci sekce postavíš celou stránku v kontrolním bodu a landing page ve vlajkovém projektu; animaci řízenou scrollem si tam přidáš jako rozšíření a přechody mezi stránkami zapneš v portfoliu.
+
+> [!NOTE]
+> Tím máš z pohybu všechno, co prohlížeč zvládne sám v CSS. Efekty, na které samotné CSS nestačí — odhalení nadpisu po slovech, přišpendlená sekce, tlumený scroll nebo časová osa řízená z JavaScriptu — přijdou v sekci o efektech a animacích (`css-efekty-animace`), která na tuhle navazuje. Do té doby platí: pohyb, který zvládne CSS, do JavaScriptu nepatří.
 
 ## Kde to najdeš v MDN
 
