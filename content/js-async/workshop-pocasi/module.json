@@ -1,1 +1,1 @@
-{ "type": "workshop", "title": "Aplikace na počasí", "summary": "Postavíš vyhledávání míst s našeptávačem a třídenní předpověď nad API: stavy načítání a chyb, zrušení starších požadavků, debounce, časový limit a místo v adrese.", "minutes": 90, "runtime": "dom" }
+{ "type": "workshop", "title": "Aplikace na počasí", "summary": "Postavíš vyhledávání míst s našeptávačem a třídenní předpověď nad API: stavy načítání a chyb, zrušení starších požadavků, debounce, časový limit a místo v adrese.", "minutes": 95, "runtime": "dom" }

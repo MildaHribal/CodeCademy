@@ -423,9 +423,9 @@ function firstOnline(terminalIds) {
 
 # --approaches--
 
-## --approach-- new Promise a vnořené then
+## --approach-- Karta řetězem přes Promise.all a catch u každého terminálu
 
-Každá metoda terminálu má vlastní obal přes `new Promise` a `pay` vnoří schválení do callbacku, kde je karta vidět. Čte se přímočaře, jen se obaly opakují.
+`pay` nevnořuje `then`: kartu pošle řetězem dál vedle schválení přes `Promise.all([card, authorize(card, amount)])`. `availableTotal` místo `allSettled` přidá každé Promise vlastní `catch`, který výpadek zapíše a vrátí nulu. Hodí se, když potřebuješ náhradní hodnotu hned u zdroje; `allSettled` je čitelnější, když chceš jen rozdělit výsledky na povedené a nepovedené.
 
 ### --file-- script.js
 
@@ -491,65 +491,59 @@ function ping(terminalId) {
 // ===== Tvůj kód =====
 
 function wait(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+  return new Promise((resolve) => {
+    setTimeout(() => resolve(), ms);
+  });
 }
 
 function readCard() {
   return new Promise((resolve, reject) => {
-    terminal.readCard((error, card) => {
-      if (error) reject(error);
-      else resolve(card);
-    });
+    terminal.readCard((error, card) => (error ? reject(error) : resolve(card)));
   });
 }
 
 function authorize(card, amount) {
   return new Promise((resolve, reject) => {
-    terminal.authorize(card, amount, (error, approval) => {
-      if (error) reject(error);
-      else resolve(approval);
-    });
+    terminal.authorize(card, amount, (error, approval) => (error ? reject(error) : resolve(approval)));
   });
 }
 
+// Karta putuje řetězem dál spolu se schválením: Promise.all přijme i hodnotu, která Promise není.
 function pay(amount) {
-  return readCard().then((card) =>
-    authorize(card, amount).then((approval) => ({
-      amount,
-      last4: card.number.slice(-4),
-      approvalCode: approval.approvalCode,
-    })),
-  );
+  return readCard()
+    .then((card) => Promise.all([card, authorize(card, amount)]))
+    .then(([card, approval]) => ({ amount, last4: card.number.slice(-4), approvalCode: approval.approvalCode }));
 }
 
 function payOrExplain(amount) {
   return pay(amount)
-    .then((receipt) => `Zaplaceno ${receipt.amount} Kč`)
+    .then(({ amount: paid }) => `Zaplaceno ${paid} Kč`)
     .catch((error) => `Platba se nezdařila: ${error.message}`);
 }
 
 function terminalsTotal(terminalIds) {
-  return Promise.all(terminalIds.map((id) => loadTotal(id)))
-    .then((totals) => totals.reduce((sum, total) => sum + total, 0));
+  return Promise.all(terminalIds.map(loadTotal)).then((totals) => totals.reduce((sum, total) => sum + total, 0));
 }
 
+// Místo allSettled: každá Promise má vlastní catch, takže Promise.all se nikdy nezamítne.
 function availableTotal(terminalIds) {
-  return Promise.allSettled(terminalIds.map((id) => loadTotal(id))).then((results) => {
-    let total = 0;
-    const failed = [];
-    results.forEach((result, index) => {
-      if (result.status === 'fulfilled') total += result.value;
-      else failed.push(terminalIds[index]);
-    });
-    return { total, failed };
-  });
+  const failed = [];
+  const safeTotals = terminalIds.map((id) =>
+    loadTotal(id).catch(() => {
+      failed.push(id);
+      return 0;
+    }),
+  );
+  return Promise.all(safeTotals).then((totals) => ({
+    total: totals.reduce((sum, total) => sum + total, 0),
+    failed: terminalIds.filter((id) => failed.includes(id)),
+  }));
 }
 
 function firstOnline(terminalIds) {
-  return Promise.any(terminalIds.map((id) => ping(id)))
-    .catch(() => {
-      throw new Error('Žádný terminál není online');
-    });
+  return Promise.any(terminalIds.map(ping)).catch(() => {
+    throw new Error('Žádný terminál není online');
+  });
 }
 ```
 

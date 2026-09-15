@@ -1,1 +1,1 @@
-{ "type": "lesson", "title": "fetch a HTTP z prohlížeče", "summary": "Co vrací fetch, proč 404 nevyhodí chybu, JSON tam i zpátky, CORS z pohledu prohlížeče, zrušení požadavku a jak zabránit, aby starší odpověď přepsala novější.", "minutes": 40, "runtime": "js" }
+{ "type": "lesson", "title": "fetch a HTTP z prohlížeče", "summary": "Co vrací fetch, proč 404 nevyhodí chybu, JSON tam i zpátky, CORS z pohledu prohlížeče, zrušení požadavku a jak zabránit, aby starší odpověď přepsala novější.", "minutes": 45, "runtime": "js" }

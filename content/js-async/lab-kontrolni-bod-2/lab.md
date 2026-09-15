@@ -142,6 +142,46 @@ assert.deepEqual(
 );
 ```
 
+Řazení podle české abecedy a české datum nezávisí na jazyku, který má nastavený prohlížeč čtenáře.
+
+```js
+const until = (check, message, ms) => helpers.waitFor(() => {
+  assert.ok(check(), message);
+  return true;
+}, ms);
+const list = document.querySelector('#books');
+const ids = () => [...list.querySelectorAll(':scope > li')].map((item) => item.dataset.id);
+await until(() => ids().length === 17, 'po otevření má být v #books 17 platných knih', 3000);
+// prohlížeč čtenáře v angličtině: kde kód jazyk neuvede, použije se 'en'
+const english = (locales) => locales ?? 'en';
+const RealCollator = Intl.Collator;
+Intl.Collator = function Collator(locales, options) {
+  return new RealCollator(english(locales), options);
+};
+const RealDateTimeFormat = Intl.DateTimeFormat;
+Intl.DateTimeFormat = function DateTimeFormat(locales, options) {
+  return new RealDateTimeFormat(english(locales), options);
+};
+for (const [owner, name] of [[String.prototype, 'localeCompare'], [Date.prototype, 'toLocaleDateString'], [Date.prototype, 'toLocaleString']]) {
+  const real = owner[name];
+  owner[name] = name === 'localeCompare'
+    ? function (that, locales, options) { return real.call(this, that, english(locales), options); }
+    : function (locales, options) { return real.call(this, english(locales), options); };
+}
+// stránka se načte znovu už s anglickým prohlížečem
+mockApi.delay = 30;
+list.replaceChildren();
+await helpers.importFile('app.js');
+await until(() => ids().length === 17 && list.getAttribute('aria-busy') !== 'true', 'po novém spuštění app.js se má katalog znovu vykreslit', 3000);
+await helpers.wait(100);
+assert.deepEqual(
+  ids(),
+  ['K-101', 'K-114', 'K-110', 'K-105', 'K-107', 'K-102', 'K-120', 'K-117', 'K-121', 'K-119', 'K-108', 'K-111', 'K-118', 'K-103', 'K-115', 'K-106', 'K-112'],
+  'v prohlížeči nastaveném na angličtinu se knihy seřadily jinak — řazení podle české abecedy musí jazyk \'cs\' uvést samo',
+);
+assert.match(list.querySelector(':scope > li[data-id="K-102"]').textContent, /(?<!\d)2\.\s*9\.\s*2026(?!\d)/, 'v prohlížeči nastaveném na angličtinu má být datum pořád česky 2. 9. 2026 — uveď jazyk i u formátování data');
+```
+
 Změna `#sort` na nejnovější přírůstky knihy hned přeřadí; stejné datum je podle názvu.
 
 ```js

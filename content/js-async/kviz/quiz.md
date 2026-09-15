@@ -443,24 +443,28 @@ js-chyby-ladeni/vyjimky#try-nechyti-chybu-ktera-nastane-pozdeji
 
 ## --question--
 
-Co vypíše tenhle kód?
+Galerie po načtení skriptu zavolá `loadNextPage()` a hned potom začne sledovat prázdný prvek pod seznamem. Seznam je zatím prázdný, takže `#sentinel` je od začátku vidět. Kolikrát se po otevření stránky zavolá `loadNextPage`, když uživatel vůbec neposouvá? Napiš číslo.
 
 ```js
-localStorage.setItem('favorites', [14, 21]);
-console.log(localStorage.getItem('favorites'));
+loadNextPage();
+
+const observer = new IntersectionObserver((entries) => {
+  if (entries[0].isIntersecting) loadNextPage();
+});
+observer.observe(document.querySelector('#sentinel'));
 ```
 
 ### --expected--
 
-14,21
+2
 
 ### --why--
 
-`localStorage` ukládá jen text. Pole převede přes `String([14, 21])` na `14,21`, a když ho načteš zpátky, dostaneš řetězec, ne pole. Pole se ukládá přes `JSON.stringify` a čte přes `JSON.parse`.
+Myslíš si, že observer ohlásí prvek až při prvním posunu? Prohlížeč zavolá callback hned po `observe` s aktuálním stavem, a protože je `#sentinel` vidět, zavolá `loadNextPage` podruhé, zatímco první načtení ještě běží. Bez stavu „právě načítám" by se první stránka stáhla dvakrát.
 
 ### --see--
 
-js-dom/prohlizecova-api#jen-retezce-json-stringify-a-json-parse
+js-dom/prohlizecova-api#sledovani-prvku-intersectionobserver-a-resizeobserver
 
 # --code-- Kolegův modul objednávek
 

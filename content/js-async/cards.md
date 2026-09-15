@@ -48,20 +48,20 @@ js-async/promise#chyby-catch-a-finally
 
 ## --card-- output
 
-Co vypíše tenhle kód? Napiš jméno chyby a číslo oddělené mezerou.
+Co vypíše tenhle kód?
 
 ```js
 Promise.any([Promise.reject(new Error('Zrcadlo A')), Promise.reject(new Error('Zrcadlo B'))])
-  .catch((error) => console.log(error.name, error.errors.length));
+  .catch((error) => console.log(error.name));
 ```
 
 ### --expected--
 
-AggregateError 2
+AggregateError
 
 ### --why--
 
-Myslíš si, že `any` vrátí první chybu jako `race`? `any` chyby přeskakuje a zamítne se, až když selžou všechny, a to souhrnnou chybou `AggregateError`, která všechny důvody nese v poli `errors`.
+Myslíš si, že `any` vrátí první chybu jako `race`? `any` chyby přeskakuje a zamítne se, až když selžou všechny, a to jednou souhrnnou chybou `AggregateError`, ne chybou prvního zrcadla.
 
 ### --see--
 
@@ -176,18 +176,18 @@ js-async/async-await#zruseni-abortcontroller-a-signal
 Co vypíše tenhle kód? Napiš obě hodnoty oddělené mezerou.
 
 ```js
-const created = new Response(null, { status: 204 });
-const moved = new Response('', { status: 301 });
-console.log(created.ok, moved.ok);
+const created = new Response('{"id": 58}', { status: 201 });
+const deleted = new Response(null, { status: 204 });
+console.log(created.ok, deleted.ok);
 ```
 
 ### --expected--
 
-true false
+true true
 
 ### --why--
 
-Myslíš si, že `ok` znamená jen stav 200? `ok` je `true` pro celý rozsah 200–299, takže i pro `201 Created` a `204 No Content`. Stav mimo tenhle rozsah má `ok` rovné `false`, i když nejde o chybu serveru.
+Myslíš si, že `ok` znamená jen stav 200? `ok` je `true` pro celý rozsah 200–299, takže i pro `201 Created` po vytvoření záznamu a `204 No Content` po smazání. Kontrola `response.status === 200` by takové úspěchy hlásila jako chybu.
 
 ### --see--
 
@@ -508,7 +508,7 @@ Jaké stavy musí mít obrazovka, která načítá data ze serveru, a jak je zp�
 
 ### --back--
 
-Aspoň čtyři: načítání, data, prázdný výsledek („nic jsme nenašli") a chyba s možností zkusit znovu. Každý potřebuje vlastní vzhled a při přechodu mezi nimi nesmí zůstat nic z předchozího stavu, třeba staré výsledky pod chybovou hláškou. Čtečce oznámím změny textu přes prvek s `role="status"` (u chyby `role="alert"`) a oblast, která se právě načítá, označím `aria-busy="true"`. Úklid po úspěchu i po chybě dělám ve `finally`.
+Aspoň čtyři: načítání, data, prázdný výsledek („nic jsme nenašli") a chyba s možností zkusit znovu. Každý potřebuje vlastní vzhled a při přechodu mezi nimi nesmí zůstat nic z předchozího stavu, třeba staré výsledky pod chybovou hláškou. Čtečce oznámím změny textu přes prvek s `role="status"` a oblast, která se právě načítá, označím `aria-busy="true"`. Úklid po úspěchu i po chybě dělám ve `finally`.
 
 ### --see--
 

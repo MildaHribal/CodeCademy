@@ -1,1 +1,1 @@
-{ "type": "lesson", "title": "Promise", "summary": "Tři stavy Promise, kdy psát new Promise, řetězení then, chyby přes catch a čekání na víc věcí najednou přes all, allSettled, race a any.", "minutes": 30, "runtime": "js" }
+{ "type": "lesson", "title": "Promise", "summary": "Tři stavy Promise, kdy psát new Promise, řetězení then, chyby přes catch a čekání na víc věcí najednou přes all, allSettled, race a any.", "minutes": 40, "runtime": "js" }

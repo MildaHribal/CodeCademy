@@ -634,7 +634,7 @@ js-async/event-loop#nula-neznamena-hned
 ### Časovač v kartě na pozadí
 
 > [!PITFALL]
-> **Prohlížeče časovače v neaktivní kartě zpomalují**, typicky na nejvýš jedno spuštění za sekundu, po delší době i víc. Příznak: odpočet, který přičítá „jednu sekundu za tik", se po návratu do karty rozchází se skutečným časem. Oprava: počítej zbývající čas z hodin (`Date.now()`), ne z počtu tiků. Odpočet počítaný z hodin napíšeš hned v příštím workshopu.
+> **Prohlížeče časovače v neaktivní kartě zpomalují**, typicky na nejvýš jedno spuštění za sekundu a Chrome po pěti minutách na pozadí opakované časovače spouští třeba jen jednou za minutu. Příznak: odpočet, který přičítá „jednu sekundu za tik", se po návratu do karty rozchází se skutečným časem. Oprava: počítej zbývající čas z hodin (`Date.now()`), ne z počtu tiků. Odpočet počítaný z hodin napíšeš hned v příštím workshopu.
 
 ## Kde to najdeš v MDN
 
