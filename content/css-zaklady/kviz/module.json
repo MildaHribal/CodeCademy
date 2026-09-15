@@ -1,0 +1,1 @@
+{ "type": "quiz", "title": "Kvíz: základy CSS", "summary": "Co vybere selektor, em proti rem, výsledek calc() a clamp(), vlastní vlastnosti se záložní hodnotou, co ukazuje DevTools — a kolegova stránka akce se čtyřmi skrytými chybami.", "minutes": 25, "runtime": "dom" }

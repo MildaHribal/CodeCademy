@@ -75,7 +75,7 @@ HTML popisuje strukturu: tohle je nadpis, tohle odstavec, tohle odkaz. CSS (*Cas
 > **CSS je seznam pravidel „těmhle prvkům nastav tyhle vlastnosti" a prohlížeč z něj použije jen to, čemu rozumí.** Co nepochopí, tiše přeskočí.
 
 :::check
-V ukázce výše jsi změnil `color` na `.cafe` a odkaz zůstal modrý. Co z toho plyne?
+V ukázce výše nastavuje pravidlo `.cafe` hnědou barvu textu, a přesto odkaz „Rezervovat stůl" zůstal modrý. Co z toho plyne?
 
 ### --answer--
 Pravidlo `.cafe` se na odkaz vůbec nevztahuje, protože odkaz nemá třídu `cafe`.
@@ -359,10 +359,7 @@ Jednotku si prohlížeč nedoplní. Bez jednotky smí být jen nula a vlastnosti
 >
 > *Oprava:* délky potřebují jednotku (`12px`, `1.125rem`). Bez jednotky smí být jen `0`.
 
-> [!PITFALL] Jeden neplatný selektor shodí celou skupinu
-> *Příznak:* pravidlo `h1, h2:hovr { color: crimson; }` neobarví ani nadpis `h1`.
->
-> *Oprava:* když prohlížeč nerozumí jednomu selektoru ve skupině, zahodí **celé** pravidlo, nejen jednu část. Oprav překlep (`:hover`), nebo napiš dvě samostatná pravidla.
+Poslední past není o deklaraci, ale o selektoru. Tipni si, jak dopadne pravidlo s překlepem ve skupině:
 
 :::live predict
 ```html
@@ -382,6 +379,11 @@ h1, h2:hovr {
 --option*-- Žádný.
 --why-- Selektor `h2:hovr` je neplatný, a když je neplatná jedna část skupiny, zahodí se celé pravidlo. U deklarací se zahazuje jen ta jedna, u skupiny selektorů všechno. Oprav `:hovr` na `:hover` a `h1` se obarví hned, `h2` až při najetí myší.
 :::
+
+> [!PITFALL] Jeden neplatný selektor shodí celou skupinu
+> *Příznak:* pravidlo `h1, h2:hovr { color: crimson; }` neobarví ani nadpis `h1`.
+>
+> *Oprava:* když prohlížeč nerozumí jednomu selektoru ve skupině, zahodí **celé** pravidlo, nejen jednu část. Oprav překlep (`:hover`), nebo napiš dvě samostatná pravidla.
 
 > [!PITFALL] Stylopis se nenačetl
 > *Příznak:* stránka vypadá úplně bez stylů — písmo Times, modré odkazy, žádné barvy.
@@ -455,7 +457,16 @@ css-zaklady/jak-css-funguje#typicke-chyby-a-pasti
 
 ## --question--
 
-V pravidle `.button { background: #0f766e; color: white; padding: 10; border-radius: 8px; }` je jedna deklarace neplatná. Napiš jméno její vlastnosti.
+Tři deklarace v pravidle `.button` jsou platné a jedna ne. Napiš jméno vlastnosti té neplatné.
+
+```css
+.button {
+  margin: 0;
+  font-weight: 600;
+  background-color: #0f766e;
+  padding: 8;
+}
+```
 
 ### --expected--
 
@@ -463,7 +474,7 @@ padding
 
 ### --why--
 
-Hodnota `10` nemá jednotku a `padding` čeká délku. Tlačítko tak zůstane bez vnitřního odsazení, ostatní deklarace platí.
+`margin: 0` je v pořádku (nula jednotku nepotřebuje) a `font-weight: 600` bere holé číslo. `padding` ale čeká délku, takže `8` bez jednotky zahodí — a jen tuhle jednu deklaraci, zbytek pravidla platí dál.
 
 ### --see--
 

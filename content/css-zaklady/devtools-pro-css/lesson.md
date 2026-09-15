@@ -520,19 +520,15 @@ css-zaklady/devtools-pro-css#styles-ktera-pravidla-na-prvek-miri
 
 ## --question--
 
-Nadpis má v CSS `font-size: 1.5rem` a stránka má výchozí velikost písma. Jakou hodnotu `font-size` uvidíš u nadpisu v panelu Computed?
+V panelu Computed vidíš u odstavce `font-size: 20px`, ale v kódu žádnou velikost písma nenajdeš — odstavec ji zdědil. Stránka má výchozí velikost písma. Jakou hodnotu bys odstavci napsal do CSS v `rem`, aby vyšlo totéž?
 
 ### --expected--
 
-24px
-
-### --accept--
-
-24 px
+1.25rem
 
 ### --why--
 
-Computed převádí délky na pixely: 1,5 × 16 px = 24 px.
+Computed ukazuje spočtenou hodnotu vždycky v pixelech, kód si ji přepočítáš zpátky: 20 ÷ 16 = 1,25. V `rem` navíc velikost poroste, když si uživatel v prohlížeči zvětší výchozí písmo.
 
 ### --see--
 

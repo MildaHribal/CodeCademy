@@ -334,7 +334,7 @@ min-height: 100dvh
 
 ## `ch`: šířka řádku textu
 
-`1ch` je šířka znaku „0" v aktuálním písmu. Používá se hlavně na jednu věc: **šířku textového sloupce**. Řádky delší než zhruba 75 znaků se čtou špatně — oko se na konci řádku těžko trefí na začátek dalšího. Pravidlo `max-width: 65ch` na článku drží délku řádku kolem 60–75 znaků bez ohledu na velikost písma.
+`1ch` je šířka znaku „0" v aktuálním písmu. Používá se hlavně na jednu věc: **šířku textového sloupce**, tedy [[délka řádku|délku řádku]] (*measure*). Řádky delší než zhruba 75 znaků se čtou špatně — oko se na konci řádku těžko trefí na začátek dalšího. Pravidlo `max-width: 65ch` na článku drží délku řádku kolem 60–75 znaků bez ohledu na velikost písma.
 
 :::live
 ```html

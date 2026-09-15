@@ -1,1 +1,1 @@
-{ "type": "lesson", "title": "Vlastní vlastnosti (CSS proměnné)", "summary": "Design tokeny na :root, var() se záložní hodnotou, přepsání v komponentě, dědičnost, neplatná hodnota za běhu a odstíny přes color-mix().", "minutes": 25, "runtime": "dom" }
+{"type": "lesson", "title": "Vlastní vlastnosti (CSS proměnné)", "summary": "Design tokeny na :root, var() se záložní hodnotou, přepsání v komponentě, dědičnost, neplatná hodnota za běhu a odstíny přes color-mix().", "minutes": 35, "runtime": "dom"}

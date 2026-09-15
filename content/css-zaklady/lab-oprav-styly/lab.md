@@ -10,7 +10,7 @@ Bistro U Zvonu v Olomouci vyvěšuje každý den polední menu na web. Kolega mu
 
 ## Hlášení
 
-- **Ceny.** Ceny jídel měly být tučné, tmavě zelené (`#166534`) a o kus větší než běžný text. Jsou ale obyčejné, černé a stejně velké jako alergeny.
+- **Ceny.** Ceny jídel měly být tučné, tmavě zelené (`#166534`) a o kus větší než běžný text (18 px). Jsou ale obyčejné, tmavé jako název jídla a stejně velké jako běžný text.
 - **Alergeny.** Řádek „Alergeny: …" pod každým jídlem měl být oranžovohnědý (`#b45309`), aby ho šlo rychle najít. Menší písmo sedí, ale barva je stejně tmavá jako název jídla. Kolega tvrdí, že barvu do pravidla `.allergens` napsal a je správná.
 - **Denní nabídka.** Doporučená svíčková má mít vlevo výrazný červený pruh široký 4 px (`#b91c1c`). Světle žluté pozadí má, pruh žádný. Editor u deklarace nic nepodtrhává.
 

@@ -1,6 +1,6 @@
 {
   "title": "Základy CSS",
-  "intro": "x",
+  "intro": "Každý web, který vypadá nějak, a ne jen „nějak je\", stojí na CSS: barva tlačítka, písmo článku, zaoblená karta se stínem, obrys pro ovládání klávesnicí. V téhle sekci se naučíš psát styly tak, abys u každé deklarace věděl, **proč** platí, nebo proč ne.\n\nNejdřív zjistíš, jak prohlížeč pravidla čte a proč neplatnou deklaraci tiše zahodí, a hned z toho postavíš digitální vizitku s přechodem, stínem a stavy pro myš i klávesnici. Pak se naučíš hledat chyby v DevTools, vybírat prvky přesnými selektory, zavést barvy a rozestupy jako design tokeny a vybrat správnou jednotku. Na konci vysázíš čitelný článek se stupnicí písma a titulkem, který roste s oknem.\n\nPředpoklad: znáš základy HTML — prvky, atributy `class` a `id` a strukturu stránky.",
   "modules": [
     "jak-css-funguje",
     "workshop-vizitka",
@@ -10,6 +10,65 @@
     "lab-program-kina",
     "vlastni-vlastnosti",
     "lab-karta-produktu",
-    "jednotky-a-hodnoty"
+    "jednotky-a-hodnoty",
+    "workshop-typografie",
+    "kviz"
+  ],
+  "outcomes": [
+    {
+      "text": "Připojíš stylopis a u neplatné deklarace, chybějícího středníku nebo neplatného selektoru ve skupině předem řekneš, co prohlížeč zahodí.",
+      "links": [
+        "css-zaklady/jak-css-funguje#kam-css-napsat-link-style-a-atribut-style",
+        "css-zaklady/jak-css-funguje#neplatna-deklarace-se-tise-zahodi",
+        "css-zaklady/workshop-vizitka/021"
+      ]
+    },
+    {
+      "text": "Vybereš prvky podle třídy, atributu, vztahu i pozice a vysvětlíš, proč `p:first-child` nebo `.a .b` nevybraly, co jsi čekal.",
+      "links": [
+        "css-zaklady/selektory-zaklad#kombinatory-vztahy-mezi-prvky",
+        "css-zaklady/selektory-zaklad#pseudotridy-podle-pozice",
+        "css-zaklady/lab-program-kina"
+      ]
+    },
+    {
+      "text": "Napíšeš kartu s barvami v hex, `rgb()` a `hsl()`, přechodem, zaoblením, vrstveným stínem a stavy `:hover` a `:focus-visible`.",
+      "links": [
+        "css-zaklady/workshop-vizitka",
+        "css-zaklady/selektory-zaklad#pseudotridy-stav-prvku"
+      ]
+    },
+    {
+      "text": "V DevTools najdeš, které pravidlo na prvek míří, rozlišíš přebitou, neplatnou a neaktivní deklaraci a v panelu Computed zjistíš spočtenou hodnotu a její původ.",
+      "links": [
+        "css-zaklady/devtools-pro-css#panel-styles-co-plati-a-co-je-preskrtnute",
+        "css-zaklady/devtools-pro-css#computed-spoctena-hodnota-a-odkud-prisla",
+        "css-zaklady/lab-oprav-styly"
+      ]
+    },
+    {
+      "text": "Zvolíš jednotku podle toho, na co má hodnota reagovat, a spočítáš na papíře výsledek `em`, `rem`, procent, `calc()` a `clamp()`.",
+      "links": [
+        "css-zaklady/jednotky-a-hodnoty#em-nasobek-pisma-prvku",
+        "css-zaklady/jednotky-a-hodnoty#min-max-a-clamp",
+        "css-zaklady/kviz"
+      ]
+    },
+    {
+      "text": "Zavedeš barvy, rozestupy a stupnici písma jako design tokeny, přepíšeš je pro jednu komponentu a vysvětlíš, proč nepomohla záložní hodnota.",
+      "links": [
+        "css-zaklady/vlastni-vlastnosti#dedicnost-a-prepsani-v-komponente",
+        "css-zaklady/vlastni-vlastnosti#zalozni-hodnota-ve-var",
+        "css-zaklady/lab-karta-produktu",
+        "css-zaklady/workshop-typografie/017"
+      ]
+    },
+    {
+      "text": "Vysázíš čitelný článek: velikost textu v `rem`, řádkování bez jednotky, šířka v `ch`, vertikální rytmus a nadpisy s `text-wrap: balance`.",
+      "links": [
+        "css-zaklady/workshop-typografie",
+        "css-zaklady/workshop-typografie/013"
+      ]
+    }
   ]
 }

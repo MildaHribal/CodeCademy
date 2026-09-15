@@ -1,1 +1,1 @@
-{ "type": "lesson", "title": "Jak CSS funguje", "summary": "Pravidlo, selektor a deklarace, kam styly napsat, výchozí styly prohlížeče a proč se neplatná deklarace tiše zahodí.", "minutes": 20, "runtime": "dom" }
+{"type": "lesson", "title": "Jak CSS funguje", "summary": "Pravidlo, selektor a deklarace, kam styly napsat, výchozí styly prohlížeče a proč se neplatná deklarace tiše zahodí.", "minutes": 40, "runtime": "dom"}

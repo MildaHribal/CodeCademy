@@ -50,6 +50,29 @@ První vybere prvky s jednou z tříd, druhý s oběma.
 
 V článku o výletech chceš, aby odkazy na mapy.cz měly za textem šipku, odkazy ke stažení PDF ikonu a první odstavec byl větší. Dát každému takovému prvku vlastní třídu jde, ale HTML často píše někdo jiný nebo ho generuje redakční systém. Přesný selektor to vyřeší bez zásahu do HTML.
 
+Tady je článek z redakčního systému. Odstavce nemají jedinou třídu, a přesto je ten první za nadpisem větší a barevný:
+
+:::live
+```html
+<article class="guide">
+  <h2>Jak se připravit na první půlmaraton</h2>
+  <p>Na 21 kilometrů se dá připravit za dvanáct týdnů, i když teď uběhneš jen pět.</p>
+  <p>Začni třemi krátkými běhy týdně a každý týden přidej nejvýš desetinu vzdálenosti.</p>
+  <p>Jeden běh v týdnu nech pomalý a dlouhý, klidně s přestávkami na chůzi.</p>
+</article>
+```
+```css
+body { font-family: system-ui, sans-serif; margin: 1rem; line-height: 1.6; }
+
+.guide h2 + p {
+  font-size: 1.25rem;
+  color: #0f766e;
+}
+```
+:::
+
+Zkus v selektoru změnit `+` na `~` a sleduj, kolik odstavců se obarví. Pak ho přepiš na `.guide p` a porovnej. Každý znak v selektoru mění, **které** prvky pravidlo dostanou.
+
 > [!REMEMBER]
 > **Selektor je dotaz na strom HTML: popisuje, jaký prvek hledáš (typ, třída, atribut, stav) a kde leží vůči ostatním (uvnitř, hned za, na kolikáté pozici).** Pravidlo dostanou všechny prvky, které dotazu odpovídají.
 

@@ -1,1 +1,1 @@
-{ "type": "lesson", "title": "DevTools pro CSS", "summary": "Najdeš, která pravidla na prvek míří, co je přeškrtnuté a proč, jakou hodnotu prohlížeč spočítal a odkud přišla — a styly upravíš naživo.", "minutes": 25, "runtime": "dom" }
+{"type": "lesson", "title": "DevTools pro CSS", "summary": "Najdeš, která pravidla na prvek míří, co je přeškrtnuté a proč, jakou hodnotu prohlížeč spočítal a odkud přišla — a styly upravíš naživo.", "minutes": 40, "runtime": "dom"}

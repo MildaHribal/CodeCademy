@@ -114,3 +114,20 @@ mdn: https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Cascading_variables
 lekce: css-zaklady/vlastni-vlastnosti#design-tokeny-pojmenovani-a-skala
 
 Pojmenovaná hodnota návrhu — barva, rozestup, velikost písma, zaoblení — uložená jako vlastní vlastnost na jednom místě. Jméno popisuje účel (`--color-accent`), ne vzhled (`--blue`).
+
+## --term-- délka řádku
+
+en: measure
+aliases: délku řádku, délky řádku, délkou řádku
+mdn: https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/length
+lekce: css-zaklady/jednotky-a-hodnoty#ch-sirka-radku-textu
+
+Počet znaků na jednom řádku textového sloupce. Pohodlně se čte zhruba 45 až 75 znaků, a proto se šířka sloupce píše v jednotce `ch`, třeba `max-width: 65ch`.
+
+## --term-- vertikální rytmus
+
+en: vertical rhythm
+aliases: vertikálního rytmu, vertikálním rytmem
+lekce: css-zaklady/workshop-typografie/013
+
+Pravidelné svislé mezery mezi odstavci, nadpisy a bloky stránky, odvozené z pár tokenů rozestupů. Mezera nad nadpisem je větší než pod ním, aby nadpis patřil k textu, který uvádí.
