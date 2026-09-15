@@ -128,9 +128,8 @@ body { font-family: system-ui, sans-serif; margin: 1rem; }
 .readout { font-variant-numeric: tabular-nums; font-weight: 600; }
 
 .stage {
-  padding: 0;
   background: #fef3c7;
-  outline: 1px dashed #d97706;
+  border: 1px dashed #d97706;
   width: max-content;
 }
 

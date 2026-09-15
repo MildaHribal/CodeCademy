@@ -18,7 +18,7 @@ Téma, texty a vzhled jsou tvoje volba: klidně z příspěvku udělej recenzi k
 - Pole pro odpověď je přes celou šířku obsahu příspěvku, ne víc.
 - Fotka vyplní celou šířku obsahu příspěvku a pod obrázkem není proužek tmavého pozadí.
 - Avatar je svisle vycentrovaný se jménem autorky.
-- Štítky zůstanou v řádku textu, ale každý je celistvá „pilulka": nerozdělí se na dva řádky a řádky štítků se nepřekrývají.
+- Štítky zůstanou v řádku textu, ale každý je celistvá „pilulka": nerozdělí se na dva řádky, řádky štítků se nepřekrývají a mezi řádky zůstane malá mezera (aspoň 4 px).
 - Tlačítka „Líbí se mi" a „Komentovat" jsou dotykové cíle vysoké aspoň 44 px a široké jen podle svého textu.
 - Nápis „Uloženo do sbírky" se ukáže až po uložení (to dodělá kolega v JavaScriptu). Zatím není vidět, ale drží si místo, aby se po jeho ukázání nic neposunulo.
 - Odkaz „Nahlásit příspěvek" má v HTML atribut `hidden` a nesmí být vidět ani zabírat místo. Až kolega atribut odebere, má se ukázat.

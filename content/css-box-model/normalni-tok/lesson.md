@@ -111,7 +111,7 @@ Každý prvek dostane od prohlížeče výchozí `display`, a ten určuje, jaký
 | skládá se | pod předchozí box | za předchozí slovo, v řádku |
 | šířka | celá šířka rodiče (`width: auto`) | podle obsahu |
 | `width`, `height` | fungují | nepůsobí (výjimka: obrázky a formulářová pole) |
-| svislý `padding`, `margin`, `border` | odsouvají sousedy | kreslí se, ale sousedy neodsunou |
+| svislý `padding`, `margin`, `border` | odsouvají sousedy | padding a rámeček se kreslí, margin se ignoruje; sousedy neodsunou |
 | vodorovný `padding`, `margin`, `border` | fungují | fungují, odsunou slova vedle |
 
 Obrázek, `input` nebo `button` jsou zvláštní případ: v řádku tečou jako slova, ale mají vlastní rozměry, takže jim šířka i výška nastavit jde. `button` a pole formuláře mají ve výchozím stavu `display: inline-block`, obrázek je řádkový prvek s vlastními rozměry.
@@ -122,7 +122,7 @@ Když chceš vidět, kde který box leží, dej si na chvíli do CSS obrys všem
 ```html
 <section class="demo">
   <h2>Nový e-shop <em>Kolo &amp; Stan</em></h2>
-  <p>Otevíráme v <strong>pondělí 6. října</strong> v Brně na Cejlu. Mapu najdeš na <a href="#">stránce prodejny</a>.</p>
+  <p>Otevíráme v <strong>pondělí 6. října</strong> v Brně na Cejlu. Mapu i otevírací dobu najdeš na <a href="#">stránce brněnské prodejny Kolo &amp; Stan</a>.</p>
   <p>Prvních 50 zákazníků dostane <span class="tag">láhev zdarma</span>.</p>
 </section>
 ```
@@ -141,7 +141,7 @@ body { font-family: system-ui, sans-serif; margin: 1rem; line-height: 1.5; }
 ```
 :::
 
-Nadpis a odstavce mají obdélník přes celou šířku. `em`, `strong`, `a` a `span` jsou obtažené jen kolem svého textu. Zúž si okno náhledu přepínačem šířky na 375 a sleduj odkaz „stránce prodejny": když se zalomí, jeho box se rozpadne na dva kusy, na každém řádku jeden. Blok se takhle nikdy nerozdělí.
+Nadpis a odstavce mají obdélník přes celou šířku. `em`, `strong`, `a` a `span` jsou obtažené jen kolem svého textu. Zúž si okno náhledu přepínačem šířky na 375 a sleduj odkaz na stránku prodejny: když se zalomí, jeho box se rozpadne na dva kusy, na každém řádku jeden. Blok se takhle nikdy nerozdělí.
 
 > [!TIP]
 > Obrys (`outline`) je na hledání boxů lepší než `border`, protože nezabírá místo a nic neposune. V DevTools totéž uvidíš, když najedeš myší na prvek v panelu Elements.

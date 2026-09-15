@@ -206,11 +206,11 @@ Které z těchto deklarací založí na prvku blokový formátovací kontext, ta
 
 ### --answer--
 
-`position: relative`
+`display: block`
 
 #### --why--
 
-`relative` prvek jen posune vůči jeho místu, v normálním toku zůstává a nový kontext nezakládá.
+Obyčejný blok v normálním toku vlastní kontext nezakládá. Právě z něj marginy prvního a posledního dítěte utíkají ven.
 
 ### --answer--
 
@@ -223,6 +223,7 @@ Které z těchto deklarací založí na prvku blokový formátovací kontext, ta
 ### --see--
 
 css-box-model/margin-collapse-a-bfc#blokovy-formatovaci-kontext
+css-box-model/preteceni#overflow-co-s-obsahem-ktery-preteka
 
 ## --question--
 
@@ -242,31 +243,31 @@ css-box-model/preteceni#overflow-co-s-obsahem-ktery-preteka
 
 ## --question--
 
-Poslední zpráva v seznamu chatů je `<span class="preview">` uvnitř `<li>` a má `white-space: nowrap`, `overflow: hidden` a `text-overflow: ellipsis`. Text přetéká z `li` a tři tečky nikde. Co je špatně?
+V drobečkové navigaci e-shopu je poslední položka odkaz `<a class="crumb">` s dlouhým názvem produktu. Odkaz má `max-width: 12rem`, `white-space: nowrap`, `overflow: hidden` a `text-overflow: ellipsis`. Název se ale neořízne, je celý a táhne se přes 12rem. Co je špatně?
 
 ### --answer--
 
-`text-overflow` neumí tečky u textu kratšího než 100 znaků.
+`max-width` a `text-overflow` se navzájem ruší, stačí jedno z nich.
 
 #### --why--
 
-Délka textu nerozhoduje. Rozhoduje, jestli má box, na kterém vlastnosti jsou, šířku, kterou text přetéká.
+Tři tečky potřebují box s omezenou šířkou, takže `max-width` sem patří. Háček je v tom, jaký box odkaz vytváří.
 
 ### --correct--
 
-`span` je řádkový prvek, `overflow` a `text-overflow` na něj nepůsobí. Potřebuje `display: block` nebo `inline-block` s omezenou šířkou.
+Odkaz je řádkový prvek: `max-width` na něj nepůsobí a `overflow` s `text-overflow` taky ne. Pomůže mu `display: inline-block`.
 
 #### --why--
 
-Oříznutí a tři tečky fungují jen na boxu, který má šířku a obsahuje řádky textu. Řádkový `span` je jen kus textu v řádku `li`.
+Šířka i oříznutí fungují jen na boxu, který má vlastní šířku, tedy blok nebo `inline-block`. Řádkový odkaz je jen kus textu v řádku, jeho velikost určuje text.
 
 ### --answer--
 
-Chybí `max-width: 100%` na `li`.
+`white-space: nowrap` zakazuje i oříznutí, musí pryč.
 
 #### --why--
 
-`li` je blok a šířku rodiče nepřekročí ani bez `max-width`. Problém je v prvku, na kterém jsou vlastnosti oříznutí.
+Bez `nowrap` by se text zalomil a do strany by nepřetékal vůbec. `nowrap` je jedna ze čtyř podmínek, ne překážka.
 
 ### --see--
 
@@ -307,7 +308,7 @@ Oba selektory mají stejnou specificitu (0, 1, 1): jednu třídu a jeden typ. P�
 
 ### --see--
 
-css-kaskada/kaskada
+css-kaskada/kaskada#specificita-trojice-a-b-c
 
 ## --question--
 
@@ -323,7 +324,7 @@ Myslíš si, že `:where()` započítá třídu `.stack`? Všechno uvnitř `:whe
 
 ### --correct--
 
-3rem, protože `:where()` má nulovou specificitu a obě pravidla mají jen typ, takže vyhraje pozdější.
+3rem, protože pravidlo stacku má díky `:where()` nulovou specificitu a `h2` vyšší.
 
 #### --why--
 
@@ -339,7 +340,7 @@ Dvě pravidla pro tutéž vlastnost se nesčítají, kaskáda vybere jednu hodno
 
 ### --see--
 
-css-kaskada/moderni-selektory
+css-kaskada/moderni-selektory#where-stejny-vyber-nulova-specificita
 
 ## --question--
 
@@ -360,7 +361,7 @@ Styly mimo vrstvy mají přednost před styly ve vrstvách bez ohledu na specifi
 
 ### --see--
 
-css-kaskada/kaskada
+css-kaskada/kaskada#vrstvy-layer
 
 ## --question--
 

@@ -36,23 +36,23 @@ css-box-model/box-model#logicke-vlastnosti-inline-a-block-misto-stran
 
 ## --card-- css
 
-Recenze v kartě mají být aspoň 10rem vysoké, ale s dlouhým textem musí karta růst. Napiš deklaraci logickou vlastností.
+Tlačítko „Do košíku" má být aspoň 10rem široké, aby se na něj dobře trefovalo. S delším textem („Do košíku a k pokladně") se ale musí rozšířit, ne zalomit. Napiš deklaraci logickou vlastností.
 
 ### --expected--
 
 ```css
-min-block-size: 10rem;
+min-inline-size: 10rem;
 ```
 
 ### --accept--
 
 ```css
-min-height: 10rem;
+min-width: 10rem;
 ```
 
 ### --why--
 
-Pevná výška by delší text nechala vytéct přes spodní okraj. Minimum drží jen spodní hranici.
+Pevná šířka by delší text zalomila do víc řádků. Minimum drží jen spodní hranici a nad ní tlačítko roste s obsahem.
 
 ### --see--
 
@@ -146,7 +146,7 @@ css-box-model/margin-collapse-a-bfc#blokovy-formatovaci-kontext
 
 ## --card-- css
 
-V komentáři je dlouhý odkaz bez mezer, který na telefonu roztáhne stránku. Napiš deklaraci pro text komentáře, která dovolí zlomit slovo, jen když se nevejde.
+Karta objednávky je flex položka a dlouhý e-mail zákazníka bez mezer ji roztahuje, takže přetéká z řádku. Obyčejná slova se mají dál lámat jen mezi slovy. Napiš deklaraci pro text s e-mailem.
 
 ### --expected--
 
@@ -154,15 +154,9 @@ V komentáři je dlouhý odkaz bez mezer, který na telefonu roztáhne stránku.
 overflow-wrap: anywhere;
 ```
 
-### --accept--
-
-```css
-overflow-wrap: break-word;
-```
-
 ### --why--
 
-`overflow-wrap` láme jen slova, která se celá nevejdou na řádek. `anywhere` navíc zmenší nejmenší šířku obsahu, takže funguje i ve flexboxu a gridu.
+`overflow-wrap` láme jen slova, která se celá nevejdou na řádek. Ve flex položce ale pomůže jen `anywhere`, protože zmenší i nejmenší šířku obsahu. `break-word` slovo zlomí až při vykreslení a položku roztáhne dál.
 
 ### --see--
 
@@ -222,17 +216,23 @@ css-box-model/preteceni#obrazky-hranice-sirky-pomer-stran-a-object-fit
 
 ## --card-- css
 
-Portrétní fotka má v kartě čtvercový výřez. Napiš deklaraci, se kterou fotka výřez celý vyplní a nezdeformuje se.
+Loga partnerů festivalu mají různé tvary a stojí v dlaždicích s `aspect-ratio: 3 / 2`. Každé logo musí být vidět celé, nic se nesmí oříznout ani zdeformovat. Napiš deklaraci pro obrázek loga.
 
 ### --expected--
 
 ```css
-object-fit: cover;
+object-fit: contain;
+```
+
+### --accept--
+
+```css
+object-fit: scale-down;
 ```
 
 ### --why--
 
-`cover` zachová poměr stran, zvětší obrázek přes celý box a přesah ořízne. Výchozí `fill` obrázek roztáhne.
+`contain` zachová poměr stran a zmenší obrázek tak, aby se do boxu vešel celý, zbytek dlaždice zůstane prázdný. `cover` by okraje loga ořízl a výchozí `fill` ho zdeformuje.
 
 ### --see--
 
@@ -240,7 +240,7 @@ css-box-model/preteceni#obrazky-hranice-sirky-pomer-stran-a-object-fit
 
 ## --card-- css
 
-Blokový štítek „Akce" má být jen tak široký jako jeho text, ale na úzkém displeji nesmí přetéct. Napiš deklaraci šířky.
+Odkaz „Zobrazit další recepty" má `display: block` a `margin-inline: auto`, a přesto se roztahuje přes celou šířku a nic se necentruje. Má být jen tak široký jako jeho text, ale na úzkém displeji nesmí přetéct. Napiš deklaraci šířky.
 
 ### --expected--
 

@@ -498,19 +498,20 @@ css-box-model/margin-collapse-a-bfc#blokovy-formatovaci-kontext
 
 ## --question--
 
-Sekce `.faq` má svislý stack: `.faq > * + * { margin-block-start: 12px; }`. Uvnitř je nadpis a pět otázek. Kolik deklarací `margin-block-start` se na děti sekce použije?
+Kolega napsal ze vzoru stack jen druhé pravidlo: `.faq > * + * { margin-block-start: 12px; }`. Děti sekce `.faq` jsou odstavce s výchozím `margin-block: 16px` od prohlížeče. Kolik pixelů bude mezi dvěma odstavci?
 
 ### --expected--
 
-5
+16
 
 ### --accept--
 
-pět
+16 px
+16px
 
 ### --why--
 
-`* + *` vybere každé dítě, před kterým je sourozenec. Nadpis je první a margin nedostane, pět otázek za ním ano.
+Pravidlo stacku přepíše jen horní margin odstavců na 12 px. Spodní margin předchozího odstavce zůstal 16 px a oba se v normálním toku slijí na větší z nich. Proto má vzor stack i první pravidlo, které dětem svislé marginy vynuluje.
 
 ### --see--
 

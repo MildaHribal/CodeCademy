@@ -1,1 +1,1 @@
-{ "type": "lesson", "title": "Box model", "summary": "Z čeho se skládá každý box, co přesně měří width, proč se hodí border-box a jak psát rozměry logickými vlastnostmi.", "minutes": 25, "runtime": "dom" }
+{"type": "lesson", "title": "Box model", "summary": "Z čeho se skládá každý box, co přesně měří width, proč se hodí border-box a jak psát rozměry logickými vlastnostmi.", "minutes": 30, "runtime": "dom"}

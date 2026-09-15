@@ -42,7 +42,7 @@ Text se zalamuje, takže do strany nikdy nepřeteče a `text-overflow` nemá co 
 
 ## Problém: obsah, který se nevejde
 
-Tady je komentář pod článkem na úzkém displeji. Autor komentáře vložil odkaz a do nadpisu karty se vešel dlouhý název:
+Tady je komentář pod článkem na úzkém displeji. Autorka komentáře vložila odkaz a její jméno se nesmí zalomit:
 
 :::live
 ```html
@@ -70,7 +70,7 @@ body { font-family: system-ui, sans-serif; margin: 1rem; line-height: 1.5; }
 ```
 :::
 
-Jméno i adresa vylezou z rámečku doprava. Tomu se říká [[přetečení]] (*overflow*). Na skutečném telefonu by se objevil vodorovný posuvník a celá stránka by se dala posouvat do strany. Zkus přidat do `.comment` `overflow: hidden;` a pak ho vyměň za `overflow-wrap: anywhere;`.
+Jméno i adresa vylezou z rámečku doprava. Tomu se říká [[přetečení]] (*overflow*). Na skutečném telefonu by se objevil vodorovný posuvník a celá stránka by se dala posouvat do strany. Zkus přidat do `.comment` `overflow: hidden;` a pak ho vyměň za `overflow-wrap: anywhere;`. Adresa se zalomí, jméno ne: `white-space: nowrap` zalamování zakazuje úplně. Obojí rozebereme níž.
 
 > [!REMEMBER]
 > **Co se do boxu s danou šířkou nevejde, z něj ve výchozím stavu přeteče a zůstane vidět. Box se kvůli obsahu nerozšíří a nic se samo neořízne.** Jak s přetečením naložit, rozhoduješ ty: zalomit, oříznout, nebo nechat posouvat.
@@ -607,6 +607,27 @@ Obal s `overflow-x: auto` tabulku posouvat umí. Stačí, aby byl užší než t
 ### --see--
 
 css-box-model/preteceni#velikost-podle-obsahu-min-content-max-content-fit-content
+
+## --question--
+
+Karta produktu má obsah široký 320 px. Nahoře v ní je blok `<div class="product__cover">` s `aspect-ratio: 4 / 3`, bez nastavené šířky i výšky a bez textu. Jak vysoký bude (v px)?
+
+### --expected--
+
+240
+
+### --accept--
+
+240 px
+240px
+
+### --why--
+
+Blok bez šířky vyplní šířku rodiče, tedy 320 px. Výška zůstala `auto`, takže se dopočítá z poměru stran: 320 ÷ 4 × 3 = 240 px. Kdyby blok měl i pevnou výšku, poměr stran by se ignoroval.
+
+### --see--
+
+css-box-model/preteceni#obrazky-hranice-sirky-pomer-stran-a-object-fit
 
 ## --question--
 
