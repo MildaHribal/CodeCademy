@@ -123,25 +123,25 @@ body { font-family: system-ui, sans-serif; margin: 1rem; }
 :::
 
 :::check
-Seznam `<ul class="steps">` má `list-style: square` a `padding-left: 2rem`. Vnořený seznam `<ul>` uvnitř jeho položky nemá žádné vlastní pravidlo. Který z těch dvou stylů převezme?
+Recenze `<blockquote class="review">` má `font-style: italic` a `padding-left: 1.5rem`. Odstavec `<p>` uvnitř ní nemá žádné vlastní pravidlo. Který z těch dvou stylů převezme jako svou vlastní hodnotu?
 
 ### --answer--
-Oba, protože je vnořený v seznamu, který je má.
+Oba, protože leží v prvku, který je má.
 
 #### --why--
-`padding` se nedědí. Vnořený seznam má odsazení z výchozích stylů prohlížeče.
+`padding` se nedědí. Text odstavce je odsazený jen proto, že leží uvnitř recenze s odsazením, sám odstavec má `padding-left: 0`.
 
 ### --correct--
-Jen čtverečkové odrážky (`list-style`).
+Jen kurzívu (`font-style`).
 
 #### --why--
-`list-style` se dědí, `padding` ne. Vnořený seznam tedy dostane čtverečky, ale odsazení si nechá výchozí.
+`font-style` je vlastnost textu a dědí se, `padding` ne. Odstavec tedy bude kurzívou, ale vlastní odsazení mít nebude.
 
 ### --answer--
-Žádný, protože vnořený seznam je nový prvek `ul` s vlastními výchozími styly.
+Žádný, protože `<p>` má vlastní výchozí styly prohlížeče.
 
 #### --why--
-Výchozí styly prohlížeče pro `ul` nastavují odsazení, ale styl odrážek ne — ten se tedy zdědí.
+Výchozí styly prohlížeče dávají odstavci okraje nahoře a dole, ale styl písma ne — ten se tedy zdědí.
 :::
 
 ## Zděděná hodnota prohraje s každou deklarací
@@ -273,7 +273,7 @@ body { font-family: system-ui, sans-serif; margin: 1rem; }
 --see-- css-kaskada/dedicnost#klicova-slova-inherit-initial-unset-a-revert
 :::
 
-Hromadně jde klíčové slovo použít přes vlastnost `all`, která zastupuje všechny vlastnosti kromě vlastních vlastností: `all: unset` smaže prvku úplně všechno. Užitečné, když z `<button>` děláš ikonu bez rámečku — ale smaže to i obrys fokusu, takže ho musíš vrátit (viz [Typické chyby a pasti](see:css-kaskada/dedicnost#typicke-chyby-a-pasti)).
+Hromadně jde klíčové slovo použít přes vlastnost `all`, která zastupuje všechny vlastnosti kromě vlastních vlastností a směru textu (`direction`): `all: unset` smaže prvku skoro všechno. Užitečné, když z `<button>` děláš ikonu bez rámečku — ale smaže to i obrys fokusu, takže ho musíš vrátit (viz [Typické chyby a pasti](see:css-kaskada/dedicnost#typicke-chyby-a-pasti)).
 
 :::check
 Chceš, aby prvek `<li>`, kterému šablona nastavila `display: flex`, byl zase obyčejná položka seznamu s odrážkou. Který zápis to udělá?
@@ -399,9 +399,9 @@ Bezjednotková hodnota se dědí jako číslo a nadpis ji vynásobí svou veliko
 > *Oprava:* piš `line-height` bez jednotky (`1.5`), dědí se pak poměr, ne pixely.
 
 > [!PITFALL] `all: unset` na tlačítku
-> *Příznak:* tlačítko s ikonou vypadá, jak má, ale při procházení klávesou Tab na něm není vidět fokus a kurzor nad ním není ruka.
+> *Příznak:* tlačítko s ikonou vypadá, jak má, ale při procházení klávesou Tab na něm není vidět fokus.
 >
-> *Oprava:* `all: unset` smaže i obrys fokusu a kurzor z výchozích stylů. Vrať je: `&:focus-visible { outline: 2px solid; }` a `cursor: pointer`.
+> *Oprava:* `all: unset` smaže i obrys fokusu z výchozích stylů prohlížeče (`outline-style` spadne na počáteční `none`). Vrať ho vlastním pravidlem, třeba `.icon-button:focus-visible { outline: 2px solid; }`.
 
 :::explain
 Vysvětli vlastními slovy, proč odkaz uvnitř patičky s `color: white` zůstane modrý a proč nepomůže dát patičce `!important`.
@@ -437,6 +437,8 @@ Obrys fokusu dává tlačítku výchozí styl prohlížeče. `all: unset` ho př
 #### --why--
 Tlačítko je dál vidět, jen se z něj stal řádkový prvek. S fokusem to nesouvisí.
 :::
+
+V labu to spojíš s vrstvami a moderními selektory: přihlášce vrátíš písmo stránky, uklidíš její styly a chyby ukážeš až ve chvíli, kdy na nich záleží.
 
 ## Kde to najdeš v MDN
 
@@ -498,7 +500,7 @@ css-kaskada/dedicnost#zdedena-hodnota-prohraje-s-kazdou-deklaraci
 
 ## --question--
 
-Obal `.box` nemá `display: block` ani žádné jiné pravidlo pro `display`, a přesto se jako blok chová. Tvoje pravidlo `.box { display: unset; }` z něj udělá řádkový prvek. Proč?
+Prvek `<div class="box">` nemá ve tvých stylech žádné pravidlo pro `display`, a přesto se chová jako blok. Tvoje pravidlo `.box { display: unset; }` z něj udělá řádkový prvek. Proč?
 
 ### --answer--
 

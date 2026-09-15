@@ -1,0 +1,1 @@
+{ "type": "quiz", "title": "Kvíz: selektory a kaskáda", "summary": "Otázky na čtení cizího CSS: které pravidlo vyhraje, jakou specificitu má selektor, co se zdědí a jak se chovají vrstvy a !important.", "minutes": 30, "runtime": "dom" }

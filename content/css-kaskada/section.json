@@ -1,5 +1,35 @@
 {
   "title": "Selektory a kaskáda do hloubky",
-  "intro": "x",
-  "modules": ["kaskada", "workshop-uklid-stylu", "moderni-selektory", "workshop-odznaky", "dedicnost"]
+  "intro": "Napíšeš `background: red` a tlačítko zůstane modré. Kdo tohle řeší přidáváním `!important`, za půl roku nemůže změnit nic. V téhle sekci se naučíš **předem říct, které pravidlo vyhraje a proč** — a psát styly tak, aby se nepřebíjely.\n\nProjdeš žebříček kaskády (původ, důležitost, inline styl, vrstvy `@layer`, specificita, pořadí), uklidíš převzatý web se starou šablonou plnou id a vykřičníků, postavíš přehled herních serverů se štítky a tlačítky ve variantách pomocí vnořeného CSS, `:is()`, `:where()` a `:has()`, pochopíš dědičnost a klíčová slova `inherit`, `initial`, `unset` a `revert` a nakonec sám nastyluješ přihlášku, která ukazuje chyby až ve chvíli, kdy na nich záleží.\n\nPředpoklad: základy CSS — selektory, barvy, jednotky a vlastní vlastnosti.",
+  "modules": ["kaskada", "workshop-uklid-stylu", "moderni-selektory", "workshop-odznaky", "dedicnost", "lab-prihlaska-na-hackathon", "kviz"],
+  "outcomes": [
+    {
+      "text": "U libovolné deklarace předem řekneš, jestli se projeví, a pojmenuješ kritérium kaskády, které rozhodlo.",
+      "links": ["css-kaskada/kaskada#zebricek-kaskady", "css-kaskada/kaskada#typicke-chyby-a-pasti", "css-kaskada/kviz"]
+    },
+    {
+      "text": "Spočítáš specificitu selektoru jako trojici (A, B, C) včetně `:is()`, `:not()`, `:has()`, `:where()` a vnořených pravidel a porovnáš dva selektory.",
+      "links": ["css-kaskada/kaskada#specificita-trojice-a-b-c", "css-kaskada/moderni-selektory#specificita-is", "css-kaskada/moderni-selektory#specificita-vnorenych-pravidel"]
+    },
+    {
+      "text": "Uspořádáš styly do vrstev `@layer` a vysvětlíš, proč styl mimo vrstvy vyhraje a proč `!important` pořadí vrstev obrací.",
+      "links": ["css-kaskada/kaskada#vrstvy-layer", "css-kaskada/kaskada#important-obraci-poradi-vrstev", "css-kaskada/workshop-uklid-stylu/009", "css-kaskada/workshop-uklid-stylu/012"]
+    },
+    {
+      "text": "Převezmeš styly plné id a `!important` a uklidíš je snížením specificity a vrstvami, ne silnějšími selektory.",
+      "links": ["css-kaskada/workshop-uklid-stylu", "css-kaskada/kaskada#jak-z-valky-specificity-ven"]
+    },
+    {
+      "text": "Napíšeš komponentu s variantami a stavy ve vnořeném CSS a kartu, která se přizpůsobí obsahu přes `:has()`.",
+      "links": ["css-kaskada/workshop-odznaky", "css-kaskada/moderni-selektory#vnorovani-css-nesting", "css-kaskada/moderni-selektory#has-styl-rodice-podle-obsahu"]
+    },
+    {
+      "text": "Vysvětlíš, kdy se hodnota zdědí, a vybereš mezi `inherit`, `initial`, `unset`, `revert` a `revert-layer`.",
+      "links": ["css-kaskada/dedicnost#zdedena-hodnota-prohraje-s-kazdou-deklaraci", "css-kaskada/dedicnost#klicova-slova-inherit-initial-unset-a-revert"]
+    },
+    {
+      "text": "Nastyluješ formulář, který ukáže chyby až po interakci uživatele přes `:user-invalid` a `:has()`, bez JavaScriptu a bez `!important`.",
+      "links": ["css-kaskada/lab-prihlaska-na-hackathon", "css-kaskada/moderni-selektory#stav-formulare-focus-within-a-user-invalid"]
+    }
+  ]
 }

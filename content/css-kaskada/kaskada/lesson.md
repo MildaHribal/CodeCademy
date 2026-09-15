@@ -166,7 +166,7 @@ Deklarace mají [[původ stylu]] (*cascade origin*). Pro tebe jsou důležité d
 - **styly prohlížeče** (*user agent stylesheet*) — výchozí vzhled: modré podtržené odkazy, tučné nadpisy, okraje odstavců,
 - **autorské styly** (*author styles*) — všechno, co napíšeš ty: soubory přes `<link>`, bloky `<style>` i atribut `style`.
 
-Autorský styl vyhraje nad stylem prohlížeče vždycky, bez ohledu na specificitu. Výchozí barvu odkazů přitom prohlížeč dává selektorem, který obsahuje pseudotřídu (v Chromu `a:-webkit-any-link`). Tipni si, co s ní udělá nejslabší možný autorský selektor:
+Běžná autorská deklarace vyhraje nad výchozím stylem prohlížeče bez ohledu na specificitu. Výchozí barvu odkazů přitom prohlížeč dává selektorem, který obsahuje pseudotřídu (v Chromu `a:-webkit-any-link`). Tipni si, co s ní udělá nejslabší možný autorský selektor:
 
 :::live predict
 ```html
@@ -679,6 +679,8 @@ Kaskáda porovnává deklarace podle pevného žebříčku: původ a důležitos
 - Styl mimo vrstvy vyhraje nad běžnými deklaracemi ve všech vrstvách.
 - Oprava je přesunout soupeře do vrstvy, ne zesilovat selektor.
 :::
+
+V dalším modulu použiješ žebříček naostro: převezmeš web horské chaty, kde nový vzhled prohrává se starou šablonou, a uklidíš ho bez jediného `!important`.
 
 ## Kde to najdeš v MDN
 

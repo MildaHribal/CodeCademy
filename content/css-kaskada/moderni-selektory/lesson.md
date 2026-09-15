@@ -129,7 +129,7 @@ Kombinátor mezera jen říká, kde má vstup ležet. Stylovat obal podle stavu 
 }
 ```
 
-Seznam v `:is()` je navíc **shovívavý** (*forgiving selector list*): když je v něm selektor, kterému prohlížeč nerozumí, přeskočí jen ten. Obyčejný seznam oddělený čárkami se chová jinak. Tipni si:
+Seznam v `:is()` je navíc [[shovívavý seznam selektorů|shovívavý]] (*forgiving selector list*): když je v něm selektor, kterému prohlížeč nerozumí, přeskočí jen ten. Obyčejný seznam oddělený čárkami se chová jinak. Tipni si:
 
 :::live predict
 ```html
@@ -207,10 +207,6 @@ Napiš specificitu selektoru `.nav :is(a, .button):hover` ve tvaru `A,B,C`.
 ```
 ```css
 body { font-family: system-ui, sans-serif; margin: 1rem; }
-
-h2 {
-  color: #be123c;
-}
 ```
 --variant-- :is(.article) h2
 ```css
@@ -462,7 +458,7 @@ Pravidla vnořování:
 - `&` zastupuje rodičovský selektor. Kde `&` není, platí vnořený selektor jako potomek (`h2` uvnitř `.card` = `.card h2`).
 - **Mezera za `&` je kombinátor.** `&:hover` je stav karty, `& :hover` je libovolný potomek pod kurzorem.
 - `&` smí stát i uprostřed nebo na konci (`.dark-section &`).
-- Vnořit jde i `@media`, `@supports` a `@container`.
+- Vnořit jde i `@media`, `@supports` a `@container`. Media dotazy do hloubky probere sekce Responzivní design a témata, teď stačí vědět, že pravidlo uvnitř platí jen na dost širokém okně.
 
 Tipni si, jestli tahle rozbalovací nabídka dostane barvu:
 
@@ -585,7 +581,7 @@ Pravidlo odpovídá `:is(nav .link):focus-visible`. `:is()` přinese (0, 1, 1) z
 
 Obrázky v kartě dostanou zaoblení a poměr stran, ale obrázky vložené do popisu produktu (třeba z redakčního systému) zůstanou beze změny. Obyčejný selektor `.product-card img` by zasáhl i je. Holé selektory uvnitř `@scope` nepřidávají specificitu za kořen, takže `img` tu má (0, 0, 1).
 
-`@scope` je ve všech hlavních prohlížečích od roku 2026. Na komponenty bez vnořených cizích částí ti dál stačí třída komponenty.
+`@scope` funguje ve všech hlavních prohlížečích od prosince 2025, kdy ho doplnil Firefox 146. Na komponenty bez vnořených cizích částí ti dál stačí třída komponenty.
 
 :::live
 ```html
@@ -691,6 +687,8 @@ Nahradit `&` za `:is(.card)`.
 #### --why--
 `:is(.card)-footer` je stejně neplatný selektor. Jméno třídy se ze dvou kusů poskládat nedá.
 :::
+
+V dalším workshopu z těchhle selektorů postavíš přehled herních serverů: štítky a tlačítka ve variantách, vnořené stavy a karty, které reagují na obsah.
 
 ## Kde to najdeš v MDN
 
