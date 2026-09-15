@@ -316,13 +316,6 @@ console.log(espresso(), tea());
 --why-- `espresso` a `tea` vznikly dvěma voláními továrny, takže každá má vlastní prostředí a vlastní `count`. Tři volání `espresso` se `tea` nijak nedotknou. Přesně tohle chybělo počítadlu „To se mi líbí" ze začátku lekce.
 :::
 
-> [!PITFALL]
-> **Továrna zavolaná při každém použití vrací pořád totéž číslo.** Kód
-> `button.onclick = () => console.log(createCounter()());` vypíše po každém kliknutí `1`,
-> protože každé kliknutí vyrobí nové počítadlo s novým `count`. Oprava: továrnu
-> zavolej jednou, výsledek ulož do proměnné (`const likeTea = createCounter();`)
-> a v posluchači volej už jen `likeTea()`.
-
 :::check
 Vytvořil jsi `const a = createCounter();` a `const b = a;`. Pak zavoláš `a()`, `a()` a `b()`. Co vrátí `b()`?
 
@@ -588,7 +581,7 @@ S `var` by na obrázku bylo jediné prostředí `{ seat: 4 }` a všechny tři fu
 ukazovaly na ně.
 
 > [!PITFALL]
-> **Funkce vytvořené v cyklu s `var` vidí všechny poslední hodnotu.** Příznak:
+> **Všechny funkce vytvořené v cyklu s `var` vidí poslední hodnotu.** Příznak:
 > všechna tlačítka nebo časovače pracují s poslední položkou, nebo s `undefined`,
 > když se `items[i]` čte za koncem pole. Oprava: v hlavičce cyklu `let` (nebo
 > `for…of` s `const`). Ve starém kódu uvidíš místo toho pomocnou funkci, která
@@ -726,16 +719,11 @@ console.log(tea());
 ### Továrna zavolaná při každém použití
 
 > [!PITFALL]
-> **`createCounter()()` vrací pokaždé `1`.** Každé zavolání továrny vyrobí nový stav.
-> Příznak: počítadlo, mezipaměť nebo debounce „nefunguje", jako by si nic
-> nepamatovalo. Oprava: továrnu zavolej jednou mimo posluchač a výsledek si ulož.
-
-### `var` ve smyčce
-
-> [!PITFALL]
-> **Časovače a posluchače vytvořené v cyklu s `var` vidí poslední hodnotu.** Příznak:
-> všechny vypíšou totéž číslo, nebo `undefined` při čtení `items[i]`. Oprava: `let`
-> v hlavičce cyklu nebo `for…of`.
+> **`button.onclick = () => console.log(createCounter()());` vypíše po každém kliknutí `1`.**
+> Každé kliknutí zavolá továrnu a vyrobí nové počítadlo s novým `count`. Příznak:
+> počítadlo, mezipaměť nebo debounce „nefunguje", jako by si nic nepamatovalo. Oprava:
+> továrnu zavolej jednou mimo posluchač (`const likeTea = createCounter();`) a v posluchači
+> volej už jen `likeTea()`.
 
 :::check
 Dvě vyhledávací pole používají `createDelay()` a navzájem si ruší časovač. Kde je nejspíš chyba?
@@ -850,37 +838,26 @@ js-funkce-hloubka/closures#pamatuje-si-promennou-ne-hodnotu
 
 ## --question--
 
-Kód má do konzole vypsat `Linka 1`, `Linka 2`, `Linka 3`, ale vypíše třikrát `Linka 4`. Která úprava to opraví?
+Kolega slyšel, že past s cyklem opraví `let`, a tak změnil `var` na `let` — jen deklaraci přesunul nad cyklus. Co vypíše tenhle kód? Napiš všechny řádky.
 
 ```js
-for (var line = 1; line <= 3; line++) {
+let line;
+for (line = 1; line <= 3; line++) {
   setTimeout(() => console.log(`Linka ${line}`), 0);
 }
 ```
 
-### --answer--
+### --expected--
 
-Změnit druhý argument `setTimeout` z `0` na `100`.
+```text
+Linka 4
+Linka 4
+Linka 4
+```
 
-#### --why--
+### --why--
 
-Delší čekání nic nezmění: funkce se spustí po cyklu tak jako tak a všechny drží jednu proměnnou.
-
-### --correct--
-
-Napsat v hlavičce cyklu `let line = 1` místo `var line = 1`.
-
-#### --why--
-
-`let` vytvoří v každém kole novou proměnnou, takže každá funkce drží vlastní číslo linky.
-
-### --answer--
-
-Přepsat šipkovou funkci na `function () { … }`.
-
-#### --why--
-
-Obě formy funkce si prostředí pamatují stejně. Rozhoduje, kolik proměnných `line` existuje.
+Myslíš si, že stačí napsat `let`? Novou proměnnou pro každé kolo vytvoří jen `let` **v hlavičce** cyklu. Tady je `line` jedna proměnná nad cyklem, stejně jako u `var`, takže ji všechny tři funkce sdílejí a po cyklu v ní je `4`. Oprava: `for (let line = 1; line <= 3; line++)`.
 
 ### --see--
 

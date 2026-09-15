@@ -1,0 +1,1 @@
+{ "type": "workshop", "title": "Strom komentářů", "summary": "Z ploché tabulky komentářů postavíš diskusi pod receptem: strom odpovědí, počty, smazané komentáře, řazení a vlákna, která jde sbalit.", "minutes": 90, "runtime": "js" }

@@ -1,0 +1,1 @@
+{ "type": "lab", "title": "Zpracování objednávek", "summary": "Samostatně složíš přehledy objednávek pražírny z malých čistých funkcí: ceny balíčků rekurzí, žebříček přes pipe, mezipaměť dopravy a debounce hledání.", "minutes": 90, "runtime": "js" }

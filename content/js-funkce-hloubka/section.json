@@ -1,9 +1,77 @@
 {
   "title": "Closures, this a funkcionální styl",
-  "intro": "draft",
+  "intro": "Funkce v JavaScriptu umí víc než přijmout argumenty a vrátit výsledek. Pamatují si prostředí, ve kterém vznikly, a na tom stojí počítadla, mezipaměti, našeptávače i každý posluchač události. Mají `this`, které se nečekaně ztratí, když metodu předáš tlačítku nebo časovači. A dají se skládat do sebe a volat samy sebe, takže projdou i menu s podkategoriemi nebo diskusi s odpověďmi na odpovědi. Na tohle všechno se ptá skoro každý pohovor na frontend a React na tom staví.\n\nPostup: lekce o closures a workshop, ve kterém postavíš knihovnu utilit pro našeptávač vlakových stanic (`once`, `memoize`, `debounce`, `throttle`). Lekce o `this` a přehrávač podcastů, jehož metody si `this` neztratí ani v časovači. Lekce o funkcionálním stylu a rekurzi a workshop, ve kterém z ploché tabulky postavíš diskusi pod receptem. Na konci samostatný lab se zpracováním objednávek a kvíz nad cizím kódem.\n\n**Předpoklady:** funkce a rozsah platnosti, objekty a kopie, metody pole včetně `reduce` a `toSorted`.",
   "modules": [
     "closures",
     "workshop-tovarny-funkci",
-    "this"
+    "this",
+    "workshop-prehravac",
+    "funkcionalni-styl",
+    "workshop-strom-komentaru",
+    "lab-pipeline-dat",
+    "kviz"
+  ],
+  "outcomes": [
+    {
+      "text": "Vysvětlíš vlastními slovy, co je closure, a nakreslíš, proč si funkce pamatuje proměnnou i po doběhnutí vnější funkce.",
+      "links": [
+        "js-funkce-hloubka/closures#closure-prostredi-prezije-navrat-funkce",
+        "js-funkce-hloubka/closures#pamatuje-si-promennou-ne-hodnotu"
+      ]
+    },
+    {
+      "text": "Napíšeš továrnu se soukromým stavem a obaly `once` a `memoize` a poznáš, kdy stav omylem sdílí všechny výrobky.",
+      "links": [
+        "js-funkce-hloubka/closures#soukromy-stav",
+        "js-funkce-hloubka/workshop-tovarny-funkci/011",
+        "js-funkce-hloubka/closures#stav-mimo-tovarnu"
+      ]
+    },
+    {
+      "text": "Napíšeš `debounce` a `throttle` bez nápovědy a řekneš, kdy se hodí který.",
+      "links": [
+        "js-funkce-hloubka/workshop-tovarny-funkci/015",
+        "js-funkce-hloubka/workshop-tovarny-funkci/017",
+        "js-funkce-hloubka/lab-pipeline-dat"
+      ]
+    },
+    {
+      "text": "U každého volání funkce určíš, co je `this`, a opravíš ztracené `this` šipkovou funkcí nebo `bind`.",
+      "links": [
+        "js-funkce-hloubka/this#jak-urcit-this-postup",
+        "js-funkce-hloubka/this#ztracene-this-v-callbacku",
+        "js-funkce-hloubka/workshop-prehravac/013"
+      ]
+    },
+    {
+      "text": "Poznáš a opravíš past s `var` v cyklu, ve kterém vznikají časovače nebo posluchače.",
+      "links": [
+        "js-funkce-hloubka/closures#var-v-cyklu-se-settimeout",
+        "js-funkce-hloubka/workshop-strom-komentaru/021"
+      ]
+    },
+    {
+      "text": "Složíš malé čisté funkce přes `pipe` a poznáš skrytý vedlejší efekt, který funkci dělá nečistou.",
+      "links": [
+        "js-funkce-hloubka/funkcionalni-styl#cista-funkce-a-skryte-vedlejsi-efekty",
+        "js-funkce-hloubka/funkcionalni-styl#kompozice-vystup-jedne-funkce-je-vstupem-dalsi",
+        "js-funkce-hloubka/workshop-strom-komentaru/013"
+      ]
+    },
+    {
+      "text": "Napíšeš rekurzi se základním případem nad stromem dat — postavíš ho z ploché tabulky, projdeš ho a upravíš bez mutace.",
+      "links": [
+        "js-funkce-hloubka/funkcionalni-styl#rekurze-funkce-ktera-vola-sama-sebe",
+        "js-funkce-hloubka/workshop-strom-komentaru/006",
+        "js-funkce-hloubka/workshop-strom-komentaru/011"
+      ]
+    },
+    {
+      "text": "Podle hlášky `Maximum call stack size exceeded` najdeš chybějící základní případ a víš, kdy rekurzi nahradit cyklem.",
+      "links": [
+        "js-funkce-hloubka/funkcionalni-styl#limit-zasobniku",
+        "js-funkce-hloubka/workshop-strom-komentaru/017"
+      ]
+    }
   ]
 }

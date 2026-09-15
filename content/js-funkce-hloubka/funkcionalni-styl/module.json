@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Funkcionální styl", "summary": "Čisté funkce bez skrytých vedlejších efektů, skládání funkcí přes pipe, deklarativní zápis a rekurze nad stromem včetně limitu zásobníku.", "minutes": 35, "runtime": "js" }

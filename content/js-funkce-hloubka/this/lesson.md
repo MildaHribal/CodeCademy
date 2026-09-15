@@ -314,7 +314,9 @@ Zkus šipkovou funkci v `forEach` nahradit zase jen `stats.add` a přečti si hl
 > [!NOTE]
 > `setTimeout` je výjimka: funkci bez objektu zavolá s `this` nastaveným na `window`
 > i ve strict mode. `setTimeout(player.play, 1000)` z úvodu proto nespadne, jen
-> vypíše „Přehrávám: undefined". Příčina i oprava jsou stejné.
+> vypíše „Přehrávám: undefined". Příčina i oprava jsou stejné. Podobně
+> `addEventListener` zavolá obyčejnou funkci s `this` nastaveným na **prvek**, na
+> kterém posluchač visí — ne na tvůj objekt.
 
 :::check
 Která úprava opraví `setTimeout(player.play, 1000)` tak, aby se vypsal název dílu?

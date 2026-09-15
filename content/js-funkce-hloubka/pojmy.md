@@ -35,7 +35,7 @@ Funkce, která dostane jinou funkci a vrátí novou funkci, jež ji zavolá a p�
 
 en: partial application
 aliases: částečné aplikace, částečnou aplikaci, částečnou aplikací
-lekce: js-funkce-hloubka/closures#funkce-ktera-obali-jinou-funkci
+lekce: js-funkce-hloubka/workshop-tovarny-funkci/009
 
 Vytvoření nové funkce, která má některé argumenty původní funkce už předvyplněné a čeká jen na zbytek.
 
@@ -52,7 +52,7 @@ lekce: js-funkce-hloubka/closures#closure-a-pamet
 en: memoization
 aliases: memoizaci, memoizací, memoizovaná funkce, memoizovanou funkci, memoize
 mdn: https://developer.mozilla.org/en-US/docs/Glossary/Memoization
-lekce: js-funkce-hloubka/closures#closure-a-pamet
+lekce: js-funkce-hloubka/workshop-tovarny-funkci/011
 
 Technika, kdy si funkce pro stejné argumenty pamatuje výsledek v mezipaměti a podruhé ho vrátí bez výpočtu. Funguje spolehlivě jen u čistých funkcí.
 
@@ -98,3 +98,44 @@ mdn: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Ob
 lekce: js-funkce-hloubka/this#call-apply-a-bind-this-natvrdo
 
 Určení `this` ručně přes `call`, `apply` nebo `bind`. `bind` vrátí novou funkci, jejíž `this` už nic nezmění.
+
+## --term-- kompozice funkcí
+
+en: function composition
+aliases: kompozice, kompozici funkcí, kompozicí funkcí, skládání funkcí
+lekce: js-funkce-hloubka/funkcionalni-styl#kompozice-vystup-jedne-funkce-je-vstupem-dalsi
+
+Spojení funkcí za sebe tak, že výstup jedné je vstupem další. V JavaScriptu se píše pomocnou funkcí `pipe(a, b, c)`, která hodnotu pošle přes funkce zleva doprava.
+
+## --term-- deklarativní zápis
+
+en: declarative style
+aliases: deklarativního zápisu, deklarativním zápisem, deklarativní styl, deklarativně
+lekce: js-funkce-hloubka/funkcionalni-styl#deklarativni-a-imperativni-zapis
+
+Kód, který popisuje, co chceš dostat, ne jak to krok za krokem udělat. Typicky řetěz `filter`, `map` a `reduce` místo cyklu s počítadlem a `push`.
+
+## --term-- imperativní zápis
+
+en: imperative style
+aliases: imperativního zápisu, imperativním zápisem, imperativní styl, imperativně
+lekce: js-funkce-hloubka/funkcionalni-styl#deklarativni-a-imperativni-zapis
+
+Kód, který popisuje postup krok za krokem: založ proměnnou, projdi cyklem, změň, přidej. Hodí se, když potřebuješ skončit dřív nebo spočítat víc věcí v jednom průchodu.
+
+## --term-- rekurze
+
+en: recursion
+aliases: rekurzi, rekurzí, rekurzivní funkce, rekurzivní funkci, rekurzivní volání, rekurzivního volání
+mdn: https://developer.mozilla.org/en-US/docs/Glossary/Recursion
+lekce: js-funkce-hloubka/funkcionalni-styl#rekurze-funkce-ktera-vola-sama-sebe
+
+Řešení úlohy funkcí, která volá sama sebe na menší část úlohy. Hodí se na vnořená data, jako jsou stromy kategorií nebo komentářů.
+
+## --term-- základní případ
+
+en: base case
+aliases: základního případu, základním případem, základní případy
+lekce: js-funkce-hloubka/funkcionalni-styl#rekurze-funkce-ktera-vola-sama-sebe
+
+Situace, ve které rekurzivní funkce zná odpověď hned a sama sebe už nevolá, třeba prázdné pole nebo uzel bez potomků. Bez něj rekurze skončí chybou `RangeError: Maximum call stack size exceeded`.
