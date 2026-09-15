@@ -70,22 +70,6 @@ const rgba = (color) => { const c = document.createElement('canvas'); c.width = 
 const luminance = ([r, g, b]) => [r, g, b].map((v) => { v /= 255; return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }).reduce((sum, v, i) => sum + v * [0.2126, 0.7152, 0.0722][i], 0);
 const contrast = (a, b) => { const [hi, lo] = [luminance(rgba(a)), luminance(rgba(b))].sort((p, q) => q - p); return (hi + 0.05) / (lo + 0.05); };
 const css = (selector, prop) => getComputedStyle(document.querySelector(selector))[prop];
-const pairs = () => [
-  ['text stránky', css('body', 'color'), css('body', 'backgroundColor')],
-  ['text v kartě', css('.card h3', 'color'), css('.card', 'backgroundColor')],
-  ['perex', css('.lead', 'color'), css('body', 'backgroundColor')],
-  ['popis karty', css('.card__text', 'color'), css('.card', 'backgroundColor')],
-  ['text tlačítka', css('.button', 'color'), css('.button', 'backgroundColor')],
-  ['odkaz', css('.link', 'color'), css('body', 'backgroundColor')],
-  ['štítek', css('.tag', 'color'), css('.tag', 'backgroundColor')],
-];
-const checkPairs = (label) => {
-  for (const [name, fg, bg] of pairs()) {
-    assert.equal(rgba(bg)[3], 255, `${label}: ${name} leží na průhledném pozadí (${bg}) — chybí token barvy pozadí?`);
-    const ratio = contrast(fg, bg);
-    assert.ok(ratio >= 4.5, `${label}: ${name} má kontrast ${ratio.toFixed(2)} : 1 (${fg} na ${bg}), čekám aspoň 4.5 : 1`);
-  }
-};
 theme('light');
 const ratio = contrast(css('.input', 'borderTopColor'), css('.newsletter', 'backgroundColor'));
 assert.ok(ratio >= 3, `Světlý motiv: okraj pole má kontrast ${ratio.toFixed(2)} : 1, čekám aspoň 3 : 1`);
@@ -99,24 +83,7 @@ document.head.insertAdjacentHTML('beforeend', '<style>*, *::before, *::after { t
 const theme = (name) => { document.documentElement.dataset.theme = name; document.documentElement.style.colorScheme = name; };
 const rgba = (color) => { const c = document.createElement('canvas'); c.width = c.height = 1; const x = c.getContext('2d', { willReadFrequently: true }); x.fillStyle = color; x.fillRect(0, 0, 1, 1); return [...x.getImageData(0, 0, 1, 1).data]; };
 const luminance = ([r, g, b]) => [r, g, b].map((v) => { v /= 255; return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }).reduce((sum, v, i) => sum + v * [0.2126, 0.7152, 0.0722][i], 0);
-const contrast = (a, b) => { const [hi, lo] = [luminance(rgba(a)), luminance(rgba(b))].sort((p, q) => q - p); return (hi + 0.05) / (lo + 0.05); };
 const css = (selector, prop) => getComputedStyle(document.querySelector(selector))[prop];
-const pairs = () => [
-  ['text stránky', css('body', 'color'), css('body', 'backgroundColor')],
-  ['text v kartě', css('.card h3', 'color'), css('.card', 'backgroundColor')],
-  ['perex', css('.lead', 'color'), css('body', 'backgroundColor')],
-  ['popis karty', css('.card__text', 'color'), css('.card', 'backgroundColor')],
-  ['text tlačítka', css('.button', 'color'), css('.button', 'backgroundColor')],
-  ['odkaz', css('.link', 'color'), css('body', 'backgroundColor')],
-  ['štítek', css('.tag', 'color'), css('.tag', 'backgroundColor')],
-];
-const checkPairs = (label) => {
-  for (const [name, fg, bg] of pairs()) {
-    assert.equal(rgba(bg)[3], 255, `${label}: ${name} leží na průhledném pozadí (${bg}) — chybí token barvy pozadí?`);
-    const ratio = contrast(fg, bg);
-    assert.ok(ratio >= 4.5, `${label}: ${name} má kontrast ${ratio.toFixed(2)} : 1 (${fg} na ${bg}), čekám aspoň 4.5 : 1`);
-  }
-};
 theme('light');
 for (const selector of ['body', '.card']) {
   const value = luminance(rgba(css(selector, 'backgroundColor')));
@@ -164,22 +131,6 @@ const rgba = (color) => { const c = document.createElement('canvas'); c.width = 
 const luminance = ([r, g, b]) => [r, g, b].map((v) => { v /= 255; return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }).reduce((sum, v, i) => sum + v * [0.2126, 0.7152, 0.0722][i], 0);
 const contrast = (a, b) => { const [hi, lo] = [luminance(rgba(a)), luminance(rgba(b))].sort((p, q) => q - p); return (hi + 0.05) / (lo + 0.05); };
 const css = (selector, prop) => getComputedStyle(document.querySelector(selector))[prop];
-const pairs = () => [
-  ['text stránky', css('body', 'color'), css('body', 'backgroundColor')],
-  ['text v kartě', css('.card h3', 'color'), css('.card', 'backgroundColor')],
-  ['perex', css('.lead', 'color'), css('body', 'backgroundColor')],
-  ['popis karty', css('.card__text', 'color'), css('.card', 'backgroundColor')],
-  ['text tlačítka', css('.button', 'color'), css('.button', 'backgroundColor')],
-  ['odkaz', css('.link', 'color'), css('body', 'backgroundColor')],
-  ['štítek', css('.tag', 'color'), css('.tag', 'backgroundColor')],
-];
-const checkPairs = (label) => {
-  for (const [name, fg, bg] of pairs()) {
-    assert.equal(rgba(bg)[3], 255, `${label}: ${name} leží na průhledném pozadí (${bg}) — chybí token barvy pozadí?`);
-    const ratio = contrast(fg, bg);
-    assert.ok(ratio >= 4.5, `${label}: ${name} má kontrast ${ratio.toFixed(2)} : 1 (${fg} na ${bg}), čekám aspoň 4.5 : 1`);
-  }
-};
 theme('dark');
 const ratio = contrast(css('.input', 'borderTopColor'), css('.newsletter', 'backgroundColor'));
 assert.ok(ratio >= 3, `Tmavý motiv: okraj pole má kontrast ${ratio.toFixed(2)} : 1, čekám aspoň 3 : 1`);
@@ -193,24 +144,7 @@ document.head.insertAdjacentHTML('beforeend', '<style>*, *::before, *::after { t
 const theme = (name) => { document.documentElement.dataset.theme = name; document.documentElement.style.colorScheme = name; };
 const rgba = (color) => { const c = document.createElement('canvas'); c.width = c.height = 1; const x = c.getContext('2d', { willReadFrequently: true }); x.fillStyle = color; x.fillRect(0, 0, 1, 1); return [...x.getImageData(0, 0, 1, 1).data]; };
 const luminance = ([r, g, b]) => [r, g, b].map((v) => { v /= 255; return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }).reduce((sum, v, i) => sum + v * [0.2126, 0.7152, 0.0722][i], 0);
-const contrast = (a, b) => { const [hi, lo] = [luminance(rgba(a)), luminance(rgba(b))].sort((p, q) => q - p); return (hi + 0.05) / (lo + 0.05); };
 const css = (selector, prop) => getComputedStyle(document.querySelector(selector))[prop];
-const pairs = () => [
-  ['text stránky', css('body', 'color'), css('body', 'backgroundColor')],
-  ['text v kartě', css('.card h3', 'color'), css('.card', 'backgroundColor')],
-  ['perex', css('.lead', 'color'), css('body', 'backgroundColor')],
-  ['popis karty', css('.card__text', 'color'), css('.card', 'backgroundColor')],
-  ['text tlačítka', css('.button', 'color'), css('.button', 'backgroundColor')],
-  ['odkaz', css('.link', 'color'), css('body', 'backgroundColor')],
-  ['štítek', css('.tag', 'color'), css('.tag', 'backgroundColor')],
-];
-const checkPairs = (label) => {
-  for (const [name, fg, bg] of pairs()) {
-    assert.equal(rgba(bg)[3], 255, `${label}: ${name} leží na průhledném pozadí (${bg}) — chybí token barvy pozadí?`);
-    const ratio = contrast(fg, bg);
-    assert.ok(ratio >= 4.5, `${label}: ${name} má kontrast ${ratio.toFixed(2)} : 1 (${fg} na ${bg}), čekám aspoň 4.5 : 1`);
-  }
-};
 theme('dark');
 const page = luminance(rgba(css('body', 'backgroundColor')));
 const card = luminance(rgba(css('.card', 'backgroundColor')));
@@ -228,22 +162,6 @@ const rgba = (color) => { const c = document.createElement('canvas'); c.width = 
 const luminance = ([r, g, b]) => [r, g, b].map((v) => { v /= 255; return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }).reduce((sum, v, i) => sum + v * [0.2126, 0.7152, 0.0722][i], 0);
 const contrast = (a, b) => { const [hi, lo] = [luminance(rgba(a)), luminance(rgba(b))].sort((p, q) => q - p); return (hi + 0.05) / (lo + 0.05); };
 const css = (selector, prop) => getComputedStyle(document.querySelector(selector))[prop];
-const pairs = () => [
-  ['text stránky', css('body', 'color'), css('body', 'backgroundColor')],
-  ['text v kartě', css('.card h3', 'color'), css('.card', 'backgroundColor')],
-  ['perex', css('.lead', 'color'), css('body', 'backgroundColor')],
-  ['popis karty', css('.card__text', 'color'), css('.card', 'backgroundColor')],
-  ['text tlačítka', css('.button', 'color'), css('.button', 'backgroundColor')],
-  ['odkaz', css('.link', 'color'), css('body', 'backgroundColor')],
-  ['štítek', css('.tag', 'color'), css('.tag', 'backgroundColor')],
-];
-const checkPairs = (label) => {
-  for (const [name, fg, bg] of pairs()) {
-    assert.equal(rgba(bg)[3], 255, `${label}: ${name} leží na průhledném pozadí (${bg}) — chybí token barvy pozadí?`);
-    const ratio = contrast(fg, bg);
-    assert.ok(ratio >= 4.5, `${label}: ${name} má kontrast ${ratio.toFixed(2)} : 1 (${fg} na ${bg}), čekám aspoň 4.5 : 1`);
-  }
-};
 const hoverRule = helpers.cssRules('.button:hover').at(-1);
 assert.ok(hoverRule, 'V CSS má zůstat pravidlo .button:hover');
 for (const name of ['light', 'dark']) {
@@ -291,25 +209,7 @@ Barvy značky vychází z jednoho místa: když se změní barva nebo odstín zn
 document.head.insertAdjacentHTML('beforeend', '<style>*, *::before, *::after { transition: none !important; }</style>');
 const theme = (name) => { document.documentElement.dataset.theme = name; document.documentElement.style.colorScheme = name; };
 const rgba = (color) => { const c = document.createElement('canvas'); c.width = c.height = 1; const x = c.getContext('2d', { willReadFrequently: true }); x.fillStyle = color; x.fillRect(0, 0, 1, 1); return [...x.getImageData(0, 0, 1, 1).data]; };
-const luminance = ([r, g, b]) => [r, g, b].map((v) => { v /= 255; return v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }).reduce((sum, v, i) => sum + v * [0.2126, 0.7152, 0.0722][i], 0);
-const contrast = (a, b) => { const [hi, lo] = [luminance(rgba(a)), luminance(rgba(b))].sort((p, q) => q - p); return (hi + 0.05) / (lo + 0.05); };
 const css = (selector, prop) => getComputedStyle(document.querySelector(selector))[prop];
-const pairs = () => [
-  ['text stránky', css('body', 'color'), css('body', 'backgroundColor')],
-  ['text v kartě', css('.card h3', 'color'), css('.card', 'backgroundColor')],
-  ['perex', css('.lead', 'color'), css('body', 'backgroundColor')],
-  ['popis karty', css('.card__text', 'color'), css('.card', 'backgroundColor')],
-  ['text tlačítka', css('.button', 'color'), css('.button', 'backgroundColor')],
-  ['odkaz', css('.link', 'color'), css('body', 'backgroundColor')],
-  ['štítek', css('.tag', 'color'), css('.tag', 'backgroundColor')],
-];
-const checkPairs = (label) => {
-  for (const [name, fg, bg] of pairs()) {
-    assert.equal(rgba(bg)[3], 255, `${label}: ${name} leží na průhledném pozadí (${bg}) — chybí token barvy pozadí?`);
-    const ratio = contrast(fg, bg);
-    assert.ok(ratio >= 4.5, `${label}: ${name} má kontrast ${ratio.toFixed(2)} : 1 (${fg} na ${bg}), čekám aspoň 4.5 : 1`);
-  }
-};
 theme('light');
 const before = [css('.button', 'backgroundColor'), css('.tag', 'backgroundColor')].map(rgba);
 const root = document.documentElement;

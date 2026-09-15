@@ -94,7 +94,7 @@ Ikona má v CSS `width: 1.25em; height: 1.25em` a je v odkazu s písmem 20 px. J
 
 ## `viewBox`: souřadnice, ne pixely
 
-Atribut `viewBox="minX minY šířka výška"` říká, **kterou část plátna** kresba zabírá. Ikonové sady kreslí nejčastěji na plátno 24 × 24 (`viewBox="0 0 24 24"`) nebo 16 × 16. Velikost na stránce určí až CSS (nebo atributy `width` a `height`) a prohlížeč souřadnice na tu velikost přepočítá.
+Atribut [[viewBox]] se zapisuje jako `viewBox="minX minY šířka výška"` a říká, **kterou část plátna** kresba zabírá. Ikonové sady kreslí nejčastěji na plátno 24 × 24 (`viewBox="0 0 24 24"`) nebo 16 × 16. Velikost na stránce určí až CSS (nebo atributy `width` a `height`) a prohlížeč souřadnice na tu velikost přepočítá.
 
 Obě varianty níž mají stejnou kresbu a stejnou velikost 96 px. Liší se jen `viewBox`.
 
@@ -142,7 +142,7 @@ Plátno 16 jednotek se roztáhne na 32 px, jedna jednotka je 2 px. Souřadnice 8
 | **`<img src="icon.svg" alt="…">`** | ne | ano | ilustrace, loga, obrázky s vlastními barvami |
 | **sprite**: `<svg><use href="#icon-cart"/></svg>` | ano | s externím souborem ano | stejná ikona na mnoha místech |
 
-Sprite je jeden skrytý `<svg>` se značkami `<symbol>` a na každém místě jen odkaz `<use>`:
+[[SVG sprite|Sprite]] je jeden skrytý `<svg>` se značkami `<symbol>` a na každém místě jen odkaz `<use>`:
 
 ```html
 <svg hidden>
@@ -157,7 +157,7 @@ Sprite je jeden skrytý `<svg>` se značkami `<symbol>` a na každém místě je
 
 `<use>` zkopíruje symbol včetně jeho `viewBox`, takže velikost i `currentColor` fungují jako u inline SVG. Externí sprite (`<use href="/icons.svg#icon-check"/>`) prohlížeč uloží do cache, ale musí být ze stejné domény.
 
-Tip na chybu, kterou potkáš v cizím kódu, si tipni předem:
+Chybu, kterou potkáš v cizím kódu, si nejdřív zkus předpovědět:
 
 :::live predict
 ```html
@@ -204,7 +204,7 @@ Fungovalo by to, jen by se stejná kresba 40× opakovala v HTML. Sprite dá stej
 
 ## `currentColor`: ikona v barvě textu
 
-`currentColor` je hodnota, která znamená „aktuální hodnota `color`". V ikonách se píše do `fill` (výplň tvaru) nebo `stroke` (obrys čáry):
+Klíčové slovo [[currentColor]] znamená „aktuální hodnota `color`". V ikonách se píše do `fill` (výplň tvaru) nebo `stroke` (obrys čáry):
 
 - **plné ikony** (*solid*): `fill="currentColor"`,
 - **obrysové ikony** (*outline*, třeba Lucide nebo Tabler): `fill="none" stroke="currentColor" stroke-width="2"`.
@@ -463,6 +463,8 @@ flex: 0 0 auto
 ### --why--
 `flex: none` je `0 0 auto`: ikona neroste ani se nezmenšuje a zůstane na své šířce.
 :::
+
+V labu tohle spojíš s převodem návrhu: postavíš kartu nabídky práce s ikonami, které se barví s textem a čtečka je nečte navíc.
 
 ## Kde to najdeš v MDN
 

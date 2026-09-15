@@ -98,7 +98,7 @@ Stránku čteš očima v nějakém pořadí: nejdřív to, co vyskočí, pak sku
 > **Hierarchie je pořadí, ve kterém oko čte stránku. Vytváříš ji rozdílem: důležité vyčnívá, protože vedlejší ustoupí.** Nástroje máš čtyři — vzdálenost, velikost, váhu a barvu.
 
 :::check
-V souhrnu objednávky je jedenáct údajů a všechny mají `font-weight: 700`. Kolega navrhuje zvýraznit částku „Celkem" tím, že jí dá `font-weight: 900`. Proč to skoro nepomůže?
+V souhrnu objednávky mají všechny údaje `font-weight: 700`. Kolega navrhuje zvýraznit částku „Celkem" tím, že jí dá `font-weight: 900`. Proč to skoro nepomůže?
 
 ### --answer--
 Protože `font-weight: 900` prohlížeč neumí a použije 700.
@@ -579,6 +579,8 @@ Tlačítko má `font-size: 1.125rem` a `padding: 0.5em 1em`. Kořen stránky má
 ### --why--
 `1.125rem` je 18 px a `em` v paddingu se počítá z písma tlačítka, takže `1em` = 18 px. Tady je to záměr: větší tlačítko dostane úměrně větší vnitřek. U mezer mezi bloky by stejné chování stupnici rozbilo.
 :::
+
+Ve workshopu, který následuje, tyhle nástroje použiješ na potvrzení rezervace chaty: z karty plné rámečků uděláš souhrn, který se čte na první pohled.
 
 ## Kde to najdeš v MDN
 

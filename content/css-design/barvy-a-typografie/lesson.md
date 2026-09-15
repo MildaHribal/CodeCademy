@@ -3,25 +3,25 @@
 Paleta značky, tlačítko, které je čitelné ve světlém i tmavém motivu, a nadpisy, které do sebe zapadají — to řeší každý web od e-shopu po administraci. V lekci se naučíš barvy vybírat číslem, kterému jde věřit, a velikosti písma počítat, místo aby ses je snažil trefit od oka.
 
 :::check pretest
-Máš dvě barvy tlačítek: `hsl(60 100% 50%)` (žlutá) a `hsl(240 100% 50%)` (modrá). Obě mají v zápisu světlost 50 %. Odhadni, jestli na nich bude bílý text stejně čitelný.
+Máš dvě barvy: `oklch(0.7 0.15 30)` (lososová) a `oklch(0.7 0.15 250)` (modrá). Odhadni, která z nich je pro oko světlejší.
 
 ### --answer--
-Ano, stejná světlost znamená stejný kontrast s bílou.
+Lososová, teplé barvy jsou pro oko světlejší.
 
 #### --why--
-Tak to zápis `hsl()` naznačuje, ale jeho „světlost" je jen matematika nad červenou, zelenou a modrou. Jak to vypadá doopravdy, uvidíš hned v první ukázce.
+Teplota barvy tady nerozhoduje. Co přesně znamenají tři čísla v `oklch()`, uvidíš v první části lekce.
 
 ### --correct--
-Ne, na žluté bude bílý text skoro neviditelný a na modré dobře čitelný.
+Obě stejně, protože mají stejné první číslo.
 
 #### --why--
-Oko vnímá žlutou mnohem světlejší než modrou, i když mají v `hsl()` stejné číslo. Proto lekce přechází na `oklch()`.
+První číslo `oklch()` je světlost tak, jak ji vnímá oko. Stejné číslo znamená stejně světlou barvu, ať je odstín jakýkoli. U `hsl()` to neplatí, jak ukáže hned první ukázka.
 
 ### --answer--
-Ne, lépe čitelný bude bílý text na žluté.
+Modrá, protože 250 je víc než 30.
 
 #### --why--
-Žlutá je pro oko jedna z nejsvětlejších barev. Bílý text potřebuje tmavé pozadí.
+Třetí číslo je odstín, tedy úhel na barevném kole. Se světlostí nesouvisí.
 :::
 
 ## Problém: hsl lže o světlosti
@@ -156,7 +156,7 @@ setInterval(() => {
 ```
 :::
 
-Nech světlost na 0.55 a točí jen odstínem od 0 do 360. Kontrast s bílou se pohybuje jen mezi asi 4,2 a 5,3 : 1. Pak zvedni světlost na 0.75 — bílý text přestane být čitelný u všech odstínů najednou a tmavý text naopak ožije.
+Nech světlost na 0.55 a toč jen odstínem od 0 do 360. Kontrast s bílou se pohybuje jen mezi asi 4,2 a 5,3 : 1. Pak zvedni světlost na 0.75 — bílý text přestane být čitelný u všech odstínů najednou a tmavý text naopak ožije.
 
 > [!NOTE]
 > Ne každá kombinace čísel jde na displeji ukázat. Světlá barva s vysokou chromou (třeba `oklch(0.95 0.3 250)`) je mimo barvy obrazovky a prohlížeč ji přizpůsobí nejbližší zobrazitelné. Proto světlé odstíny palety dostávají nízkou chromu.
@@ -239,7 +239,7 @@ body { margin: 1.5rem; font-family: system-ui, sans-serif; }
 ```
 :::
 
-Točí odstínem a sleduj štítek „Novinka": pozadí `100` a text `700` jsou čitelné pro každý odstín, protože stupnice drží světlost pevně. Zkus v kódu u `--brand-50` chromu `calc(c * 0.2)` nahradit za `c` a podívej se, jak křiklavě pak vypadá skoro bílé pozadí.
+Toč odstínem a sleduj štítek „Novinka": pozadí `100` a text `700` jsou čitelné pro každý odstín, protože stupnice drží světlost pevně. Zkus v kódu u `--brand-50` chromu `calc(c * 0.2)` nahradit za `c` a podívej se, jak křiklavě pak vypadá skoro bílé pozadí.
 
 :::check
 Z barvy `--accent` chceš vyrobit tmavší variantu na text: stejný odstín i sytost, jen světlost 0.4. Doplň relativní barvu: `oklch(from var(--accent) … )`. Napiš celý zápis.
@@ -261,7 +261,7 @@ Aby text šel přečíst i na slunci, na levném monitoru nebo se slabším zrak
 | co | nejmenší poměr |
 |---|---|
 | běžný text | **4,5 : 1** |
-| velký text (od 24 px, nebo od 18,5 px tučně) | **3 : 1** |
+| velký text (od 24 px, nebo od 18,7 px tučně) | **3 : 1** |
 | hranice ovládacích prvků a ikony, které nesou význam (okraj pole, ikona bez textu, fokus) | **3 : 1** |
 
 Pro přísnější úroveň AAA je u textu potřeba 7 : 1. Dekorace, loga a neaktivní prvky kontrast splňovat nemusí.
@@ -269,7 +269,7 @@ Pro přísnější úroveň AAA je u textu potřeba 7 : 1. Dekorace, loga a neak
 Poměr nespočítáš z hlavy, ale nemusíš: v DevTools klikni na barevný čtvereček u `color`, výběr barvy ukáže **Contrast ratio** i čáry pro AA a AAA. Kontrast se vždy měří **dvojice** barev — text sám o sobě žádný kontrast nemá.
 
 > [!NOTE]
-> Nová CSS funkce `contrast-color(var(--bg))` vrátí bílou, nebo černou podle toho, co má s pozadím větší kontrast. Je v prohlížečích od roku 2026, u středně tmavých pozadí ale ani jedna z nich 4,5 : 1 splnit nemusí, takže paletu stejně navrhuj s kontrastem předem.
+> Nová CSS funkce `contrast-color(var(--bg))` vrátí bílou, nebo černou podle toho, co má s pozadím větší kontrast. Je to novinka, takže podporu ověř v MDN. Hlavně ale u středně tmavých pozadí 4,5 : 1 nesplní ani bílá, ani černá, takže paletu stejně navrhuj s kontrastem předem.
 
 :::check
 Šedý popisek pod polem formuláře má velikost 14 px, normální váhu a kontrast s pozadím 3,9 : 1. Projde úrovní AA? Odpověz ano, nebo ne.
@@ -278,7 +278,7 @@ Poměr nespočítáš z hlavy, ale nemusíš: v DevTools klikni na barevný čtv
 ne
 
 ### --why--
-14 px normální váhy je běžný text a potřebuje 4,5 : 1. Hranice 3 : 1 platí až od 24 px, nebo od 18,5 px tučně.
+14 px normální váhy je běžný text a potřebuje 4,5 : 1. Hranice 3 : 1 platí až od 24 px, nebo od 18,7 px tučně.
 :::
 
 ## Primitivní a sémantické tokeny
@@ -432,7 +432,7 @@ Základ stupnice je 16 px a poměr 1.25. Kolik px má velikost o **dva** stupně
 
 ## Písma: `@font-face` a variabilní fonty
 
-Systémové písmo (`system-ui`) je rychlé a vypadá dobře. Značka ale často chce vlastní písmo. Soubor písma patří **k tvému webu** (formát `woff2`), ne na cizí server — je to rychlejší a návštěvník neposílá svou IP adresu třetí straně, kvůli čemuž už evropské soudy weby pokutovaly.
+Systémové písmo (`system-ui`) je rychlé a vypadá dobře. Značka ale často chce vlastní písmo. Soubor písma patří **k tvému webu** (formát `woff2`), ne na cizí server — je to rychlejší a návštěvník neposílá svou IP adresu třetí straně. Kvůli písmům načítaným z cizího serveru už německý soud přiznal návštěvníkovi webu odškodné podle GDPR.
 
 ```css
 @font-face {
@@ -492,6 +492,8 @@ body { margin: 1.5rem; font-family: system-ui, sans-serif; }
 > *Příznak:* `oklch(from var(--brand) calc(l + 10%) c h)` nedělá nic, prvek nemá pozadí a DevTools deklaraci přeškrtne jako neplatnou.
 >
 > *Oprava:* kanály `l`, `c`, `h` jsou čísla, takže přičítej číslo: `calc(l + 0.1)`. Samotnou světlost napsat v procentech smíš: `oklch(from var(--brand) 60% c h)`.
+>
+> Když stejná chyba leží v tokenu (`--brand-soft: oklch(from … calc(l + 10%) c h)`), DevTools u tokenu nic nepřeškrtne. Neplatnost se ukáže až u prvku, který token použije: `background: var(--brand-soft)` pak dostane výchozí průhlednou hodnotu, ne pozadí z dřívějšího pravidla.
 
 > [!PITFALL] Tlumený text, který projde jen ve světlém motivu
 > *Příznak:* ve tmavém motivu jsou popisky, časy a zástupný text skoro neviditelné, DevTools ukáže kontrast kolem 2 : 1.
@@ -536,6 +538,8 @@ color-mix(in oklch, black 15%, var(--color-accent))
 `color-mix()` bere prostor, ve kterém se míchá, a dvě barvy. Procento u jedné z nich určí její podíl, druhá dostane zbytek.
 :::
 
+V labu si z toho postavíš motiv pro vlastní značku: paletu z jedné barvy, sémantické tokeny pro oba motivy a stupnici písma. Stejné tokeny později přeneseš do `@theme` v sekci o Tailwindu (`css-tailwind`), která na tuhle navazuje.
+
 ## Kde to najdeš v MDN
 
 - [oklch()](https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/oklch) — rozsahy L, C, H, průhlednost a relativní zápis `oklch(from …)`.
@@ -561,7 +565,7 @@ color-mix(in oklch, black 15%, var(--color-accent))
 
 ### --why--
 
-Kontrast roste s rozdílem světlostí. Pozadí má 0.93, takže text musí být hodně tmavý: 0.4 dá kolem 7 : 1, 0.65 jen asi 2,5 : 1. Odstín 150 zůstane, takže text je pořád zelený.
+Kontrast roste s rozdílem světlostí. Pozadí má 0.93, takže text musí být hodně tmavý: 0.4 dá kolem 7,5 : 1, 0.65 jen asi 2,6 : 1. Odstín 150 zůstane, takže text je pořád zelený.
 
 ### --see--
 
@@ -606,7 +610,7 @@ Je to v pořádku, popisky jsou vedlejší text a stačí jim 3 : 1.
 
 #### --why--
 
-Hranice 3 : 1 neplatí pro „vedlejší" text, ale pro velký text od 24 px (nebo 18,5 px tučně). Na důležitosti textu nezáleží.
+Hranice 3 : 1 neplatí pro „vedlejší" text, ale pro velký text od 24 px (nebo 18,7 px tučně). Na důležitosti textu nezáleží.
 
 ### --correct--
 
@@ -622,7 +626,7 @@ Stačí popisky dát tučně, tučný text má nižší požadavek.
 
 #### --why--
 
-Nižší požadavek má tučný text až od 18,5 px. Popisek 13 px zůstane běžným textem i tučně.
+Nižší požadavek má tučný text až od 18,7 px. Popisek 13 px zůstane běžným textem i tučně.
 
 ### --see--
 

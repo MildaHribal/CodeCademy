@@ -132,9 +132,6 @@ padding: 24px
 flex-direction: column
 gap: 0.75rem
 padding: 1.5rem
-flex-direction:column
-gap:12px
-padding:24px
 
 ### --why--
 *Vertical* je sloupec, *Gap* je `gap` a *Padding* je `padding`. V projektu místo pixelů použiješ tokeny stupnice, třeba `gap: var(--space-3)`.
@@ -144,7 +141,7 @@ padding:24px
 
 Každé dítě auto layoutu má na šířku i na výšku jedno ze tří nastavení velikosti:
 
-- *Hug contents* — prvek je velký podle obsahu. V CSS obvykle **nic nepíšeš**: tlačítko ve flex řádku je samo tak široké jako text.
+- *Hug contents* — prvek je velký podle obsahu. V CSS obvykle **nic nepíšeš**: tlačítko ve flex řádku je samo tak široké jako text. Ve sloupci (*Vertical*) pozor: flex položky se na šířku ve výchozím stavu natáhnou, takže *Hug* na šířku tam znamená `align-self: flex-start` (nebo `align-items: flex-start` na rodiči).
 - *Fill container* — prvek zabere zbylé místo. Na hlavní ose rodiče `flex: 1` (nebo `flex: 1 1 0`), na vedlejší ose výchozí `align-self: stretch`.
 - *Fixed* — pevná hodnota, `width` nebo `height`. U textu a kontejnerů je to často **omyl návrhu** (nakreslené v jedné šířce obrazovky), u ikon a avatarů záměr.
 
@@ -415,10 +412,10 @@ body {
 >
 > *Oprava:* rozestoupení je `justify-content: space-between` nebo automatický margin, ne číslo.
 
-> [!PITFALL] Prostrkání v procentech zkopírované do CSS
-> *Příznak:* nadpis s `letter-spacing: -2%` má v Chromu starším než verze 145 normální prostrkání, protože takový prohlížeč deklaraci s procenty zahodí.
+> [!PITFALL] Prostrkání z Dev Mode v pixelech
+> *Příznak:* u nadpisu 56 px s prostrkáním −2 % ukáže panel `letter-spacing: -1.12px`. Na telefonu se nadpis zmenší na 36 px, prostrkání zůstane −1,12 px a písmena se k sobě lepí víc, než návrh chtěl.
 >
-> *Oprava:* procenta z Figmy jsou z velikosti písma, v CSS je piš v `em`, které funguje všude: −2 % = `-0.02em`.
+> *Oprava:* procenta z Figmy se počítají z velikosti písma, stejně jako `em`: −2 % = `-0.02em`. Prostrkání se pak zmenší spolu s písmem.
 
 :::explain
 Vysvětli vlastními slovy, jak přeložíš do CSS rámec v auto layoutu *Horizontal, Gap 16, Padding 20*, ve kterém je ikona *Fixed 40*, text *Fill container* a tlačítko *Hug contents*.
@@ -431,7 +428,7 @@ Rámec je flex kontejner v řádku s `gap: 16px` a `padding: 20px`, v projektu p
 - *Gap* a *Padding* se přeloží na `gap` a `padding`.
 - *Fixed* je pevná velikost, u flex položky i se zákazem zmenšení.
 - *Fill container* na hlavní ose je `flex: 1`.
-- *Hug contents* nepotřebuje žádnou deklaraci.
+- *Hug contents* v řádku nepotřebuje žádnou deklaraci.
 :::
 
 :::check
@@ -449,6 +446,8 @@ V panelu je stín *Drop shadow: X 0, Y 8, Blur 24, Spread −4*, barva černá 1
 ### --why--
 Pořadí je stejné jako v panelu: posun X, posun Y, rozmazání, roztažení a barva. Průhlednost 12 % se zapíše za lomítko.
 :::
+
+Ve workshopu podle takové specifikace postavíš stránku konference a opravíš kontrast, na který návrh zapomněl.
 
 ## Kde to najdeš v MDN
 

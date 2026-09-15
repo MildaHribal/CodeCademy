@@ -1,0 +1,1 @@
+{ "type": "quiz", "title": "Kvíz: design pro vývojáře", "summary": "Hierarchie a rozestupy, oklch a kontrast, typografická stupnice, převod návrhu z Figmy na CSS a přístupné ikony, včetně čtení kolegova stylopisu s chybami v tokenech.", "minutes": 25, "runtime": "dom" }

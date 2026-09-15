@@ -1,6 +1,6 @@
 {
   "title": "Design pro vývojáře",
-  "intro": "x",
+  "intro": "Umíš postavit layout, ale stránka pořád nevypadá jako od profesionála? Většinou nejde o talent, ale o pár pravidel: jak rozestupy tvoří skupiny, jak vytvořit hierarchii, jak vybrat barvy s kontrastem a jak číst návrh od designéra.\n\nV sekci přestavíš nepřehledné potvrzení rezervace na souhrn, který se čte na první pohled, navrhneš paletu v `oklch()` a typografickou stupnici pro vlastní značku, podle specifikace z Figmy postavíš stránku konference ve světlém i tmavém motivu a samostatně převedeš komponentu z návrhu včetně přístupných SVG ikon.\n\nPředpoklad: flexbox, grid a responzivita včetně `clamp()` a `light-dark()`. Tokeny a stupnice odsud pak použiješ v sekci o Tailwindu, kde se z nich stane `@theme`.",
   "modules": [
     "hierarchie-a-rozestupy",
     "workshop-souhrn-rezervace",
@@ -8,6 +8,65 @@
     "lab-motiv-znacky",
     "cteni-navrhu",
     "workshop-podle-navrhu",
-    "svg-a-ikony"
+    "svg-a-ikony",
+    "lab-komponenta-z-navrhu",
+    "kviz"
+  ],
+  "outcomes": [
+    {
+      "text": "Vytvoříš vizuální hierarchii rozestupy, velikostí, vahou a barvou a zdůvodníš, proč je mezera uvnitř skupiny menší než mezi skupinami.",
+      "links": [
+        "css-design/hierarchie-a-rozestupy#blizkost-a-seskupeni",
+        "css-design/hierarchie-a-rozestupy#velikost-vaha-a-barva",
+        "css-design/workshop-souhrn-rezervace"
+      ]
+    },
+    {
+      "text": "Nahradíš rámečky rozestupy, rozdílným pozadím a stínem ze dvou vrstev a víš, kdy je jedna čára na místě.",
+      "links": [
+        "css-design/hierarchie-a-rozestupy#mene-ramecku-vic-rozestupu",
+        "css-design/hierarchie-a-rozestupy#hloubka-stin-misto-cary",
+        "css-design/workshop-souhrn-rezervace/011"
+      ]
+    },
+    {
+      "text": "Navrhneš paletu v `oklch()` odvozenou z jedné barvy relativními barvami a ověříš kontrast podle WCAG ve světlém i tmavém motivu.",
+      "links": [
+        "css-design/barvy-a-typografie#stupnice-odstinu-z-jedne-barvy",
+        "css-design/barvy-a-typografie#kontrast-podle-wcag",
+        "css-design/lab-motiv-znacky"
+      ]
+    },
+    {
+      "text": "Rozdělíš tokeny na primitivní a sémantické a tmavý motiv uděláš jen změnou sémantických tokenů.",
+      "links": [
+        "css-design/barvy-a-typografie#primitivni-a-semanticke-tokeny",
+        "css-design/workshop-podle-navrhu/019"
+      ]
+    },
+    {
+      "text": "Nastavíš modulární stupnici písma, výšku řádku bez jednotky a vlastní písmo přes `@font-face`.",
+      "links": [
+        "css-design/barvy-a-typografie#typograficka-stupnice",
+        "css-design/barvy-a-typografie#pisma-font-face-a-variabilni-fonty"
+      ]
+    },
+    {
+      "text": "Přečteš návrh z Figmy a převedeš auto layout, *Hug*, *Fill* a *Fixed*, textové styly a proměnné na CSS se spočtenými hodnotami.",
+      "links": [
+        "css-design/cteni-navrhu#auto-layout-je-flexbox",
+        "css-design/cteni-navrhu#dev-mode-jak-cist-hodnoty",
+        "css-design/workshop-podle-navrhu",
+        "css-design/lab-komponenta-z-navrhu"
+      ]
+    },
+    {
+      "text": "Vložíš SVG ikonu tak, aby se barvila s textem, škálovala v `em` a byla přístupná, a vybereš mezi inline SVG, `<img>`, spritem a maskou.",
+      "links": [
+        "css-design/svg-a-ikony#tri-zpusoby-jak-ikonu-vlozit",
+        "css-design/svg-a-ikony#pristupnost-ikon",
+        "css-design/lab-komponenta-z-navrhu"
+      ]
+    }
   ]
 }
