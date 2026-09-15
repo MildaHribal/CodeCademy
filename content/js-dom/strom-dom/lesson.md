@@ -295,7 +295,7 @@ Vlevo je jméno obyčejný text. Vpravo z něj prohlížeč udělal značku `<im
 Když potřebuješ kombinovat značky a cizí text, postav značky jako elementy a cizí text vlož do nich přes `textContent`. Jak na to přes `createElement` a `<template>`, se naučíš hned v prvním workshopu.
 
 > [!NOTE]
-> Novější metoda `element.setHTML(html)` HTML před vložením vyčistí od skriptů. V roce 2026 ji mají Firefox a Chrome, Safari zatím ne, proto na ni ještě nespoléhej. `textContent` je bezpečný všude.
+> Novější metoda `element.setHTML(html)` HTML před vložením vyčistí od skriptů. Zatím ji ale nepodporují všechny prohlížeče, proto na ni ještě nespoléhej. `textContent` je bezpečný všude.
 
 Existuje ještě `innerText`: vrací text tak, jak je **vidět** (skryté prvky vynechá), a proto musí nejdřív spočítat rozvržení stránky. Na čtení i zápis dat používej `textContent`.
 
@@ -550,6 +550,8 @@ Operátor `*` řetězec převede na číslo, takže `'2' * 2` je `4`. Operátor 
 
 js-dom/strom-dom#cisla-z-dataset-se-scitaji-jako-text
 :::
+
+Příště z toho postavíš seznam úkolů na stěhování: prvky ze šablony, vykreslení z pole dat a přidávání formulářem, ve kterém název úkolu nikdy nespustí cizí kód.
 
 ## Kde to najdeš v MDN
 

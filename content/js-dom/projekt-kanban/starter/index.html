@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="cs">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tabule projektu · Studio Lipka</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <p class="logo">Studio <span>Lipka</span></p>
+      <p class="project-name">Web pro Pekárnu U Mlýna</p>
+    </header>
+
+    <main class="board-page">
+      <div class="toolbar">
+        <form id="add-form" class="add-form">
+          <label class="field">
+            <span class="field__label">Nová karta</span>
+            <input id="card-title" name="title" required maxlength="80" autocomplete="off" placeholder="Třeba: Fotky dortů do galerie">
+          </label>
+          <label class="field">
+            <span class="field__label">Štítek</span>
+            <select id="card-label" name="label">
+              <option value="design">Design</option>
+              <option value="frontend">Frontend</option>
+              <option value="obsah">Obsah</option>
+            </select>
+          </label>
+          <button class="button" type="submit">Přidat kartu</button>
+        </form>
+
+        <label class="field field--filter">
+          <span class="field__label">Filtrovat karty <kbd>/</kbd></span>
+          <input id="filter" name="q" type="search" autocomplete="off" placeholder="Hledat v názvech">
+        </label>
+      </div>
+
+      <p id="status" class="status" role="status"></p>
+
+      <div class="board">
+        <section class="column" data-column="todo" aria-labelledby="column-todo">
+          <header class="column__header">
+            <h2 id="column-todo" class="column__title">K udělání</h2>
+            <span class="column__count">0</span>
+          </header>
+          <ul class="column__list"></ul>
+          <p class="column__empty" hidden>Zatím tu nic není.</p>
+        </section>
+
+        <section class="column" data-column="doing" aria-labelledby="column-doing">
+          <header class="column__header">
+            <h2 id="column-doing" class="column__title">Rozpracované</h2>
+            <span class="column__count">0</span>
+          </header>
+          <ul class="column__list"></ul>
+          <p class="column__empty" hidden>Zatím tu nic není.</p>
+        </section>
+
+        <section class="column" data-column="done" aria-labelledby="column-done">
+          <header class="column__header">
+            <h2 id="column-done" class="column__title">Hotovo</h2>
+            <span class="column__count">0</span>
+          </header>
+          <ul class="column__list"></ul>
+          <p class="column__empty" hidden>Zatím tu nic není.</p>
+        </section>
+      </div>
+    </main>
+
+    <template id="card-template">
+      <li class="card" draggable="true">
+        <span class="card__label"></span>
+        <p class="card__title"></p>
+        <div class="card__actions">
+          <button class="card__button" type="button" data-action="left"><span aria-hidden="true">←</span></button>
+          <button class="card__button" type="button" data-action="right"><span aria-hidden="true">→</span></button>
+          <button class="card__button card__button--delete" type="button" data-action="delete"><span aria-hidden="true">×</span></button>
+        </div>
+      </li>
+    </template>
+  </body>
+</html>

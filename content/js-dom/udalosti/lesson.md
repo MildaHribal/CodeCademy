@@ -266,7 +266,7 @@ Dvě metody objektu události, které začátečníci zaměňují, a přitom dě
 
 | metoda | co zruší | typické použití |
 |---|---|---|
-| `event.preventDefault()` | **výchozí akci prohlížeče** — odeslání formuláře, přechod na odkaz, zaškrtnutí políčka, posun stránky šipkou | formulář zpracovaný v JavaScriptu, vlastní ovládání klávesnicí |
+| `event.preventDefault()` | **[[výchozí akce|výchozí akci]] prohlížeče** — odeslání formuláře, přechod na odkaz, zaškrtnutí políčka, posun stránky šipkou | formulář zpracovaný v JavaScriptu, vlastní ovládání klávesnicí |
 | `event.stopPropagation()` | **další cestu události** — posluchače na předcích se nespustí | skoro nikdy; jen když by předek na událost reagoval nesmyslně |
 
 `preventDefault` nezastaví probublání a `stopPropagation` nezruší výchozí akci. Jedno s druhým nesouvisí.
@@ -664,6 +664,11 @@ console.log(saves);
 
 > [!PITFALL]
 > **Na „tlačítko" z `<div>` nejde přejít klávesou Tab ani ho zmáčknout Enterem.** Příznak: myší to funguje, z klávesnice ne, a čtečka ho neohlásí jako tlačítko. Oprava: použij `<button type="button">`. Klávesnici, fokus i roli dostaneš zadarmo.
+
+### Překreslení vezme uživateli fokus
+
+> [!PITFALL]
+> **Po prvním písmenu nebo kliknutí zmizí kurzor a klávesnicí se nedá pokračovat.** Příčina: vykreslení nahradí prvek, na kterém byl fokus, novým (`replaceChildren`, `replaceWith`, `innerHTML` nad jeho předkem). Nový prvek může vypadat stejně, ale je to jiný uzel a fokus s tím starým zmizel na `body`. Příznak je nejhorší u polí formuláře a u tlačítek v překreslovaném seznamu. Oprava: prvky, se kterými uživatel právě pracuje, neničí — překresluj jen to, co se změnilo (seznam výsledků, ne pole hledání), a u tlačítka změň jen jeho atribut. Když překreslení opravdu potřebuješ, vrať fokus na nový prvek přes `focus()`.
 
 ### Delegace chytá i cizí prvky
 

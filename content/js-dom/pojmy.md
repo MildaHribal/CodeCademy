@@ -78,3 +78,46 @@ mdn: https://developer.mozilla.org/en-US/docs/Web/Accessibility/Guides/Keyboard-
 lekce: js-dom/workshop-zalozky-a-dialog/004
 
 Technika, při které má ve skupině prvků (záložky, panel nástrojů) `tabindex="0"` jen aktivní prvek a ostatní `-1`. Klávesa Tab vede do skupiny jednou, mezi prvky se přechází šipkami.
+
+## --term-- zdroj pravdy
+
+en: single source of truth
+aliases: zdrojem pravdy, zdroje pravdy, jediný zdroj pravdy
+lekce: js-dom/workshop-seznam-ukolu/008
+
+Jediné místo, kde aplikace drží stav (třeba pole úkolů). Stránka se z něj vykresluje a nikdy se z DOM zpátky nečte jako data.
+
+## --term-- výchozí akce
+
+en: default action
+aliases: výchozí akci, výchozí akcí, výchozí chování
+mdn: https://developer.mozilla.org/en-US/docs/Web/API/Event/preventDefault
+lekce: js-dom/udalosti#preventdefault-a-stoppropagation
+
+Co prohlížeč udělá s událostí sám: odešle formulář, přejde na odkaz, zaškrtne políčko, posune stránku šipkou. Zruší ji `event.preventDefault()`.
+
+## --term-- Constraint Validation API
+
+en: Constraint Validation API
+mdn: https://developer.mozilla.org/en-US/docs/Web/HTML/Guides/Constraint_validation
+lekce: js-dom/formulare-v-js#validace-kterou-umi-prohlizec
+
+Rozhraní, přes které se JavaScript ptá prohlížeče na pravidla formuláře: `checkValidity()`, `reportValidity()`, objekt `validity` s důvody a `setCustomValidity()` pro vlastní pravidla.
+
+## --term-- parametry adresy
+
+en: query string, URL search parameters
+aliases: parametrů adresy, parametrech adresy, parametry v adrese
+mdn: https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams
+lekce: js-dom/prohlizecova-api#stav-v-adrese-url-a-urlsearchparams
+
+Část adresy za otazníkem ve tvaru `klíč=hodnota&klíč=hodnota`. Pošle se s odkazem a přežije obnovení; čte a skládá se přes `URLSearchParams`.
+
+## --term-- layout thrashing
+
+en: layout thrashing
+aliases: thrashing
+mdn: https://developer.mozilla.org/en-US/docs/Glossary/Reflow
+lekce: js-dom/prohlizecova-api#cteni-a-zapis-layoutu-stridave
+
+Střídání zápisu stylů a čtení rozměrů (`offsetHeight`, `getBoundingClientRect()`) v cyklu. Prohlížeč musí rozvržení přepočítat v každém průchodu a stránka zadrhává.

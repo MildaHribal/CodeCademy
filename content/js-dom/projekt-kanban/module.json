@@ -1,0 +1,1 @@
+{ "type": "project", "title": "Kanban tabule", "summary": "Samostatný projekt ve VS Code: tabule úkolů webového studia s přidáváním, přesunem tlačítky i přetažením, filtrem v adrese a kartami, které přežijí obnovení stránky.", "minutes": 300, "runtime": "dom" }

@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Stav a API prohlížeče", "summary": "Co přežije obnovení stránky: localStorage, stav v adrese přes URL, URLSearchParams a History API, sledování prvků observery, plynulé překreslení přes requestAnimationFrame a kopírování do schránky.", "minutes": 45, "runtime": "dom" }

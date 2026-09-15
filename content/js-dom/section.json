@@ -1,11 +1,74 @@
 {
   "title": "DOM, události a prohlížeč",
-  "intro": "Tady se z JavaScriptu stává web, na který se dá klikat. Naučíš se měnit stránku bez XSS, obsluhovat události a klávesnici, zpracovat formulář a udržet stav aplikace v datech, `localStorage` i v adrese.",
+  "intro": "Tady se z JavaScriptu stává web, na který se dá klikat. Naučíš se měnit stránku bez XSS, obsluhovat události a klávesnici, zpracovat formulář a udržet stav aplikace v datech, v `localStorage` i v adrese.\n\nPostup: lekce o stromu DOM a workshop se seznamem úkolů, lekce o událostech a workshop se záložkami a modálním oknem, lekce o formulářích a lab s přihláškou na závod, lekce o API prohlížeče a workshop s filtrem e-shopu, samostatný lab s kvízem na vlastní téma, kvíz nad cizím kódem a nakonec projekt ve VS Code: kanban tabule.\n\n**Předpoklady:** pole a objekty (`map`, `filter`, spread), funkce a closures, `try`/`catch`, základy HTML formulářů a CSS.",
   "modules": [
     "strom-dom",
     "workshop-seznam-ukolu",
     "udalosti",
     "workshop-zalozky-a-dialog",
-    "formulare-v-js"
+    "formulare-v-js",
+    "lab-prihlaska-na-zavod",
+    "prohlizecova-api",
+    "workshop-filtr-produktu",
+    "lab-kviz-aplikace",
+    "kviz",
+    "projekt-kanban"
+  ],
+  "outcomes": [
+    {
+      "text": "Najdeš, vytvoříš a změníš prvky stránky a text od uživatele vložíš tak, že se z něj nespustí cizí kód.",
+      "links": [
+        "js-dom/strom-dom#text-a-html-textcontent-a-innerhtml",
+        "js-dom/workshop-seznam-ukolu/006",
+        "js-dom/workshop-seznam-ukolu/013"
+      ]
+    },
+    {
+      "text": "Obsloužíš kliknutí v seznamu jedním posluchačem přes delegaci a vysvětlíš rozdíl mezi `target` a `currentTarget`.",
+      "links": [
+        "js-dom/udalosti#delegace-jeden-posluchac-pro-cely-seznam",
+        "js-dom/udalosti#target-a-currenttarget",
+        "js-dom/workshop-zalozky-a-dialog/010"
+      ]
+    },
+    {
+      "text": "Postavíš ovládání klávesnicí podle vzoru APG a po překreslení vrátíš uživateli fokus.",
+      "links": [
+        "js-dom/workshop-zalozky-a-dialog/006",
+        "js-dom/udalosti#prekresleni-vezme-uzivateli-fokus",
+        "js-dom/workshop-filtr-produktu/017"
+      ]
+    },
+    {
+      "text": "Zpracuješ formulář v JavaScriptu: data přes `FormData`, pravidla přes `validity` a `setCustomValidity` a chyby, které ohlásí i čtečka obrazovky.",
+      "links": [
+        "js-dom/formulare-v-js#data-z-formulare-formdata",
+        "js-dom/formulare-v-js#chyby-ktere-uvidi-kazdy",
+        "js-dom/lab-prihlaska-na-zavod"
+      ]
+    },
+    {
+      "text": "Uložíš stav do `localStorage` tak, že rozbitá data aplikaci neshodí, a filtr do adresy tak, aby fungovalo obnovení i tlačítko Zpět.",
+      "links": [
+        "js-dom/prohlizecova-api#kdyz-uloziste-zklame",
+        "js-dom/prohlizecova-api#historie-pushstate-replacestate-a-popstate",
+        "js-dom/workshop-filtr-produktu/016"
+      ]
+    },
+    {
+      "text": "Rozhodneš, jestli kus stavu patří do adresy, do `localStorage`, nebo do proměnné.",
+      "links": [
+        "js-dom/prohlizecova-api#adresa-localstorage-nebo-promenna",
+        "js-dom/workshop-filtr-produktu/024"
+      ]
+    },
+    {
+      "text": "Samostatně postavíš interaktivní aplikaci bez frameworku, kde jsou data zdroj pravdy a stránka se z nich vykresluje.",
+      "links": [
+        "js-dom/workshop-seznam-ukolu/008",
+        "js-dom/lab-kviz-aplikace",
+        "js-dom/projekt-kanban"
+      ]
+    }
   ]
 }

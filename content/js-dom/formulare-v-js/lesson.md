@@ -256,7 +256,7 @@ js-dom/formulare-v-js#input-nebo-change
 
 ## Validace, kterou umí prohlížeč
 
-Většinu pravidel zapíšeš do HTML: `required`, `type="email"`, `min` a `max`, `minlength`, `maxlength`, `pattern`. Prohlížeč je hlídá sám a JavaScript se ho na výsledek zeptá přes **Constraint Validation API**:
+Většinu pravidel zapíšeš do HTML: `required`, `type="email"`, `min` a `max`, `minlength`, `maxlength`, `pattern`. Prohlížeč je hlídá sám a JavaScript se ho na výsledek zeptá přes **[[Constraint Validation API]]**:
 
 | co | co vrací |
 |---|---|
@@ -547,35 +547,35 @@ js-dom/formulare-v-js#chyby-ktere-uvidi-kazdy
 > **Formulář nejde odeslat ani po opravě.** Příčina: `setCustomValidity('…')` bez větve, která chybu smaže přes `setCustomValidity('')`. Oprava: nastav text chyby i prázdný text v jednom posluchači `input` podle aktuální hodnoty.
 
 :::check
-Posluchač `submit` spočítá celkovou cenu `data.get('adults') * 450 + data.get('children') * 200` a výsledek je správný, ale `data.get('adults') + data.get('children')` pro 2 dospělé a 1 dítě vrátí `'21'`. Proč první výpočet funguje?
+Přihláška na závod v JavaScriptu hlídá, že běžci je aspoň 15 let, a mladšímu nedovolí formulář odeslat. Pořadatel přesto najde v databázi přihlášku dvanáctiletého. Co je nejpravděpodobnější vysvětlení?
 
 ### --answer--
 
-Protože `data.get` u polí `type="number"` vrací čísla.
+Chyba v `validity`: prohlížeč pravidlo `min` občas nevyhodnotí.
 
 #### --why--
 
-Kdyby vracel čísla, druhý výpočet by dal `3`. Oba výpočty dostávají řetězce.
+Pravidla v prohlížeči fungují spolehlivě. Otázka je, jestli přihláška vůbec prošla přes tvůj formulář.
 
 ### --correct--
 
-Operátor `*` řetězce převede na čísla, kdežto `+` s řetězcem spojuje text.
+Někdo kontrolu obešel (upravil HTML v DevTools nebo poslal data přímo na server) a server věk znovu neověřil.
 
 #### --why--
 
-`'2' * 450` je `900`, ale `'2' + '1'` je `'21'`. Spoléhat se na to nevyplatí — převáděj hodnoty z formuláře přes `Number` hned při čtení.
+Všechno, co běží v prohlížeči, má uživatel pod kontrolou. Kontrola v JavaScriptu je pohodlí pro poctivé uživatele, pravidlo musí ověřit i server.
 
 ### --answer--
 
-Protože násobení má přednost před sčítáním.
+Formulář měl `novalidate`, a proto se pravidla neuplatnila.
 
 #### --why--
 
-Přednost operátorů určuje pořadí výpočtu, ne typ hodnot. Rozhoduje, co s řetězcem udělá `*` a co `+`.
+`novalidate` vypne jen bubliny a zastavení odeslání. Tvůj posluchač `submit` pravidla kontroluje dál — pokud se formulář vůbec odesílá přes něj.
 
 ### --see--
 
-js-dom/formulare-v-js#data-z-formulare-formdata
+js-dom/formulare-v-js#kontrola-jen-v-javascriptu
 :::
 
 Příště z toho postavíš přihlášku na závod: validaci s vlastními hláškami, pravidlo podle věku a přehled odeslaných údajů.

@@ -1,0 +1,1 @@
+{ "type": "quiz", "title": "Kvíz: DOM a události", "summary": "Čtení kódu s DOM: kudy událost putuje, kde se schová XSS, co udělá localStorage a adresa a co se pokazí v cizím widgetu hodnocení receptu.", "minutes": 30 }
