@@ -1,0 +1,1 @@
+{ "type": "quiz", "title": "Kvíz: responzivita a motivy", "summary": "Otázky na čtení a počítání: které pravidlo platí na jaké šířce, kolik pixelů vyjde z clamp(), na co se ptá container query a proč motiv nereaguje — i v cizím kódu.", "minutes": 30, "runtime": "dom" }

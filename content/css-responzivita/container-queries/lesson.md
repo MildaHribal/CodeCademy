@@ -48,7 +48,7 @@ Prvek se na vlastní šířku zeptat nemůže: jeho styly by šířku měnily a 
 
 ## Problém: komponenta neví, kde je
 
-V ukázce je stejná karta koncertu dvakrát: nahoře v úzkém panelu (11rem), dole v širším obsahu (24rem). Karta se přepíná na vodorovné rozvržení media dotazem od 20rem, a protože náhled je širší než 320 px, platí podmínka pro obě.
+V ukázce je stejná karta koncertu dvakrát: nahoře v úzkém panelu (11rem), dole v širším obsahu (24rem). Karta se přepíná na vodorovné rozvržení media dotazem od 20rem (320 px). Media dotaz měří okno náhledu, a to je širší, takže podmínka platí pro obě karty najednou.
 
 :::live
 ```html
@@ -89,7 +89,7 @@ body { margin: 1rem; font-family: system-ui, sans-serif; color: #1e1b4b; }
 ```
 :::
 
-Dole je karta v pořádku, nahoře se nadpis mačká do sloupce širokého pár písmen. Změň v kódu šířku `.sidebar` na `20rem` a sleduj, že media dotaz se nezmění: karta v panelu byla vodorovná už předtím.
+Dole je karta v pořádku, nahoře se nadpis mačká do sloupce širokého pár písmen. Zkus v kódu změnit podmínku na `(width >= 60rem)`: pokud je náhled užší než 960 px, svislé budou **obě** karty, i ta dole, která místa dost má. Jedna podmínka rozhoduje o všech kartách na stránce naráz.
 
 Na řešení se nedá použít jiný bod zlomu v media dotazu. Okno je pro obě karty stejné, liší se jen **místo**.
 
@@ -306,7 +306,7 @@ Protože `inline-size` znamená, že kontejner je řádkový prvek.
 
 Na větší stránce bývá kontejnerů víc v sobě: slot v mřížce je kontejner a uvnitř karty je kontejner i blok se štítky. Podmínka bez jména se vždycky ptá **nejbližšího** kontejneru. Když přidáš kontejner dovnitř karty, pravidla pro jeho potomky se najednou ptají jeho, ne slotu.
 
-Kontejner proto můžeš pojmenovat a v podmínce jméno uvést:
+Kontejner proto můžeš pojmenovat a v podmínce jméno uvést. Takový [[pojmenovaný kontejner]] (*named container*) se zapisuje takhle:
 
 ```css
 .slot {
@@ -350,7 +350,7 @@ Kontejnery se do sebe vnořovat smí. Jen je potřeba vědět, kterého z nich s
 
 ## Jednotky kontejneru: `cqi`
 
-Uvnitř kontejneru můžeš velikosti vztahovat k jeho šířce: `1cqi` je 1 % šířky nejbližšího kontejneru (*container query inline*). Funguje to jako `vw`, jen místo okna je měřítkem kontejner. S `clamp()` dostaneš nadpis, který roste s kartou:
+Uvnitř kontejneru můžeš velikosti vztahovat k jeho šířce [[jednotka cqi|jednotkami kontejneru]]: `1cqi` je 1 % šířky nejbližšího kontejneru (*container query inline*). Funguje to jako `vw`, jen místo okna je měřítkem kontejner. S `clamp()` dostaneš nadpis, který roste s kartou:
 
 ```css
 .event__title {
@@ -427,7 +427,7 @@ Nadpis má `font-size: clamp(1rem, 0.25rem + 5cqi, 1.75rem)` a jeho kontejner je
 V praxi se oba nástroje doplňují: media dotazy rozvrhnou kostru stránky a komponenty uvnitř se přizpůsobí container queries. Stránka pak nemusí vědět, kolik místa která karta dostala.
 
 > [!NOTE]
-> Poslední řádek tabulky je *style query*: `@container style(--variant: featured) { … }` platí, když má předek vlastní vlastnost s touhle hodnotou. Kontejner k tomu nemusí mít `container-type`. Od roku 2026 ji umí všechny hlavní prohlížeče; v kurzu ji nebudeme potřebovat, ale v cizím kódu ji poznáš.
+> Poslední řádek tabulky je *style query*: `@container style(--variant: featured) { … }` platí, když má předek vlastní vlastnost s touhle hodnotou. Kontejner k tomu nemusí mít `container-type`. Podporu si před použitím ověř v tabulce kompatibility na MDN; v kurzu ji nebudeme potřebovat, ale v cizím kódu ji poznáš.
 
 :::check
 Blog má na počítači sloupec článků a vedle něj panel „Nejčtenější". Napiš, kterým nástrojem rozhodneš, **jestli bude panel vedle sloupce, nebo pod ním**: napiš `media` nebo `container`.
@@ -460,6 +460,28 @@ Jestli se panel vejde vedle sloupce, závisí na šířce okna, a to je otázka 
 >
 > *Oprava:* `size` vyřadí obsah z výpočtu šířky **i výšky**. Pro dotazy na šířku stačí `inline-size`; `size` použij jen u prvku s výškou nastavenou zvenku.
 
+:::check
+Kolega dal sekci s kartami `container-type: size`, aby se v ní šlo ptát „na všechno". Sekce nemá nastavenou výšku a karty v ní dřív měly 600 px na výšku. Co uvidí po změně?
+
+### --answer--
+Nic se nezmění, `size` je jen obecnější varianta `inline-size`.
+
+#### --why--
+Myslíš si, že se `size` od `inline-size` liší jen tím, na co se smíš ptát? Mění i to, ze kterých rozměrů prohlížeč obsah vyřadí.
+
+### --correct--
+Sekce bude vysoká 0 px a karty přetečou přes obsah pod ní.
+
+#### --why--
+`size` vyřadí obsah z výpočtu šířky i výšky. Blok šířku dostane od rodiče, výšku ale bral jen z obsahu, a ten se teď nepočítá. Na dotazy na šířku stačí `inline-size`.
+
+### --answer--
+Karty se zmenší, aby se sekce vešla do výšky okna.
+
+#### --why--
+Kontejner se oknu nepřizpůsobuje a karty se kvůli němu nezmenšují. Zeptej se, odkud blok bez nastavené výšky bere svou výšku.
+:::
+
 :::explain
 Vysvětli vlastními slovy, proč na kartu, která se objevuje v postranním panelu i v obsahu, nestačí media dotaz a co udělá container query jinak.
 
@@ -472,6 +494,8 @@ Media dotaz se ptá na šířku okna, a ta je pro kartu v panelu i v obsahu stej
 - Kontejner musí být předek karty, ne karta sama.
 - Stejná komponenta se tak rozhodne podle místa, kam ji vložíš.
 :::
+
+Příště postavíš kartu filmu pro program kina, která je v úzkém panelu svislá, v seznamu vodorovná a ve Filmu týdne velká, a to jediným CSS bez tříd pro jednotlivá místa.
 
 ## Kde to najdeš v MDN
 

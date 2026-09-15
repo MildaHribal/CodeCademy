@@ -78,3 +78,66 @@ mdn: https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_containment/Container_
 lekce: css-responzivita/container-queries#jednotky-kontejneru-cqi
 
 `1cqi` je 1 % šířky nejbližšího kontejneru dotazu. Bez kontejneru se počítá z malého okna prohlížeče.
+
+## --term-- pojmenovaný kontejner
+
+en: named container
+aliases: pojmenovaného kontejneru, pojmenované kontejnery, pojmenovaných kontejnerů, jméno kontejneru
+mdn: https://developer.mozilla.org/en-US/docs/Web/CSS/container-name
+lekce: css-responzivita/container-queries#pojmenovane-kontejnery
+
+Kontejner se jménem z `container-name` nebo zkratky `container: jméno / inline-size`. Podmínka `@container jméno (…)` přeskočí bližší kontejnery s jiným jménem.
+
+## --term-- plynulá velikost
+
+en: fluid sizing
+aliases: plynulé velikosti, plynulou velikost, plynulá typografie, plynulé typografie
+mdn: https://developer.mozilla.org/en-US/docs/Web/CSS/clamp
+lekce: css-responzivita/mobile-first#plynule-velikosti-clamp
+
+Velikost písma nebo rozestupu, která roste s oknem nebo kontejnerem bez skoků a drží se mezi minimem a maximem, typicky `clamp(2rem, 1rem + 4vw, 3.5rem)`.
+
+## --term-- responzivní obrázek
+
+en: responsive image
+aliases: responzivní obrázky, responzivního obrázku, responzivních obrázků
+mdn: https://developer.mozilla.org/en-US/docs/Web/HTML/Guides/Responsive_images
+lekce: css-responzivita/mobile-first#obrazky-srcset-a-sizes
+
+Obrázek s atributy `srcset` a `sizes`, u kterého si prohlížeč sám vybere soubor podle skutečné šířky na stránce a hustoty displeje.
+
+## --term-- color-scheme
+
+en: color-scheme
+aliases: color scheme
+mdn: https://developer.mozilla.org/en-US/docs/Web/CSS/color-scheme
+lekce: css-responzivita/preference-uzivatele#color-scheme-rekni-prohlizeci-co-stranka-umi
+
+Vlastnost, která prohlížeči říká, jaké motivy stránka nebo její část podporuje (`light`, `dark`, `light dark`). Řídí se jí formuláře, posuvníky, výchozí barvy a funkce `light-dark()`.
+
+## --term-- light-dark()
+
+en: light-dark()
+aliases: light-dark
+mdn: https://developer.mozilla.org/en-US/docs/Web/CSS/color_value/light-dark
+lekce: css-responzivita/preference-uzivatele#light-dark-dve-hodnoty-v-jedne-deklaraci
+
+Funkce se dvěma barvami, která vrátí první ve světlém a druhou v tmavém motivu. Řídí se použitým `color-scheme`; bez něj vrací vždy první barvu.
+
+## --term-- omezený pohyb
+
+en: reduced motion
+aliases: omezení pohybu, omezeným pohybem, omezeného pohybu
+mdn: https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-reduced-motion
+lekce: css-responzivita/preference-uzivatele#omezeny-pohyb-prefers-reduced-motion
+
+Nastavení systému, kterým uživatel žádá méně pohybu na obrazovce. Web ho pozná podle `prefers-reduced-motion: reduce` a vypne posuny, paralaxu a velké animace.
+
+## --term-- vynucené barvy
+
+en: forced colors
+aliases: vynucených barev, vynucenými barvami, režim vynucených barev
+mdn: https://developer.mozilla.org/en-US/docs/Web/CSS/@media/forced-colors
+lekce: css-responzivita/preference-uzivatele#kontrast-a-vynucene-barvy
+
+Režim, ve kterém systém (třeba kontrastní režim Windows) nahradí barvy stránky omezenou paletou a odstraní stíny. Pozná se podle `forced-colors: active`.

@@ -1,6 +1,6 @@
 # Mobile-first
 
-Víc než polovinu návštěv e-shopů, zpravodajských webů i rezervačních systémů dělají lidé z telefonu. Stránka, která na počítači vypadá skvěle a na telefonu nutí uživatele zvětšovat prsty a posouvat do strany, přichází o zákazníky. V téhle lekci se naučíš psát CSS tak, aby jedna stránka fungovala od úzkého telefonu po široký monitor.
+Víc než polovinu návštěv e-shopů, zpravodajských webů i rezervačních systémů dělají lidé z telefonu. Stránka, která na počítači vypadá dobře a na telefonu nutí uživatele zvětšovat prsty a posouvat do strany, přichází o zákazníky. V téhle lekci se naučíš psát CSS tak, aby jedna stránka fungovala od úzkého telefonu po široký monitor.
 
 :::check pretest
 Otevřeš na telefonu stránku, která v `<head>` nemá značku `<meta name="viewport">`. Co udělá mobilní prohlížeč?
@@ -46,7 +46,7 @@ Stránka má tři karty výletů ve třech sloupcích a žádné media dotazy. N
 
 :::live
 ```html
-<iframe class="device" title="Stránka v okně zvolené šířky" srcdoc="
+<div class="frame"><iframe class="device" title="Stránka v okně zvolené šířky" srcdoc="
 <style>
   body { margin: 0; padding: 1rem; font-family: system-ui, sans-serif; color: #1c2b36; }
   h1 { margin: 0 0 1rem; font-size: 1.75rem; }
@@ -61,7 +61,7 @@ Stránka má tři karty výletů ve třech sloupcích a žádné media dotazy. N
   <article class='trip'><h2>Propast Macocha</h2><p>Hluboká 138 metrů, dolů vede lodička.</p></article>
   <article class='trip'><h2>Sněžka</h2><p>Nejvyšší hora Česka s výhledem do Polska.</p></article>
 </div>
-"></iframe>
+"></iframe></div>
 ```
 ```css
 body { margin: 1rem; font-family: system-ui, sans-serif; }
@@ -76,13 +76,20 @@ body { margin: 1rem; font-family: system-ui, sans-serif; }
   scale: calc(340 / max(var(--w), 340));
   transform-origin: 0 0;
 }
+
+.frame {
+  /* Zmenšený rámeček zabírá jen tolik místa, kolik je ho vidět. */
+  width: 346px;
+  height: calc((26rem + 4px) * 340 / max(var(--w), 340));
+  overflow: hidden;
+}
 ```
 ```controls
 --w: range(320, 1280, 20) = 360 | Šířka okna (px)
 ```
 :::
 
-Na 360 px zbude na sloupec sotva 90 px: nadpisy se lámou, popis má jedno dvě slova na řádek a třetí karta vyčuhuje z okna. Posuň šířku na 1000 px a tatáž stránka vypadá dobře. Rozvržení, které funguje na jedné šířce, na jiné selže.
+Na 360 px zbude na tři sloupce necelých 300 px: nadpisy se lámou, popis má jedno dvě slova na řádek a třetí karta i tak vyčuhuje z okna. Posuň šířku na 1000 px a tatáž stránka vypadá dobře. Rozvržení, které funguje na jedné šířce, na jiné selže.
 
 Řešení má dvě části. Nejdřív napíšeš styly, které fungují na **nejužší** obrazovce: tady jeden sloupec, protože karty pod sebou čte telefon nejlépe. Pak přidáš pravidla, která se použijí jen od určité šířky okna, a na nich rozvržení rozšíříš. Tomu se říká [[mobile-first]].
 
@@ -176,7 +183,7 @@ Karty výletů teď mají základ v jednom sloupci a dva media dotazy. Hýbej po
 
 :::live
 ```html
-<iframe class="device" title="Stránka v okně zvolené šířky" srcdoc="
+<div class="frame"><iframe class="device" title="Stránka v okně zvolené šířky" srcdoc="
 <style>
   body { margin: 0; padding: 1rem; font-family: system-ui, sans-serif; color: #1c2b36; }
   h1 { margin: 0 0 1rem; font-size: 1.75rem; }
@@ -199,7 +206,7 @@ Karty výletů teď mají základ v jednom sloupci a dva media dotazy. Hýbej po
   <article class='trip'><h2>Propast Macocha</h2><p>Hluboká 138 metrů, dolů vede lodička.</p></article>
   <article class='trip'><h2>Sněžka</h2><p>Nejvyšší hora Česka s výhledem do Polska.</p></article>
 </div>
-"></iframe>
+"></iframe></div>
 ```
 ```css
 body { margin: 1rem; font-family: system-ui, sans-serif; }
@@ -212,6 +219,13 @@ body { margin: 1rem; font-family: system-ui, sans-serif; }
   background: white;
   scale: calc(340 / max(var(--w), 340));
   transform-origin: 0 0;
+}
+
+.frame {
+  /* Zmenšený rámeček zabírá jen tolik místa, kolik je ho vidět. */
+  width: 346px;
+  height: calc((26rem + 4px) * 340 / max(var(--w), 340));
+  overflow: hidden;
 }
 ```
 ```controls
@@ -254,7 +268,7 @@ Rámeček níž je okno široké 700 px. Než odkryješ náhled, tipni si:
 
 :::live predict
 ```html
-<iframe class="device" title="Okno široké 700 px" srcdoc="
+<div class="frame"><iframe class="device" title="Okno široké 700 px" srcdoc="
 <style>
   body { margin: 0; padding: 2rem; font-family: system-ui, sans-serif; }
 
@@ -265,7 +279,7 @@ Rámeček níž je okno široké 700 px. Než odkryješ náhled, tipni si:
   .sale { padding: 1.5rem; border-radius: 1rem; background: #fde68a; font-size: 2rem; }
 </style>
 <p class='sale'>Sleva 20 % na stany</p>
-"></iframe>
+"></iframe></div>
 ```
 ```css
 body { margin: 1rem; font-family: system-ui, sans-serif; }
@@ -278,6 +292,13 @@ body { margin: 1rem; font-family: system-ui, sans-serif; }
   background: white;
   scale: 0.5;
   transform-origin: 0 0;
+}
+
+.frame {
+  /* Zmenšený rámeček zabírá jen tolik místa, kolik je ho vidět. */
+  width: 354px;
+  height: calc((14rem + 4px) / 2);
+  overflow: hidden;
 }
 ```
 --question-- Jakou barvu pozadí bude mít banner v okně širokém 700 px?
@@ -317,7 +338,7 @@ Tady je past, kterou čeká málokdo. Okno je znovu široké 700 px:
 
 :::live predict
 ```html
-<iframe class="device" title="Okno široké 700 px" srcdoc="
+<div class="frame"><iframe class="device" title="Okno široké 700 px" srcdoc="
 <style>
   html { font-size: 62.5%; }
   body { margin: 0; padding: 2rem; font-family: system-ui, sans-serif; }
@@ -328,7 +349,7 @@ Tady je past, kterou čeká málokdo. Okno je znovu široké 700 px:
   }
 </style>
 <p class='plan'>Tarif Plus</p>
-"></iframe>
+"></iframe></div>
 ```
 ```css
 body { margin: 1rem; font-family: system-ui, sans-serif; }
@@ -341,6 +362,13 @@ body { margin: 1rem; font-family: system-ui, sans-serif; }
   background: white;
   scale: 0.5;
   transform-origin: 0 0;
+}
+
+.frame {
+  /* Zmenšený rámeček zabírá jen tolik místa, kolik je ho vidět. */
+  width: 354px;
+  height: calc((14rem + 4px) / 2);
+  overflow: hidden;
 }
 ```
 --question-- Kolega nastavil `html { font-size: 62.5% }`, aby 1rem byl 10 px. Jakou barvu bude mít tarif v okně širokém 700 px?
@@ -367,7 +395,7 @@ Karta je čitelná od 20rem, mezi dvěma kartami je `gap` 1.5rem a stránka má 
 
 ## Plynulé velikosti: `clamp()`
 
-Nadpis, který má na telefonu 32 px, je na monitoru malý. Dva media dotazy s pevnými velikostmi fungují, ale nadpis mezi nimi skáče. Plynulá velikost roste s oknem bez skoků a drží se v mezích. Funkci `clamp()` znáš ze základů CSS:
+Nadpis, který má na telefonu 32 px, je na monitoru malý. Dva media dotazy s pevnými velikostmi fungují, ale nadpis mezi nimi skáče. [[plynulá velikost|Plynulá velikost]] (*fluid sizing*) roste s oknem bez skoků a drží se v mezích. Funkci `clamp()` znáš ze základů CSS:
 
 ```css
 h1 {
@@ -382,7 +410,7 @@ Výpočet pro okno 600 px: 1rem + 4vw = 16 + 0.04 × 600 = 16 + 24 = **40 px**. 
 
 :::live
 ```html
-<iframe class="device" title="Stránka v okně zvolené šířky" srcdoc="
+<div class="frame"><iframe class="device" title="Stránka v okně zvolené šířky" srcdoc="
 <style>
   body { margin: 0; padding: 1rem; font-family: system-ui, sans-serif; color: #1c2b36; }
   h1 { margin: 0 0 0.5rem; font-size: clamp(2rem, 1rem + 4vw, 3.5rem); line-height: 1.1; }
@@ -391,7 +419,7 @@ Výpočet pro okno 600 px: 1rem + 4vw = 16 + 0.04 × 600 = 16 + 24 = **40 px**. 
 <h1>Výlety po Česku</h1>
 <p class='ruler' style='font-size: 2rem'>min 32 px</p>
 <p class='ruler' style='font-size: 3.5rem'>max 56 px</p>
-"></iframe>
+"></iframe></div>
 ```
 ```css
 body { margin: 1rem; font-family: system-ui, sans-serif; }
@@ -404,6 +432,13 @@ body { margin: 1rem; font-family: system-ui, sans-serif; }
   background: white;
   scale: calc(340 / max(var(--w), 340));
   transform-origin: 0 0;
+}
+
+.frame {
+  /* Zmenšený rámeček zabírá jen tolik místa, kolik je ho vidět. */
+  width: 346px;
+  height: calc((16rem + 4px) * 340 / max(var(--w), 340));
+  overflow: hidden;
 }
 ```
 ```controls
@@ -434,7 +469,7 @@ Nadpis má `font-size: clamp(1.5rem, 0.5rem + 5vw, 3rem)`. Kolik pixelů bude m�
 
 ## Obrázky: `srcset` a `sizes`
 
-Obrázek, který na monitoru zabírá 1200 px, je na telefonu široký 360 px. Když telefon stahuje verzi pro monitor, platí uživatel za data a stránka se načítá déle. Atribut `srcset` nabídne prohlížeči víc souborů a atribut `sizes` mu řekne, jak široký obrázek na stránce bude:
+Obrázek, který na monitoru zabírá 1200 px, je na telefonu široký 360 px. Když telefon stahuje verzi pro monitor, platí uživatel za data a stránka se načítá déle. [[responzivní obrázek|Responzivní obrázek]] (*responsive image*) to řeší: atribut `srcset` nabídne prohlížeči víc souborů a atribut `sizes` mu řekne, jak široký obrázek na stránce bude:
 
 ```html
 <img
@@ -486,7 +521,7 @@ for (const img of document.querySelectorAll('img[srcset]')) {
 Vlevo prohlížeč stáhl soubor pro obrázek přes celý náhled, i když ho zobrazuje ve 160 px. Vpravo stačil menší soubor. Na displeji s vyšší hustotou uvidíš v obou náhledech o stupeň větší soubor, poměr ale zůstane. Zkus vpravo změnit `sizes` na `100px`.
 
 > [!NOTE]
-> U obrázků s `loading="lazy"` jde napsat `sizes="auto"` a prohlížeč si šířku změří sám. Podpora se teprve dotahuje, ručně psaný `sizes` funguje všude.
+> U obrázků s `loading="lazy"` jde napsat `sizes="auto, 100vw"` a prohlížeč si šířku změří sám. Prohlížeč, který `auto` ještě nezná, ho přeskočí a použije `100vw`. Ručně psaný `sizes` funguje všude a u obrázků nahoře na stránce, které se načítají hned, je jediná možnost.
 
 :::check
 Obrázek je na telefonu přes celou šířku okna a od 50rem zabírá třetinu okna. Napiš hodnotu atributu `sizes`.
@@ -602,6 +637,8 @@ Základní styly jsou pro nejužší obrazovku a platí všude, takže každé z
 - Media dotaz nezvyšuje specificitu.
 - Při stejné specificitě vyhraje pozdější pravidlo, proto media dotazy patří pod základ.
 :::
+
+Příště z téhle teorie postavíš celou úvodní stránku servisu kol: od hlavičky pro telefon přes plynulé nadpisy a obrázek se `sizes` až po ceník, který se na mobilu posouvá sám.
 
 ## Kde to najdeš v MDN
 

@@ -1,10 +1,79 @@
 {
   "title": "Responzivní design a motivy",
-  "intro": "x",
+  "intro": "Každou stránku, kterou postavíš, někdo otevře na telefonu širokém 360 px, jiný na monitoru přes 2000 px a třetí večer v tmavém režimu. Responzivní web se všem přizpůsobí z jednoho HTML a jednoho CSS, bez zvláštní mobilní verze.\n\nV sekci napíšeš úvodní stránku servisu kol **mobile-first** od telefonu po široký monitor, s plynulým písmem přes `clamp()` a obrázky, které si stáhnou správnou velikost. Pak postavíš kartu filmu, která se přes **container queries** rozhodne podle místa, kam ji dáš, a naučíš se, kdy se ptát okna a kdy komponenty. Nakonec přidáš **světlý a tmavý motiv** podle systému i ručního přepínače a zohledníš další preference uživatele: omezený pohyb, vyšší kontrast, myš nebo prst a tisk. V labu to všechno spojíš na blogu, který si můžeš přepsat na vlastní téma.\n\nPředpoklad: znáš flexbox a grid (`fr`, `repeat()`, pojmenované oblasti) a víš, jak funguje kaskáda a CSS proměnné.",
   "modules": [
     "mobile-first",
     "workshop-landing-mobil",
     "container-queries",
-    "workshop-karta-kontejner"
+    "workshop-karta-kontejner",
+    "preference-uzivatele",
+    "lab-tmavy-rezim",
+    "kviz"
+  ],
+  "outcomes": [
+    {
+      "text": "Postavíš stránku mobile-first, která funguje od 320 px po široký monitor, a vysvětlíš, proč media dotazy s `width >=` stojí pod základními styly.",
+      "links": [
+        "css-responzivita/mobile-first#poradi-rozhoduje-media-dotaz-nepridava-silu",
+        "css-responzivita/workshop-landing-mobil",
+        "css-responzivita/workshop-landing-mobil/010"
+      ]
+    },
+    {
+      "text": "Spočítáš bod zlomu z nejmenší čitelné šířky obsahu a zapíšeš ho syntaxí rozsahů tak, aby se dva media dotazy na hranici nepřekrývaly.",
+      "links": [
+        "css-responzivita/mobile-first#body-zlomu-podle-obsahu",
+        "css-responzivita/mobile-first#media-dotaz-a-syntaxe-rozsahu",
+        "css-responzivita/workshop-landing-mobil/018"
+      ]
+    },
+    {
+      "text": "Nastavíš plynulé písmo a rozestupy přes `clamp()` se součtem `rem` a `vw` nebo `cqi` a na papíře spočítáš, kolik pixelů vyjde na dané šířce.",
+      "links": [
+        "css-responzivita/mobile-first#plynule-velikosti-clamp",
+        "css-responzivita/container-queries#jednotky-kontejneru-cqi",
+        "css-responzivita/workshop-landing-mobil/016"
+      ]
+    },
+    {
+      "text": "Napíšeš obrázku `srcset` a `sizes` podle jeho skutečné šířky a navigaci i tabulku, které se na telefonu posouvají samy a mají dotykové cíle aspoň 44 px.",
+      "links": [
+        "css-responzivita/mobile-first#obrazky-srcset-a-sizes",
+        "css-responzivita/mobile-first#dotykove-cile",
+        "css-responzivita/workshop-landing-mobil/011"
+      ]
+    },
+    {
+      "text": "Rozhodneš, jestli se komponenta ptá okna, nebo svého místa, a postavíš kartu s variantami přes container queries s pojmenovaným kontejnerem.",
+      "links": [
+        "css-responzivita/container-queries#media-dotaz-nebo-container-query",
+        "css-responzivita/container-queries#pojmenovane-kontejnery",
+        "css-responzivita/workshop-karta-kontejner"
+      ]
+    },
+    {
+      "text": "Opravíš zhroucený kontejner a podmínku, která se ptá nečekaně bližšího kontejneru, a vysvětlíš, proč kontejner nepočítá se šířkou obsahu.",
+      "links": [
+        "css-responzivita/container-queries#kontejner-bez-vlastni-sirky-se-zhrouti",
+        "css-responzivita/workshop-karta-kontejner/007",
+        "css-responzivita/workshop-karta-kontejner/011"
+      ]
+    },
+    {
+      "text": "Uděláš světlý a tmavý motiv podle systému s ručním přepínačem přes tokeny, `color-scheme` a `light-dark()` a víš, kdy místo toho sáhnout po media dotazu na tokeny.",
+      "links": [
+        "css-responzivita/preference-uzivatele#light-dark-dve-hodnoty-v-jedne-deklaraci",
+        "css-responzivita/preference-uzivatele#rucni-prepinac-motivu",
+        "css-responzivita/lab-tmavy-rezim"
+      ]
+    },
+    {
+      "text": "Zohledníš omezený pohyb, vyšší kontrast, vynucené barvy, ovládání prstem a tisk tak, aby web nikoho nevynechal.",
+      "links": [
+        "css-responzivita/preference-uzivatele#omezeny-pohyb-prefers-reduced-motion",
+        "css-responzivita/preference-uzivatele#kontrast-a-vynucene-barvy",
+        "css-responzivita/preference-uzivatele#mys-nebo-prst-hover-a-pointer"
+      ]
+    }
   ]
 }

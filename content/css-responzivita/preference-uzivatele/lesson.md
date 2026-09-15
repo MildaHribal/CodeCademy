@@ -56,7 +56,7 @@ Media dotaz se nemusí ptát jen na šířku okna. Umí se zeptat i na **prefere
 }
 ```
 
-Kdybys ale tmavý motiv psal tak, že v media dotazu přepíšeš barvy u každé komponenty zvlášť, máš za chvíli dvě kopie všech barev po celém souboru a každá nová komponenta je past. Proto se barvy píšou do **tokenů** (vlastních vlastností) a komponenty používají jen je. Motiv pak na jednom místě přepíná hodnoty tokenů.
+Kdybys ale tmavý motiv psal tak, že v media dotazu přepíšeš barvy u každé komponenty zvlášť, máš za chvíli dvě kopie všech barev po celém souboru a každá nová komponenta je past. Proto se barvy píšou do **[[design token|tokenů]]** (CSS proměnných) a komponenty používají jen je. Motiv pak na jednom místě přepíná hodnoty tokenů.
 
 ```css
 :root {
@@ -190,7 +190,7 @@ body { margin: 1rem; font-family: system-ui, sans-serif; }
 
 .booking { display: grid; gap: 0.75rem; max-width: 18rem; }
 .booking label { display: grid; gap: 0.25rem; }
-.booking__check { display: flex !important; align-items: center; gap: 0.5rem; }
+.booking .booking__check { display: flex; align-items: center; gap: 0.5rem; }
 ```
 ```controls
 --scheme: toggle(light, dark) = light | color-scheme
@@ -214,7 +214,7 @@ color-scheme: dark light
 
 ## `light-dark()`: dvě hodnoty v jedné deklaraci
 
-Když stránka má `color-scheme: light dark`, můžeš tmavou hodnotu tokenu zapsat hned vedle světlé. Funkce `light-dark()` vrátí první barvu ve světlém motivu a druhou v tmavém:
+Když stránka má `color-scheme: light dark`, můžeš tmavou hodnotu tokenu zapsat hned vedle světlé. Funkce [[light-dark()]] vrátí první barvu ve světlém motivu a druhou v tmavém:
 
 ```css
 :root {
@@ -359,7 +359,7 @@ Ne, `color-scheme` na `:root` nejde měnit, když už je nastavené.
 
 ## Omezený pohyb: `prefers-reduced-motion`
 
-Animace, paralaxa a velké posuny obsahu můžou lidem s poruchou rovnováhy způsobit závrať nebo nevolnost. Kdo si v systému zapne omezení pohybu, dostane `prefers-reduced-motion: reduce`. Dva obvyklé zápisy:
+Animace, paralaxa a velké posuny obsahu můžou lidem s poruchou rovnováhy způsobit závrať nebo nevolnost. Kdo si v systému zapne [[omezený pohyb|omezení pohybu]] (*reduced motion*), dostane `prefers-reduced-motion: reduce`. Dva obvyklé zápisy:
 
 ```css
 /* 1. Pohyb jen pro ty, kdo nic neomezili */
@@ -427,7 +427,7 @@ Dvě podmínky pro lidi, kteří hůř vidí:
 }
 ```
 
-Druhé pravidlo je obvyklý trik: ve světlém i tmavém motivu je vidět barevný stín a průhledný obrys neruší. V režimu vynucených barev stín zmizí, ale obrys dostane systémovou barvu a fokus zůstane vidět.
+Druhé pravidlo je obvyklý trik: ve světlém i tmavém motivu je vidět barevný stín a průhledný obrys neruší. V režimu [[vynucené barvy|vynucených barev]] (*forced colors*) stín zmizí, ale obrys dostane systémovou barvu a fokus zůstane vidět.
 
 :::check
 Tlačítko ukazuje fokus jen přes `box-shadow` a nemá žádný `outline`. Co uvidí uživatel s kontrastním režimem Windows (`forced-colors: active`), když se na tlačítko dostane klávesou Tab?
@@ -596,6 +596,8 @@ Rámeček smažu, v tmavém motivu rámečky nejsou potřeba.
 #### --why--
 Rámeček odděluje kartu od pozadí v obou motivech. Problém je v tom, že jeho barva nereaguje na motiv.
 :::
+
+Příště to všechno spojíš v labu: blog, který se přizpůsobí oknu, místu karet a motivu, který si čtenář vybere.
 
 ## Kde to najdeš v MDN
 
