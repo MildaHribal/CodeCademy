@@ -88,7 +88,7 @@ assert.equal(countMatching('abc', () => false), 0, "countMatching('abc', vždy f
 assert.equal(countMatching('', () => true), 0, "countMatching('', vždy true) má vrátit 0");
 ```
 
-`isDigit` pozná číslici.
+`isDigit` pozná každou číslici 0–9, i `0` a `1`, které v konstantě `DIGITS` chybí.
 
 ```js
 assert.equal(isDigit('7'), true, "isDigit('7') má vrátit true");

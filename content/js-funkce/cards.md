@@ -73,21 +73,21 @@ js-funkce/funkce#vychozi-a-zbytkove-parametry
 Co vypíše tenhle kód?
 
 ```js
-function volume(level) {
-  const current = level || 50;
-  return current;
+function stockLabel(count) {
+  const shown = count || 'neznámý počet';
+  return `Skladem: ${shown}`;
 }
 
-console.log(volume(0));
+console.log(stockLabel(0));
 ```
 
 ### --expected--
 
-50
+Skladem: neznámý počet
 
 ### --why--
 
-Myslíš si, že `||` doplní jen chybějící hodnotu? Doplní každou nepravdivou, a `0` nepravdivá je. Uživatel, který si ztlumil zvuk na nulu, dostane hlasitost 50. Oprava: `level = 50` v parametrech nebo `level ?? 50`.
+Myslíš si, že `||` doplní jen chybějící hodnotu? Doplní každou nepravdivou, a `0` nepravdivá je. Vyprodané zboží tak místo nuly ukáže nesmysl. Oprava: `count ?? 'neznámý počet'`, nebo výchozí parametr.
 
 ### --see--
 
@@ -222,31 +222,33 @@ js-funkce/scope-a-hoisting#hoisting-a-temporal-dead-zone-tdz
 Co vypíše tenhle kód?
 
 ```js
-const unit = 'kg';
-
-function show(value) {
-  return `${value} ${unit}`;
+function badgeText(text) {
+  return `${prefix}: ${text}`;
 }
 
-function inGrams() {
-  const unit = 'g';
-  return show(500);
+function saleLabel() {
+  const prefix = 'Akce';
+  return badgeText('sleva 20 %');
 }
 
-console.log(inGrams());
+try {
+  console.log(saleLabel());
+} catch (error) {
+  console.log(error.name);
+}
 ```
 
 ### --expected--
 
-500 kg
+ReferenceError
 
 ### --why--
 
-Myslíš si, že `show` uvidí proměnné funkce, která ji zavolala? Funkce hledá proměnné tam, kde je napsaná — `show` je na nejvyšší úrovni, a tam je `unit = 'kg'`. To je lexikální rozsah.
+Myslíš si, že `badgeText` uvidí `prefix`, protože ji volá `saleLabel`, která ho má? Funkce hledá proměnné tam, kde je napsaná. `badgeText` je na nejvyšší úrovni skriptu a tam žádný `prefix` není: `ReferenceError: prefix is not defined`. Oprava: předat `prefix` parametrem.
 
 ### --see--
 
-js-funkce/scope-a-hoisting#lexikalni-rozsah-a-zasobnik-volani
+js-funkce/scope-a-hoisting#funkce-ceka-promennou-volajiciho
 
 ## --card-- output
 

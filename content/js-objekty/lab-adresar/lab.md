@@ -59,7 +59,7 @@ const book = { k1: eva };
 const ota = { id: 'k2', name: 'Oto Hora', phone: null, email: null, company: 'Pila Hora', tags: [], favorite: false };
 const result = addContact(book, ota);
 assert.deepEqual(Object.keys(result), ['k1', 'k2'], 'addContact({ k1 }, kontakt k2) má vrátit adresář s klíči k1 a k2');
-assert.equal(result.k2, ota, 'addContact má pod klíč k2 uložit předaný kontakt');
+assert.deepEqual(result.k2, ota, 'addContact má pod klíč k2 uložit předaný kontakt');
 assert.deepEqual(Object.keys(book), ['k1'], 'addContact nesmí přidat kontakt do původního adresáře');
 ```
 
@@ -83,7 +83,7 @@ assert.equal(result.k1.id, 'k1', "updateContact nesmí změnit id kontaktu, i kd
 assert.equal(result.k1.name, 'Eva Kolářová', 'updateContact má zachovat ostatní údaje kontaktu');
 assert.equal(eva.phone, null, 'updateContact nesmí změnit původní objekt kontaktu');
 assert.notEqual(result, book, 'updateContact má vrátit nový adresář');
-assert.equal(result.k2, ota, 'updateContact má nezměněné kontakty nechat tytéž');
+assert.deepEqual(result.k2, ota, 'updateContact nemá měnit ostatní kontakty');
 ```
 
 `updateContact` s `id`, které v adresáři není, vrátí tentýž adresář.

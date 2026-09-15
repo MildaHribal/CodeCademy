@@ -1,1 +1,1 @@
-{ "type": "workshop", "title": "Profil uživatele", "summary": "Postavíš editor profilu vývojáře s náhledem pro firmy a tlačítkem Zrušit: úpravy bez mutace, destrukturalizace a oprava dvou kolegových funkcí, které rozbíjely uložená data.", "minutes": 90, "runtime": "js" }
+{ "type": "workshop", "title": "Profil uživatele", "summary": "Postavíš editor profilu vývojáře s náhledem pro firmy a tlačítkem Zrušit: úpravy bez mutace, destrukturalizace a oprava dvou kolegových funkcí, které rozbíjely uložená data.", "minutes": 85, "runtime": "js" }

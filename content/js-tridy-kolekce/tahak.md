@@ -75,7 +75,7 @@ class Chapter extends Recording {
   }
 }
 
-// počítání a seskupení do Map
+// počítání do Map
 const counts = new Map();
 for (const word of words) {
   counts.set(word, (counts.get(word) ?? 0) + 1);

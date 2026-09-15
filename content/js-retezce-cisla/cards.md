@@ -477,11 +477,11 @@ js-retezce-cisla/intl-a-datum#rozdil-dnu-a-letni-cas
 
 ## --card-- free
 
-Proč `0.1 + 0.2 !== 0.3` a jak se v JavaScriptu bezpečně počítá s penězi?
+Kolega tvrdí, že „JavaScript neumí počítat“, protože součet košíku vyšel o haléř vedle. Co se doopravdy stalo a jak se v JavaScriptu bezpečně počítá s penězi?
 
 ### --back--
 
-Čísla se ukládají ve dvojkové soustavě jako plovoucí řádová čárka a desetiny v ní nemají přesný zápis, stejně jako třetina v desítkové. `0.1` i `0.2` jsou uložené přibližně a součet vyjde `0.30000000000000004`. Celá čísla jsou ale přesná, proto se částky drží v haléřích nebo centech a počítá se s celými čísly. Převod z korun dělám přes `Math.round(koruny * 100)`, zaokrouhluju na jednom místě a na koruny převádím až při výpisu, třeba přes `Intl.NumberFormat`.
+Čísla se ukládají ve dvojkové soustavě jako plovoucí řádová čárka a desetiny v ní nemají přesný zápis, stejně jako třetina v desítkové. Třeba `49.9` je uložené o kousek menší, `49.9 * 3 * 100` vyjde `14969.999999999998` a zaokrouhlení dolů ubere haléř. Stejně počítá každý jazyk s touhle normou, nejde o chybu JavaScriptu. Celá čísla jsou ale přesná, proto se částky drží v haléřích nebo centech a počítá se s celými čísly. Převod z korun dělám přes `Math.round(koruny * 100)`, zaokrouhluju na jednom místě a na koruny převádím až při výpisu, třeba přes `Intl.NumberFormat`.
 
 ### --see--
 
@@ -501,11 +501,11 @@ js-retezce-cisla/cisla#z-textu-na-cislo-number-parseint-parsefloat
 
 ## --card-- free
 
-Proč `'👍🏽'.length` vrátí 4 a jak spočítáš znaky tak, jak je vidí uživatel?
+Uživatel napíše přezdívku `Iva👋🏻` a formulář, který hlídá limit přes `length`, mu napočítá 7 znaků, i když vidí čtyři. Proč, a jak spočítáš znaky tak, jak je vidí?
 
 ### --back--
 
-JavaScript ukládá řetězce po 16bitových kódových jednotkách a `length` počítá právě je. Emoji palce zabírá dvě jednotky a odstín pleti je samostatný znak s dalšími dvěma. `[...text].length` nebo `for…of` počítají celé znaky Unicode, tedy dva. To, co člověk vidí jako jeden znak, je grafém a spočítá ho `Intl.Segmenter` s `granularity: 'grapheme'` — ten patří do počítadla znaků ve formuláři.
+JavaScript ukládá řetězce po 16bitových kódových jednotkách a `length` počítá právě je. Emoji mávající ruky zabírá dvě jednotky a odstín pleti je samostatný znak s dalšími dvěma. `[...text].length` nebo `for…of` počítají celé znaky Unicode, u přezdívky tedy pět. To, co člověk vidí jako jeden znak, je grafém a spočítá ho `Intl.Segmenter` s `granularity: 'grapheme'` — ten patří do počítadla znaků ve formuláři.
 
 ### --see--
 

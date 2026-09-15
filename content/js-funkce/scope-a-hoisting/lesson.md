@@ -542,41 +542,41 @@ Zkus do ukázky jako úplně první řádek napsat `'use strict';` a sleduj, jak
 založení proměnné stane chyba.
 
 :::check
-Kolegova funkce počítá cenu vstupenky a pro studenty padá s `ReferenceError: Cannot access 'price' before initialization`. Co je špatně?
+Kolegova funkce počítá cenu dopravy a u expresního doručení padá s `ReferenceError: Cannot access 'fee' before initialization`. Co je špatně?
 
 ```js
-function ticketPrice(age, isStudent) {
-  if (isStudent) {
-    return price * 0.7;
+function deliveryFee(weight, isExpress) {
+  if (isExpress) {
+    return fee + 89;
   }
-  const price = age < 15 ? 110 : 220;
-  return price;
+  const fee = weight > 5 ? 129 : 79;
+  return fee;
 }
 ```
 
 ### --answer--
 
-`price` je `const`, a proto se s ní nedá násobit.
+`fee` je `const`, a proto se k ní nedá nic přičíst.
 
 #### --why--
 
-S `const` se počítat dá, jen do ní nejde znovu přiřadit. Hláška mluví o něčem jiném — kdy se `price` čte.
+`fee + 89` do `fee` nic nepřiřazuje, jen spočítá nové číslo, a to s `const` jde. Hláška mluví o něčem jiném — kdy se `fee` čte.
 
 ### --correct--
 
-Větev pro studenty čte `price` ještě v TDZ, nad řádkem její deklarace.
+Větev pro expres čte `fee` ještě v TDZ, nad řádkem její deklarace.
 
 #### --why--
 
-`const price` existuje od začátku těla funkce, ale číst ji jde až od řádku deklarace. Oprava: řádek `const price = …` přesunout nad `if`.
+`const fee` existuje od začátku těla funkce, ale číst ji jde až od řádku deklarace. Oprava: řádek `const fee = …` přesunout nad `if`.
 
 ### --answer--
 
-`price` je deklarovaná v bloku `if`, takže venku není vidět.
+`fee` je deklarovaná v bloku `if`, takže venku není vidět.
 
 #### --why--
 
-Deklarace `price` je v těle funkce, ne v bloku `if`. Blok ji jen čte — příliš brzy.
+Deklarace `fee` je v těle funkce, ne v bloku `if`. Blok ji jen čte — příliš brzy.
 
 ### --see--
 

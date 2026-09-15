@@ -30,7 +30,7 @@ Přesné požadavky jsou v seznamu kontrol. Každá funkce před kontrolou oří
 ```js
 assert.equal(isValidZip('60200'), true, "isValidZip('60200') má vrátit true");
 assert.equal(isValidZip('602 00'), true, "isValidZip('602 00') má vrátit true");
-assert.equal(isValidZip('  110 00 '), true, "isValidZip('  110 00 ') má vrátit true — mezery na krajích se ořízne");
+assert.equal(isValidZip('  110 00 '), true, "isValidZip('  110 00 ') má vrátit true — mezery na krajích se oříznou");
 ```
 
 `isValidZip(text)` vrátí `false` pro jiný počet číslic, mezeru na špatném místě, víc mezer nebo jiné znaky.

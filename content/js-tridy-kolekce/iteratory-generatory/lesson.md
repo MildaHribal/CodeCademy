@@ -515,7 +515,7 @@ js-tridy-kolekce/iteratory-generatory#generatory-function-a-yield
 
 ## --question--
 
-Kolega volá v cyklu `if (visitedIds.includes(id))` nad polem `visitedIds` a chce místo toho iterátor `visitedSet.values()`, „protože je rychlejší". Co je na tom špatně?
+Kolega má v cyklu přes tisíce objednávek podmínku `visitedIds.includes(id)` nad polem a chce ji zrychlit. Před cyklem si jednou uloží `const visited = visitedSet.values();` a v každém kole prochází `visited` přes `for…of` a hledá v něm `id`. Co je na tom špatně?
 
 ### --answer--
 
@@ -523,23 +523,23 @@ Nic, průchod iterátorem je vždycky rychlejší než průchod polem.
 
 #### --why--
 
-Iterátor vydává hodnoty po jedné přes `next()`. Hledání v něm je pořád průchod hodnotu po hodnotě, jen bez možnosti projít ho podruhé.
+Myslíš si, že iterátor hledá nějak chytřeji? Vydává hodnoty po jedné přes `next()`, takže hledání v něm je pořád průchod hodnotu po hodnotě.
 
 ### --correct--
 
-Iterátor se vyčerpá a nemá rychlé vyhledávání. Rychlé je `visitedSet.has(id)` přímo na množině.
+Iterátor se v prvním kole vyčerpá, v dalších kolech už nic nenajde. Rychlé hledání dává `visitedSet.has(id)` přímo na množině.
 
 #### --why--
 
-Iterátor jde projít jen jednou a hledání v něm je průchod po jedné hodnotě. Rychlé „je tam?" dává `has` na `Set`.
+`visited` je jeden iterátor a po prvním `for…of` vrací jen `done: true`. Množina sama iterátor není, `has` se ptá jí a funguje pokaždé.
 
 ### --answer--
 
-Iterátor nejde vytvořit z `Set`, jen z pole.
+Z `Set` iterátor vytvořit nejde, jen z pole.
 
 #### --why--
 
-`Set` iterátor vytvořit umí (`values()`, `keys()`, `entries()`). Problém je v tom, k čemu se iterátor hodí.
+`Set` iterátor vytvořit umí (`values()`, `keys()`, `entries()`). Problém je v tom, co se s jedním iterátorem stane po prvním průchodu.
 
 ### --see--
 

@@ -114,6 +114,7 @@ Značka za znakem nebo třídou, která říká, kolikrát se smí opakovat: `+`
 ## --term-- kotva regulárního výrazu
 
 en: anchor
+mdn: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Assertions
 lekce: js-retezce-cisla/regularni-vyrazy#kotvy-a-cely-text-ne-kousek
 
 Značka, která nepopisuje znak, ale místo v textu: `^` začátek, `$` konec. Bez kotev výraz hledá shodu kdekoli uvnitř textu.

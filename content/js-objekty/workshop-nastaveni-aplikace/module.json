@@ -1,1 +1,1 @@
-{ "type": "workshop", "title": "Nastavení aplikace", "summary": "Postavíš panel nastavení přehrávače podcastů, který přežije obnovení stránky: sloučení s výchozími hodnotami, JSON, koncept se Zrušit, migrace starého formátu a datum, které se nerozbije.", "minutes": 100, "runtime": "js" }
+{ "type": "workshop", "title": "Nastavení aplikace", "summary": "Postavíš panel nastavení přehrávače podcastů, který přežije obnovení stránky: sloučení s výchozími hodnotami, JSON, koncept se Zrušit, migrace starého formátu a datum, které se nerozbije.", "minutes": 85, "runtime": "js" }

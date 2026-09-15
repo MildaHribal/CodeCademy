@@ -107,6 +107,36 @@ js-tridy-kolekce/tridy#dedicnost-extends-a-super
 Co vypíše tenhle kód?
 
 ```js
+class Order {
+  static created = 0;
+
+  constructor() {
+    Order.created += 1;
+  }
+}
+
+new Order();
+const last = new Order();
+console.log(Order.created, last.created);
+```
+
+### --expected--
+
+2 undefined
+
+### --why--
+
+Myslíš si, že `static` pole dostane každá objednávka? Patří třídě jako celku: obě `new` zvyšovala jedno počítadlo `Order.created`. Instance statické členy nemá, proto `last.created` je `undefined`.
+
+### --see--
+
+js-tridy-kolekce/tridy#staticke-cleny-static
+
+## --card-- output
+
+Co vypíše tenhle kód?
+
+```js
 const stock = new Map([['káva', 3]]);
 stock.set('káva', 5);
 
@@ -311,6 +341,58 @@ class Stopwatch {
 ### --see--
 
 js-tridy-kolekce/tridy#soukroma-pole
+
+## --card-- code js
+
+Doplň do třídy `Speaker` setter `volume`, který uloží hlasitost do soukromého pole `#volume`. Hodnota mimo rozsah 0–100 vyhodí `RangeError` a hlasitost nezmění. Getter už třída má.
+
+### --seed--
+
+```js
+class Speaker {
+  #volume = 30;
+
+  get volume() {
+    return this.#volume;
+  }
+}
+```
+
+### --test--
+
+```js
+const speaker = new Speaker();
+speaker.volume = 75;
+assert.equal(speaker.volume, 75, 'po speaker.volume = 75 má getter vrátit 75');
+assert.throws(() => { speaker.volume = 120; }, { name: 'RangeError' }, 'speaker.volume = 120 má vyhodit RangeError');
+assert.throws(() => { speaker.volume = -5; }, { name: 'RangeError' }, 'speaker.volume = -5 má vyhodit RangeError');
+assert.equal(speaker.volume, 75, 'odmítnutá hlasitost nesmí změnit uložených 75');
+speaker.volume = 0;
+assert.equal(speaker.volume, 0, 'hlasitost 0 je v rozsahu a má se uložit');
+```
+
+### --solution--
+
+```js
+class Speaker {
+  #volume = 30;
+
+  get volume() {
+    return this.#volume;
+  }
+
+  set volume(value) {
+    if (value < 0 || value > 100) {
+      throw new RangeError('Hlasitost musí být 0–100');
+    }
+    this.#volume = value;
+  }
+}
+```
+
+### --see--
+
+js-tridy-kolekce/tridy#gettery-a-settery
 
 ## --card-- code js
 

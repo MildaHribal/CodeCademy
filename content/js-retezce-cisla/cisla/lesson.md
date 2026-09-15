@@ -4,7 +4,7 @@
 Co vypíše tenhle řádek? Tipni si, i když si nejsi jistý.
 
 ```js
-console.log(0.1 + 0.2 === 0.3);
+console.log(1.1 + 2.2 === 3.3);
 ```
 
 ### --expected--
@@ -13,7 +13,7 @@ false
 
 ### --why--
 
-`0.1 + 0.2` vyjde v JavaScriptu `0.30000000000000004`. Proč počítač neumí sečíst dvě desetiny, vysvětlí hned první část.
+`1.1 + 2.2` vyjde v JavaScriptu `3.3000000000000003`. Proč počítač neumí přesně sečíst dvě čísla s desetinami, vysvětlí hned první část.
 :::
 
 :::check pretest
@@ -243,7 +243,7 @@ console.log(label + 5);
 ```
 --question-- Co vypíše `console.log(label + 5)`?
 --expected-- 10.505
---why-- `toFixed(2)` vrátil řetězec `'10.50'` a `+` s řetězcem spojuje text, nesčítá. Vznikne `'10.505'`. Se stejnou pastí `'120' + 30` ses potkal už v kalkulačce spropitného.
+--why-- `toFixed(2)` vrátil řetězec `'10.50'` a `+` s řetězcem spojuje text, nesčítá. Vznikne `'10.505'`. Stejnou past, text sečtený s číslem, znáš z kalkulačky spropitného.
 :::
 
 Druhá past je zaokrouhlení. `toFixed` zaokrouhluje skutečnou uloženou hodnotu, a ta je u čísel jako `1.005` o kousek menší, než vypadá: `(1.005).toFixed(2)` vrátí `'1.00'`. Zkus v ukázce výše změnit `price` na `1.005` a `label + 5` na `label`.
@@ -469,7 +469,6 @@ Math.floor(Math.random() * 10) + 1
 
 1 + Math.floor(Math.random() * 10)
 Math.trunc(Math.random() * 10) + 1
-Math.ceil(Math.random() * 10)
 
 ### --why--
 

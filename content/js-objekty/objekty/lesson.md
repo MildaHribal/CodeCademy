@@ -62,7 +62,7 @@ const stock = { kofola: 120, tatranka: 0, horalky: 35 };
 
 #### --why--
 
-`size` má `Map` a `Set`, ne obyčejný objekt. Jak se počítají klíče objektu, ukáže poslední část lekce.
+`size` obyčejný objekt nemá, `stock.size` vrátí `undefined`. Jak se počítají klíče objektu, ukáže poslední část lekce.
 :::
 
 Profil na sociální síti, produkt v e-shopu, hráč na herním serveru, odpověď z API — každý takový záznam je v JavaScriptu objekt. Kdo umí s objekty, umí číst skoro jakákoli data, která web dostane.

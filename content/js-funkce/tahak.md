@@ -62,7 +62,11 @@ function describeConversion(text, conversion) {
   if (Number.isNaN(amount)) {
     return 'Zadej číslo';
   }
-  return `${formatNumber(amount, 1)} → ${formatResult(convert(amount, conversion), targetUnit(conversion))}`;
+  const result = convert(amount, conversion);
+  if (result === null) {
+    return 'Neznámý převod';
+  }
+  return `${formatNumber(amount, 1)} → ${formatResult(result, targetUnit(conversion))}`;
 }
 
 // čistý výpočet × vedlejší efekt
