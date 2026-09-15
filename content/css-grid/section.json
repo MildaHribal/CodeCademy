@@ -1,10 +1,70 @@
 {
   "title": "CSS Grid",
-  "intro": "Grid rozvrhuje stránku **ve dvou osách najednou** — v řádcích i sloupcích. Postavíš s ním kostru aplikace, mřížku produktů, galerii i dashboard.",
+  "intro": "Grid rozvrhuje stránku **ve dvou osách najednou** — v řádcích i sloupcích. Postavíš s ním kostru aplikace, mřížku produktů, galerii i dashboard.\n\nV sekci pochopíš, jak grid počítá šířky sloupců a kam skládá položky, postavíš kostru aplikace na podcasty s přehrávačem u dna a e-shop s plakáty, jehož mřížka se přizpůsobí šířce bez media dotazů, naučíš se rozhodnout mezi gridem a flexboxem a nakonec sám rozvrhneš přehled domácí elektrárny.\n\nPředpoklad: znáš flexbox — hlavní a vedlejší osu, `flex-wrap`, `min-width: 0` a media dotazy s `max-width`.",
   "modules": [
     "uvod-do-gridu",
     "workshop-kostra-stranky",
     "mrizka-bez-media-queries",
-    "workshop-galerie"
+    "workshop-galerie",
+    "grid-nebo-flex",
+    "lab-dashboard",
+    "kviz"
+  ],
+  "outcomes": [
+    {
+      "text": "Spočítáš na papíře šířky sloupců ze šablony s `fr`, pevnými stopami a `gap` a řekneš, kam spadne položka bez umístění.",
+      "links": [
+        "css-grid/uvod-do-gridu#grid-kontejner-stopy-a-jednotka-fr",
+        "css-grid/uvod-do-gridu#explicitni-a-implicitni-mrizka",
+        "css-grid/uvod-do-gridu#umisteni-podle-car-grid-column-grid-row-a-span"
+      ]
+    },
+    {
+      "text": "Postavíš dvourozměrnou kostru stránky s pojmenovanými oblastmi a na telefonu ji v media dotazu nakreslíš znovu bez změny HTML.",
+      "links": [
+        "css-grid/uvod-do-gridu#pojmenovane-oblasti-grid-template-areas",
+        "css-grid/workshop-kostra-stranky/003",
+        "css-grid/workshop-kostra-stranky/011"
+      ]
+    },
+    {
+      "text": "Napíšeš mřížku karet, která se přizpůsobí šířce bez media dotazů a nepřeteče na telefonu, a vybereš mezi `auto-fill` a `auto-fit`.",
+      "links": [
+        "css-grid/mrizka-bez-media-queries#jak-prohlizec-spocita-pocet-sloupcu",
+        "css-grid/mrizka-bez-media-queries#auto-fill-nebo-auto-fit",
+        "css-grid/workshop-galerie/004"
+      ]
+    },
+    {
+      "text": "Zarovnáš nadpisy, popisy a ceny napříč sousedními kartami přes subgrid.",
+      "links": [
+        "css-grid/mrizka-bez-media-queries#karty-zarovnane-napric-subgrid",
+        "css-grid/workshop-galerie/011",
+        "css-grid/workshop-galerie/012"
+      ]
+    },
+    {
+      "text": "Vysvětlíš, proč se sloupec `1fr` s tabulkou nebo kódem nechce zmenšit, a opravíš to `minmax(0, 1fr)`.",
+      "links": [
+        "css-grid/uvod-do-gridu#typicke-chyby-a-pasti",
+        "css-grid/workshop-kostra-stranky/010"
+      ]
+    },
+    {
+      "text": "Pro konkrétní rozvržení (kostra, mřížka, lišta, štítky, stránka s patičkou) rozhodneš mezi gridem a flexboxem a zdůvodníš proč.",
+      "links": [
+        "css-grid/grid-nebo-flex#obsah-zevnitr-rozvrzeni-zvenku",
+        "css-grid/grid-nebo-flex#grid-a-flexbox-dohromady",
+        "css-grid/lab-dashboard"
+      ]
+    },
+    {
+      "text": "Najdeš a opravíš chybu v cizím gridovém CSS podle příznaku: sloupec navíc, přetečení na telefonu, neplatnou šablonu.",
+      "links": [
+        "css-grid/workshop-kostra-stranky/015",
+        "css-grid/workshop-galerie/007",
+        "css-grid/kviz"
+      ]
+    }
   ]
 }

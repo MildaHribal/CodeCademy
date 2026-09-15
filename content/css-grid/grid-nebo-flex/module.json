@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Grid, nebo flexbox?", "summary": "Obsah zevnitř, nebo rozvržení zvenku: čtyři vzory, které potkáš na každém webu (stack, cluster, sidebar, pancake), a jak mezi gridem a flexboxem rozhodnout.", "minutes": 35, "runtime": "dom" }

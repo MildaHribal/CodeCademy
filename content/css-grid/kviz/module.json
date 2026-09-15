@@ -1,0 +1,1 @@
+{ "type": "quiz", "title": "Kvíz: CSS Grid", "summary": "Počítání sloupců, kam spadne položka, auto-fill proti auto-fit, sloupec, který se nechce zmenšit, grid nebo flexbox — i v cizím kódu.", "minutes": 30, "runtime": "dom" }

@@ -83,7 +83,7 @@ body { font-family: system-ui, sans-serif; margin: 1rem; }
 ```
 :::
 
-Nech `repeat(3, 1fr)` a posuvníkem kontejner zužuj: sloupce jsou pořád tři a na 200 px se jména receptů lámou. Pak přepni na `auto-fill` a posuvník projeď znovu — sloupců ubývá a přibývá tak, aby žádný nebyl užší než `8rem`.
+Nech `repeat(3, 1fr)` a posuvníkem kontejner zužuj: sloupce zůstávají tři, ale přestávají být stejně široké — na 350 px si sloupec s „Bramboráky" vezme 122 px, protože `1fr` se nezmenší pod nejdelší slovo v něm. Na 300 px mřížka z čárkovaného rámečku vyleze. Pak přepni na `auto-fill` a posuvník projeď znovu: sloupců ubývá a přibývá tak, aby žádný nebyl užší než `8rem`, a mřížka zůstane v rámečku.
 
 > [!REMEMBER]
 > **`repeat(auto-fill, minmax(8rem, 1fr))` znamená: vytvoř tolik sloupců, kolik se jich vejde při šířce aspoň `8rem`, a místo, které zbude, mezi ně rozděl.** Minimum řídí počet sloupců, `1fr` jejich skutečnou šířku.
@@ -309,50 +309,7 @@ Kontejner je široký 250 px a má `repeat(auto-fill, minmax(min(18rem, 100%), 1
 
 Doporučená karta nebo fotka na šířku může v automatické mřížce dostat `grid-column: span 2`. [[automatické umísťování|Automatické umísťování]] ale jde po buňkách jen dopředu: když se široká položka do zbytku řádku nevejde, přeskočí na další řádek a za ní zůstane díra.
 
-`grid-auto-flow: dense` řekne mřížce, ať se pro každou další položku vrátí a zkusí nejdřív zaplnit díry výš. Přepínač mění `grid-auto-flow`:
-
-:::live
-```html
-<ul class="photos">
-  <li>1</li>
-  <li class="wide">2 na šířku</li>
-  <li class="wide">3 na šířku</li>
-  <li class="wide">4 na šířku</li>
-  <li>5</li>
-  <li>6</li>
-</ul>
-```
-```css
-body { font-family: system-ui, sans-serif; margin: 1rem; }
-
-.photos {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(6rem, 1fr));
-  grid-auto-flow: var(--flow);
-  gap: 8px;
-  width: 20rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  outline: 2px dashed #94a3b8;
-}
-
-.photos li {
-  padding: 1.25rem 0.5rem;
-  border-radius: 0.5rem;
-  background: linear-gradient(135deg, #0ea5e9, #6366f1);
-  color: white;
-  font-weight: 700;
-}
-
-.photos .wide {
-  grid-column: span 2;
-}
-```
-```controls
---flow: toggle(row, row dense) = row | grid-auto-flow
-```
-:::
+`grid-auto-flow: dense` řekne mřížce, ať se pro každou další položku vrátí a zkusí nejdřív zaplnit díry výš. Nejdřív si tipni, co to udělá:
 
 :::live predict
 ```html
@@ -396,6 +353,51 @@ body { font-family: system-ui, sans-serif; margin: 1rem; }
 --option-- Do prvního řádku před fotku 2, protože je užší.
 --why-- Fotka 3 se nevejde vedle fotky 2, a tak začne druhý řádek a vpravo od ní zbude jedna buňka. Fotka 4 je taky široká, do té buňky se nevejde a jde do třetího řádku. S `dense` se fotka 5 vrátí do první volné buňky, do které se vejde — do díry vedle trojky. Bez `dense` by šla až za čtyřku. Buňky v prvním řádku jsou obsazené, před dvojku se tedy nedostane.
 --see-- css-grid/mrizka-bez-media-queries#polozky-pres-vic-sloupcu-a-dense
+:::
+
+Přepínač teď mění `grid-auto-flow` na živé mřížce. Zkus přepnout na `row dense` a sleduj, kam se posune pětka a šestka:
+
+:::live
+```html
+<ul class="photos">
+  <li>1</li>
+  <li class="wide">2 na šířku</li>
+  <li class="wide">3 na šířku</li>
+  <li class="wide">4 na šířku</li>
+  <li>5</li>
+  <li>6</li>
+</ul>
+```
+```css
+body { font-family: system-ui, sans-serif; margin: 1rem; }
+
+.photos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(6rem, 1fr));
+  grid-auto-flow: var(--flow);
+  gap: 8px;
+  width: 20rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  outline: 2px dashed #94a3b8;
+}
+
+.photos li {
+  padding: 1.25rem 0.5rem;
+  border-radius: 0.5rem;
+  background: linear-gradient(135deg, #0ea5e9, #6366f1);
+  color: white;
+  font-weight: 700;
+}
+
+.photos .wide {
+  grid-column: span 2;
+}
+```
+```controls
+--flow: toggle(row, row dense) = row | grid-auto-flow
+```
 :::
 
 > [!PITFALL] `dense` přehází pořadí pro klávesnici

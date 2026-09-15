@@ -487,7 +487,7 @@ Prohlížeč neplatnou šablonu neopravuje po kouscích. Neplatná deklarace se 
 
 ## Zarovnání v buňce
 
-Položka ve výchozím stavu vyplní celou svou buňku: `justify-items` i `align-items` mají hodnotu `stretch`. Na rozdíl od flexboxu se v gridu osy neotáčejí:
+Položka ve výchozím stavu vyplní celou svou buňku: `justify-items` i `align-items` se u ní chovají jako `stretch`. Na rozdíl od flexboxu se v gridu osy neotáčejí:
 
 - `justify-items` zarovnává v řádkovém směru (*inline*), v češtině **vodorovně**,
 - `align-items` zarovnává v blokovém směru (*block*), tedy **svisle**,
