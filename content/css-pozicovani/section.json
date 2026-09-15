@@ -1,11 +1,75 @@
 {
   "title": "Pozicování a vrstvení",
-  "intro": "x",
+  "intro": "Pozicování je to, čím se z „textu na stránce“ stane aplikace: přilepená hlavička, štítek přes roh fotky, plovoucí tlačítko, rozbalovací nabídka u avataru, panel s detailem přes půl obrazovky.\n\nV sekci se naučíš vybrat hodnotu `position` a najít [[obsahující blok]], od kterého se prvek měří. Pochopíš, proč `z-index: 9999` někdy nepomůže vůbec, a naučíš se to spolehlivě opravit. Rozchodíš `sticky` a poznáš tři věci, které ho rozbíjejí. Nakonec postavíš nabídky a tooltipy tak, jak se to dělá dnes — nativně přes atribut `popover` a ukotvení, bez jediného řádku JavaScriptu a bez knihovny, která polohu počítá za tebe.\n\nPředpoklad: znáš box model, flexbox a grid. Sekci uzavírá galerie fotosoutěže, kterou rozvrhneš sám od začátku.",
   "modules": [
     "position",
     "workshop-lepici-lista",
     "stacking-context",
     "workshop-nastenka-ukolu",
-    "top-layer-a-kotveni"
+    "top-layer-a-kotveni",
+    "workshop-rozbalovacka",
+    "lab-modalni-okno",
+    "kviz"
+  ],
+  "outcomes": [
+    {
+      "text": "Vybereš hodnotu `position` podle toho, jestli má prvek zabírat místo v toku a vůči čemu se má měřit.",
+      "links": [
+        "css-pozicovani/position#absolute-a-obsahujici-blok",
+        "css-pozicovani/position#fixed-prispendlene-k-oknu",
+        "css-pozicovani/workshop-lepici-lista"
+      ]
+    },
+    {
+      "text": "Najdeš obsahující blok absolutně i `fixed` pozicovaného prvku a spočítáš z něj šířku prvku s `inset`.",
+      "links": [
+        "css-pozicovani/position#absolute-a-obsahujici-blok",
+        "css-pozicovani/position#inset-roztazeni-a-velikost"
+      ]
+    },
+    {
+      "text": "Rozchodíš `position: sticky` a u prvku, který se nelepí, najdeš příčinu mezi třemi podmínkami.",
+      "links": [
+        "css-pozicovani/position#sticky-lepi-se-dokud-muze",
+        "css-pozicovani/workshop-lepici-lista/008"
+      ]
+    },
+    {
+      "text": "Vysvětlíš, proč `z-index: 9999` nepomáhá, najdeš předka, který zakládá stacking context, a opravíš to.",
+      "links": [
+        "css-pozicovani/stacking-context#co-zaklada-stacking-context",
+        "css-pozicovani/stacking-context#proc-se-prvek-nedostane-nad-sourozence-rodice",
+        "css-pozicovani/workshop-nastenka-ukolu/005"
+      ]
+    },
+    {
+      "text": "Udržíš vrstvy stránky ve škále pojmenovaných hodnot a uzavřeš komponentu přes `isolation: isolate`.",
+      "links": [
+        "css-pozicovani/stacking-context#skala-z-index-v-tokenech",
+        "css-pozicovani/stacking-context#isolation-isolate-kontext-naschval"
+      ]
+    },
+    {
+      "text": "Postavíš rozbalovací nabídku, tooltip i oznámení přes `popover` a `popovertarget`, bez JavaScriptu.",
+      "links": [
+        "css-pozicovani/top-layer-a-kotveni#atribut-popover-a-tlacitko-popovertarget",
+        "css-pozicovani/top-layer-a-kotveni#auto-a-manual",
+        "css-pozicovani/workshop-rozbalovacka/002"
+      ]
+    },
+    {
+      "text": "Ukotvíš prvek k tlačítku přes `anchor-name`, `position-anchor` a `position-area` a zařídíš, aby u okraje okna nevyjel ven.",
+      "links": [
+        "css-pozicovani/top-layer-a-kotveni#ukotveni-anchor-name-position-anchor-a-position-area",
+        "css-pozicovani/top-layer-a-kotveni#zalozni-polohy-position-try-fallbacks",
+        "css-pozicovani/workshop-rozbalovacka/010"
+      ]
+    },
+    {
+      "text": "Rozvrhneš bez nápovědy galerii se štítky přes fotky, přilepenou lištou filtrů a náhledem v popoveru.",
+      "links": [
+        "css-pozicovani/lab-modalni-okno"
+      ]
+    }
   ]
 }

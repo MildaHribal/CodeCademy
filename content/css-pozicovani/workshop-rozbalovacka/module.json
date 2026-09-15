@@ -1,0 +1,1 @@
+{ "type": "workshop", "title": "Nabídka u avataru a tooltipy", "summary": "Postavíš horní lištu a seznam epizod podcastové aplikace s nabídkou účtu, tooltipy, nabídkami u epizod, výběrem rychlosti a oznámením — bez JavaScriptu, přes popover a ukotvení.", "minutes": 60, "runtime": "dom" }

@@ -125,7 +125,7 @@ Spodní karta žádný `z-index` nemá a nikdo jí ho nedal. Rozhodlo pořadí v
 
 ## Pořadí vykreslení
 
-Než přijde stacking context, musíš vědět, v jakém pořadí prohlížeč kreslí prvky, **když nikdo nemá `z-index`**. Uvnitř jednoho kontextu maluje odspodu nahoru:
+Než přijde stacking context, musíš vědět, v jakém pořadí prohlížeč kreslí prvky, když nikdo nemá `z-index` — takzvané [[pořadí vykreslení]] (*painting order*). Uvnitř jednoho kontextu maluje odspodu nahoru:
 
 1. pozadí a rámeček prvku, který kontext založil,
 2. potomky se **záporným** `z-index`,
@@ -275,7 +275,7 @@ Jakákoli průhlednost menší než 1 z karty udělá stacking context, i když 
 
 ## Proč se prvek nedostane nad sourozence rodiče
 
-Představ si stacking contexty jako kapitoly knihy a `z-index` jako číslo stránky uvnitř kapitoly. Stránka 900 v kapitole 1 je pořád před stránkou 1 v kapitole 2. Pořadí kapitol se rozhodne úplně bez ohledu na čísla stránek v nich.
+Představ si stacking contexty jako kapitoly knihy a `z-index` jako číslo stránky uvnitř kapitoly. Stránka 900 v ==kapitole 1== je pořád před stránkou 1 v ==kapitole 2==. Pořadí kapitol se rozhodne úplně bez ohledu na čísla stránek v nich.
 
 :::live predict
 ```html

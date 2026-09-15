@@ -1,0 +1,1 @@
+{ "type": "quiz", "title": "Kvíz: pozicování a vrstvení", "summary": "Obsahující blok, stacking context, proč se sticky nelepí, popover a ukotvení — i v cizím kódu stránky obchodu.", "minutes": 30, "runtime": "dom" }

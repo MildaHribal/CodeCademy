@@ -59,7 +59,6 @@ body { margin: 1.5rem; font-family: system-ui, sans-serif; background: #eef2f7; 
 }
 
 .menu {
-  margin: 0;
   padding: 0.5rem 0.75rem;
   border: 0;
   border-radius: 0.5rem;
@@ -90,7 +89,7 @@ document.querySelector('#menu').showPopover();
 ```
 :::
 
-Absolutní nabídka je uříznutá spodní hranou karty. Popover je celý, jen leží uprostřed okna — k tomu, jak ho posadit vedle tlačítka, se dostaneš v části o ukotvení. (Řádek v JavaScriptu tu jen otevře popover bez kliknutí, v praxi ho nepotřebuješ.)
+Absolutní nabídka je uříznutá spodní hranou karty. Popover je celý, protože se otevřený vykreslí v [[top layer]], zvláštní vrstvě nad celou stránkou. Jen leží uprostřed okna — k tomu, jak ho posadit vedle tlačítka, se dostaneš v části o ukotvení. (Řádek v JavaScriptu tu jen otevře popover bez kliknutí, v praxi ho nepotřebuješ.)
 
 > [!REMEMBER]
 > **Otevřený popover nebo modální `<dialog>` se vykreslí v top layer — nad celou stránkou, mimo všechny stacking contexty, `overflow` i `z-index`. Ukotvení mu pak řekne, u kterého prvku a na které straně má ležet.**
@@ -287,9 +286,9 @@ Panel košíku je popover s třídou `.cart`. Napiš selektor, který ztmaví st
 
 ## `<dialog>` pro modální okna
 
-Popover **není modální**: stránka pod ním zůstává aktivní, jde klikat i tabovat dál. Na nabídky, tooltipy a výběry to je přesně správně. Pro okno, které musí uživatel vyřídit, než bude pokračovat (potvrzení smazání, přihlášení, košík před platbou), je prvek `<dialog>` otevřený jako modální.
+Popover **není modální**: stránka pod ním zůstává ==aktivní==, jde klikat i tabovat dál. Na nabídky, tooltipy a výběry to je přesně správně. Pro okno, které musí uživatel vyřídit, než bude pokračovat (potvrzení smazání, přihlášení, košík před platbou), je prvek `<dialog>` otevřený jako modální.
 
-Modální dialog se taky vykreslí v top layer a navíc: přesune fokus dovnitř, zbytek stránky udělá neaktivní (nejde na něj kliknout ani se na něj dostat klávesou Tab) a zavře se klávesou Esc. Otevřít ho jde bez JavaScriptu tlačítkem s atributy `commandfor` a `command`:
+Modální dialog se taky vykreslí v top layer a navíc: přesune fokus dovnitř, zbytek stránky udělá ==neaktivní== (nejde na něj kliknout ani se na něj dostat klávesou Tab) a zavře se klávesou Esc. Otevřít ho jde bez JavaScriptu tlačítkem s atributy `commandfor` a `command`:
 
 ```html
 <button commandfor="delete-dialog" command="show-modal">Smazat projekt</button>
@@ -300,7 +299,7 @@ Modální dialog se taky vykreslí v top layer a navíc: přesune fokus dovnitř
 </dialog>
 ```
 
-Z JavaScriptu otevřeš dialog metodou `showModal()`, k tomu se dostaneš v sekci js-dom.
+Atributy `commandfor` a `command` jsou nové — ve všech hlavních prohlížečích jsou od konce roku 2025. Z JavaScriptu otevřeš dialog metodou `showModal()`, k tomu se dostaneš v sekci js-dom.
 
 | | `popover` | modální `<dialog>` |
 |---|---|---|
@@ -555,23 +554,39 @@ Tam by skončil absolutně pozicovaný prvek bez pozicovaného předka. Popover 
 >
 > *Oprava:* když má kotvu se stejným jménem víc prvků, vyhraje poslední v HTML. Každá dvojice potřebuje vlastní jméno — třeba přes custom property v atributu `style`: `<li style="--anchor: --card-7">` a v CSS `anchor-name: var(--anchor)` i `position-anchor: var(--anchor)`.
 
+Druhá past se týká kotvy, která je sama absolutně pozicovaná — třeba tlačítko „⋯" přišpendlené do rohu karty:
+
 :::live predict
 ```html
-<div class="toolbar">
-  <span class="tip">Tučné písmo</span>
-  <button class="tool">B</button>
-</div>
+<article class="invoice">
+  <span class="tip">Další akce</span>
+  <button class="more" aria-label="Akce u faktury">⋯</button>
+  <h3>Faktura 2026-091</h3>
+  <p>Splatnost 30. 9. · 12 400 Kč</p>
+</article>
 ```
 ```css
-body { margin: 0; font-family: system-ui, sans-serif; }
+body { margin: 1.5rem; font-family: system-ui, sans-serif; background: #f1f5f9; }
 
-.toolbar { position: relative; display: flex; justify-content: center; padding: 3rem; background: #f1f5f9; }
+.invoice { position: relative; width: 18rem; padding: 1rem 1.25rem; border-radius: 1rem; background: white; }
+.invoice h3 { margin: 0; font-size: 1rem; }
+.invoice p { margin: 0.25rem 0 0; color: #64748b; }
 
-.tool { anchor-name: --bold; width: 2.5rem; height: 2.5rem; border-radius: 0.5rem; font-weight: 700; }
+.more {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  anchor-name: --more;
+  width: 2rem;
+  height: 2rem;
+  border: 0;
+  border-radius: 0.5rem;
+  background: #e2e8f0;
+}
 
 .tip {
   position: absolute;
-  position-anchor: --bold;
+  position-anchor: --more;
   position-area: bottom;
   margin-top: 0.25rem;
   padding: 0.125rem 0.5rem;
@@ -582,18 +597,63 @@ body { margin: 0; font-family: system-ui, sans-serif; }
   white-space: nowrap;
 }
 ```
---question-- Tooltip je absolutně pozicovaný a ukotvený k tlačítku B. Kde bude?
---option-- Pod tlačítkem B, jak říká `position-area: bottom`.
---option*-- Jinde než pod tlačítkem, ukotvení se nepoužije.
+--question-- Tooltip „Další akce" je absolutně pozicovaný a ukotvený k tlačítku „⋯". Kde bude?
+--option-- Pod tlačítkem „⋯", jak říká `position-area: bottom`.
+--option*-- V levém horním rohu karty, ukotvení se nepoužije.
 --option-- Nad tlačítkem, protože je v HTML před ním.
---why-- Kotva a tooltip mají stejný obsahující blok (`.toolbar`) a kotva je v HTML až **za** tooltipem. Prohlížeč smí ukotvit jen ke kotvě, která se rozvrhne dřív než ukotvený prvek, jinak ukotvení ignoruje a tooltip zůstane tam, kde by byl bez něj. Přesuň `<span class="tip">` v HTML za tlačítko a tooltip skočí pod něj. Popovery tohle neřeší, protože v top layer se vykreslují až po všem ostatním.
+--why-- Tlačítko i tooltip jsou absolutně pozicované ve stejném obsahujícím bloku (karta) a tlačítko je v HTML až **za** tooltipem. Takovou kotvu prohlížeč nepřijme: ukotvit se dá jen k prvku, jehož poloha je známá dřív než poloha ukotveného prvku. Ukotvení ignoruje a tooltip zůstane tam, kde by byl bez něj. Přesuň `<span class="tip">` v HTML za tlačítko a tooltip skočí pod něj. Kotva, která je v normálním toku, tuhle podmínku nemá.
 --see-- css-pozicovani/top-layer-a-kotveni#typicke-chyby-a-pasti
 :::
 
 > [!PITFALL] Tooltip se neukotví
-> *Příznak:* absolutně pozicovaný tooltip s `position-anchor` leží na svém místě v toku nebo v rohu rodiče, jako by ukotvení neexistovalo.
+> *Příznak:* absolutně pozicovaný tooltip s `position-anchor` leží v rohu rodiče nebo na svém místě v toku, jako by ukotvení neexistovalo.
 >
-> *Oprava:* kotva musí být v HTML **před** ukotveným prvkem, když mají stejný obsahující blok. Přesuň tooltip za kotvu, nebo z něj udělej popover.
+> *Oprava:* když je kotva sama absolutně pozicovaná a má stejný obsahující blok jako tooltip, musí být v HTML **před** ním. Přesuň tooltip za kotvu, nebo z něj udělej popover.
+
+> [!PITFALL] Tooltip se nevejde pod ikonu v liště
+> *Příznak:* tooltip s `position: absolute` a `position-area: bottom` u ikony v nízké přilepené liště nezačíná pod ikonou. Prohlížeč ho posune nahoru přes ikonu až ke spodní hraně lišty.
+>
+> *Oprava:* mřížka `position-area` sahá jen po okraje obsahujícího bloku ukotveného prvku a prohlížeč prvek z něj nepustí. U `absolute` je obsahujícím blokem nejbližší pozicovaný předek — tady lišta vysoká 3 rem. Dej tooltipu `position: fixed` (obsahujícím blokem je pak okno, pokud žádný předek nemá `transform`, `filter` nebo `backdrop-filter`), nebo z něj udělej popover.
+
+:::compare
+```html
+<header class="bar">
+  <strong>Editor</strong>
+  <button class="bar__icon" aria-label="Uložit">⤓</button>
+  <span class="tip" aria-hidden="true">Uložit změny</span>
+</header>
+<p class="text">Text dokumentu pod lištou…</p>
+```
+```css
+body { margin: 0; font-family: system-ui, sans-serif; }
+
+.bar { position: sticky; top: 0; display: flex; align-items: center; gap: 1rem; height: 3rem; padding-inline: 1rem; background: #0f172a; color: white; }
+.bar__icon { anchor-name: --save; width: 2rem; height: 2rem; border: 0; border-radius: 0.5rem; background: #334155; }
+.text { padding: 1rem; }
+
+.tip {
+  position-anchor: --save;
+  position-area: bottom;
+  margin-top: 0.25rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 0.375rem;
+  background: #f59e0b;
+  color: #111827;
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+```
+--variant-- position: absolute
+```css
+.tip { position: absolute; }
+```
+--variant-- position: fixed
+```css
+.tip { position: fixed; }
+```
+:::
+
+S `absolute` tooltip přejede ikonu a zůstane v liště. S `fixed` leží pod ikonou přes text dokumentu. Zkus lište přidat `backdrop-filter: blur(8px)` a sleduj, co se stane s variantou `fixed`.
 
 > [!PITFALL] Tlačítko s ikonou bez jména
 > *Příznak:* tlačítko „⋯" nebo avatar otevírá nabídku, ale čtečka obrazovky přečte jen „tlačítko".

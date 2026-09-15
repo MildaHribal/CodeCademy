@@ -131,7 +131,7 @@ Prvek má jen `position: static; top: 50px;`. O kolik pixelů se posune dolů? N
 
 Prvek s `position: relative` se vykreslí posunutý o `top`, `right`, `bottom` a `left` **od své původní polohy**. V toku ale dál drží své původní místo, takže sousedi se nepohnou a posunutý prvek je může překrýt.
 
-Pozor na směr: `top: 10px` znamená „odsaď se o 10 px **od horního okraje** původní polohy", tedy posun **dolů**. `left: 10px` posouvá doprava.
+Pozor na směr: `top: 10px` znamená „odsaď se o 10 px od horního okraje původní polohy", tedy posun ==dolů==. `left: 10px` posouvá ==doprava==.
 
 :::live predict
 ```html
