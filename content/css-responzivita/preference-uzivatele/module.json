@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Preference uživatele a motivy", "summary": "Světlý a tmavý motiv podle systému přes color-scheme, light-dark() a dvě sady tokenů, omezený pohyb, vyšší kontrast, vynucené barvy, myš vs. prst a tisk.", "minutes": 35, "runtime": "dom" }

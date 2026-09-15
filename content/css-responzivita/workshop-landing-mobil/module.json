@@ -1,0 +1,1 @@
+{ "type": "workshop", "title": "Úvodní stránka servisu kol", "summary": "Postavíš mobile-first úvodní stránku mobilního servisu kol: hlavičku s posuvnou navigací, úvod s obrázkem podle skutečné šířky, služby, ceník, recenze a patičku, a opravíš dvě chyby v kolegových media dotazech.", "minutes": 90, "runtime": "dom" }

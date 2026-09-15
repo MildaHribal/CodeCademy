@@ -288,6 +288,8 @@ U `border-box` se od 200 px odečte padding z obou stran (20 px) a rámeček z o
 
 Blokový prvek (odstavec, `div`, `section`) má ve výchozím stavu `width: auto`. To neznamená „100 %", ale **„vyplň šířku rodiče, ale odečti si od ní vlastní margin, rámeček i padding"**. Proto se blok s marginem vždycky vejde.
 
+Záporný margin funguje stejně, jen obráceně: od šířky rodiče se odečte záporné číslo, takže blok s `width: auto` a `margin-inline: -1rem` bude o 32 px **širší** než rodič a na obě strany přečnívá.
+
 `width: 100%` řekne něco jiného: „box je široký jako obsah rodiče" (s `border-box`). Margin se k tomu přidá zvenku. Tipni si, co z toho vznikne:
 
 :::live predict
@@ -479,6 +481,8 @@ Rámeček je vrstva boxu. Když přibude, box se o něj zvětší a obsah posko�
 #### --why--
 Padding je taky vrstva boxu. Karta se zvětší a všechno za ní se odsune.
 :::
+
+V dalším workshopu z těchhle vrstev postavíš stránku vstupenek na festival: sloupec uprostřed, banner, který roste s textem, a karty, ze kterých nic nepřečnívá.
 
 ## Kde to najdeš v MDN
 

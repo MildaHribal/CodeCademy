@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Přetečení a velikost obsahu", "summary": "Co dělá obsah, který se do boxu nevejde: overflow a jeho vedlejší efekty, dlouhé URL, oříznutí třemi tečkami, velikost podle obsahu, obrázky s poměrem stran a float jen na obtékání.", "minutes": 30, "runtime": "dom" }

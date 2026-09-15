@@ -1,0 +1,1 @@
+{ "type": "workshop", "title": "Postav přehled herních serverů", "summary": "Postavíš karty herních serverů se štítky stavu, tlačítky ve variantách a stavech a kartami, které reagují na obsah — vnořeným CSS, :is(), :has() a :focus-within, se dvěma opravami kolegova kódu.", "minutes": 80, "runtime": "dom" }

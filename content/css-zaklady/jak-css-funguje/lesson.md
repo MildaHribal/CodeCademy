@@ -276,7 +276,9 @@ Co všechno se přeskočí:
 - neplatná hodnota — `font-size: 20;` bez jednotky, `color: #ff000;` s pěti číslicemi,
 - když chybí středník, splynou dvě deklarace v jednu nesmyslnou a zahodí se **obě**.
 
-Tahle shovívavost má dobrý důvod: starší prohlížeč přeskočí vlastnost, kterou ještě nezná, a zbytek stránky vykreslí. Pro tebe to ale znamená, že překlep se neprojeví chybou, jen tím, že **se nic nestane**.
+Tahle shovívavost má dobrý důvod: starší prohlížeč přeskočí vlastnost, kterou ještě nezná, a zbytek stránky vykreslí. Pro tebe to ale znamená, že překlep se neprojeví chybou, jen tím, že **se nic nestane**. Editor v Akademii ti neplatnou deklaraci aspoň podtrhne, v cizím projektu ale takovou pomoc mít nemusíš.
+
+Ještě jedno pravidlo, které se hodí k další ukázce: když dvě **platná** pravidla se stejným selektorem nastaví stejnou vlastnost, vyhraje to, které je ve stylopisu později. Kdo vyhraje u různých selektorů, rozebírá do hloubky sekce o kaskádě.
 
 :::live predict
 ```html
@@ -386,6 +388,19 @@ h1, h2:hovr {
 >
 > *Oprava:* zkontroluj `<link rel="stylesheet" href="…">` v `<head>`: jestli tam vůbec je, jestli sedí cesta a jméno souboru (`styles.css` ≠ `style.css`) a jestli `rel` není překlep.
 
+:::check
+Pravidlo `.alert { background-color: #fee2e2; }` se na prvek `<div class=".alert">` nevztahuje. Napiš opravený atribut `class`.
+
+### --expected--
+class="alert"
+
+### --accept--
+class=alert
+
+### --why--
+Tečka je v CSS značka „tohle je třída". Do HTML patří jen samotné jméno třídy. S tečkou v atributu se třída jmenuje doslova `.alert` i s tečkou a selektor `.alert` hledá třídu `alert` bez ní.
+:::
+
 :::explain
 Vysvětli, proč prohlížeč neplatnou deklaraci jen přeskočí, místo aby ohlásil chybu a stránku nevykreslil. Co to znamená pro tebe, když ladíš styly?
 
@@ -398,6 +413,8 @@ CSS je navržené tak, aby stránka fungovala i ve starším prohlížeči, kter
 - Překlep v CSS nevyhodí chybovou hlášku, jen se neprojeví.
 - Zahozené deklarace se hledají v DevTools, kde jsou přeškrtnuté.
 :::
+
+Teď víš, jak prohlížeč pravidla čte. V dalším modulu z nich postavíš digitální vizitku: barvy, písmo, zaoblené rohy a stín, který udělá z obyčejného textu kartu, jakou znáš z profilů na sociálních sítích.
 
 ## Kde to najdeš v MDN
 

@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Stacking context a z-index", "summary": "Pořadí vykreslení, co zakládá stacking context, proč se prvek s z-index 9999 nedostane nad sourozence rodiče a jak držet vrstvy v tokenech.", "minutes": 30, "runtime": "dom" }

@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Pět hodnot position", "summary": "static, relative, absolute, fixed a sticky: kdy prvek zůstane v toku, vůči čemu se měří top a left a proč se sticky někdy nelepí.", "minutes": 35, "runtime": "dom" }

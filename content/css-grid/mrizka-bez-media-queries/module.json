@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Mřížka, která se přizpůsobí sama", "summary": "auto-fill a auto-fit s minmax(), min() proti přetečení na telefonu, položky přes víc sloupců, dense a subgrid pro karty zarovnané napříč.", "minutes": 30, "runtime": "dom" }

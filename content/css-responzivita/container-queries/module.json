@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Container queries", "summary": "Komponenta, která se přizpůsobí místu, kam ji dáš: container-type, @container, pojmenované kontejnery, jednotky cqi a kdy použít media dotaz.", "minutes": 30, "runtime": "dom" }

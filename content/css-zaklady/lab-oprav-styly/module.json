@@ -1,0 +1,1 @@
+{ "type": "lab", "title": "Oprav rozbité menu", "summary": "V kolegových stylech poledního menu jsou tři chyby. Najdeš je v DevTools — pravidlo, které nemíří, deklaraci, která prohrála, a rámeček, který není vidět.", "minutes": 30, "runtime": "dom" }

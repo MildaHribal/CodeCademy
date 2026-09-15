@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Úvod do gridu", "summary": "Grid kontejner a stopy, jednotka fr, explicitní a implicitní mřížka, čáry a span, pojmenované oblasti, zarovnání v buňce a proč se sloupec 1fr nechce zmenšit.", "minutes": 35, "runtime": "dom" }

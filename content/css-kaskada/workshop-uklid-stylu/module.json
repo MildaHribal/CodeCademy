@@ -1,0 +1,1 @@
+{ "type": "workshop", "title": "Ukliď styly webu horské chaty", "summary": "Převezmeš web se starou šablonou plnou id a !important a uklidíš ho: snížíš specificitu, zavřeš šablonu do vrstvy a postavíš vrstvy pro komponenty a utility — se třemi opravami kolegova kódu.", "minutes": 80, "runtime": "dom" }

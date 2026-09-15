@@ -1,0 +1,1 @@
+{ "type": "quiz", "title": "Kvíz: animace", "summary": "Otázky na čtení kódu a počítání: co je levné animovat, přechod vs. animace, fill-mode, view transitions, scroll a omezený pohyb — i v kolegových stylech.", "minutes": 25, "runtime": "dom" }

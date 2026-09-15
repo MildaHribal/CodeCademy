@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Barvy v oklch a typografie", "summary": "Paleta v oklch() se stupnicí z jedné barvy, kontrast podle WCAG, primitivní a sémantické tokeny pro světlý i tmavý motiv, modulární stupnice písma a @font-face.", "minutes": 45, "runtime": "dom" }

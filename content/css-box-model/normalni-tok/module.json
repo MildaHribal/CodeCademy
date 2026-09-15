@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Normální tok, block a inline", "summary": "Jak se boxy skládají, když jim nic nenastavíš: bloky pod sebou, řádkové prvky v řádcích textu, proč odkazu nejde nastavit výška a odkud se bere mezera pod obrázkem.", "minutes": 25, "runtime": "dom" }

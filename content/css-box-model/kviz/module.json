@@ -1,0 +1,1 @@
+{ "type": "quiz", "title": "Kvíz: box model a tok dokumentu", "summary": "Šířka boxu, řádkové a blokové boxy, kde se margin slije a co založí blokový formátovací kontext, přetečení a oříznutí. Pár otázek z kaskády a vlastních vlastností.", "minutes": 25, "runtime": "dom" }

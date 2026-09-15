@@ -1,0 +1,10 @@
+{
+  "title": "CSS Grid",
+  "intro": "Grid rozvrhuje stránku **ve dvou osách najednou** — v řádcích i sloupcích. Postavíš s ním kostru aplikace, mřížku produktů, galerii i dashboard.",
+  "modules": [
+    "uvod-do-gridu",
+    "workshop-kostra-stranky",
+    "mrizka-bez-media-queries",
+    "workshop-galerie"
+  ]
+}

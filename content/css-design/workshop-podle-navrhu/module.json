@@ -1,0 +1,1 @@
+{ "type": "workshop", "title": "Stránka konference podle návrhu", "summary": "Podle specifikace z Figmy postavíš stránku frontendové konference: paletu z jedné barvy, textové styly, auto layout, varianty štítků a opravíš kontrast, na který návrh zapomněl, ve světlém i tmavém motivu.", "minutes": 90, "runtime": "dom" }

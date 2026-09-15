@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Klíčové snímky", "summary": "Animace, které běží samy: @keyframes a vlastnost animation, fill-mode a směr, steps() a linear(), animace gradientu přes @property a kdy sáhnout po animaci místo přechodu.", "minutes": 40, "runtime": "dom" }

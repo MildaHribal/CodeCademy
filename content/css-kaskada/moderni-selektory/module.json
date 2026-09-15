@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Moderní selektory a nesting", "summary": ":is(), :where(), :not() a :has(), stav formuláře přes :user-invalid a :focus-within, vnořené CSS a @scope — a jakou specificitu z nich prohlížeč spočítá.", "minutes": 35, "runtime": "dom" }

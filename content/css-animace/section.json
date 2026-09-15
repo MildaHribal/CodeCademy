@@ -1,0 +1,5 @@
+{
+  "title": "Přechody, transformace a animace",
+  "intro": "rozpracováno",
+  "modules": ["transition-transform", "workshop-interakce", "keyframes", "lab-loader-a-toast", "view-transitions-scroll", "kviz"]
+}

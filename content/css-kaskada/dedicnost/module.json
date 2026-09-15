@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Dědičnost a výchozí hodnoty", "summary": "Které vlastnosti se dědí a proč zděděná hodnota prohraje s každou deklarací, inherit, initial, unset, revert a revert-layer, spočtená hodnota a proč formulářové prvky nemají písmo stránky.", "minutes": 30, "runtime": "dom" }

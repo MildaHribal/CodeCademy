@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "SVG a ikony", "summary": "Ikony, které se chovají jako text: viewBox, inline SVG vs. img vs. sprite, currentColor, přístupné jméno, maska pro ikony ze souboru, ikonové sady a licence.", "minutes": 40, "runtime": "dom" }

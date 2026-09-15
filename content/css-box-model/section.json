@@ -1,5 +1,63 @@
 {
   "title": "Box model a tok dokumentu",
-  "intro": "x",
-  "modules": ["box-model", "workshop-vstupenky"]
+  "intro": "Každý prvek na stránce je pro prohlížeč obdélník a skoro každá „záhadná\" chyba v CSS — tlačítko přečnívající z karty, mezera, která je jinak velká, než jsi napsal, proužek pod fotkou nebo stránka, která jde na telefonu posouvat do strany — vzniká tím, jak prohlížeč ty obdélníky počítá a skládá.\n\nV sekci se naučíš spočítat velikost boxu, pochopíš normální tok s blokovými a řádkovými boxy, slévání marginů a blokový formátovací kontext a zjistíš, co dělat s obsahem, který se nevejde. Postavíš stránku vstupenek na festival, dáš do pořádku rozestupy stránky receptu a samostatně opravíš příspěvek na sociální síti a rozvrhneš článek s obtékanými obrázky.\n\nPředpoklad: znáš základy CSS a kaskádu — selektory, jednotky, vlastní vlastnosti a specificitu.",
+  "modules": [
+    "box-model",
+    "workshop-vstupenky",
+    "normalni-tok",
+    "lab-prispevek",
+    "margin-collapse-a-bfc",
+    "workshop-rozestupy",
+    "preteceni",
+    "lab-clanek-s-obrazky",
+    "kviz"
+  ],
+  "outcomes": [
+    {
+      "text": "Spočítáš šířku a výšku boxu pro `content-box` i `border-box` a vybereš mezi pevnou velikostí a hranicí `min-*` / `max-*`.",
+      "links": [
+        "css-box-model/box-model#box-sizing-co-presne-meri-width",
+        "css-box-model/box-model#hranice-velikosti-min-a-max",
+        "css-box-model/workshop-vstupenky/007"
+      ]
+    },
+    {
+      "text": "Popíšeš, jak se blokové, řádkové a `inline-block` boxy skládají v normálním toku, a opravíš odkaz, který ignoruje výšku, proužek pod obrázkem i nesprávně skrytý prvek.",
+      "links": [
+        "css-box-model/normalni-tok#blokove-a-radkove-boxy",
+        "css-box-model/normalni-tok#mezera-pod-obrazkem",
+        "css-box-model/lab-prispevek"
+      ]
+    },
+    {
+      "text": "Vysvětlíš, proč se margin slil nebo „utekl\" z rodiče, a spočítáš, jak velká mezera mezi bloky vznikne.",
+      "links": [
+        "css-box-model/margin-collapse-a-bfc#kdy-se-marginy-slevaji",
+        "css-box-model/workshop-rozestupy/003",
+        "css-box-model/workshop-rozestupy/009"
+      ]
+    },
+    {
+      "text": "Řekneš, co je blokový formátovací kontext a co ho zakládá, a založíš ho přes `display: flow-root` bez vedlejších efektů.",
+      "links": [
+        "css-box-model/margin-collapse-a-bfc#blokovy-formatovaci-kontext",
+        "css-box-model/workshop-rozestupy/004"
+      ]
+    },
+    {
+      "text": "Postavíš rozestupy stránky ze stupnice tokenů, vzorem stack a `gap`, bez marginů, které se slévají nebo utíkají.",
+      "links": [
+        "css-box-model/margin-collapse-a-bfc#mezery-drzi-rodic-stack-a-gap",
+        "css-box-model/workshop-rozestupy"
+      ]
+    },
+    {
+      "text": "Ošetříš přetečení dlouhých adres, tabulek a obrázků, zkrátíš text na jeden řádek se třemi tečkami a necháš text obtékat obrázek.",
+      "links": [
+        "css-box-model/preteceni#dlouha-slova-a-adresy",
+        "css-box-model/preteceni#jeden-radek-se-tremi-teckami",
+        "css-box-model/lab-clanek-s-obrazky"
+      ]
+    }
+  ]
 }

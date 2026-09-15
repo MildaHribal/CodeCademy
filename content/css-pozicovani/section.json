@@ -1,0 +1,11 @@
+{
+  "title": "Pozicování a vrstvení",
+  "intro": "x",
+  "modules": [
+    "position",
+    "workshop-lepici-lista",
+    "stacking-context",
+    "workshop-nastenka-ukolu",
+    "top-layer-a-kotveni"
+  ]
+}

@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Selektory", "summary": "Typ, třída a id, atributy, kombinátory, pseudotřídy pro stav i pořadí, pseudoprvky ::before a ::after a jak třídy pojmenovat, aby se v nich dalo vyznat.", "minutes": 30, "runtime": "dom" }

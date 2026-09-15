@@ -1,5 +1,15 @@
 {
   "title": "Základy CSS",
   "intro": "x",
-  "modules": ["jak-css-funguje"]
+  "modules": [
+    "jak-css-funguje",
+    "workshop-vizitka",
+    "devtools-pro-css",
+    "lab-oprav-styly",
+    "selektory-zaklad",
+    "lab-program-kina",
+    "vlastni-vlastnosti",
+    "lab-karta-produktu",
+    "jednotky-a-hodnoty"
+  ]
 }

@@ -1,0 +1,10 @@
+{
+  "title": "Responzivní design a motivy",
+  "intro": "x",
+  "modules": [
+    "mobile-first",
+    "workshop-landing-mobil",
+    "container-queries",
+    "workshop-karta-kontejner"
+  ]
+}

@@ -1,0 +1,1 @@
+{ "type": "lab", "title": "Program letního kina", "summary": "Nastyluj tabulku programu bez jediné třídy v HTML: střídání řádků, vyprodaná představení, tlačítka a ikony u odkazů jen pomocí selektorů.", "minutes": 45, "runtime": "dom" }

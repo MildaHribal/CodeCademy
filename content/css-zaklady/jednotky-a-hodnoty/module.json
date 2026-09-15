@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Jednotky a hodnoty", "summary": "px, rem a em (a proč em násobí), procenta vůči rodiči, jednotky okna vh, dvh a svh, ch na šířku řádku, calc() a plynulé hodnoty přes min(), max() a clamp().", "minutes": 30, "runtime": "dom" }

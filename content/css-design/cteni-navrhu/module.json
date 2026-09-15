@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Čtení návrhu z Figmy", "summary": "Jak z návrhu ve Figmě vyčíst pravidla místo souřadnic: auto layout jako flexbox, hug, fill a fixed, varianty a proměnné jako tokeny, převod hodnot z Dev Mode a na co se doptat.", "minutes": 40, "runtime": "dom" }

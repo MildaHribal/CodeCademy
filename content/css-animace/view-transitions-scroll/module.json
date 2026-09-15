@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "View transitions a animace řízené scrollem", "summary": "Plynulé změny obsahu jedním voláním startViewTransition, přelet prvku přes view-transition-name, přechody mezi stránkami, ukazatel čtení a odhalování karet přes scroll() a view() jako progresivní vylepšení.", "minutes": 40, "runtime": "dom" }
