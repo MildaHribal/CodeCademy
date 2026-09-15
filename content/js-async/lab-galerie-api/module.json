@@ -1,0 +1,1 @@
+{ "type": "lab", "title": "Galerie s nekonečným scrollováním", "summary": "Samostatně postavíš fotogalerii, která při posouvání sama načítá další stránky z API, nikdy nenačte stránku dvakrát, pozná konec a po chybě nabídne nový pokus.", "minutes": 70, "runtime": "dom" }

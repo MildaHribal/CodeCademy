@@ -1,0 +1,1 @@
+{ "type": "lab", "title": "Kontrolní bod: katalog knihovny", "summary": "Bez návodu spojíš všechno z části o JavaScriptu: načteš katalog z API, vadné záznamy vynecháš a nahlásíš, knihy seřadíš podle české abecedy i data, vyfiltruješ z formuláře a ukážeš stavy načítání a chyby.", "minutes": 120, "runtime": "dom" }

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="cs">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Filmotéka</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#">Filmotéka</a>
+      <form id="search-form" class="search" role="search">
+        <label class="visually-hidden" for="search">Hledat film</label>
+        <input id="search" name="q" class="search__input" type="search" placeholder="Hledej film podle názvu" autocomplete="off">
+        <button class="button" type="submit">Hledat</button>
+      </form>
+    </header>
+
+    <div class="layout">
+      <main class="content">
+        <p id="status" class="status" role="status"></p>
+
+        <div id="error" class="error" role="alert" hidden>
+          <p id="error-text" class="error__text"></p>
+          <button id="retry" class="button" type="button">Zkusit znovu</button>
+        </div>
+
+        <section id="list-view" aria-labelledby="list-title">
+          <h1 id="list-title" class="list-title">Nejlépe hodnocené</h1>
+          <ul id="results" class="results"></ul>
+          <p id="empty" class="empty" hidden>Žádný film tomu hledání neodpovídá.</p>
+          <nav class="pager" aria-label="Stránky výsledků">
+            <button id="prev" class="button button--ghost" type="button">Předchozí</button>
+            <span id="page-info" class="pager__info"></span>
+            <button id="next" class="button button--ghost" type="button">Další</button>
+          </nav>
+        </section>
+
+        <section id="detail-view" class="detail" aria-labelledby="detail-title" hidden>
+          <button id="back" class="button button--ghost" type="button">← Zpět na seznam</button>
+          <div class="detail__body">
+            <img id="detail-poster" class="detail__poster" src="data:," alt="">
+            <div class="detail__info">
+              <h1 id="detail-title" class="detail__title" tabindex="-1"></h1>
+              <p id="detail-original" class="detail__original"></p>
+              <p id="detail-meta" class="detail__meta"></p>
+              <p id="detail-overview" class="detail__overview"></p>
+              <button id="favorite-toggle" class="button" type="button" aria-pressed="false">Přidat do oblíbených</button>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <aside class="favorites" aria-labelledby="favorites-title">
+        <h2 id="favorites-title" class="favorites__title">Oblíbené</h2>
+        <ul id="favorites" class="favorites__list"></ul>
+        <p id="favorites-empty" class="favorites__empty">Zatím nic. Film přidáš v jeho detailu.</p>
+      </aside>
+    </div>
+
+    <script src="api.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

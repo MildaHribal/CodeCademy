@@ -1,11 +1,79 @@
 {
   "title": "Asynchronní JavaScript a fetch",
-  "intro": "draft",
+  "intro": "Skoro všechno zajímavé na webu se děje „za chvíli“: odpověď serveru, odpočet, našeptávač, nekonečný seznam fotek. V téhle sekci pochopíš, jak prohlížeč střídá práci, aby stránka nezamrzla, a naučíš se psát kód, který na něco čeká: **Promise, `async`/`await` a `fetch`** se všemi stavy, které skutečná aplikace potřebuje — načítání, chyba, prázdno, zrušení a souběh odpovědí.\n\nPostup: lekce o event loopu a workshop s bleskovým výprodejem (časovače a dávky), lekce o Promise a lab s platebním terminálem, lekce o `async`/`await` a workshop s odjezdovou tabulí (souběh, limit, opakování, zrušení), lekce o `fetch` a aplikace na počasí. Pak dva laby, kvíz, kontrolní bod celé části o JavaScriptu a na závěr projekt filmové databáze do portfolia.\n\n**Předpoklady:** DOM a události, `localStorage` a stav v adrese ze sekce o DOM, funkce a closures, pole a objekty, `try`/`catch`.",
   "modules": [
     "event-loop",
     "workshop-vyprodej",
     "promise",
     "lab-platebni-terminal",
-    "async-await"
+    "async-await",
+    "workshop-casovace",
+    "fetch",
+    "workshop-pocasi",
+    "lab-galerie-api",
+    "lab-oprav-3-chyby",
+    "kviz",
+    "lab-kontrolni-bod-2",
+    "projekt-filmova-databaze"
+  ],
+  "outcomes": [
+    {
+      "text": "Vysvětlíš event loop a předpovíš pořadí výpisu se `setTimeout`, Promise a `await`.",
+      "links": [
+        "js-async/event-loop#cekani-obstara-prohlizec-fronta-uloh",
+        "js-async/event-loop#mikroulohy-promise-ma-prednost",
+        "js-async/async-await#await-prerusi-funkci-ne-program",
+        "js-async/kviz"
+      ]
+    },
+    {
+      "text": "Napíšeš kód s Promise a `async`/`await` včetně souběhu přes `Promise.all`, časového limitu a zrušení přes `AbortController`.",
+      "links": [
+        "js-async/async-await#postupne-nebo-soubezne",
+        "js-async/async-await#zruseni-abortcontroller-a-signal",
+        "js-async/workshop-casovace",
+        "js-async/lab-platebni-terminal"
+      ]
+    },
+    {
+      "text": "Načteš data přes `fetch` s kontrolou `response.ok` a ukážeš stav načítání, chyby a prázdného výsledku.",
+      "links": [
+        "js-async/fetch#404-a-500-nejsou-pro-fetch-chyba",
+        "js-async/fetch#stavy-nacitani-chyba-a-prazdno",
+        "js-async/workshop-pocasi/006",
+        "js-async/lab-galerie-api"
+      ]
+    },
+    {
+      "text": "Zařídíš, aby starší odpověď nepřepsala novější: zrušíš předchozí požadavek, nebo porovnáš číslo požadavku.",
+      "links": [
+        "js-async/fetch#soubeh-odpovedi-starsi-nesmi-prepsat-novejsi",
+        "js-async/workshop-pocasi/011",
+        "js-async/projekt-filmova-databaze"
+      ]
+    },
+    {
+      "text": "V cizím kódu najdeš a opravíš zapomenuté `await`, `forEach` s `async` callbackem, zbytečně postupné čekání a chybějící kontrolu stavu odpovědi.",
+      "links": [
+        "js-async/lab-oprav-3-chyby",
+        "js-async/async-await#typicke-chyby-a-pasti",
+        "js-async/workshop-casovace/006"
+      ]
+    },
+    {
+      "text": "Rozdělíš dlouhou práci do dávek, aby stránka nezamrzla, a napíšeš časovač, který se nepřekrývá a počítá s hodinami, ne s tiky.",
+      "links": [
+        "js-async/event-loop#dlouhy-vypocet-zamrazi-stranku",
+        "js-async/workshop-vyprodej/013",
+        "js-async/workshop-vyprodej/005"
+      ]
+    },
+    {
+      "text": "Samostatně spojíš načtení dat, validaci, řazení a vykreslení do DOM do fungující aplikace.",
+      "links": [
+        "js-async/lab-kontrolni-bod-2",
+        "js-async/projekt-filmova-databaze"
+      ]
+    }
   ]
 }

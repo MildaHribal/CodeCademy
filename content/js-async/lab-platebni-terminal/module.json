@@ -1,1 +1,1 @@
-{"type":"lab","title":"Platební terminál","summary":"Samostatně obalíš callbackové SDK platebního terminálu do Promise, poskládáš z něj platbu a sečteš tržby z několika terminálů najednou.","minutes":60,"runtime":"js"}
+{"type":"lab","title":"Platební terminál","summary":"Samostatně obalíš callbackové SDK platebního terminálu do Promise, poskládáš z něj platbu a sečteš tržby z několika terminálů najednou.","minutes":75,"runtime":"js"}

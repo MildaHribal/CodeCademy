@@ -532,6 +532,8 @@ js-async/promise#pole-funkci-misto-pole-promise
 - [Promise() constructor](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/Promise) — executor, `resolve` a `reject` a příklad obalení callbackového API.
 - [Promise.withResolvers()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/withResolvers) — kdy se hodí mít `resolve` mimo executor.
 
+Hned v dalším labu obalíš staré callbackové SDK platebního terminálu do Promise, poskládáš z něj platbu a sečteš tržby z několika terminálů najednou.
+
 # --questions--
 
 ## --question--

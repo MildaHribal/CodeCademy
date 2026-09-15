@@ -1,0 +1,1 @@
+{ "type": "project", "title": "Filmová databáze", "summary": "Samostatně postavíš katalog filmů nad API: seznam, hledání, stránkování, detail a oblíbené, se stavem v adrese, zrušením starších požadavků a ošetřenými chybami.", "minutes": 300, "runtime": "dom" }

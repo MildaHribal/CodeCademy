@@ -1,0 +1,1 @@
+{ "type": "lab", "title": "Oprav 3 chyby", "summary": "Kolegův kód rezervací ve sportovním centru má tři asynchronní chyby: připomínky hlásí nulu, výpadek serveru se tváří jako prázdný den a volné kurty se načítají pomalu. Najdi je, oprav a nic dalšího nerozbij.", "minutes": 55, "runtime": "js" }

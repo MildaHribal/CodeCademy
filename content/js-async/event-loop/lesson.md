@@ -88,10 +88,10 @@ console.log('5. skript skončil');
 --step-- 1 | běží hlavní skript
 stack -> @stack
 @stack: [skript]
---step-- 2 | renderCart je navrchu, uvnitř se na chvíli položí i formatPrice
+--step-- 2 | během volání: renderCart je navrchu, na chvíli nad ni přibude i formatPrice
 stack -> @stack
 @stack: [skript, renderCart]
---step-- 3 | renderCart skončila a zmizela, skript dojede do konce
+--step-- 3 | renderCart skončila a zmizela, skript dojíždí do konce
 stack -> @stack
 @stack: [skript]
 :::
@@ -181,7 +181,7 @@ stack -> @stack
 tasks -> @tasks
 @stack: [skript]
 @tasks: [sendEmail]
---step-- 3 | úloha ve frontě čeká, skript pořád běží
+--step-- 3 | během processItems: úloha ve frontě čeká, skript pořád běží
 stack -> @stack
 tasks -> @tasks
 @stack: [skript, processItems]
@@ -419,7 +419,7 @@ document.querySelector('#save').addEventListener('click', () => {
 --option-- Text „Ukládám…" a po chvíli „Uloženo".
 --option*-- Pořád „Připraveno", tlačítko nereaguje a po chvíli rovnou „Uloženo".
 --option-- Rychlé problikávání mezi „Ukládám…" a „Uloženo".
---why-- `textContent` se změní hned, ale **vykreslit** ho prohlížeč může až po konci handleru. Než k tomu dojde, přepíše ho `'Uloženo'`, takže „Ukládám…" nikdy neuvidíš. Zkus cyklus zabalit do `setTimeout(() => { … }, 0)` i s posledním řádkem a sleduj, že „Ukládám…" se ukáže: handler skončí, stránka se překreslí a práce proběhne v další úloze.
+--why-- `textContent` se změní hned, ale **vykreslit** ho prohlížeč může až po konci handleru. Než k tomu dojde, přepíše ho `'Uloženo'`, takže „Ukládám…" nikdy neuvidíš. Zkus cyklus i s posledním řádkem zabalit do `setTimeout(() => { … }, 50)` a sleduj, že „Ukládám…" se ukáže: handler skončí, prohlížeč mezitím stránku překreslí a práce proběhne až v další úloze. S nulou místo `50` by se úloha časovače mohla spustit dřív, než na překreslení dojde, a „Ukládám…" bys zase neviděl.
 :::
 
 > [!REMEMBER]
@@ -514,7 +514,7 @@ document.querySelector('#chunks').addEventListener('click', () => {
 Při prvním tlačítku čítač i pruh stojí a písmena, která mezitím napíšeš, se v poli objeví až najednou po konci výpočtu. Při druhém se práce rozdělí na dávky: po každé dávce `setTimeout` pustí ke slovu frontu, stránka se překreslí a čítač tiká dál. Výpočet trvá o chlup déle, ale stránka žije. Zkus v `workPart` změnit `100` na `400` a sleduj, jak se odezva zhorší i u dávek — dávka musí být krátká.
 
 > [!NOTE]
-> Novější prohlížeče mají pro „pusť na chvíli ke slovu stránku" funkci `scheduler.yield()`. V září 2026 ji ale Safari nepodporuje, proto se používá s kontrolou `if (globalThis.scheduler?.yield)` a náhradou přes `setTimeout`. Opravdu těžké výpočty patří do Web Workeru, samostatného vlákna, ke kterému se dostaneme v rozšíření o prohlížeči. A pozor na klam: animace `transform` a `opacity` zvládá Chrome mimo hlavní vlákno, takže točící se kolečko se může točit dál, i když stránka jinak nereaguje.
+> Novější prohlížeče mají pro „pusť na chvíli ke slovu stránku" funkci `scheduler.yield()`. Zatím ji ale nepodporují všechny rozšířené prohlížeče (MDN ji vede jako *Limited availability*), proto se používá s kontrolou `if (globalThis.scheduler?.yield)` a náhradou přes `setTimeout`. Opravdu těžké výpočty patří do Web Workeru, samostatného vlákna, ke kterému se dostaneme v rozšíření o prohlížeči. A pozor na klam: animace `transform` a `opacity` zvládá Chrome mimo hlavní vlákno, takže točící se kolečko se může točit dál, i když stránka jinak nereaguje.
 
 :::check
 Proč se při výpočtu po dávkách čítač znovu rozběhne? Vyber nejpřesnější vysvětlení.
@@ -642,6 +642,8 @@ js-async/event-loop#nula-neznamena-hned
 - [Using microtasks in JavaScript with queueMicrotask()](https://developer.mozilla.org/en-US/docs/Web/API/HTML_DOM_API/Microtask_guide) — rozdíl mezi úlohou a mikroúlohou s ukázkami pořadí.
 - [Window: setTimeout() method](https://developer.mozilla.org/en-US/docs/Web/API/Window/setTimeout) — oddíl *Reasons for delays longer than specified* vysvětluje, proč časovač přijde později, včetně karet na pozadí.
 - [Scheduler: yield() method](https://developer.mozilla.org/en-US/docs/Web/API/Scheduler/yield) — rozdělení dlouhé práce a tabulka podpory v prohlížečích.
+
+V příštím workshopu z časovačů postavíš stránku bleskového výprodeje: odpočet podle hodin, oznámení, které samo zmizí, a katalog, který se vykreslí po dávkách, aniž by stránka zamrzla.
 
 # --questions--
 

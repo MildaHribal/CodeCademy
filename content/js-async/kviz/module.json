@@ -1,0 +1,1 @@
+{ "type": "quiz", "title": "Kvíz: asynchronní JavaScript", "summary": "Pořadí výpisů s časovači, Promise a await, fetch a chybové stavy, souběh a zrušení, pár otázek ze starších sekcí a čtení cizího modulu objednávek.", "minutes": 30 }

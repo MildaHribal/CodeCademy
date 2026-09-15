@@ -415,6 +415,38 @@ Tři `await` za sebou spustí každý požadavek až po skončení předchozího
 - Postupně jen tam, kde krok potřebuje výsledek předchozího.
 :::
 
+:::check
+Objednávka potřebuje nejdřív ověřit slevový kód (`checkCoupon`) a s jeho výsledkem spočítat cenu dopravy (`shippingPrice`). Zároveň chceš načíst doporučené zboží (`loadTips`), které na ničem nezávisí. Který zápis je nejrychlejší a správný?
+
+### --answer--
+
+`const [coupon, shipping, tips] = await Promise.all([checkCoupon(), shippingPrice(coupon), loadTips()]);`
+
+#### --why--
+
+`shippingPrice(coupon)` se zavolá dřív, než `coupon` existuje. Závislý krok nemůže běžet souběžně s tím, na jehož výsledku stojí.
+
+### --answer--
+
+Tři `await` pod sebou v pořadí `checkCoupon`, `shippingPrice`, `loadTips`.
+
+#### --why--
+
+Správně to dopadne, ale doporučené zboží zbytečně čeká na slevu i dopravu, i když na nich nezávisí.
+
+### --correct--
+
+`const [shipping, tips] = await Promise.all([checkCoupon().then((coupon) => shippingPrice(coupon)), loadTips()]);`
+
+#### --why--
+
+První položka pole je řetěz, ve kterém doprava počká na slevu. Doporučení mezitím běží souběžně a `Promise.all` počká na obojí. Místo řetězu `then` tam může být i malá `async` funkce se dvěma `await`.
+
+### --see--
+
+js-async/async-await#postupne-nebo-soubezne
+:::
+
 ## Cykly: `for…of` čeká, `forEach` ne
 
 Když potřebuješ nad polem udělat asynchronní operaci **postupně** (třeba odeslat objednávky jednu po druhé, protože API nesnese souběh), napiš `await` do cyklu `for…of`. Funkce se zastaví v každém kole.
@@ -490,6 +522,89 @@ Máš pole `files` a funkci `upload(file)`, která vrací Promise. Server přijm
 ### --see--
 
 js-async/async-await#cykly-for-of-ceka-foreach-ne
+:::
+
+## Zrušení: `AbortController` a `signal`
+
+Na odjezdové tabuli přepneš zastávku, zatímco se ta první ještě načítá. Na staré odjezdy už nikdo nečeká, ale Promise sama od sebe nezmizí: doběhne, zabere síť a v horším případě přepíše novější výsledek. Klíčové slovo na zrušení JavaScript nemá. Používá dvojici objektů:
+
+- `AbortController` je ovladač, kterým zrušení **vyvoláš**: `controller.abort()`,
+- `AbortSignal` v `controller.signal` **předáš** funkci, kterou chceš umět zrušit.
+
+Funkce, které zrušení podporují (`fetch` a většina knihoven), berou signal ve volbách `{ signal }`. Po `abort()` se jejich Promise zamítne chybou, která má `name` rovné `'AbortError'`. (Signal bere i `addEventListener`: po `abort()` posluchač odebere.) Uvnitř vlastní funkce se na signal díváš přes `signal.aborted`, `signal.throwIfAborted()` nebo událost `abort`:
+
+:::live js
+```js
+// Počká ms milisekund; signal umí čekání zrušit
+function wait(ms, { signal } = {}) {
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(resolve, ms);
+    signal?.addEventListener('abort', () => {
+      clearTimeout(timer);
+      reject(signal.reason);
+    });
+  });
+}
+
+async function loadStop(name, signal) {
+  await wait(100, { signal });
+  console.log(`odjezdy: ${name}`);
+}
+
+const controller = new AbortController();
+loadStop('Hlavní nádraží', controller.signal).catch((error) => console.log('zrušeno:', error.name));
+setTimeout(() => controller.abort(), 30);
+```
+:::
+
+Zkus změnit `30` na `300` a sleduj, že načtení doběhne dřív, než přijde zrušení. Pak zkus smazat `signal` z volání `wait` uvnitř `loadStop`: `abort()` proběhne, ale nikdo ho neposlouchá.
+
+:::live js predict
+```js
+function wait(ms, { signal } = {}) {
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(resolve, ms);
+    signal?.addEventListener('abort', () => {
+      clearTimeout(timer);
+      reject(signal.reason);
+    });
+  });
+}
+
+const controller = new AbortController();
+wait(10, { signal: controller.signal })
+  .then(() => console.log('hotovo'))
+  .catch((error) => console.log(error.name));
+setTimeout(() => controller.abort(), 50);
+```
+--question-- Co vypíše tenhle kód? Napiš výpis pod sebe.
+--expected-- hotovo
+--why-- Čekání se splnilo po 10 ms a usazená Promise už svůj stav nezmění. `abort()` po 50 ms zavolá `reject`, jenže ten přijde pozdě a nic se nestane. Zrušení nevrací zpátky hotovou práci, jen zastaví tu, která ještě běží.
+:::
+
+> [!REMEMBER]
+> **Zrušení je žádost.** Splní ji jen funkce, která `signal` dostala a hlídá ho; hotovou práci nevrátí.
+
+Časový limit dostaneš bez vlastního časovače: `AbortSignal.timeout(5000)` je signal, který se sám zruší po pěti sekundách, a chyba pak má `name` rovné `'TimeoutError'`. Když má jedna operace poslouchat víc signálů, třeba tlačítko **Zrušit** i limit, spojí je `AbortSignal.any([controller.signal, AbortSignal.timeout(5000)])`. Zruší se, jakmile se zruší kterýkoli z nich.
+
+:::check
+Načítání dostane `{ signal: AbortSignal.timeout(2000) }` a server odpoví až za pět sekund. Jakou hodnotu bude mít `error.name` v `catch`?
+
+### --expected--
+
+TimeoutError
+
+### --accept--
+
+'TimeoutError'
+
+### --why--
+
+Signal z `AbortSignal.timeout` se po dvou sekundách zruší s důvodem `TimeoutError`. Podle jména rozeznáš vypršený limit (`TimeoutError`) od zrušení uživatelem přes `controller.abort()` (`AbortError`).
+
+### --see--
+
+js-async/async-await#zruseni-abortcontroller-a-signal
 :::
 
 ## `await` mimo funkci: top-level `await`
@@ -568,6 +683,11 @@ Lze objednat
 > [!PITFALL]
 > **Chyba v `async` handleru události nikam nedorazí.** Prohlížeč vrácenou Promise zahodí, takže `throw` uvnitř skončí jako `Uncaught (in promise)` a uživatel nevidí nic, třeba se ani neschová načítání. Oprava: v každém `async` handleru obal práci do `try`/`catch` a chybu ukaž ve stránce.
 
+### Zrušení hlášené jako chyba
+
+> [!PITFALL]
+> **Zrušené čekání skončí v `catch` jako každá jiná chyba.** Příznak: uživatel přepne zastávku a místo nových odjezdů uvidí „Chyba: signal is aborted without reason". Oprava: v `catch` nejdřív zkontroluj `if (error.name === 'AbortError') return;` — zrušení není porucha, jen ho tiše ukonči.
+
 ### Postupné čekání tam, kde nemusí být
 
 > [!PITFALL]
@@ -608,6 +728,9 @@ js-async/async-await#zapomenute-await
 - [await](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/await) — co se stane se zamítnutím a oddíl *Top level await* o `await` v modulech.
 - [for await...of](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for-await...of) — cyklus nad daty, která přicházejí po částech.
 - [Promise.all()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all) — souběžné čekání a příklad s `async` funkcemi.
+- [AbortController](https://developer.mozilla.org/en-US/docs/Web/API/AbortController) — zrušení a v příbuzné stránce *AbortSignal* metody `timeout()` a `any()` s tabulkou podpory.
+
+Ve workshopu z těchhle kousků složíš načítání odjezdové tabule ze tří dopravců: souběžně, s časovým limitem, opakováním po chybě a zrušením při přepnutí zastávky.
 
 # --questions--
 

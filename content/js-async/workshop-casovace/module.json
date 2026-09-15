@@ -1,0 +1,1 @@
+{ "type": "workshop", "title": "Odjezdová tabule: souběh a zrušení", "summary": "Postavíš načítání odjezdové tabule ze tří dopravců: souběžně, s časovým limitem, opakováním po chybě, zrušením při přepnutí zastávky a obnovováním bez překrývání.", "minutes": 90, "runtime": "js" }
