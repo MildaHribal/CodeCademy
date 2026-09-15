@@ -2,6 +2,6 @@
   "type": "lesson",
   "title": "Porovnání a logika",
   "summary": "Přísné vs. volné porovnání, truthy a falsy, logické operátory a podmínky.",
-  "minutes": 15,
+  "minutes": 40,
   "runtime": "js"
 }

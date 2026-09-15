@@ -1,7 +1,7 @@
 {
   "type": "quiz",
   "title": "Kvíz: základy JavaScriptu",
-  "summary": "Co vypíše kód, truthy/falsy, typy chyb a pasti v cyklech.",
-  "minutes": 25,
+  "summary": "Čtení kódu: co vypíše, truthy a falsy, == a ===, ?? a ||, druh chyby podle hlášky, pasti v cyklech a cizí kód věrnostního programu kavárny.",
+  "minutes": 30,
   "runtime": "js"
 }

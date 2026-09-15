@@ -93,7 +93,7 @@ js-zaklady/reseni-problemu#1-preformuluj-zadani-vlastnimi-slovy
 
 ## 2. Vymysli příklady, i ty okrajové
 
-Než napíšeš řádek kódu, spočítej ručně výsledek pro několik vstupů. Vyber běžné případy a pak ty „na hraně", kde se kód láme nejčastěji: nula, jednička, hraniční hodnota, sudé × liché.
+Než napíšeš řádek kódu, spočítej ručně výsledek pro několik vstupů. Vyber běžné případy a pak ty „na hraně" — [[okrajový případ|okrajové případy]], kde se kód láme nejčastěji: nula, jednička, hraniční hodnota, sudé × liché.
 
 | `limit` | sudá čísla | výsledek | proč ho chceš |
 |---|---|---|---|
@@ -382,6 +382,8 @@ js-zaklady/reseni-problemu#test-na-jedinem-prikladu
 - [Remainder (%)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Remainder) — zbytek po dělení, na kterém stojí test sudosti, včetně chování u záporných čísel.
 - [Loops and iteration](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Loops_and_iteration) — když si při přepisu podcílů nevybavíš, jak se píše cyklus.
 - [Math](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math) — hotové výpočty (zaokrouhlení, maximum, odmocnina), které nemusíš vymýšlet sám.
+
+Dál: v labu Malé algoritmy tenhle postup použiješ na čtyři úlohy bez návodu — FizzBuzz, součet číslic, převod teploty a prvočísla.
 
 # --questions--
 

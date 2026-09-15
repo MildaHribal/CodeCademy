@@ -368,7 +368,7 @@ js-zaklady/porovnani-a-logika#vychozi-hodnota-misto
 
 ## Ternární operátor
 
-Když podle podmínky vybíráš jednu ze dvou **hodnot**, je `if`/`else` zbytečně dlouhý. Ternární operátor je výraz: `podmínka ? hodnota, když platí : hodnota, když neplatí`.
+Když podle podmínky vybíráš jednu ze dvou **hodnot**, je `if`/`else` zbytečně dlouhý. [[ternární operátor|Ternární operátor]] je výraz: `podmínka ? hodnota, když platí : hodnota, když neplatí`.
 
 :::live js
 ```js
@@ -545,6 +545,8 @@ console.log(ticketsLeft < '9', ticketsLeft === 10);
 --why-- Dva texty se porovnávají znak po znaku jako ve slovníku: `'1'` je před `'9'`, takže `'10' < '9'` platí. A `===` mezi textem a číslem je vždy `false`. Oprava: převést hodnotu na číslo hned při načtení, `Number(ticketsLeft)`.
 :::
 
+Zkus v ukázce přepsat `'9'` na číslo `9`. Když je jen **jedna** strana `<` nebo `>` číslo, JavaScript text potichu převede na číslo a `'10' < 9` vyjde správně `false`. Na tuhle náhodu ale nespoléhej — stačí, aby číslo přišlo jako text i z druhé strany.
+
 > [!PITFALL]
 > **Text z formuláře porovnaný s číslem dává nesmyslné výsledky.** Příznak: `'10' < '9'` je `true`, `'5' === 5` je `false` a podmínka „nikdy neplatí" nebo platí jen u některých čísel. Oprava: `Number()` hned u vstupu a teprve pak porovnávat.
 
@@ -564,19 +566,19 @@ console.log(ticketsLeft < '9', ticketsLeft === 10);
 > **Bez `break` propadne `switch` do dalšího `case`.** Příznak: vypíše se nebo nastaví víc věcí najednou a poslední přepíše tu správnou. Oprava: `break` za každou větev; záměrné propadání (víc `case` pod sebou) nech jen bez příkazů mezi nimi.
 
 :::check
-Zákazník si objednal jídlo a do pole „Spropitné" napsal `0`. Program má řádek `const tip = tipInput || 50;` a v `tipInput` je číslo `0`. Kolik bude `tip`?
+E-shop slibuje dopravu zdarma „od 1 500 Kč". V kódu je podmínka `if (cartTotal > 1500)`. Při jaké nejmenší celé částce v korunách dostane zákazník dopravu zdarma?
 
 ### --expected--
 
-50
+1501
 
 ### --why--
 
-`0` je falsy, takže `||` vrátí pravou stranu. Zákazníkova nula se ztratí. `tipInput ?? 50` by nulu zachoval.
+`>` hranici nepustí: `1500 > 1500` je `false`, takže zákazník s nákupem přesně za 1 500 Kč dopravu zaplatí, i když mu ji e-shop slíbil. „Od 1 500 Kč" znamená `cartTotal >= 1500`.
 
 ### --see--
 
-js-zaklady/porovnani-a-logika#smaze-platnou-nulu
+js-zaklady/porovnani-a-logika#hranice-misto
 :::
 
 ## Kde to najdeš v MDN
@@ -585,6 +587,8 @@ js-zaklady/porovnani-a-logika#smaze-platnou-nulu
 - [Falsy](https://developer.mozilla.org/en-US/docs/Glossary/Falsy) — úplný seznam hodnot, které se v podmínce chovají jako nepravda.
 - [Nullish coalescing operator (??)](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Nullish_coalescing) — rozdíl proti `||` s příklady.
 - [switch](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/switch) — propadání mezi `case` a kam patří `default`.
+
+Dál: ve workshopu Hodnocení studentů z bodů spočítáš známku, slovní hodnocení a upozornění — a přesně na hranicích bodů zjistíš, jestli máš `>=`, nebo `>`.
 
 # --questions--
 

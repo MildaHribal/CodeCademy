@@ -112,3 +112,29 @@ mdn: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statement
 lekce: js-zaklady/cteni-chyb-a-debugger#debugger-zastav-program-a-podivej-se-dovnitr
 
 Místo, kde se program v DevTools zastaví před provedením řádku. Nastavíš ho kliknutím na číslo řádku v panelu Sources nebo příkazem `debugger;` v kódu.
+
+## --term-- ternární operátor
+
+en: conditional (ternary) operator
+aliases: ternárního operátoru, ternárním operátorem, ternární operátory
+mdn: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_operator
+lekce: js-zaklady/porovnani-a-logika#ternarni-operator
+
+Výraz `podmínka ? hodnota1 : hodnota2`, který vrátí jednu ze dvou hodnot podle podmínky. Hodí se na výběr hodnoty, na tři a víc možností je čitelnější `if`/`else if`.
+
+## --term-- nekonečná smyčka
+
+en: infinite loop
+aliases: nekonečné smyčky, nekonečnou smyčku, nekonečnou smyčkou, nekonečný cyklus
+mdn: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Loops_and_iteration
+lekce: js-zaklady/cykly#nekonecna-smycka
+
+Cyklus, jehož podmínka nikdy nepřestane platit, typicky kvůli chybějícímu kroku nebo kroku špatným směrem. Karta prohlížeče zamrzne; Akademie takovou smyčku zastaví hláškou.
+
+## --term-- okrajový případ
+
+en: edge case
+aliases: okrajové případy, okrajového případu, okrajových případů, okrajovým případem
+lekce: js-zaklady/reseni-problemu#2-vymysli-priklady-i-ty-okrajove
+
+Vstup na hraně povolených hodnot — nula, jednička, prázdný text, hodnota přesně na hranici podmínky. Právě na něm se nejčastěji ukáže chyba, proto patří do každé sady příkladů.

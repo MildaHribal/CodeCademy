@@ -1,7 +1,7 @@
 {
   "type": "lab",
   "title": "Malé algoritmy",
-  "summary": "FizzBuzz, součet číslic, převod teploty a prvočísla — poprvé sám bez vedení.",
-  "minutes": 50,
+  "summary": "Samostatně napíšeš hru na počítání s vlastními slovy, součet číslic, převod teploty a prvočísla — čtyři klasické úlohy z pohovorů.",
+  "minutes": 65,
   "runtime": "js"
 }

@@ -1,8 +1,7 @@
 {
   "type": "lab",
   "title": "Oprav 3 chyby",
-  "summary": "Najdi a oprav tři chyby v cizím programu.",
-  "minutes": 30,
-  "runtime": "js",
-  "kind": "debug"
+  "summary": "Kolegův kód pokladny Kina Hvězda má tři chyby z pastí sekce. Najdi je, oprav a nic dalšího nerozbij.",
+  "minutes": 45,
+  "runtime": "js"
 }

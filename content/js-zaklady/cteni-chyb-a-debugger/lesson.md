@@ -176,6 +176,9 @@ Uncaught TypeError: Cannot read properties of undefined (reading 'length')
 4. **`at countVowels (script.js:4:28)`** — kde: funkce `countVowels`, soubor `script.js`, **řádek 4**, znak 28.
 5. Další řádky `at …` jsou [[stack trace]]: cesta, kudy program k místu chyby došel. `countVowels` zavolala funkce `printReport` z řádku 12 a tu zavolal hlavní kód na řádku 15.
 
+> [!NOTE]
+> Funkce (`countVowels`, `printReport`) do hloubky probere sekce Funkce a rozsah platnosti. Teď stačí vědět, že funkce je pojmenovaný kus kódu, který jde z jiného místa **zavolat** — a stack trace zapisuje, kdo koho volal.
+
 Stack trace se čte shora: nahoře je místo, kde to spadlo, pod ním kdo ho zavolal. Když je chybná hodnota předaná zvenku (tady `undefined` místo textu), příčinu najdeš o řádek níž ve výpisu — tam, odkud se funkce volala.
 
 > [!TIP]
@@ -236,7 +239,7 @@ Step into
 
 #### --why--
 
-Step into vstoupí do volané funkce a zastaví se na jejím prvním řádku. V Scope pak uvidíš i parametr `cartTotal`.
+Step into vstoupí do volané funkce a zastaví se na jejím prvním řádku. V panelu Scope pak uvidíš i hodnotu, se kterou byla funkce zavolána.
 
 ### --answer--
 
@@ -260,7 +263,7 @@ Debugger si vyzkoušíš hned. Nejrychlejší cesta nepotřebuje žádný soubor
 3. Program se zastaví na `debugger;` a DevTools přepnou do panelu **Sources**. Hodnoty najdeš v panelu **Scope**, podsekce **Local** nebo **Script**.
 
 :::check
-Zastav tenhle program v DevTools a v panelu Scope zjisti, jakou hodnotu má `checksum`, když program stojí na `debugger;`. Počítat ručně nemusíš — v tom je smysl debuggeru.
+Zastav tenhle program v DevTools a v panelu Scope zjisti, jakou hodnotu má `checksum`, když program stojí na `debugger;`. Počítat ručně nemusíš — v tom je smysl debuggeru. Řádek s `for` dvanáctkrát zopakuje výpočet pod ním; cykly se naučíš za dvě lekce, tady ho stačí vložit.
 
 ```js
 let checksum = 7;
@@ -381,6 +384,8 @@ js-zaklady/cteni-chyb-a-debugger#hlaska-ukazuje-nasledek-ne-pricinu
 - [debugger](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/debugger) — kdy příkaz `debugger` program zastaví a kdy nic nedělá.
 - [Debug JavaScript (Chrome DevTools)](https://developer.chrome.com/docs/devtools/javascript) — návod k panelu Sources s breakpointy, Scope a Watch. Není to MDN, ale oficiální dokumentace Chrome.
 
+Dál: v lekci Porovnání a logika se program naučí rozhodovat a ve workshopu Hodnocení studentů zkusíš debugger na kolegově funkci, která dává špatné známky přesně na hranici.
+
 # --questions--
 
 ## --question--
@@ -445,7 +450,7 @@ Nic zvláštního, program proběhne, jako by tam příkaz nebyl.
 
 #### --why--
 
-`debugger;` zastaví program jen při otevřených DevTools. Proto ho před odevzdáním kódu smaž, ale uživatelům neublíží.
+`debugger;` zastaví program jen při otevřených DevTools. Uživatelům tedy neublíží, ale do hotového kódu nepatří — před odevzdáním ho smaž.
 
 ### --answer--
 

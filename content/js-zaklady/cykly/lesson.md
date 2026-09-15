@@ -361,7 +361,7 @@ js-zaklady/cykly#break-a-continue
 
 ## Nekonečná smyčka
 
-Když podmínka nikdy nepřestane platit, cyklus běží navždy. Ve skutečném prohlížeči karta zamrzne a nereaguje, dokud ji nezavřeš. Tři nejčastější příčiny:
+Když podmínka nikdy nepřestane platit, cyklus běží navždy — vznikne [[nekonečná smyčka]]. Ve skutečném prohlížeči karta zamrzne a nereaguje, dokud ji nezavřeš. Tři nejčastější příčiny:
 
 - **zapomenutý krok:** ve `while` chybí `count++`,
 - **krok špatným směrem:** `i--` místo `i++` u cyklu, který má dojít nahoru,
@@ -483,6 +483,8 @@ js-zaklady/cykly#pruchod-navic
 - [for](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for) — pořadí, ve kterém se provádějí tři části hlavičky.
 - [for...of](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...of) — co všechno jde procházet: text, pole a další.
 - [break](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/break) — ukončení cyklu i `switch`.
+
+Dál: v labu Oprav 3 chyby najdeš v kolegově programu off-by-one a dvě další pasti z téhle sekce.
 
 # --questions--
 

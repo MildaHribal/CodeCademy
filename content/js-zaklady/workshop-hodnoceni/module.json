@@ -1,7 +1,7 @@
 {
   "type": "workshop",
   "title": "Hodnocení studentů",
-  "summary": "Postavíš program, který z bodů přidělí známku, slovní hodnocení a upozornění.",
-  "minutes": 55,
+  "summary": "Postavíš modul školní aplikace, který z bodů spočítá známku, slovní hodnocení a upozornění a vypíše přehled celé třídy.",
+  "minutes": 90,
   "runtime": "js"
 }

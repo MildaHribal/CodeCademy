@@ -591,6 +591,8 @@ js-zaklady/promenne-a-typy#spojeni-misto-scitani
 - [Operator precedence](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Operator_precedence) — tabulka přednosti operátorů, když si pořadím nejsi jistý.
 - [Template literals](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals) — šablonové řetězce, víc řádků a vkládání výrazů.
 
+Dál: ve workshopu Kalkulačka spropitného z proměnných, operátorů a šablonových řetězců postavíš rozúčtování večeře pro celý stůl — včetně textu z formuláře, který se nesmí spojit místo sečíst.
+
 # --questions--
 
 ## --question--
@@ -672,7 +674,11 @@ js-zaklady/promenne-a-typy#undefined-a-null
 
 ## --question--
 
-Jaký typ vrátí `typeof` pro hodnotu `'false'`? Napiš přesně výstup konzole.
+Co vypíše tenhle řádek?
+
+```js
+console.log(typeof typeof 42);
+```
 
 ### --expected--
 
@@ -680,7 +686,7 @@ string
 
 ### --why--
 
-V uvozovkách je to text, i když obsahuje slovo `false`. Typ `boolean` mají jen hodnoty `true` a `false` bez uvozovek.
+Vnitřní `typeof 42` vrátí jméno typu **jako text**, tedy `'number'`. Vnější `typeof` se pak ptá na typ tohohle textu, a to je `string`. `typeof` proto nikdy nevrátí přímo hodnotu typu, vždycky text s jeho jménem.
 
 ### --see--
 

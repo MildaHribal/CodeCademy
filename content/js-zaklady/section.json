@@ -1,52 +1,76 @@
 {
   "title": "Základy JavaScriptu",
-  "intro": "V této sekci přejdeš od statické stránky k programům, které se rozhodují, počítají a opakují akce. Naučíš se číst chybové hlášky a zastavit program v debuggeru — ten ti od teď ušetří hodiny marného hledání.\n\n**Předpoklady:** `html-zaklady` a `start-nastroje`.",
+  "intro": "Každé tlačítko, které na webu něco spočítá, rozhodne nebo zopakuje, stojí na tom, co se naučíš tady: proměnné, typy, podmínky a cykly. A hned od začátku i to, co odlišuje programátora od zkoušení naslepo — čtení chybových hlášek a debugger.\n\nPostup: první program a proměnné, workshop s kalkulačkou spropitného pro bistro, lekce o chybách a debuggeru, podmínky a workshop, ve kterém postavíš hodnocení písemky pro celou třídu. Pak cykly a lab, kde opravíš tři chyby v kolegově pokladně kina, krátká lekce o tom, jak řešit úlohu, lab se čtyřmi klasickými algoritmy z pohovorů a kvíz nad cizím kódem.\n\n**Předpoklady:** `html-zaklady` a `start-nastroje`.",
   "modules": [
     "prvni-program",
-    "cteni-chyb-a-debugger",
     "promenne-a-typy",
     "workshop-kalkulacka-spropitneho",
+    "cteni-chyb-a-debugger",
     "porovnani-a-logika",
     "workshop-hodnoceni",
     "cykly",
+    "lab-oprav-3-chyby",
     "reseni-problemu",
     "lab-fizzbuzz-a-spol",
-    "lab-oprav-3-chyby",
     "kviz"
   ],
   "outcomes": [
     {
       "text": "Napíšeš krátký program s proměnnými, podmínkami a cykly.",
       "links": [
-        "js-zaklady/promenne-a-typy",
-        "js-zaklady/porovnani-a-logika",
-        "js-zaklady/cykly"
+        "js-zaklady/promenne-a-typy#const-a-let",
+        "js-zaklady/workshop-hodnoceni",
+        "js-zaklady/cykly#cyklus-for",
+        "js-zaklady/lab-fizzbuzz-a-spol"
       ]
     },
     {
-      "text": "Vysvětlíš datové typy a rozdíl mezi == a ===, truthy a falsy.",
+      "text": "Vysvětlíš datové typy, rozdíl mezi `==` a `===` a co je truthy a falsy.",
       "links": [
-        "js-zaklady/promenne-a-typy",
-        "js-zaklady/porovnani-a-logika"
+        "js-zaklady/promenne-a-typy#datove-typy",
+        "js-zaklady/porovnani-a-logika#prisna-rovnost-a-volna",
+        "js-zaklady/porovnani-a-logika#truthy-a-falsy"
       ]
     },
     {
-      "text": "Přečteš chybovou hlášku a stack, zastavíš program na debugger; a krokuješ ho.",
+      "text": "Převedeš text z formuláře na číslo a spočítáš s ním, aniž by ho `+` spojil místo sečtení.",
       "links": [
-        "js-zaklady/cteni-chyb-a-debugger"
+        "js-zaklady/promenne-a-typy#text-a-cislo-operator-a-prevod-typu",
+        "js-zaklady/workshop-kalkulacka-spropitneho",
+        "js-zaklady/workshop-kalkulacka-spropitneho/012"
       ]
     },
     {
-      "text": "Postupuješ při řešení úlohy: přeformuluješ, vymyslíš příklady, rozložíš na kroky.",
+      "text": "Přečteš chybovou hlášku a stack trace, zastavíš program na `debugger;` a krokuješ ho.",
       "links": [
-        "js-zaklady/reseni-problemu"
+        "js-zaklady/cteni-chyb-a-debugger#tri-druhy-chyb",
+        "js-zaklady/cteni-chyb-a-debugger#jak-cist-hlasku-a-stack-trace",
+        "js-zaklady/cteni-chyb-a-debugger#debugger-v-praxi-a-v-akademii"
       ]
     },
     {
-      "text": "Najdeš a opravíš chybu v krátkém cizím programu.",
+      "text": "Napíšeš řetěz podmínek s hranicemi, `switch` a výchozí hodnotu přes `??` a ověříš je na okrajových případech.",
+      "links": [
+        "js-zaklady/porovnani-a-logika#rozhodovani-if-else-if-else",
+        "js-zaklady/workshop-hodnoceni/006",
+        "js-zaklady/workshop-hodnoceni/013",
+        "js-zaklady/workshop-hodnoceni/014"
+      ]
+    },
+    {
+      "text": "Při řešení úlohy postupuješ: přeformuluješ zadání, vymyslíš příklady včetně okrajových a rozložíš postup na kroky.",
+      "links": [
+        "js-zaklady/reseni-problemu#1-preformuluj-zadani-vlastnimi-slovy",
+        "js-zaklady/reseni-problemu#2-vymysli-priklady-i-ty-okrajove",
+        "js-zaklady/lab-fizzbuzz-a-spol"
+      ]
+    },
+    {
+      "text": "Najdeš a opravíš chybu v krátkém cizím programu, aniž bys rozbil zbytek.",
       "links": [
         "js-zaklady/lab-oprav-3-chyby",
-        "js-zaklady/workshop-kalkulacka-spropitneho"
+        "js-zaklady/workshop-hodnoceni/010",
+        "js-zaklady/workshop-kalkulacka-spropitneho/012"
       ]
     }
   ]

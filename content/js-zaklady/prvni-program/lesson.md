@@ -55,7 +55,16 @@ Každý prohlížeč má zabudovaný *engine*, který JavaScript čte a provád�
 
 Stejný jazyk umí běžet i mimo prohlížeč. Node.js vezme engine V8 a spouští JavaScript v terminálu — píšou se v něm servery a nástroje. K němu se dostaneš v sekci Node.js. Do té doby píšeš JavaScript pro prohlížeč.
 
-V Akademii máš prohlížeč pořád po ruce: ukázky v lekcích i kroky workshopů spouštějí kód v izolovaném rámu stránky a výpisy ukazují v panelu konzole. Nic nemusíš instalovat.
+V Akademii máš prohlížeč pořád po ruce: ukázky v lekcích i kroky workshopů spouštějí kód v izolovaném rámu stránky a výpisy ukazují v panelu konzole. Nic nemusíš instalovat. Tahle ukázka se právě provedla v tvém prohlížeči:
+
+:::live js
+```js
+console.log('Ahoj, tenhle řádek provedl engine tvého prohlížeče.');
+console.log('Prohlížeč se hlásí jako:', navigator.userAgent);
+```
+:::
+
+Zkus změnit text v prvním řádku a sleduj, jak se výpis v konzoli hned přepíše. Druhý řádek prozradí, v jakém prohlížeči kód běží — na serveru by žádný `navigator` nebyl.
 
 :::check
 Kamarád tvrdí, že JavaScript ze stránky nepoběží, když uživatel nemá nainstalovaný Node.js. Má pravdu?
@@ -430,6 +439,8 @@ js-zaklady/prvni-program#chybejici-carka-mezi-hodnotami
 - [Lexical grammar](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Lexical_grammar) — v části *Automatic semicolon insertion* přesná pravidla, kdy engine středník doplní a kdy ne.
 - [`<script>` element](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/script) — atributy `src`, `defer` a `type`.
 
+Dál: v lekci Proměnné a typy si program začne hodnoty pamatovat a hned potom z nich ve workshopu postavíš kalkulačku, která rozúčtuje večeři v bistru.
+
 # --questions--
 
 ## --question--
@@ -460,35 +471,41 @@ js-zaklady/prvni-program#komentare
 
 ## --question--
 
-Program vypsal do konzole `Načteno` a pod tím červenou hlášku. V souboru je pod chybným řádkem ještě `console.log('Zobrazeno');`. Proč se nevypsal?
+Co bude v konzoli, když spustíš tenhle program?
+
+```js
+console.log('Načítám objednávku');
+console.log('Položek:', 3;
+console.log('Hotovo');
+```
 
 ### --answer--
 
-Konzole ukazuje vždycky jen jeden výpis.
+`Načítám objednávku` a pod tím chybová hláška.
 
 #### --why--
 
-Konzole ukáže libovolně výpisů. Co se stalo s programem v místě chyby?
+Tak by to dopadlo s chybou, která vznikne až při provádění řádku, třeba s překlepem ve jménu. Tady je ale chyba v samotném zápisu. Kdy ji engine zjistí?
 
 ### --correct--
 
-Program se na chybném řádku zastavil a další příkazy neprovedl.
+Jen chybová hláška `SyntaxError`, žádný výpis.
 
 #### --why--
 
-Příkazy jdou shora dolů. Nezachycená chyba program ukončí, takže řádky pod ní se nikdy neprovedou.
+Engine celý soubor nejdřív přečte. Chybějící závorku najde ještě před spuštěním a neprovede ani první řádek.
 
 ### --answer--
 
-`console.log` nejde použít dvakrát za sebou.
+`Načítám objednávku` a `Hotovo`, chybný řádek se přeskočí.
 
 #### --why--
 
-`console.log` můžeš volat, kolikrát chceš — první výpis to dokazuje. Proč se druhý neprovedl?
+Prohlížeč chybné řádky nepřeskakuje. A u chyby v zápisu se program nespustí vůbec — ani řádky nad ní.
 
 ### --see--
 
-js-zaklady/prvni-program#prikazy-se-provadeji-shora-dolu
+js-zaklady/prvni-program#chybejici-carka-mezi-hodnotami
 
 ## --question--
 

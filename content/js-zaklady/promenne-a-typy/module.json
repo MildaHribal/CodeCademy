@@ -2,6 +2,6 @@
   "type": "lesson",
   "title": "Proměnné a typy",
   "summary": "const, let, datové typy, typeof a rozdíl mezi undefined a null.",
-  "minutes": 15,
+  "minutes": 40,
   "runtime": "js"
 }
