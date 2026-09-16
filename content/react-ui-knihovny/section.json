@@ -1,10 +1,36 @@
 {
   "title": "UI knihovny a animace v Reactu",
-  "intro": "Rozepsaná sekce.",
+  "intro": "Jak se v React projektech dnes skutečně staví rozhraní. Nejdřív Tailwind uvnitř komponent: podmíněné třídy přes `clsx`, konflikty utilit přes `tailwind-merge` a varianty v mapě místo skládaných řetězců. Pak vlastní sada komponent ve stylu shadcn/ui a přístupná primitiva Radix — u každé komponenty uvidíš, co bys musel napsat sám (fokus, Escape, role, portál) a proč to necháš na primitivu.",
   "modules": [
     "tailwind-v-reactu",
     "workshop-sada-komponent",
     "shadcn-a-radix",
     "workshop-pristupne-komponenty"
+  ],
+  "outcomes": [
+    {
+      "text": "Složíš třídy komponenty podle props přes `clsx` a `tailwind-merge` tak, že je volající může přepsat přes `className` a nic se nepřebije náhodou.",
+      "links": ["react-ui-knihovny/tailwind-v-reactu#cn-clsx-a-tailwind-merge-v-jednom", "react-ui-knihovny/workshop-sada-komponent"]
+    },
+    {
+      "text": "Navrhneš API komponenty s variantami přes `class-variance-authority` a předáš dál `className`, `ref` i zbytek props.",
+      "links": ["react-ui-knihovny/tailwind-v-reactu#varianty-v-mape-trid", "react-ui-knihovny/workshop-sada-komponent"]
+    },
+    {
+      "text": "Nastylíš stav komponenty z atributů `data-*` a `aria-*` místo podmínek v JSX.",
+      "links": ["react-ui-knihovny/tailwind-v-reactu#stav-jako-data-atribut", "react-ui-knihovny/shadcn-a-radix#stav-v-atributech-data-state"]
+    },
+    {
+      "text": "Vysvětlíš, co shadcn/ui je a není (kód v repozitáři, ne závislost), a co za tebe řeší přístupné primitivum.",
+      "links": ["react-ui-knihovny/shadcn-a-radix#shadcn-ui-kod-v-repozitari-ne-zavislost", "react-ui-knihovny/shadcn-a-radix#co-zustava-na-tobe"]
+    },
+    {
+      "text": "Postavíš přístupný dialog, rozbalovací menu, záložky, výběr a přepínač nad Radix primitivy a ověříš je klávesnicí.",
+      "links": ["react-ui-knihovny/shadcn-a-radix#radix-primitiva-chovani-bez-vzhledu", "react-ui-knihovny/workshop-pristupne-komponenty"]
+    },
+    {
+      "text": "Rozhodneš mezi řízeným a neřízeným režimem primitiva a poznáš, kdy akce potřebuje `AlertDialog` místo `Dialog`.",
+      "links": ["react-ui-knihovny/shadcn-a-radix#rizeny-a-nerizeny-rezim", "react-ui-knihovny/workshop-pristupne-komponenty"]
+    }
   ]
 }

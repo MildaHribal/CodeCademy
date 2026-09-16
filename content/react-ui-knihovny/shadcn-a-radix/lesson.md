@@ -85,7 +85,7 @@ primitivum je sada dílů, které se skládají do sebe — u dialogu takhle:
 | `Dialog.Trigger` | prvek, který dialog otevírá (dostane `aria-haspopup`, `aria-expanded`) |
 | `Dialog.Portal` | vykreslí obsah na konec `<body>`, mimo tvůj layout |
 | `Dialog.Overlay` | překrytí stránky |
-| `Dialog.Content` | samotné okno: `role="dialog"`, past na fokus, Escape, návrat fokusu |
+| `Dialog.Content` | samotné okno: `role="dialog"`, [[past na fokus]], Escape, návrat fokusu na `Trigger` |
 | `Dialog.Title` | název dialogu — čtečka ho ohlásí při otevření |
 | `Dialog.Description` | doplňující věta (nepovinné) |
 | `Dialog.Close` | prvek, který dialog zavře |
@@ -151,7 +151,7 @@ rodiče nemá.
 
 ## Řízený a neřízený režim
 
-Každé primitivum umí dva režimy. **Neřízený** si stav drží sám — napíšeš jen
+Každé primitivum umí dva režimy, neřízený a [[řízený režim|řízený]]. **Neřízený** si stav drží sám — napíšeš jen
 `defaultOpen` (nebo nic) a o nic se nestaráš. **Řízený** stav držíš ty:
 `open={otevreno} onOpenChange={setOtevreno}`. Přesně stejná dvojice funguje
 u `Tabs` (`value` / `onValueChange`), `Switch` (`checked` / `onCheckedChange`)
@@ -187,10 +187,10 @@ export default function App() {
 }
 ```
 --question-- Dialog je řízený stavem a otevírá ho obyčejné `<button>` mimo `Dialog.Trigger`. Kde skončí fokus po zavření dialogu Escapem?
+--option-- Na tlačítku „Odhlásit zařízení" — dialog si pamatuje prvek, který měl fokus před otevřením.
 --option-- Na prvním prvku stránky, protože dialog neví, odkud byl otevřený.
---option*-- Na tlačítku „Odhlásit zařízení" — Radix si pamatuje prvek, který měl fokus před otevřením.
---option-- Nikde; fokus zůstane na `<body>`, dokud uživatel nezmáčkne Tab.
---why-- Radix si při otevření uloží aktivní prvek (ne `Trigger`, ale ten, co měl fokus) a při zavření mu fokus vrátí. Proto řízený režim o přístupnost nepřijde. Kdyby ten prvek mezitím z DOM zmizel, fokus spadne na `<body>` — a to je přesně situace, kterou řeší dialog otevíraný z položky menu.
+--option*-- Na `<body>` — fokus se vrací na `Dialog.Trigger`, a ten tady žádný není.
+--why-- Modální `Dialog.Content` výchozí návrat fokusu zruší a zaostří `Dialog.Trigger`. Když dialog otevřeš tlačítkem mimo `Trigger`, není co zaostřit a fokus spadne na `<body>`: uživatel klávesnice pak začíná znovu od začátku stránky. Buď dialog otevírej z `Trigger`u, nebo si fokus vrať sám v `onCloseAutoFocus`.
 :::
 
 > [!TIP]
@@ -426,12 +426,13 @@ Co z tohohle seznamu Radix **nevyřeší** za tebe?
 
 ### --answer--
 
-Vrácení fokusu na prvek, ze kterého se dialog otevřel.
+Vrácení fokusu na `Dialog.Trigger` po zavření dialogu.
 
 #### --why--
 
-Tohle je jedna z hlavních věcí, proč primitivum bereš — uložený aktivní prvek
-dostane fokus zpátky při zavření.
+Tohle je jedna z hlavních věcí, proč primitivum bereš: `Dialog.Content` po zavření
+zaostří `Trigger` sám. Jen když dialog otevíráš tlačítkem mimo `Trigger`, musíš
+si o fokus říct v `onCloseAutoFocus`.
 
 ### --answer--
 
