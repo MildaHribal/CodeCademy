@@ -292,7 +292,8 @@ export function renderWorkspace(ctx, { module, item, nav, steps = null, stepInde
         h('kbd', { class: 'btn__kbd' }, 'Ctrl+Enter'),
       );
     }
-    return h('span', { class: 'result__links' }, nextModuleLink(nav), backLink(nav));
+    // Bez dalšího modulu je `nextModuleLink` sám odkazem zpět na sekci — nepřidávej ho dvakrát.
+    return h('span', { class: 'result__links' }, nextModuleLink(nav), nav.nextModule ? backLink(nav) : null);
   }
 
   function goNext() {
