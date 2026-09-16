@@ -6,11 +6,20 @@ Nainstaluješ knihovnu a editor ti u ní hned našeptává typy. Odkud je podle 
 ### --answer--
 Vygeneroval si je z kódu knihovny.
 
+#### --why--
+To by trvalo dlouho a knihovna může být napsaná v obyčejném JavaScriptu bez typů, odkud už nic vygenerovat nejde.
+
 ### --correct--
 Přečetl je ze souboru s příponou `.d.ts`, který má knihovna v balíčku.
 
+#### --why--
+Soubory `.d.ts` jsou definiční soubory, které říkají překladači tvar dat bez jejich implementace.
+
 ### --answer--
 Stáhl si je z internetu při psaní.
+
+#### --why--
+Editor při psaní na síť nesahá. Typy musí být přítomné přímo ve složce `node_modules`.
 :::
 
 :::check pretest
@@ -22,6 +31,9 @@ poslední
 ### --accept--
 ten nejvíc odsazený
 poslední řádek
+
+### --why--
+Poslední (nejhlouběji odsazený) řádek obsahuje skutečnou příčinu nesouladu (např. "string is not assignable to number"). Všechny řádky nad ním jen popisují, jak k ní kompilátor došel přes strukturu objektů.
 :::
 
 Vlastní typy jsi psal celý workshop. V práci ale devět z deseti typů, které

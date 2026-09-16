@@ -6,11 +6,20 @@ Funkce dostane parametr typu `string | number`. Co myslíš, že se stane, když
 ### --answer--
 Projde to. `toFixed` na textu vrátí ten text.
 
+#### --why--
+`toFixed` je metoda pro čísla. Volat ji na textu by vyhodilo výjimku (JavaScript to nedělá tiše).
+
 ### --correct--
 Kontrola to odmítne — `toFixed` na `string` neexistuje.
 
+#### --why--
+TypeScript dovolí zavolat jen ty metody, které existují ve všech větvích sjednocení.
+
 ### --answer--
 Projde to, ale spadne to až za běhu.
+
+#### --why--
+Přesně tomuhle pádu za běhu má kontrola typů zabránit, takže to nedovolí ani přeložit.
 :::
 
 :::check pretest
@@ -22,6 +31,9 @@ nevím
 ### --accept--
 označí případ, který nemůže nastat
 hlídá, že jsem na nic nezapomněl
+
+### --why--
+`never` slouží jako signál pro TypeScript, že se na dané místo v kódu nesmí nikdy dostat běh programu. Používá se k ověření vyčerpávající kontroly (exhaustive check).
 :::
 
 Typy z minulé lekce popisují, **co v hodnotě je**. Jenže polovina práce

@@ -6,11 +6,20 @@ Co myslíš: projde kontrolou typů řádek `const hra: { nazev: string } = { na
 ### --answer--
 Projde. Objekt má `nazev` typu `string`, zbytek je navíc a nikomu nevadí.
 
+#### --why--
+Takhle funguje strukturální typování v TypeScriptu, ale pro objektové literály platí přísnější kontrola.
+
 ### --correct--
 Neprojde. U objektu napsaného přímo do proměnné hlásí TypeScript i klíč navíc.
 
+#### --why--
+Jmenuje se to "excess property checking" a brání to překlepům v názvech klíčů.
+
 ### --answer--
 Neprojde, protože typ objektu musí mít jméno (`type` nebo `interface`).
+
+#### --why--
+Typ objektu může být napsaný "inline" (tzv. anonymní typ), jméno není povinné.
 :::
 
 Typová anotace je krátká jen do chvíle, kdy začneš popisovat skutečná data.
@@ -343,7 +352,7 @@ Bez `strict`u projde skoro všechno a psaní typů je jen zdobení. Zapínej ho 
 > [!NOTE]
 > Ve starém projektu, který `strict` nemá, se nezapíná najednou — objeví se stovky
 > chyb. Zapíná se po jedné volbě, začíná se `strictNullChecks` a opravuje se po
-> souborech. To je téma sekce [Práce v cizím kódu](see:nastroje-cizi-kod/cteni-cizi-kodu).
+> souborech. To si ukážeme v navazujících kurzech.
 
 :::check
 Funkce `najdiHru(id)` používá `hry.find(…)`. Jaký návratový typ jí TypeScript odvodí, když je zapnutý `strictNullChecks`?

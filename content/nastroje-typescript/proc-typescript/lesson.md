@@ -6,11 +6,20 @@ V souboru `ceny.ts` je řádek `const cena: number = '199';`. Co myslíš, co se
 ### --answer--
 Node skončí chybou, protože `'199'` není číslo.
 
+#### --why--
+Node typové anotace před spuštěním ignoruje, takže chybu nevyhodí.
+
 ### --correct--
 Program normálně doběhne. Node anotaci `: number` jen zahodí.
 
+#### --why--
+TypeScript nemá žádný vliv na chování programu za běhu, typy se mažou.
+
 ### --answer--
 Node text `'199'` sám převede na číslo `199`.
+
+#### --why--
+TypeScript ani Node žádné hodnoty za běhu automaticky nepřevádí.
 :::
 
 :::check pretest
