@@ -6,6 +6,70 @@
 
 ---
 
+## 0. AKTUÁLNÍ ZADÁNÍ (platí přednostně, 16. 9. 2026)
+
+**Tvoje sekce — a jen tyhle.** Do ostatních adresářů v `content/` NESAHEJ, souběžně na nich
+pracuje druhý nástroj a přepsali byste si práci. Piš je v tomhle pořadí:
+
+1. `html-zaklady` — HTML a jak funguje web
+2. `start-nastroje` — VS Code, terminál, první repozitář a nasazení (+ lekce `jak-se-ucit-v-akademii`)
+3. `html-formulare` — formuláře
+4. `html-pristupnost` — přístupnost
+5. `nastroje-git-terminal` — Git a terminál pokročile
+6. `nastroje-moduly-vite` — npm, moduly, Vite, lint a formát
+7. `nastroje-devtools-vykon` — DevTools a výkon webu
+8. `nastroje-testovani` — testování (Vitest, Playwright, MSW)
+9. `nastroje-cizi-kod` — orientace v cizím kódu, PR a code review
+10. `prace-s-ai` — jak používat AI a nespolehnout se na ni
+11. `js-algoritmy` — řešení problémů, Big O, pohovorové úlohy
+12. `kariera-pohovor` — portfolio, CV, pohovor
+
+**Sekce, které dělá druhý nástroj a jsou zakázané:** `nastroje-typescript`, `react-zaklady`,
+`react-hloubka`, `react-ui-knihovny`, `react-aplikace`, `next-fullstack`, a dále všechny
+`css-*`, `js-*` (kromě `js-algoritmy`) a `node-zaklady` — ty už jsou hotové a zrecenzované,
+ber je jako vzor a odkazuj na ně.
+
+**Pořadí modelů:** začni na Gemini 3.8 Flash. Když sekce neprojde kontrolou kvality (níž)
+ani po druhém pokusu, přepni na Gemini 3.1 Pro. Když neprojde ani tam, nech ji rozpracovanou
+a napiš, že potřebuje Claude Opus.
+
+**Kontrola kvality — povinná po KAŽDÉ sekci, bez výjimky:**
+
+```sh
+cd /home/karel/akademie
+npm run overit -- --concurrency 2 content/<sekce>
+```
+
+Musí vyjít **0 chyb a 0 varování**. Teprve pak je sekce hotová. Do zprávy uživateli vždy
+vypiš přesný výstup téhle kontroly.
+
+**Co se minule nepovedlo a nesmí se opakovat** (skutečné nálezy z předchozího běhu):
+
+- Workshopy vygenerované skriptem se zástupným textem (popis „Text", test `a === 2`,
+  řešení `let a = 2`, tipy „Nějaký tip"). **Nikdy negeneruj kroky skriptem.** Každý krok
+  se píše ručně a učí jednu konkrétní věc.
+- Testy v cizím formátu (`describe`, `it`, `import './main.js'`, `assert.isNotNull`).
+  Testy jsou tělo async funkce s `assert` podle kap. 6 kontraktu — jiný formát runner nespustí.
+- Prázdný seed a řešení (`// kód...`).
+- České identifikátory v kódu (`teplotaFahrenheit`). Kód anglicky, texty česky.
+- Pomocné skripty zapomenuté v `content/` (`generate_workshops.js`, `fix_all.js`…).
+- Smazaná cizí práce. Když něco vypadá jako omyl, napiš to, nemaž to.
+- **Rozepsaná sekce shodí aplikaci**, pokud má `section.json` se seznamem modulů, které ještě
+  nemají `module.json`. Dokud sekci nedokončíš, drž soubor pojmenovaný `section.json.wip`
+  a přejmenuj ho na `section.json` až na konci.
+- Řádek konzole nikdy neporovnávej přes `===` se syrovým textem. Neviditelný rozdíl
+  (rozložené `č`, pevná mezera) pak odmítne správné řešení. Použij:
+  `const sameLine = (a) => a.normalize('NFC').replace(/\u00a0/g, ' ').replace(/\s+/g, ' ').trim();`
+
+**Postup u jedné sekce** je v kapitole 5: nejdřív autor, pak druhý průchod jako nezávislý
+recenzent (jiný agent, který zkusí 2–3 jiná správná a 2–3 typicky chybná řešení přes runner).
+Teprve pak commit.
+
+**Hlas průběžně,** která sekce je hotová a jaký měla výsledek kontroly. Práci po tobě kontroluje
+druhá strana a nekvalitní sekce se přepisují od nuly, takže se vyplatí psát pomaleji a pořádně.
+
+---
+
 ## 1. O co jde
 
 **Akademie** je lokální interaktivní kurz webového vývoje ve stylu freeCodeCamp — **ne hra**.
