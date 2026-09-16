@@ -47,3 +47,43 @@ lekce: react-ui-knihovny/shadcn-a-radix#radix-primitiva-chovani-bez-vzhledu
 Uzavření fokusu do otevřeného dialogu: Tab a Shift+Tab chodí jen po prvcích uvnitř
 a na konci se vrátí na začátek. Bez ní uživatel klávesnice odejde za dialog na stránku,
 kterou přitom nevidí.
+
+## --term-- orchestrace
+
+en: orchestration
+aliases: orchestraci, orchestrace animací, orchestrací
+lekce: react-ui-knihovny/motion-for-react#varianty-a-orchestrace
+
+Řízení toho, kdy která animace ve skupině začne. Rodič rozdá potomkům stejně
+pojmenovanou variantu a v `transition` si přes `staggerChildren` a `delayChildren`
+určí prodlevu mezi nimi.
+
+## --term-- odchodová animace
+
+en: exit animation
+aliases: odchodové animace, odchodovou animaci, odchodovou animací, odchodová animace prvku
+lekce: react-ui-knihovny/motion-for-react#animatepresence-odchod-z-dom
+
+Animace, která se přehraje, když prvek mizí ze stromu komponent. Musí ji někdo
+podržet v DOM — v Motionu to dělá `AnimatePresence`, která odcházející prvek
+odstraní až po dokončení `exit`.
+
+## --term-- layout animace
+
+en: layout animation
+aliases: layout animace, layout animaci, layout animací, layoutové animace
+lekce: react-ui-knihovny/motion-for-react#layout-animace-a-layoutid
+
+Plynulý přechod mezi dvěma pozicemi nebo velikostmi, které vyplynuly z layoutu, ne
+ze změny vlastnosti. Motion si prvek změří před překreslením a po něm a rozdíl
+dohraje `transform`em; zapíná se prop `layout`.
+
+## --term-- omezený pohyb
+
+en: reduced motion
+aliases: omezeného pohybu, omezeným pohybem, omezený pohyb
+lekce: react-ui-knihovny/motion-for-react#omezeny-pohyb
+
+Systémové nastavení „omezit pohyb", které prohlížeč hlásí jako
+`prefers-reduced-motion: reduce`. V Motionu na něj reaguje `MotionConfig
+reducedMotion="user"`: zahodí posuny a zvětšení, průhlednost animovat nechá.

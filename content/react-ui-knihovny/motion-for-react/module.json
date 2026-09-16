@@ -1,0 +1,8 @@
+{
+  "type": "lesson",
+  "title": "Motion for React",
+  "summary": "Rozanimuješ vstup, odchod, změnu layoutu a gesta přes Motion — a poznáš, kdy animaci raději nepsat.",
+  "minutes": 50,
+  "runtime": "react",
+  "libs": ["tailwind"]
+}
