@@ -1,0 +1,1 @@
+{ "type": "lab", "title": "Kvíz v Reactu", "summary": "Samostatně postavíš kvízovou aplikaci: otázka po otázce, výběr odpovědi, vyhodnocení, skóre a restart.", "minutes": 75, "runtime": "react" }
