@@ -111,7 +111,9 @@ function lintExtension({ name, runtime, context, compact, item }) {
     if (!declarations.length) return [];
     const files = ws.getFiles().map((file) => (file.name === name ? { name, content: text } : { name: file.name, content: file.content }));
     try {
-      const items = await inspectCss({ runtime, files, declarations, signal: controller.signal });
+      // Knihovny kroku (kap. 6.10): bez nich by Tailwind nevygeneroval styly a lint by hlásil falešné nálezy.
+      const libs = Array.isArray(item?.libs) ? item.libs : [];
+      const items = await inspectCss({ runtime, libs, files, declarations, signal: controller.signal });
       return controller.signal.aborted ? [] : inactiveDiagnostics(declarations, items);
     } catch {
       return [];

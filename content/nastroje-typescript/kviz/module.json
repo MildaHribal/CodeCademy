@@ -1,0 +1,1 @@
+{ "type": "quiz", "title": "Kvíz: TypeScript", "summary": "Ověříš si unknown proti any, zúžení, generika, čtení hlášek a co z kódu zbude po odstranění typů.", "minutes": 25 }

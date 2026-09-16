@@ -233,3 +233,20 @@ test('resolveContentItem: q:, card: a explain: podle klíčů z parseru', (t) =>
   assert.equal(labPoint.source.title, 'Lab');
   assert.equal(resolveContentItem(dir, `explain:sekce/lab#${hashKey('Neexistuje.')}`), null);
 });
+
+test('loadCurriculum: rozepsaná sekce ani modul neshodí celou osnovu', (t) => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'akademie-osnova-'));
+  t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
+  fs.writeFileSync(path.join(dir, 'osnova.json'), JSON.stringify({
+    parts: [{ id: 'cast', title: 'Část', sections: ['rozbita', { id: 'planovana', title: 'Plánovaná', summary: 'Zatím nic.' }] }],
+  }));
+  // sekce se section.json, jehož modul ještě nemá module.json
+  fs.mkdirSync(path.join(dir, 'rozbita', 'chybejici-modul'), { recursive: true });
+  fs.writeFileSync(path.join(dir, 'rozbita', 'section.json'), JSON.stringify({ title: 'Rozbitá', modules: ['chybejici-modul'] }));
+
+  const curriculum = loadCurriculum(dir);
+  const [rozbita, planovana] = curriculum.parts[0].sections;
+  assert.equal(rozbita.available, true);
+  assert.deepEqual(rozbita.modules, []);
+  assert.equal(planovana.available, false);
+});

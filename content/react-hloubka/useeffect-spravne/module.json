@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "useEffect správně", "summary": "Poznáš, kdy efekt nepotřebuješ, a když ano, napíšeš ho s úplnými závislostmi a úklidem.", "minutes": 65, "runtime": "react" }

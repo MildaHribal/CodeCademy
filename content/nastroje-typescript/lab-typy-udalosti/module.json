@@ -1,0 +1,1 @@
+{ "type": "lab", "title": "Lab: systém událostí", "summary": "Sám napíšeš generický emitter, u kterého posluchač dostane data přesně podle názvu události.", "minutes": 70, "runtime": "node" }

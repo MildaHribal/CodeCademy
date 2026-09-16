@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Druhy stavu", "summary": "Rozlišíš UI stav, formulář, serverová data, URL a globální stav a pro každý zvolíš nástroj.", "minutes": 40, "runtime": "react" }

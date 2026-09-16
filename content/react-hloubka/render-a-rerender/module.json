@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Render a rerender", "summary": "Řekneš, kdy React komponentu vykreslí znovu, kdy to vadí a čím se to dá zastavit.", "minutes": 55, "runtime": "react" }

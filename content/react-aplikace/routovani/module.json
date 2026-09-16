@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Routování", "summary": "Rozdělíš aplikaci na trasy s parametry, vnořenými layouty, stránkou 404 a filtrem drženým v URL.", "minutes": 50, "runtime": "react" }

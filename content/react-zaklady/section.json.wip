@@ -1,0 +1,71 @@
+{
+  "title": "React: základy",
+  "intro": "Skoro každá aplikace, kterou dnes potkáš v práci — administrace, e-shop, dashboard, interní nástroj — je postavená v Reactu. Jeho hlavní myšlenka je jedna věta: **z dat spočítáš, jak má stránka vypadat, a o změny v DOM se stará React**. Místo `querySelector`, `classList` a `textContent` na patnácti místech napíšeš funkci, která vrátí značkování, a React dopočítá rozdíl.\n\nPostup: lekce o tom, proč React vznikl a jak se v něm píše JSX, workshop na stránku festivalu, lekce o komponentách a props, workshop na katalog deskových her, lekce o stavu jako snímku renderu, workshop na počítadlo kalorií, lekce o formulářích a zvednutí stavu, samostatný lab a kvíz nad cizím kódem.\n\n**Předpoklady:** funkce a callbacky, pole a jejich metody (hlavně `map` a `filter`), objekty, reference a kopie bez mutace, DOM a události. Na React se dívej jako na jiný způsob, jak dělat to, co už umíš z [DOM a událostí](see:js-dom/strom-dom#stranka-je-strom-uzlu).",
+  "modules": [
+    "proc-react",
+    "workshop-stranka-festivalu",
+    "komponenty-a-props",
+    "workshop-katalog-produktu",
+    "stav-jako-snimek",
+    "workshop-pocitadlo-kalorii",
+    "udalosti-a-formulare",
+    "lab-kviz-v-reactu",
+    "kviz"
+  ],
+  "outcomes": [
+    {
+      "text": "Vysvětlíš rozdíl mezi ručním přepisováním DOM a deklarativním UI, kde vzhled plyne z dat.",
+      "links": [
+        "react-zaklady/proc-react#problem-seznam-ktery-musis-prepsat-rucne",
+        "react-zaklady/proc-react#jak-react-vykresli-stranku"
+      ]
+    },
+    {
+      "text": "Napíšeš komponentu v JSX s výrazy v `{}`, fragmentem a správnými atributy bez nápovědy.",
+      "links": [
+        "react-zaklady/proc-react#jsx-znackovani-jako-vyraz",
+        "react-zaklady/workshop-stranka-festivalu"
+      ]
+    },
+    {
+      "text": "Poskládáš stránku z komponent, které si předávají data props a obsah přes `children`.",
+      "links": [
+        "react-zaklady/komponenty-a-props#props-jsou-parametry-komponenty",
+        "react-zaklady/komponenty-a-props#children-obsah-mezi-znackami",
+        "react-zaklady/workshop-katalog-produktu"
+      ]
+    },
+    {
+      "text": "Vykreslíš seznam z pole se stabilním `key` a podmínku bez pasti s nulou.",
+      "links": [
+        "react-zaklady/komponenty-a-props#seznam-z-pole-a-key",
+        "react-zaklady/komponenty-a-props#podminene-vykresleni",
+        "react-zaklady/workshop-katalog-produktu/009"
+      ]
+    },
+    {
+      "text": "Držíš stav v `useState` a vysvětlíš, proč je stav snímek renderu a proč tři volání `setPocet(pocet + 1)` přidají jen jeden.",
+      "links": [
+        "react-zaklady/stav-jako-snimek#stav-je-snimek-renderu",
+        "react-zaklady/stav-jako-snimek#funkce-aktualizace",
+        "react-zaklady/workshop-pocitadlo-kalorii"
+      ]
+    },
+    {
+      "text": "Změníš pole nebo objekt ve stavu bez mutace a odvozenou hodnotu spočítáš místo toho, abys ji ukládal.",
+      "links": [
+        "react-zaklady/stav-jako-snimek#pole-a-objekty-ve-stavu",
+        "react-zaklady/stav-jako-snimek#odvozena-hodnota-misto-stavu",
+        "react-zaklady/workshop-pocitadlo-kalorii/012"
+      ]
+    },
+    {
+      "text": "Ovládneš formulářové pole stavem a zvedneš stav do společného rodiče, aby měl jeden zdroj pravdy.",
+      "links": [
+        "react-zaklady/udalosti-a-formulare#rizene-pole",
+        "react-zaklady/udalosti-a-formulare#zvednuti-stavu",
+        "react-zaklady/lab-kviz-v-reactu"
+      ]
+    }
+  ]
+}

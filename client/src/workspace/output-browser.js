@@ -5,10 +5,11 @@ import { mountPreview } from '../run.js';
 import { createConsolePanel } from '../components/console-panel.js';
 
 /**
- * @param {{ runtime, slots }} options — slots: 'output-tools', 'output-after'
+ * @param {{ runtime, libs?: string[], slots }} options — slots: 'output-tools', 'output-after'
+ *   libs = knihovny kroku (kontrakt kap. 6.10) — náhled je musí dostat stejně jako testy
  * @returns {{ element, consolePanel, previewHost, mount(files) → preview }}
  */
-export function createBrowserOutput({ runtime, slots }) {
+export function createBrowserOutput({ runtime, libs = [], slots }) {
   const consolePanel = createConsolePanel();
   const previewHost = h('div', { class: 'output__frame' });
   const showPreview = runtime !== 'js';
@@ -40,7 +41,7 @@ export function createBrowserOutput({ runtime, slots }) {
     previewHost,
     /** Připojí náhled (až je panel v dokumentu — iframe potřebuje být ve stránce). */
     mount(files) {
-      const preview = mountPreview(previewHost, { runtime, files });
+      const preview = mountPreview(previewHost, { runtime, libs, files });
       preview.onConsole?.((entry) => consolePanel.receive(entry));
       return preview;
     },

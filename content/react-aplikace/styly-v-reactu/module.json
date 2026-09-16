@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Styly v Reactu", "summary": "Porovnáš CSS Modules a Tailwind v komponentách, poskládáš třídy podle stavu a pro projekt si vybereš jedno.", "minutes": 40, "runtime": "react" }

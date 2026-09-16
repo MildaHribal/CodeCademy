@@ -17,6 +17,8 @@ import { transformRun } from '../../components/test-result.js';
  */
 export function createPractice(task, { onPass, onGiveUp, solution = null }) {
   const runtime = task.runtime ?? 'js';
+  // Knihovny úlohy (kontrakt kap. 6.10) — opakování spouští krok se stejnou stránkou jako plocha.
+  const libs = Array.isArray(task.libs) ? task.libs : Array.isArray(task.item?.libs) ? task.item.libs : [];
   const isNode = runtime === 'node';
   const isJs = runtime === 'js';
   const controller = new AbortController();
@@ -65,6 +67,7 @@ export function createPractice(task, { onPass, onGiveUp, solution = null }) {
       const current = files();
       let run = await runTests({
         runtime,
+        libs,
         files: current,
         hints: task.hints ?? [],
         signal: controller.signal,
@@ -119,14 +122,14 @@ export function createPractice(task, { onPass, onGiveUp, solution = null }) {
       editor = createCodeEditor(editorHost, {
         files: task.seed.map((file) => ({ ...file })),
         label: `Kód: ${task.title}`,
-        onChange: (changed) => preview?.update({ runtime, files: changed }),
+        onChange: (changed) => preview?.update({ runtime, libs, files: changed }),
         onSubmit: () => check(),
         runtime,
         context: 'editor',
         item: task.item ?? null,
       });
       if (!isNode) {
-        preview = mountPreview(previewHost, { runtime, files: files() });
+        preview = mountPreview(previewHost, { runtime, libs, files: files() });
         preview.onConsole?.((entry) => {
           if (!isJs) consolePanel.element.hidden = entry.level === 'clear';
           consolePanel.receive(entry);

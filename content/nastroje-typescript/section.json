@@ -1,0 +1,16 @@
+{
+  "title": "TypeScript",
+  "intro": "JavaScript ti řekne o chybě, až když kód spustíš — a někdy až když ho spustí uživatel. TypeScript je vrstva nad ním, která hlídá, jaké hodnoty kam patří, a chybu najde ještě před spuštěním. Naučíš se otypovat funkce, objekty a stavy, zúžit typ z neznámých dat, přečíst typy cizí knihovny a ověřit data na hranici aplikace schématem v Zodu.\n\nPředpoklad: celý JavaScript včetně objektů, polí, tříd a `async`/`await`, a `npm` s Vite ze sekce `nastroje-moduly-vite`. Kontrolu typů budeš v krocích pouštět příkazem `npx tsc --noEmit`, takže kontrola trvá pár sekund a hláška je hned vidět.",
+  "modules": [
+    "proc-typescript",
+    "zakladni-typy",
+    "workshop-typy-kosiku",
+    "zuzovani-a-genericita",
+    "lab-typy-udalosti",
+    "typy-knihoven",
+    "workshop-cizi-typy",
+    "validace-na-hranici",
+    "workshop-api-klient",
+    "kviz"
+  ]
+}

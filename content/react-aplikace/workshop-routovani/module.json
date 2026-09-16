@@ -1,0 +1,1 @@
+{ "type": "workshop", "title": "Katalog kol", "summary": "Postavíš vícestránkový katalog kol: seznam, detail, vnořený layout, 404 a filtr, který přežije sdílení odkazu.", "minutes": 50, "runtime": "react" }

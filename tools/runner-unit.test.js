@@ -410,3 +410,67 @@ describe('knihovny a runtime react (kap. 6.10, 6.11)', async () => {
     nodeAssert.equal(await resolveVendorFile('raw/gsap/package.json'), await resolveVendorFile('raw/gsap/package.json'));
   });
 });
+
+// Editor je jiná vrstva než runner, ale jazyky souborů (`lang`) drží stejný kontrakt:
+// runtime react píše .jsx/.tsx a editor je musí zvýraznit v režimu JSX (kap. 6.11).
+describe('editor: zvýrazňování podle jazyka souboru', () => {
+  /** Kolik chyb najde parser CodeMirroru v kódu. 0 = jazyk je nastavený správně. */
+  function parseErrors(support, code) {
+    const parser = (Array.isArray(support) ? support[0] : support)?.language?.parser;
+    if (!parser) return null;
+    let errors = 0;
+    parser.parse(code).iterate({ enter: (node) => { if (node.type.isError) errors++; } });
+    return errors;
+  }
+
+  test('jsx a tsx v režimu JSX, js a ts bez něj', async () => {
+    const { languageFor } = await import('../client/src/components/code-editor.js');
+    const jsx = 'const karta = <p className="p-6">{cena} Kč</p>;';
+
+    nodeAssert.equal(parseErrors(languageFor('jsx'), jsx), 0);
+    nodeAssert.equal(parseErrors(languageFor('tsx'), `const cena: number = 1990;\n${jsx}`), 0);
+    // Bez režimu JSX by student viděl svůj vlastní kód jako chybu.
+    nodeAssert.ok(parseErrors(languageFor('js'), jsx) > 0);
+    // TypeScript bez JSX: typy projdou, JSX ne.
+    nodeAssert.equal(parseErrors(languageFor('ts'), 'const cena: number = 1990;'), 0);
+    nodeAssert.ok(parseErrors(languageFor('ts'), jsx) > 0);
+
+    for (const lang of ['html', 'css', 'js', 'json', 'vue']) {
+      nodeAssert.notEqual(languageFor(lang), undefined, lang);
+    }
+    nodeAssert.deepEqual(languageFor('neznamy'), []);
+  });
+});
+
+// `libs` musí dojít z obsahu až do požadavku na runner — jinak se Tailwind ani Lenis
+// do stránky nevloží a testy kroku selžou na něčem, co autor napsal správně (kap. 6.10).
+describe('libs se dostanou do běhu testů (kap. 6.10)', async () => {
+  const { planModule } = await import('./lib/content-checks.js');
+  const { parseStep, parseLesson } = await import('../shared/parse.js');
+
+  test('krok workshopu: seed i řešení se spouští s libs kroku', () => {
+    const step = parseStep(
+      ['---', 'libs: tailwind, gsap', '---', '', '# --description--', '', 'Text.', '', '# --hints--', '',
+        'Odsazení je 24 px.', '', '```js', "assert.equal(getComputedStyle(document.body).margin, '0px', 'margin');", '```', '',
+        '# --seed--', '', '## --file-- index.html', '', '```html', '<div class="karta">a</div>', '```', '',
+        '# --solution--', '', '## --file-- index.html', '', '```html', '<div class="karta p-6">a</div>', '```', ''].join('\n'),
+      { id: 's/m/001' },
+    );
+    nodeAssert.deepEqual(step.libs, ['tailwind', 'gsap']);
+    const plan = planModule({ type: 'workshop', sectionId: 's', steps: [step] });
+    nodeAssert.equal(plan.jobs.length, 2, 'seed a řešení');
+    for (const job of plan.jobs) nodeAssert.deepEqual(job.libs, ['tailwind', 'gsap']);
+  });
+
+  test('živá ukázka lekce: běží s libs z hlavičky :::live', () => {
+    const lesson = parseLesson(
+      ['# Lekce', '', '## Část', '', ':::live dom libs=tailwind', '```html', '<div class="p-6">a</div>', '```', ':::', '',
+        ':::live js', '```js', "console.log('ahoj');", '```', ':::', ''].join('\n'),
+      { id: 's/lekce' },
+    );
+    const plan = planModule({ type: 'lesson', sectionId: 's', lesson });
+    nodeAssert.deepEqual(plan.jobs[0].libs, ['tailwind']);
+    // Ukázka bez knihoven klíč `libs` vůbec nemá (požadavek zůstává stejný jako dřív).
+    nodeAssert.equal('libs' in plan.jobs[1], false);
+  });
+});

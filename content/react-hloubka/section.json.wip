@@ -1,0 +1,68 @@
+{
+  "title": "React do hloubky",
+  "intro": "V základech Reactu jsi skládal komponenty a držel stav v `useState`. Teď se naučíš to, co v Reactu odděluje „nějak to funguje“ od „vím, proč to funguje“: kdy React komponentu vykreslí znovu, kdy potřebuješ efekt a kdy ne, jak si sáhnout na prvek v DOMu, jak vytáhnout logiku do vlastního hooku, jak zvládnout složitější stav reducerem a rozvést ho kontextem — a jak ošetřit chyby, čekání na data a vykreslení mimo svůj kout stránky.\n\nPostup: tři lekce o renderu, efektech a refech, workshop s přístupným modalem a oznámeními, lekce o vlastních hoocích a o reduceru s kontextem, workshop s objednávkou ve třech krocích, lekce o chybách a Suspense, samostatný lab s tabulkou dat a kvíz nad cizí komponentou.\n\n**Předpoklady:** komponenty, props, `key`, `useState` a formuláře ze sekce React: základy; z JavaScriptu closures, `this`, práce s DOMem a asynchronní kód (`Promise`, `async`/`await`, `AbortController`).",
+  "modules": [
+    "render-a-rerender",
+    "useeffect-spravne",
+    "useref-a-dom",
+    "workshop-modal-a-toasty",
+    "vlastni-hooky",
+    "reducer-a-context",
+    "workshop-objednavka-pizzy",
+    "chyby-suspense-portaly",
+    "lab-tabulka-dat",
+    "kviz"
+  ],
+  "outcomes": [
+    {
+      "text": "Popíšeš, kdy React komponentu vykreslí znovu, a poznáš, kdy to vadí.",
+      "links": [
+        "react-hloubka/render-a-rerender#kdyz-se-vykresli-rodic-vykresli-se-i-potomci",
+        "react-hloubka/render-a-rerender#memo-zarazka-kterou-lehce-obejdes"
+      ]
+    },
+    {
+      "text": "Poznáš, kdy `useEffect` nepotřebuješ, a když ano, napíšeš ho s úplnými závislostmi a úklidem.",
+      "links": [
+        "react-hloubka/useeffect-spravne#kdy-efekt-nepotrebujes",
+        "react-hloubka/useeffect-spravne#uklid-co-po-sobe-efekt-uklidi"
+      ]
+    },
+    {
+      "text": "Použiješ `useRef` pro prvek v DOMu i jako schránku pro hodnotu mimo render.",
+      "links": [
+        "react-hloubka/useref-a-dom#ref-na-prvek-fokus-scroll-a-mereni",
+        "react-hloubka/useref-a-dom#ref-jako-schranka-mimo-render"
+      ]
+    },
+    {
+      "text": "Vytáhneš logiku do vlastního hooku a vysvětlíš, proč hook sdílí logiku, ne stav.",
+      "links": [
+        "react-hloubka/vlastni-hooky#hook-sdili-logiku-ne-stav",
+        "react-hloubka/workshop-modal-a-toasty/016"
+      ]
+    },
+    {
+      "text": "Spravuješ složitější stav reducerem a rozvedeš ho kontextem bez zbytečných překreslení.",
+      "links": [
+        "react-hloubka/reducer-a-context#usereducer-akce-jako-jmeno-udalosti",
+        "react-hloubka/workshop-objednavka-pizzy",
+        "react-hloubka/lab-tabulka-dat"
+      ]
+    },
+    {
+      "text": "Ošetříš chybu error boundary, čekání na data Suspense a vykreslíš modal přes portál se správou fokusu.",
+      "links": [
+        "react-hloubka/chyby-suspense-portaly#error-boundary-zachrana-nad-komponentou",
+        "react-hloubka/workshop-modal-a-toasty/009"
+      ]
+    },
+    {
+      "text": "V cizí komponentě najdeš chybu v efektu: chybějící závislost, chybějící úklid, nebo efekt, který tam nemá co dělat.",
+      "links": [
+        "react-hloubka/useeffect-spravne#typicke-chyby-a-pasti",
+        "react-hloubka/kviz"
+      ]
+    }
+  ]
+}

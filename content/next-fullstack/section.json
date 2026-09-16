@@ -1,0 +1,89 @@
+{
+  "title": "Next.js: fullstack aplikace",
+  "intro": "React už umíš a Node taky. Tady je dáš dohromady: jedna aplikace, ve které se stránka vyrobí na serveru, data se čtou rovnou z databáze a změny posílá formulář serverové akci — bez vlastního API mezi tím.\n\nNext.js nejde spustit v editoru v prohlížeči, takže sekce stojí na dvou projektech ve VS Code. Lekce k nim dodají model „kde co běží\", workshop procvičí klientskou půlku formulářů a lab vrstvu akcí s validací a oprávněními. Na konci máš aplikaci, kterou můžeš dát na pohovor.",
+  "modules": [
+    "ssr-csr-ssg",
+    "app-router",
+    "server-a-client-komponenty",
+    "projekt-next-zaklad",
+    "data-a-server-actions",
+    "workshop-formular-akce",
+    "auth-v-nextu",
+    "lab-akce-a-opravneni",
+    "seo-a-metadata",
+    "testy-a-nasazeni-nextu",
+    "kviz",
+    "projekt-zaverecny"
+  ],
+  "outcomes": [
+    {
+      "text": "Vysvětlíš CSR, SSR, SSG a streamování a pro každou stránku zvolíš strategii.",
+      "links": [
+        "next-fullstack/ssr-csr-ssg#ctyri-strategie-ctyri-vysledky",
+        "next-fullstack/ssr-csr-ssg#kdy-next-js-a-kdy-staci-spa"
+      ]
+    },
+    {
+      "text": "Poznáš nesoulad při hydrataci podle hlášky a opravíš jeho příčinu.",
+      "links": [
+        "next-fullstack/ssr-csr-ssg#co-nesoulad-zpusobuje",
+        "next-fullstack/kviz"
+      ]
+    },
+    {
+      "text": "Rozvrhneš složku `app/`: layouty, stránky, stavy načítání a chyb, dynamické segmenty a route handlery.",
+      "links": [
+        "next-fullstack/app-router#app-jako-mapa-webu",
+        "next-fullstack/projekt-next-zaklad"
+      ]
+    },
+    {
+      "text": "Rozdělíš UI na serverové a klientské komponenty a uhlídáš hranici i tajemství.",
+      "links": [
+        "next-fullstack/server-a-client-komponenty#use-client-hranice-ne-prepinac",
+        "next-fullstack/server-a-client-komponenty#tajemstvi-a-next-public"
+      ]
+    },
+    {
+      "text": "Načteš data v serverové komponentě a změníš je serverovou akcí s validací, autorizací a revalidací.",
+      "links": [
+        "next-fullstack/data-a-server-actions#serverova-akce-formular-ktery-mluvi-s-databazi",
+        "next-fullstack/lab-akce-a-opravneni"
+      ]
+    },
+    {
+      "text": "Napíšeš formulář, který ukáže chyby od serveru, stav odesílání i optimistický výsledek.",
+      "links": [
+        "next-fullstack/workshop-formular-akce/001",
+        "next-fullstack/data-a-server-actions#validace-a-autorizace-v-kazde-akci"
+      ]
+    },
+    {
+      "text": "Přihlásíš uživatele, ochráníš stránky i akce a rozlišíš role.",
+      "links": [
+        "next-fullstack/auth-v-nextu#ochrana-stranky-a-akce",
+        "next-fullstack/auth-v-nextu#role-a-prava"
+      ]
+    },
+    {
+      "text": "Nastavíš metadata, náhledový obrázek, sitemap, obrázky a písma.",
+      "links": [
+        "next-fullstack/seo-a-metadata#metadata-jako-export",
+        "next-fullstack/seo-a-metadata#nahledovy-obrazek-sitemap-a-robots"
+      ]
+    },
+    {
+      "text": "Otestuješ aplikaci proti produkčnímu buildu a nasadíš ji na platformu nebo do kontejneru.",
+      "links": [
+        "next-fullstack/testy-a-nasazeni-nextu#playwright-proti-produkcnimu-buildu",
+        "next-fullstack/testy-a-nasazeni-nextu#nasazeni-platforma-nebo-kontejner"
+      ]
+    },
+    {
+      "text": "Postavíš, otestuješ a popíšeš fullstack aplikaci, kterou můžeš ukázat na pohovoru.",
+      "links": [
+        "next-fullstack/projekt-zaverecny"
+      ]
+    }
+  ]
+}

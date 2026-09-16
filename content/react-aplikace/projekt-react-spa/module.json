@@ -1,0 +1,1 @@
+{ "type": "project", "title": "Plánovač jídel a nákupů", "summary": "Vlajkový projekt: SPA nad API s recepty, filtry v URL, oblíbenými, týdenním plánem a nákupním seznamem.", "minutes": 720, "runtime": "node" }

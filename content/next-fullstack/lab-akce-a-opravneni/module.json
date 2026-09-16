@@ -1,0 +1,1 @@
+{ "type": "lab", "title": "Lab: akce s validací a oprávněními", "summary": "Samostatně napíšeš vrstvu serverových akcí v TypeScriptu: Zod schéma, kontrola vlastníka a role.", "minutes": 70, "runtime": "node" }

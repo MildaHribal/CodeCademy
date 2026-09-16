@@ -101,7 +101,11 @@ a `syntax-check.js` je tamtéž.
       "sections": [
         "css-flexbox",
         { "id": "css-grid", "title": "CSS Grid", "summary": "Plánovaná sekce, ještě bez obsahu." },
-        { "id": "prohlizec-navic", "title": "Prohlížeč navíc", "summary": "…", "uroven": "rozsireni" }
+        { "id": "prohlizec-navic", "title": "Prohlížeč navíc", "summary": "…", "uroven": "rozsireni" },
+        { "id": "css-tailwind", "title": "Tailwind CSS v4", "summary": "…", "uroven": "jadro",
+          "modules": [
+            { "id": "utility-first", "type": "lesson", "title": "Utility-first myšlení", "summary": "Co se naučíš, jedna věta.", "minutes": 45 }
+          ] }
       ]
     }
   ]
@@ -114,6 +118,17 @@ a `syntax-check.js` je tamtéž.
   (`available: false`); `title` a `summary` z objektu jsou pak povinné (verify: chyba).
   Existuje-li sekce na disku, `title` a `intro` se berou ze `section.json`.
 - `uroven`: `"jadro"` (výchozí) nebo `"rozsireni"` (nepovinné rozšíření). Jiná hodnota = chyba.
+- `modules` (nepovinné, jen u sekce, která **na disku není**): plánované moduly podle
+  `docs/osnova.md`, v pořadí průchodu. Každý je objekt
+  `{ id, type, title, summary, minutes }` — `id` je slug modulu bez sekce, `type` jedno
+  z `lesson | workshop | lab | quiz | project` (kap. 2.3), `summary` jedna věta „co se
+  naučíš", `minutes` odhad v minutách. Díky tomu přehled ukáže i u připravované sekce,
+  co se v ní bude učit.
+  - **Když sekce na disku existuje, pole se ignoruje** a moduly se berou ze `section.json`
+    (kap. 2.2); autor sekce `modules` z osnovy při dopsání sekce smaže.
+  - Plánované moduly nejsou obsah: nezakládají id modulu (kap. 2.4), nedají se otevřít
+    a nic se podle nich neověřuje. `loadCurriculum` je dnes ve výstupu nevrací
+    (u nedostupné sekce posílá `modules: []`) — viz Otevřené body v `docs/osnova.md`.
 - `doporucenaTrasa` (nepovinné): pole slugů sekcí v doporučeném pořadí průchodu;
   prokládá části (CSS a JS). Části zůstávají tematické. Nic se podle trasy nezamyká,
   UI z ní jen počítá odkaz „Další na trase" na konci sekce.
@@ -173,8 +188,13 @@ Jména `uroven` a `doporucenaTrasa` se ve výstupu nepřekládají (stejná jako
 ```
 
 `type` je jedno z `lesson | workshop | lab | quiz | project`.
-`runtime` je výchozí prostředí testů pro kroky modulu (`dom | js | vue | node`,
-výchozí `dom`; `react` je plánovaný, kap. 13). Slugy jsou `a-z0-9` s pomlčkami.
+`runtime` je výchozí prostředí testů pro kroky modulu
+(`dom | js | vue | react | node`, výchozí `dom`). Slugy jsou `a-z0-9` s pomlčkami.
+
+`libs` (nepovinné, jen runtime `dom`, `vue` a `react`) = knihovny do stránky pro
+všechny kroky modulu: `"libs": ["tailwind", "gsap"]` i `"libs": "tailwind, gsap"`.
+Sečte se s `libs` z frontmatteru kroku; seznam jmen a co která knihovna udělá je
+v kap. 6.10.
 
 | typ | soubory v adresáři modulu |
 |---|---|
@@ -543,7 +563,8 @@ nav { display: flex; }
 | klíč | platí pro | význam |
 |---|---|---|
 | `title` | vše | titulek (jinak `Krok N` / titulek modulu) |
-| `runtime` | vše | `dom \| js \| vue \| node`, jinak z `module.json` |
+| `runtime` | vše | `dom \| js \| vue \| react \| node`, jinak z `module.json` |
+| `libs` | runtime dom, vue, react | knihovny do stránky (kap. 6.10): `libs: tailwind, gsap` i `libs: [tailwind, gsap]`; sečte se s `libs` z `module.json` |
 | `timeoutMs` | vše | limit jednoho testu v ms (respektuje UI, server i verify). Projekty, které volají `helpers.run('npm test')` apod., si ho musí zvýšit. |
 | `main` | runtime node | co spouští tlačítko **Spustit** (jinak `index.js`, jinak první `.js` v pořadí souborů) |
 | `kind` | krok workshopu, lab | `step` (výchozí) \| `debug` \| `parsons` \| `recall` \| `choose` (kap. 3.4–3.6). V labu jen `step` nebo `debug`. |
@@ -592,7 +613,8 @@ Pravidla:
 {
   id: 'css-flexbox/workshop-navigace/003',
   title: 'Flex kontejner',
-  runtime: 'dom',                              // dom | js | vue | node
+  runtime: 'dom',                              // dom | js | vue | react | node
+  libs: ['tailwind', 'gsap'],                  // jen když krok knihovny má (kap. 6.10); jinak klíč chybí
   kind: 'step',                                // step | debug | parsons | recall | choose
   description: '…markdown…',
   hints: [{ text: '…markdown…', test: '…js kód…' }],
@@ -1193,7 +1215,7 @@ flex-direction
 ### 5.2 Živá ukázka `:::live`
 
 ````md
-:::live [dom|js|vue]
+:::live [dom|js|vue|react] [libs=tailwind,gsap]
 ```html
 …
 ```
@@ -1215,6 +1237,12 @@ flex-direction
 - Uvnitř jen bloky kódu `html`, `css`, `js` (každý jazyk nejvýš jednou; mapují se na
   `index.html`, `styles.css`, `script.js`) a nejvýš jeden blok `controls`. Text mimo
   bloky kódu = ParseError. Aspoň jeden soubor.
+- `:::live react` bere místo toho blok `jsx` (nebo `tsx`) → `App.jsx` / `App.tsx`
+  a blok `css` → `styles.css`; komponenta s výchozím exportem se vykreslí sama
+  (kap. 6.11). `controls` umí jen `dom` a `vue`, jinde ParseError.
+- `libs=` (jen runtime `dom`, `vue`, `react`) přidá ukázce knihovny, kap. 6.10:
+  `:::live dom libs=tailwind,gsap`, `:::live react libs=tailwind`. Pořadí argumentů je
+  runtime, `libs=`, `predict` nakonec; bez mezer okolo čárek.
 - `index.html` u živé ukázky je jen tělo stránky, CSS i JS se připojí automaticky.
 - Uživatel si ukázku může upravit a vidí výsledek hned. Tlačítko „Obnovit" vrátí originál.
 
@@ -1297,7 +1325,8 @@ B
 :::
 ````
 
-- Hlavička: `:::live [dom|js|vue|node] predict`. Runtime `node` je povolený jen s `predict`.
+- Hlavička: `:::live [dom|js|vue|react|node] [libs=tailwind,gsap] predict` (`predict` je
+  vždy poslední argument). Runtime `node` je povolený jen s `predict`.
 - Nejdřív bloky souborů jako u 5.2 (u `node` jen jeden blok `js` → `index.js`),
   pak **značky**: řádek mimo blok kódu, který začíná `--question--`, `--expected--`,
   `--accept--`, `--why--`, `--option--`, `--option*--`, `--output--` nebo `--see--`.
@@ -1488,7 +1517,8 @@ Splnění lekce nepodmiňuje nic jiného (nic se nezamyká).
   headings: [{ level: 2, text: 'Problém: prvky vedle sebe', anchor: 'problem-prvky-vedle-sebe' }],
   blocks: [
     { kind: 'md', text },
-    { kind: 'live', runtime, files: [{ name, lang, content }], controls: Control[], predict: Question | null, output: string | null },
+    { kind: 'live', runtime, files: [{ name, lang, content }], controls: Control[], predict: Question | null, output: string | null,
+      libs: ['tailwind'] },                      // `libs` jen když ukázka knihovny má (kap. 6.10)
     { kind: 'check', pretest, question: Question },
     { kind: 'explain', prompt, model, checklist },
     { kind: 'memory', code, steps },
@@ -1564,12 +1594,13 @@ Tokeny jsou v `client/src/styles/tokens.css` ve světlé i tmavé variantě
 ```js
 // RunRequest
 {
-  runtime: 'dom' | 'js' | 'vue' | 'node',
+  runtime: 'dom' | 'js' | 'vue' | 'react' | 'node',
   files: [{ name: 'index.html', content: '…' }],
   hints: [{ text, test }],
-  timeoutMs: 5000,         // na jeden test; výchozí dom/js/vue 5000, node 10000; frontmatter timeoutMs přebíjí
+  timeoutMs: 5000,         // na jeden test; výchozí dom/js/vue/react 5000, node 10000; frontmatter timeoutMs přebíjí
   signal,                  // nepovinné, jen v prohlížeči: AbortSignal zruší kontrolu
-  storage,                 // nepovinné, jen dom/js/vue: { localStorage: { klíč: 'text' }, sessionStorage: {…} } — naplní úložiště v paměti před spuštěním kódu (kap. 13)
+  storage,                 // nepovinné, jen dom/js/vue/react: { localStorage: { klíč: 'text' }, sessionStorage: {…} } — naplní úložiště v paměti před spuštěním kódu (kap. 6.12)
+  libs,                    // nepovinné, jen dom/vue/react: ['tailwind', 'gsap'] — knihovny do stránky (kap. 6.10)
 }
 
 // RunResult
@@ -1631,6 +1662,7 @@ Tokeny jsou v `client/src/styles/tokens.css` ve světlé i tmavé variantě
 | `helpers.normalize(src)` | sloučí bílé znaky do jedné mezery, ořízne |
 | `helpers.wait(ms)` | Promise |
 | `helpers.waitFor(fn, timeoutMs = 2000)` | čeká, dokud `fn()` (i async) nevrátí pravdivou hodnotu; vrátí ji. Výjimku z `fn` bere jako „zatím ne"; po vypršení vyhodí s poslední hláškou. |
+| `await helpers.flush()` | počká, až se stránka „dosrovná": doběhnou mikroúlohy, naplánované vykreslení Reactu (včetně efektů) a dogeneruje se CSS Tailwindu. V runtime `js` a `node` je to jen `wait(0)`. Volá se po každé akci, která má něco překreslit (kap. 6.11). |
 
 ### 6.3 Runtime `dom`
 
@@ -1683,6 +1715,41 @@ Běží na serveru. Soubory se zapíšou do nového dočasného adresáře
 (u projektu se použije adresář projektu uživatele, nic se nekopíruje ani nemaže).
 Každý test běží v novém procesu `node` s cwd = ten adresář.
 
+**Balíčky bez instalace.** Dočasný adresář dostane `node_modules` jako **symlink** na
+`node_modules` Akademie, takže kód kroku smí `import express from 'express'`,
+`import { z } from 'zod'` nebo `import { drizzle } from 'drizzle-orm/…'` a test smí
+`helpers.run('npx tsc --noEmit')`, `npx vitest run`, `npx eslint .` — nic se nestahuje
+a nic se neinstaluje (i offline). V PATH je navíc `node_modules/.bin`, takže i `tsc`,
+`vitest` a `eslint` bez `npx` fungují; npm je přepnuté do offline režimu, aby svými
+hláškami nešpinilo `stdout` testu. Úklid po testu maže **jen ten symlink**,
+`node_modules` Akademie zůstávají.
+
+- **Kontrola typů (`npx tsc --noEmit`) nemá `@types/*`.** Nainstalovaný je `typescript`
+  (verze 7, nativní kompilátor), ale **ne** `@types/node` ani `@types/express`. Co to
+  znamená pro krok:
+  - Vlastní typy, generika, `zod` (typy si nese sám) a DOM/ES API (`console`, `Map`,
+    `fetch`) se zkontrolují normálně.
+  - `import … from 'node:fs'` nebo `process` hlásí `TS2591 Cannot find name 'node:fs'`
+    (resp. `'process'`), `import express from 'express'` hlásí `TS7016` (chybí deklarace).
+  - Krok to obejde svým `tsconfig.json`: `include` jen soubory, které Node API nepoužívají,
+    a `"noImplicitAny": false`, když potřebuje `express` (pak je `app` typu `any`).
+    Vstupní soubor s `process.env` a `app.listen` nechá mimo kontrolu typů.
+  - Kdyby měla sekce o TypeScriptu učit typy nad Node API a Expressem naplno, chce to
+    doinstalovat `@types/node` a `@types/express` (změna `package.json` — mimo tento
+    kontrakt).
+- **U projektu s `cwd`** (kap. 9) se symlink nevytváří a nic se nemaže — projekt má
+  vlastní `node_modules` (a `npm install` si pouští uživatel).
+- Krok, který chce `npx tsc` nebo `npx vitest run`, si musí přinést svůj
+  `tsconfig.json` / `eslint.config.js` jako soubor kroku (viz ukázka v kap. 6.13).
+- **Limity.** Test má `timeoutMs` z frontmatteru (výchozí node 10 000 ms).
+  `helpers.run` bez vlastního limitu dědí `timeoutMs` testu, nejméně 10 s —
+  `npx tsc` pod zátěží trvá sekundy a nemá spadnout dřív než test sám. Krok,
+  který pouští `tsc` nebo `vitest`, ať má ve frontmatteru `timeoutMs: 30000`.
+- Předinstalované balíčky pro obsah: `express`, `zod`, `drizzle-orm`, `typescript`,
+  `vitest`, `eslint` + `@eslint/js`, `prettier`, `jsdom`, `@testing-library/react`
+  a `@testing-library/dom`. Nic dalšího krok importovat nesmí (verify ani runner
+  balíčky nedoinstalují).
+
 | jméno | co to je |
 |---|---|
 | `assert` | `node:assert/strict` (výsledek selhání má `actual`/`expected` jako v 6.1) |
@@ -1701,13 +1768,13 @@ přes `helpers.run`/`startServer` (jinak prázdné). `errors` = prázdné.
 ```js
 // client/src/runner/index.js  (prohlížeč)
 export async function runTests(request /* RunRequest */) /* → RunResult */
-//   dom/js/vue běží lokálně v iframech; node → POST /api/run-node. request.signal (AbortSignal) kontrolu zruší.
-export function mountPreview(container /* HTMLElement */, { runtime, files, viewport = null }) /* → Preview */
-//   živý náhled: iframe (dom/vue) nebo panel konzole (js); node → jen tlačítko „Spustit" v UI
+//   dom/js/vue/react běží lokálně v iframech; node → POST /api/run-node. request.signal (AbortSignal) kontrolu zruší.
+export function mountPreview(container /* HTMLElement */, { runtime, files, libs = [], viewport = null }) /* → Preview */
+//   živý náhled: iframe (dom/vue/react) nebo panel konzole (js); node → jen tlačítko „Spustit" v UI
 
 // Preview
 {
-  update({ runtime, files }),
+  update({ runtime, files, libs }),
   destroy(),
   onConsole(cb) /* → odhlášení */,
   //   cb({ level: 'log'|'info'|'warn'|'error'|'clear', text, uncaught?: true, file?: 'script.js', line?: 3, column?: 5 })
@@ -1722,7 +1789,7 @@ export function mountPreview(container /* HTMLElement */, { runtime, files, view
   //   → aktuální { width, height } | null (poslední setViewport)
 }
 
-export async function inspectCss({ runtime, files, declarations, signal }) /* → [{ id, property, reason, elements }] */
+export async function inspectCss({ runtime, files, libs = [], declarations, signal }) /* → [{ id, property, reason, elements }] */
 //   složí stránku v neviditelném iframu 1024×768 a vrátí neaktivní deklarace (lint „neaktivní CSS")
 
 // client/runner.html — stránka bez UI, vystaví: window.akademieRunner = { runTests, mountPreview, inspectCss }
@@ -1786,6 +1853,536 @@ explainError(text /* 'TypeError: Cannot read properties of undefined (reading \'
 testem nebo v konzoli; anglický originál zůstane pod tím. Nenapsané funkce
 (víc `ReferenceError: x is not defined` pro různá jména) UI sloučí do jednoho řádku.
 Reference `see` ověřuje verify stejně jako v obsahu (kap. 2.9).
+
+### 6.10 Knihovny v prohlížečových runtime (`libs`)
+
+Runtime `dom`, `vue` a `react` mají po ruce sadu knihoven **z `node_modules` Akademie**.
+Nic se nestahuje z CDN a nic nepotřebuje síť: soubory vydává server na `/api/vendor/…`
+s `Access-Control-Allow-Origin: *` (iframe runneru má neprůhledný origin, kap. 6.8).
+
+**Zápis.** Pole `libs` = jména knihoven oddělená čárkou, malými písmeny:
+
+```md
+---
+title: Karta produktu
+runtime: dom
+libs: tailwind, gsap
+---
+```
+
+| kde | zápis | platí pro |
+|---|---|---|
+| `module.json` | `"libs": ["tailwind"]` (i text `"tailwind, gsap"`) | všechny kroky modulu, jejichž runtime `libs` umí — krok `js` v modulu `dom` je nedostane |
+| frontmatter kroku, labu, projektu | `libs: tailwind, gsap` i `libs: [tailwind, gsap]` | ten jeden krok; **sečte se** s `libs` z `module.json` |
+| živá ukázka (kap. 5.3) | `:::live dom libs=tailwind,gsap`, `:::live react libs=tailwind predict` | tu ukázku |
+| runner | `RunRequest.libs` (kap. 6.1), `mountPreview({ libs })`, `inspectCss({ libs })` | ten běh |
+
+Pořadí argumentů u `:::live` je **runtime, `libs=`, `predict` nakonec**, bez mezer okolo
+čárek. Neznámé jméno knihovny je chyba parseru (`neznámá knihovna "…"`), stejně jako
+`libs` u runtime `js` nebo `node`.
+
+| jméno | co `libs` udělá se stránkou | jak se to v kódu používá |
+|---|---|---|
+| `tailwind` | vloží `@tailwindcss/browser` jako **klasický skript** | nic dalšího — `class="flex p-6"` funguje hned. `@theme`, `@utility`, `@apply`, `@custom-variant` patří do `<style type="text/tailwindcss">` v `index.html`, nebo do CSS souboru, který začíná `@import "tailwindcss";` |
+| `gsap` | nic (jen dokumentuje krok) | `import gsap from 'gsap'`, pluginy `import { ScrollTrigger } from 'gsap/ScrollTrigger'` (dál `SplitText`, `Flip`, `Observer`, `MotionPathPlugin`, `ScrollToPlugin`, `Draggable`, `TextPlugin`…) a `gsap.registerPlugin(ScrollTrigger)` |
+| `motion` | nic | `import { animate, scroll, inView, stagger } from 'motion'`; v Reactu `import { motion } from 'motion/react'` |
+| `lenis` | vloží styly Lenisu (`html.lenis { … }`) | `import Lenis from 'lenis'`, v Reactu `import { ReactLenis } from 'lenis/react'` |
+| `three` | nic | `import * as THREE from 'three'`, doplňky `import { OrbitControls } from 'three/addons/controls/OrbitControls.js'` |
+
+- **Stránku mění samy od sebe jen `tailwind` a `lenis`** — ty `libs` opravdu zapíná.
+  `gsap`, `motion` a `three` jsou jen **ES moduly v import map**, a ta je v runtime `dom`,
+  `vue` a `react` vždycky: `import gsap from 'gsap'` projde i bez `libs`. Do `libs` je
+  **přesto piš** — je to dokumentace kroku (v `module.json` a ve frontmatteru je na jednom
+  místě vidět, s čím krok pracuje) a chrání obsah, kdyby se import map někdy zúžila.
+- **Tailwind se zapne i sám**, bez `libs`, když stránka nebo CSS obsahuje
+  `@import "tailwindcss"`, `<style type="text/tailwindcss">`, nebo
+  `<script src="…@tailwindcss/browser@4">` — adresa CDN se **nahradí místním souborem**.
+  Krok „jak se Tailwind připojí ke stránce" se tak dá napsat přesně podle dokumentace
+  Tailwindu a funguje offline. **Lenis se zapne sám**, když ho kód naimportuje.
+- `requestAnimationFrame`, `scroll` a `ResizeObserver` v iframu fungují (rAF se
+  nezastavuje — testovací iframe je průhledný v rohu okna, ne mimo obrazovku).
+  Animaci v testu čekej přes `helpers.waitFor(…)`, nikdy pevným `helpers.wait(300)`.
+- **Tailwind generuje CSS asynchronně** (`MutationObserver`). Runner po načtení stránky
+  a při každém `helpers.flush()` čeká, až dogeneruje, takže `getComputedStyle` v testu
+  vidí hotové hodnoty. Po akci, která přidá třídu, zavolej `await helpers.flush()`.
+- Test na animaci ať měří **vlastnost, kterou animace mění** (`transform`, `opacity`),
+  ne konkrétní číslo v polovině animace. Dobré: `getComputedStyle(el).transform !== 'none'`.
+- Knihovna, kterou krok nepotřebuje, se do stránky nevloží: `libs` neplatí „pro jistotu".
+- **`libs` platí všude, kde se kód kroku spouští**: v testech (`Zkontrolovat`), v živém
+  náhledu vedle editoru, v živé ukázce lekce, v opakování, v projektu, v lintu
+  neaktivního CSS (`inspectCss`) i v `npm run overit`. Kdo přidává nové místo, kde se
+  spouští kód obsahu, musí `libs` předat dál — jinak krok, který autor napsal správně,
+  v tom jednom místě spadne (hlídá to unit test v `tools/runner-unit.test.js`).
+
+**Co v testu funguje a co ne** (ověřeno v runneru; platí pro `dom`, `vue` i `react`):
+
+| chci otestovat | jak |
+|---|---|
+| tailwindovou třídu | vypočítaný styl (`paddingTop === '24px'`), po akci `await helpers.flush()` |
+| barvu z palety Tailwindu | **neporovnávej s `rgb(…)`** — `getComputedStyle` vrátí `oklch(0.929 0.013 255.508)`. Testuj rozměry, nebo vlastní barvu z `@theme` (`--color-akce: #16a34a` → `rgb(22, 163, 74)`), nebo si hodnotu vezmi z jiného prvku |
+| scroll | stránka v iframu se scrolluje: `window.scrollTo(0, 600)`, `window.scrollY`, `document.scrollingElement.scrollTop`, u vlastního scrolleru `el.scrollTop = 200` |
+| ScrollTrigger | po scrollu čekej `helpers.waitFor(…)` na následek (třída, `transform`). Po změně výšky obsahu `ScrollTrigger.refresh()`; k nahlédnutí `ScrollTrigger.getAll()` |
+| Lenis | `lenis.scrollTo(600, { immediate: true })` skočí hned, `lenis.scroll` je pozice; `<html>` má třídu `lenis` |
+| konec animace GSAPu | `tl.progress(1)` (skočí na konec), nebo `gsap.globalTimeline.timeScale(50)` |
+| konec animace Motionu | `await animate(el, …)`, nebo `const a = animate(el, …); a.complete();`. `MotionGlobalConfig.skipAnimations = true` animaci označí za hotovou, ale koncovou hodnotu do stylu zapsat nemusí — spoléhej na `await`/`complete()` |
+| 3D scénu (three) | WebGL2 v testovacím prohlížeči funguje (software rendering). Pixely z canvasu čti **jen s `new THREE.WebGLRenderer({ canvas, preserveDrawingBuffer: true })`** — bez něj prohlížeč buffer po kompozici zahodí a `gl.readPixels(…)` jednou projde a jednou vrátí prázdno. S ním funguje `gl.readPixels(…)` i `canvas.toDataURL()`. `devicePixelRatio` je 1 |
+| `prefers-reduced-motion` | **z testu ho zapnout nejde** (prohlížeč hlásí `no-preference`, `useReducedMotion()` vrátí `false`). Testuj, že pravidlo existuje: `helpers.cssRules('.karta').some((r) => r.conditions.some((c) => /prefers-reduced-motion/.test(c)))` |
+| data ze sítě | `fetch` na **internet nefunguje** (stránka je offline). Relativní `fetch('/api/…')` na server Akademie projde. Data kroku dávej do souboru (`data.json`), nebo `fetch` v kroku nahraď vlastní funkcí |
+
+- **Rozměry stránka dostane až po prvním rozvržení.** Iframe je 1024×768, ale když se
+  spustí modul uživatele, může `window.innerWidth`, `getBoundingClientRect()`
+  i `scrollHeight` být ještě **0**. Hned potom iframe dostane `resize` (1024×768)
+  a ozve se `ResizeObserver`. V **testu** je layout vždy hotový (runner na něj čeká,
+  kap. 6.3), takže tohle není problém testů, ale **kódu kroku**: canvas, `three`
+  i vlastní výpočty rozměrů musí být v `requestAnimationFrame` smyčce nebo
+  v `ResizeObserver` (tak se to píše i ve skutečném projektu), ne jen jednou při
+  načtení. Krok, který rozměr přečte jen na začátku, nakreslí v náhledu nic.
+- Animaci nikdy netestuj pevným `helpers.wait(300)` — vždy `helpers.waitFor(…)`,
+  `await` animace, nebo skok na konec.
+
+**Sestavení (`tools/build-vendor.js`).** Balíčky, které v `node_modules` nejsou
+použitelné ES moduly (React, React Router, Motion, radix-ui, React Query… — CommonJS
+nebo holé importy závislostí), se předsestaví jedním buildem do
+`node_modules/.cache/akademie-vendor/bundle/`; sdílené části jdou do `chunk-*.js`, takže
+React je v celé stránce **jedna instance**. `gsap`, `three`, `lenis` a Tailwind už ES
+moduly jsou a vydávají se přímo z `node_modules` (`/api/vendor/raw/…`).
+
+- Sestavení si vynutí `./start.sh`, `npm run overit` i testy runneru **samy**, když
+  chybí nebo je po `npm install` zastaralé (podpis = verze balíčků + seznam modulů).
+  Souběžné běhy se hlídají zámkem, výsledek se přesouvá na místo najednou.
+- Ručně: `npm run vendor` (sestaví, když je potřeba),
+  `node tools/build-vendor.js --force` (vždycky).
+- Seznam knihoven, import map a jména souborů jsou **na jednom místě**:
+  `client/src/runner/vendor-libs.js`. Přidat knihovnu = přidat ji tam (a do `LIBS`
+  v `shared/parse.js`); nová knihovna se musí nejdřív nainstalovat do `package.json`.
+
+### 6.11 Runtime `react`
+
+Hlavní runtime React sekcí. Chová se jako `dom` (kap. 6.3 — test běží uvnitř iframu
+náhledu, `document` je stránka uživatele), navíc:
+
+- **JSX a TypeScript přes Sucrase.** Soubory `.jsx`, `.tsx`, `.ts`, `.mts`, `.js`, `.mjs`
+  se přeloží na volání `jsx()` z `react/jsx-runtime` (automatic runtime, `import React`
+  není potřeba). ES moduly a moderní syntaxi (`?.`, `??`, class fields) Sucrase nechá být
+  a **čísla řádků nemění** — chyba za běhu i ochrana smyček hlásí řádek původního `.jsx`.
+  `.ts`/`.tsx` se jen zbaví typů; **typy se nekontrolují** (kontrola typů = `npx tsc`
+  v runtime `node`, kap. 6.6).
+- **Import map** (mimo soubory kroku): `react`, `react/jsx-runtime`,
+  `react/jsx-dev-runtime`, `react-dom`, `react-dom/client`, `react-router`,
+  `react-router/dom`, `@tanstack/react-query`, `radix-ui`, `clsx`,
+  `class-variance-authority`, `tailwind-merge`, `motion`, `motion/react` — a k tomu
+  všechno z kap. 6.10 (`gsap`, `three`, `lenis`). React je sestavený **ve vývojovém
+  režimu**, takže varování (chybějící `key`, špatné použití hooku) jsou srozumitelná
+  a jdou do konzole náhledu.
+- **Importy mezi soubory kroku** se píšou jako ve Vite: `./App`, `./App.jsx`, `./hooks`
+  (→ `hooks/index.jsx`), `/src/main.jsx`. Přípona se smí vynechat (`.jsx`, `.tsx`, `.js`,
+  `.ts`, `.mjs`, `.mts`, `.json`). `import './styles.css'` vloží styl do stránky (jako Vite);
+  `import data from './data.json'` vrátí rozparsovaná data jako výchozí export (taky jako
+  Vite, `with { type: 'json' }` není potřeba — v runtime `dom` naopak potřeba je).
+- **Když `index.html` chybí**, runner stránku složí sám: `<div id="root"></div>` a jako
+  modul spustí první existující vstup z `main.jsx`, `main.tsx`, `index.jsx`, `index.tsx`,
+  `src/main.jsx`, `src/main.tsx`, … Když vstup chybí, vezme `App.jsx`/`App.tsx`: má-li
+  `createRoot`, spustí se jako vstup, jinak runner vykreslí jeho **výchozí export** do
+  `#root` sám. **Krok o jedné komponentě je tak jen `App.jsx` a nic víc.** CSS soubory,
+  které nikdo neimportuje, se připojí jako `<style>`.
+- **`index.html` smí být i vlastní** — pak platí skládání z kap. 6.3. Používej to jen tam,
+  kde má krok učit, jak `index.html`, `#root` a `main.jsx` souvisí.
+- **`await helpers.flush()`** (kap. 6.2) je v Reactu nejdůležitější pomocník: po
+  `helpers.click(…)`, `helpers.type(…)` nebo jakékoli akci počká, než React commitne
+  vykreslení a doběhnou efekty. Bez něj test čte DOM **před** překreslením.
+  Před prvním testem ho runner volá **sám** (stránka je „hotová" po prvním vykreslení),
+  takže `useState` s výchozí hodnotou se testuje bez `flush`.
+- Zbytek pomocníků funguje jako v `dom` (`click`, `type`, `press`, `submit`, `resize`,
+  `cssRule`, `waitFor`). `helpers.importFile('App.jsx')` vrátí namespace modulu —
+  **tu samou instanci, jakou používá stránka** — takže jde otestovat i vyexportovanou
+  funkci nebo hook bez vykreslení.
+- **`@testing-library/react` v prohlížeči není.** Testy sahají na skutečný DOM náhledu
+  (`document.querySelector`), tedy na to, co student vidí. Testing Library a jsdom patří
+  do runtime `node` (kap. 6.6) — na krok „jak se testuje komponenta".
+- **Chyba v JSX** je `syntaxError` z kap. 6.1:
+  `{ file: 'App.jsx', line: 4, column: 21, message: 'Unterminated JSX contents' }`
+  (neuzavřený `<p>` uvnitř `<div>`).
+  Žádný test se nespustí, UI ukáže „Kód nejde spustit" s tlačítkem na řádek. Kontroluje se
+  nejdřív Sucrase (JSX, typy), pak ještě `acorn` nad výsledkem (dvojí `const`…).
+- **Ochrana smyček** (kap. 6.8) běží nad **přeloženým** kódem, takže `while (true)`
+  v komponentě selže s českou hláškou a správným řádkem v `.jsx`. Nekonečné překreslování
+  (`setState` přímo v těle komponenty) zastaví React sám a v `errors` je
+  `Error: Too many re-renders. …` — test na to nespoléhej, radši ho nech selhat na DOM.
+- **Varování Reactu jdou do konzole náhledu i do `logs`** jako `level: 'error'`:
+  `Each child in a list should have a unique "key" prop.` Krok o seznamech na tom může
+  postavit test:
+  `assert.ok(!logs.some((zapis) => /unique "key"/.test(zapis.text)), 'každá položka seznamu potřebuje key');`
+- `libs: tailwind` (kap. 6.10) jde s Reactem dohromady: `className="p-6"` v JSX i `@theme`
+  v `src/index.css`, který začíná `@import "tailwindcss";`.
+- **Radix (`radix-ui`) vykresluje do portálu mimo `#root`** — `Dialog.Portal`, `Popover`,
+  `Tooltip`, `Select` skončí přímo v `<body>`. Test proto hledá **nad celým dokumentem**
+  (`document.querySelector('[role="dialog"]')`), ne pod `#root`. Ověřeno: po
+  `helpers.click(trigger)` a `await helpers.flush()` je dialog v DOM, `helpers.press(dialog,
+  'Escape')` ho zavře; stav je vidět i na `[data-state="open"]`.
+- **Z react-routeru funguje v sandboxu jen `MemoryRouter`** (a `createMemoryRouter`,
+  klidně s `initialEntries`). Stránka běží jako `about:srcdoc` s neprůhledným originem:
+  `BrowserRouter` **nevykreslí nic** (`history.pushState` vyhodí `SecurityError`)
+  a `HashRouter` spadne na `TypeError: Failed to construct 'URL'`. Kroky o routování piš
+  s `MemoryRouter` — `Link`, `useNavigate`, `Routes`/`Route` v něm fungují normálně
+  a testují se přes DOM. Skutečné adresy v adresním řádku patří do projektu ve VS Code
+  (kap. 9, Next.js).
+- `@tanstack/react-query` funguje s `queryFn`, které vrací Promise (síť není, viz 6.10):
+  `useQuery` v testu vyčkej přes `helpers.waitFor(() => document.querySelector(…))`.
+  `clsx`, `class-variance-authority` a `tailwind-merge` jsou v import map taky
+  (`twMerge(clsx('p-2', 'p-4'))` → `p-4`).
+- V `module.json` se `runtime: "react"` píše pro celý modul; jednotlivý krok ho může
+  přebít (`runtime: js` na krok o čistém JS uvnitř React modulu).
+
+### 6.12 Úložiště v sandboxu (`localStorage`, `sessionStorage`)
+
+Iframe bez `allow-same-origin` (kap. 6.8) má neprůhledný origin a skutečné
+`localStorage` v něm vyhodí `SecurityError` — kód studenta by spadl ještě před testem.
+Runner proto v runtime `dom`, `js`, `vue` a `react` podstrčí stránce **úložiště v paměti**:
+
+- Rozhraní je stejné jako u skutečného: `getItem`, `setItem`, `removeItem`, `clear`,
+  `key(i)`, `length`, zápis i čtení tečkou (`localStorage.theme = 'dark'`),
+  `delete localStorage.theme`, `Object.keys(localStorage)`. Hodnoty jsou vždy text.
+- **Čerstvé pro každý test i pro každé složení náhledu** — testy se neovlivňují.
+  Test si může úložiště naplnit sám (`localStorage.setItem(…)`) a pak zavolat funkci
+  stránky, nebo použít `RunRequest.storage` (kap. 6.1):
+  `storage: { localStorage: { theme: 'dark' } }`.
+- **Co tu není:** událost `storage`, IndexedDB ani cookies (kap. 13). V nové kartě
+  (`Preview.openInNewTab`, kap. 6.7) má stránka skutečné úložiště prohlížeče.
+
+### 6.13 Příklady pro autorky a autory: knihovny, React, balíčky v node
+
+Tři hotové kroky, **spuštěné přes runner**: řešení projde všemi testy a seed aspoň
+jeden test neprojde (test tedy opravdu něco hlídá). Jsou zkrácené na mechaniku —
+zadání, seed a design piš podle `styl-obsahu.md`.
+
+**1. Runtime `dom` s Tailwindem a GSAPem.**
+
+`````md
+---
+title: Karta, která na klik povyroste
+runtime: dom
+libs: tailwind, gsap
+---
+
+# --description--
+
+Karta produktu je hotová, chybí jí reakce na dotek.
+
+1. V `index.html` dej kartě tailwindové třídy: bílé pozadí `bg-white`, zaoblení
+   `rounded-xl` a vnitřní odsazení `p-6`.
+2. V `script.js` ji nech po kliknutí GSAPem povyrůst na `scale: 1.05`.
+
+# --hints--
+
+- Karta má vnitřní odsazení `p-6`, tedy 24 px.
+
+```js
+const karta = document.querySelector('.karta');
+assert.equal(getComputedStyle(karta).paddingTop, '24px');
+```
+
+- Karta má bílé pozadí.
+
+```js
+const karta = document.querySelector('.karta');
+assert.equal(getComputedStyle(karta).backgroundColor, 'rgb(255, 255, 255)');
+```
+
+- Po kliknutí GSAP kartu zvětší (dostane `transform`).
+
+```js
+const karta = document.querySelector('.karta');
+assert.equal(getComputedStyle(karta).transform, 'none');
+await helpers.click(karta);
+await helpers.waitFor(() => getComputedStyle(karta).transform !== 'none');
+```
+
+# --seed--
+
+## --file-- index.html
+
+```html
+<div class="karta">
+  <h2 class="text-xl font-semibold">Sluchátka</h2>
+  <p class="text-slate-500">1 990 Kč</p>
+</div>
+```
+
+## --file-- script.js
+
+```js
+import gsap from 'gsap';
+
+// Tady přidej reakci na klik.
+```
+
+# --solution--
+
+## --file-- index.html
+
+```html
+<div class="karta bg-white rounded-xl p-6">
+  <h2 class="text-xl font-semibold">Sluchátka</h2>
+  <p class="text-slate-500">1 990 Kč</p>
+</div>
+```
+
+## --file-- script.js
+
+```js
+import gsap from 'gsap';
+
+document.querySelector('.karta').addEventListener('click', (event) => {
+  gsap.to(event.currentTarget, { scale: 1.05, duration: 0.2 });
+});
+```
+`````
+
+Co je na tom podstatné: `libs: tailwind, gsap` ve frontmatteru; test na Tailwind měří
+**vypočítaný** styl (`paddingTop === '24px'`), ne přítomnost třídy v HTML; test na GSAP
+si nejdřív ověří výchozí stav (`transform === 'none'`), pak klikne a **čeká**
+`helpers.waitFor`, protože animace běží v `requestAnimationFrame`.
+
+**2. Runtime `react` — komponenta se stavem.**
+
+`````md
+---
+title: Počítadlo kusů v košíku
+runtime: react
+libs: tailwind
+---
+
+# --description--
+
+Komponenta `Kosik` má ukazovat počet kusů a umět přidávat.
+
+1. Drž počet ve stavu: `const [pocet, setPocet] = useState(0)`.
+2. Tlačítko `Přidat` počet zvýší o jeden.
+3. Číslo vypiš do `<span data-testid="pocet">` a dej mu tailwindovou třídu
+   `font-bold`.
+
+# --hints--
+
+- Na začátku je v košíku 0 kusů.
+
+```js
+assert.equal(document.querySelector('[data-testid="pocet"]').textContent, '0');
+```
+
+- Číslo je tučné (`font-bold`).
+
+```js
+const cislo = document.querySelector('[data-testid="pocet"]');
+assert.equal(getComputedStyle(cislo).fontWeight, '700');
+```
+
+- Dvě kliknutí na „Přidat" udělají ze nuly dvojku.
+
+```js
+const tlacitko = document.querySelector('button');
+await helpers.click(tlacitko);
+await helpers.click(tlacitko);
+await helpers.flush();
+assert.equal(document.querySelector('[data-testid="pocet"]').textContent, '2');
+```
+
+# --seed--
+
+## --file-- App.jsx
+
+```jsx
+import { useState } from 'react';
+
+export default function Kosik() {
+  return (
+    <div className="p-6">
+      <p>
+        V košíku: <span data-testid="pocet">0</span> ks
+      </p>
+      <button className="rounded bg-slate-900 px-3 py-1 text-white">Přidat</button>
+    </div>
+  );
+}
+```
+
+# --solution--
+
+## --file-- App.jsx
+
+```jsx
+import { useState } from 'react';
+
+export default function Kosik() {
+  const [pocet, setPocet] = useState(0);
+
+  return (
+    <div className="p-6">
+      <p>
+        V košíku:{' '}
+        <span className="font-bold" data-testid="pocet">
+          {pocet}
+        </span>{' '}
+        ks
+      </p>
+      <button
+        className="rounded bg-slate-900 px-3 py-1 text-white"
+        onClick={() => setPocet(pocet + 1)}
+      >
+        Přidat
+      </button>
+    </div>
+  );
+}
+```
+`````
+
+Co je na tom podstatné: krok je **jediný soubor `App.jsx`** — runner složí stránku
+s `<div id="root">` a jeho výchozí export vykreslí sám (kap. 6.11). `libs: tailwind`
+dává `className` smysl. První dva testy `flush` nepotřebují (runner ho volá před
+prvním testem sám), test s klikáním **ano**: bez `await helpers.flush()` by přečetl
+DOM před překreslením. Cíle testů drží `data-testid`, aby student mohl změnit text
+i strukturu okolo.
+
+**3. Runtime `node` s balíčky (express, zod, vitest, eslint).**
+
+`````md
+---
+title: Endpoint, který nepustí špatná data
+runtime: node
+timeoutMs: 30000
+---
+
+# --description--
+
+V `app.js` je Express server. Přidej mu kontrolu vstupu Zodem.
+
+1. Popiš objednávku schématem `Objednavka` (`email` jako `z.string().email()`,
+   `kusy` jako celé číslo od 1).
+2. V `POST /objednavky` data zkontroluj přes `safeParse`. Když nesedí, vrať
+   stav `400` a `{ chyba: '…' }`; když sedí, stav `201` a uložená data.
+3. `npx vitest run` a `npx eslint .` musí projít.
+
+# --hints--
+
+- Schéma `Objednavka` odmítne prázdný e-mail i nula kusů.
+
+```js
+const { Objednavka } = await helpers.importFile('app.js');
+assert.equal(Objednavka.safeParse({ email: 'ne', kusy: 2 }).success, false);
+assert.equal(Objednavka.safeParse({ email: 'eva@example.com', kusy: 0 }).success, false);
+assert.equal(Objednavka.safeParse({ email: 'eva@example.com', kusy: 2 }).success, true);
+```
+
+- Server vrátí 201 se správnými daty a 400 se špatnými.
+
+```js
+const server = await helpers.startServer('server.js');
+const poslat = (data) => fetch(`${server.url}/objednavky`, {
+  method: 'POST',
+  headers: { 'content-type': 'application/json' },
+  body: JSON.stringify(data),
+});
+
+const ok = await poslat({ email: 'eva@example.com', kusy: 2 });
+assert.equal(ok.status, 201);
+assert.deepEqual(await ok.json(), { email: 'eva@example.com', kusy: 2 });
+
+const spatne = await poslat({ email: 'ne', kusy: 2 });
+assert.equal(spatne.status, 400);
+```
+
+- `npx vitest run` a `npx eslint .` projdou bez chyby.
+
+```js
+const testy = await helpers.run('npx vitest run');
+assert.equal(testy.code, 0, testy.stdout + testy.stderr);
+const lint = await helpers.run('npx eslint .');
+assert.equal(lint.code, 0, lint.stdout + lint.stderr);
+```
+
+# --seed--
+
+## --file-- package.json
+
+```json
+{ "type": "module" }
+```
+
+## --file-- app.js
+
+```js
+import express from 'express';
+import { z } from 'zod';
+
+// Tady doplň schéma Objednavka.
+
+export const app = express();
+app.use(express.json());
+
+app.post('/objednavky', (req, res) => {
+  res.status(201).json(req.body);
+});
+```
+
+## --file-- server.js
+
+```js
+import { app } from './app.js';
+
+app.listen(process.env.PORT);
+```
+
+## --file-- app.test.js
+
+```js
+import { expect, test } from 'vitest';
+import { Objednavka } from './app.js';
+
+test('e-mail musí být e-mail', () => {
+  expect(Objednavka.safeParse({ email: 'ne', kusy: 1 }).success).toBe(false);
+});
+```
+
+## --file-- eslint.config.js
+
+```js
+import js from '@eslint/js';
+
+export default [js.configs.recommended, { languageOptions: { globals: { process: 'readonly' } } }];
+```
+
+# --solution--
+
+## --file-- app.js
+
+```js
+import express from 'express';
+import { z } from 'zod';
+
+export const Objednavka = z.object({
+  email: z.string().email(),
+  kusy: z.number().int().min(1),
+});
+
+export const app = express();
+app.use(express.json());
+
+app.post('/objednavky', (req, res) => {
+  const vysledek = Objednavka.safeParse(req.body);
+  if (!vysledek.success) return res.status(400).json({ chyba: 'Objednávka nesedí' });
+  res.status(201).json(vysledek.data);
+});
+```
+`````
+
+Co je na tom podstatné: `import express from 'express'` a `import { z } from 'zod'`
+fungují bez instalace (kap. 6.6). Krok si přinesl **svůj `eslint.config.js`** a
+`package.json` s `"type": "module"`; kdyby chtěl `npx tsc --noEmit`, přinesl by
+i `tsconfig.json` (a počítal s tím, že `@types/node` ani `@types/express` nejsou
+nainstalované — kap. 6.6). Kvůli `npx vitest run` a `npx eslint .` má frontmatter
+`timeoutMs: 30000`. `helpers.startServer('server.js')` si vezme volný port a po testu
+server zastaví — proto je `app.listen` ve zvláštním souboru a `app.js` server jen
+exportuje (to je i tak, jak se Express testuje ve skutečnosti).
 
 ---
 
@@ -2392,18 +2989,15 @@ používat, parser je odmítá, dokud je kontrakt nedoplní.
 - `:::eventloop` — event loop s předpovědí pořadí a kroky popsanými autorem. Vlna 4, před `js-async`.
 - `target: layout` — vizuální cíl v CSS labech (porovnání geometrie). Vlna 4.
 - Cvičné úlohy `content/cviceni/<slug>/` ve formátu labu s `requires`, `topics`, `level`. Vlna 4.
-- Runtime `react` (import map, JSX/TSX, `helpers.flush()`). Vlna 5, před React sekcemi.
 - Vyhledávání Ctrl+K, popover pojmů, `#/pojmy`, REPL v konzoli, pískoviště, „Postavit
   znovu naslepo", obrazovka „Po sekci umíš" s `outcome:` položkami opakování. Vlna 3.
 - Poznámky analyzátoru k řešení (`feedback:`). Vlna 5.
-- **Úložiště v sandboxovaném iframu** (runtime `dom`, `js`, `vue`, `react`): iframe bez
-  `allow-same-origin` vyhazuje `SecurityError` u `localStorage`, `sessionStorage`,
-  IndexedDB a cookies. **Hotové (vlna 2b):** runner má in-memory `localStorage`/`sessionStorage`
-  (čerstvé pro každý test i každé překreslení náhledu) a `RunRequest.storage` (kap. 6.1); test
-  může úložiště naplnit i sám přes `localStorage.setItem` a pak zavolat funkce stránky.
-  **Chybí:** zápis počátečního úložiště v obsahu (frontmatter kroku?) a IndexedDB/cookies. Vlna 3, nejpozději před
-  `js-dom` (`prohlizecova-api`, `workshop-filtr-produktu`, `projekt-kanban`),
-  `nastroje-testovani/projekt-rozpoctovac` a hookem `useLocalStorage` v Reactu.
+- **IndexedDB a cookies v sandboxovaném iframu.** `localStorage` a `sessionStorage`
+  runner nahrazuje úložištěm v paměti — to je **hotové a specifikované v kap. 6.12**
+  (včetně `RunRequest.storage`). Zbývá: IndexedDB, cookies a událost `storage`,
+  a zápis počátečního úložiště přímo v obsahu (frontmatter kroku?). Vlna 3, nejpozději
+  před `js-dom` (`prohlizecova-api`, `workshop-filtr-produktu`, `projekt-kanban`)
+  a `nastroje-testovani/projekt-rozpoctovac`.
 - **Obrázky v obsahu** (snímky návrhu z Figmy v `css-design/cteni-navrhu`): kde leží
   (`content/<sekce>/<modul>/obrazky/`), jak se na ně odkazuje z markdownu a jak je
   server servíruje. Vlna 5, před `css-design`.

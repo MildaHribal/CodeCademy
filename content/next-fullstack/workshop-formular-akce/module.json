@@ -1,0 +1,1 @@
+{ "type": "workshop", "title": "Formulář, který mluví se serverem", "summary": "Postavíš formulář nového inzerátu: stav z akce, chyby u políček, stav odesílání a optimistický seznam.", "minutes": 85, "runtime": "react" }

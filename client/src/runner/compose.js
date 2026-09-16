@@ -83,7 +83,11 @@ export function composePage({ runtime, files, libs = [], loopLimitMs, origin = '
   function moduleUrl(name) {
     if (!moduleUrls.has(name)) {
       const content = fileMap.get(name);
-      const url = /\.json$/i.test(name) ? dataUrl('application/json', content)
+      const url = /\.json$/i.test(name) ? (isReact
+        // Runtime react: `import data from './data.json'` bez `with { type: 'json' }`, jako ve Vite.
+        ? dataUrl('text/javascript', jsonModule(content))
+        // Runtime dom/vue: skutečný modul JSON, importuje se s `with { type: 'json' }`.
+        : dataUrl('application/json', content))
         : /\.css$/i.test(name) ? dataUrl('text/javascript', cssModule(name, content, tailwind))
         : scriptUrl(content, { name, sourceType: 'module' });
       moduleUrls.set(name, url);
@@ -150,6 +154,14 @@ export function resolveReactSpecifier(fromName, specifier, fileMap) {
     if (name && isReactModuleFile(name)) return FILE_SPECIFIER_PREFIX + name;
   }
   return null;
+}
+
+/**
+ * Runtime react: JSON jako modul s výchozím exportem (jako Vite), aby `import data from './data.json'`
+ * fungoval bez `with { type: 'json' }`. Neplatný JSON ohlásí prohlížeč při načtení modulu.
+ */
+function jsonModule(content) {
+  return `export default ${String(content ?? '').trim() || 'null'};\n`;
 }
 
 /** Modul, který po importu CSS souboru vloží jeho <style> (jako Vite). Tailwind CSS jde jako text/tailwindcss. */

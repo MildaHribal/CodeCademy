@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Testy a nasazení Next.js", "summary": "Vitest na logiku, Playwright proti produkčnímu buildu, nasazení na platformu i do kontejneru.", "minutes": 50 }

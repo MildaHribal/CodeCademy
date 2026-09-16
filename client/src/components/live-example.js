@@ -70,12 +70,12 @@ function createPlainExample(host, block, { number }) {
     context: 'live',
     runtime: block.runtime,
     onChange: (files) => {
-      preview.update({ runtime: block.runtime, files: previewFiles(files) });
+      preview.update({ runtime: block.runtime, libs: block.libs ?? [], files: previewFiles(files) });
       controlPanel?.showDeclarations(stylesOf(files), values);
     },
   });
 
-  const preview = mountPreview(previewHost, { runtime: block.runtime, files: previewFiles(original) });
+  const preview = mountPreview(previewHost, { runtime: block.runtime, libs: block.libs ?? [], files: previewFiles(original) });
   preview.onConsole?.((entry) => {
     // U HTML/CSS ukázky se konzole ukáže, až když kód něco vypíše; nové spuštění ji zase schová.
     if (!isJs) consolePanel.element.hidden = entry.level === 'clear';
@@ -200,6 +200,8 @@ function createControlPanel(controls, { onInput }) {
 
 function createPredictExample(host, block, { number, key }) {
   const runtime = block.runtime;
+  // Knihovny ukázky (`:::live … libs=`, kontrakt kap. 6.10) — náhled je musí dostat.
+  const libs = Array.isArray(block.libs) ? block.libs : [];
   const isNode = runtime === 'node';
   const isJs = runtime === 'js';
   const original = block.files.map((f) => ({ ...f, region: null }));
@@ -295,9 +297,9 @@ function createPredictExample(host, block, { number, key }) {
       label: `Kód předpovědi ${number}`,
       context: 'live',
       runtime,
-      onChange: (files) => preview.update({ runtime, files }),
+      onChange: (files) => preview.update({ runtime, libs, files }),
     });
-    preview = mountPreview(previewHost, { runtime, files: original });
+    preview = mountPreview(previewHost, { runtime, libs, files: original });
     preview.onConsole?.((entry) => {
       if (!isJs) consolePanel.element.hidden = entry.level === 'clear';
       consolePanel.receive(entry);

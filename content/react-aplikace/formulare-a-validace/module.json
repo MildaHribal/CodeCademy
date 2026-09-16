@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Formuláře a validace", "summary": "Postavíš formulář s akcí, schématem a přístupnými chybami, které dávají smysl i bez JavaScriptu.", "minutes": 50, "runtime": "react" }

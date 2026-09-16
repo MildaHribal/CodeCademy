@@ -1,0 +1,1 @@
+{ "type": "project", "title": "Řízený projekt: katalog pražírny", "summary": "Po etapách postavíš katalog kávy v Next.js: layout, seznam ze serveru, detail, 404 a klientský filtr.", "minutes": 360, "runtime": "node" }

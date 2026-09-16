@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Testy komponent", "summary": "Otestuješ komponentu tak, jak ji používá uživatel: dotazy podle role, čekání na data a náhrada API.", "minutes": 50, "runtime": "react" }

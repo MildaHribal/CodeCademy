@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Serverové a klientské komponenty", "summary": "Kde který kus UI běží, co smí přes hranici \"use client\" a jak neposlat tajemství do prohlížeče.", "minutes": 60 }

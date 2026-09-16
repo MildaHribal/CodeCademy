@@ -1,0 +1,1 @@
+{ "type": "workshop", "title": "Oprav cizí modul podle hlášek", "summary": "Modul se statistikami koncertů hlásí sedm typových chyb — všechny opravíš bez any a bez as.", "minutes": 45, "runtime": "node" }

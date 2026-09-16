@@ -1,0 +1,1 @@
+{ "type": "workshop", "title": "Úkoly nad API", "summary": "Postavíš seznam úkolů nad API: stavy načítání, přidávání, invalidaci, optimistické odškrtnutí a opakování po chybě.", "minutes": 65, "runtime": "react" }

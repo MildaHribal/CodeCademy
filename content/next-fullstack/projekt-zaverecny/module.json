@@ -1,0 +1,1 @@
+{ "type": "project", "title": "Závěrečný fullstack projekt", "summary": "Vlajkový projekt na pohovor: Next.js, databáze, přihlášení, role, validace, testy, lint, nasazení a README.", "minutes": 900, "runtime": "node" }

@@ -1,0 +1,1 @@
+{ "type": "workshop", "title": "Typově bezpečný klient sdílených kol", "summary": "Postavíš klienta nad JSON API, který ověří odpověď schématem a vrátí otypovaná data — i když server pošle nesmysl.", "minutes": 55, "runtime": "node" }

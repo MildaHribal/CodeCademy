@@ -42,6 +42,8 @@ export function renderWorkspace(ctx, { module, item, nav, steps = null, stepInde
 
   const isWorkshop = Boolean(steps);
   const runtime = item.runtime;
+  // Knihovny kroku (kontrakt kap. 6.10) — do náhledu i do testů; u node a js jsou prázdné.
+  const libs = Array.isArray(item.libs) ? item.libs : [];
   const isNode = runtime === 'node';
   // Druh kroku (kontrakt kap. 3.1): step | debug | parsons | recall | choose. Vlastní plochu místo
   // editoru má jen druh zaregistrovaný přes registerStepKind, ostatní používají editor kódu.
@@ -85,7 +87,7 @@ export function renderWorkspace(ctx, { module, item, nav, steps = null, stepInde
 
   const output = isNode
     ? createNodeOutput({ item, slots, signal: ctx.signal, getFiles: () => editor.getFiles() })
-    : createBrowserOutput({ runtime, slots });
+    : createBrowserOutput({ runtime, libs, slots });
   const consolePanel = output.consolePanel;
   let preview = null;
 
@@ -167,7 +169,7 @@ export function renderWorkspace(ctx, { module, item, nav, steps = null, stepInde
       editCount++;
       const current = editor.getFiles();
       if (save) progress.saveCode(item.id, current);
-      preview?.update({ runtime, files: current });
+      preview?.update({ runtime, libs, files: current });
       if (passed) {
         changedSincePass = true;
         brief.setPassed(false);
@@ -196,7 +198,7 @@ export function renderWorkspace(ctx, { module, item, nav, steps = null, stepInde
     editCount++;
     progress.saveCode(item.id, files);
     // Náhled se obnoví sám se zpožděním; konzoli před novým spuštěním vyčistí signál 'clear'.
-    preview?.update({ runtime, files });
+    preview?.update({ runtime, libs, files });
     if (passed) {
       changedSincePass = true;
       brief.setPassed(false);
@@ -223,6 +225,7 @@ export function renderWorkspace(ctx, { module, item, nav, steps = null, stepInde
     try {
       run = await runTests({
         runtime,
+        libs,
         files,
         hints: item.hints,
         // Při odchodu z obrazovky se kontrola zruší (zaseknutý test by brzdil i další obrazovku).
@@ -311,7 +314,7 @@ export function renderWorkspace(ctx, { module, item, nav, steps = null, stepInde
     hintList.reset();
     clearResult(result);
     consolePanel.clear();
-    preview?.update({ runtime, files });
+    preview?.update({ runtime, libs, files });
     editor.focus();
     emit('reset', { files });
   }

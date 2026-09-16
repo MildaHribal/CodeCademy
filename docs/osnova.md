@@ -3031,6 +3031,11 @@ a CLI `shadcn` jsou jen v projektech, kde si je uživatel instaluje sám.
   a `doporucenaTrasa` ignoruje. UI potřebuje odznak „rozšíření", odkaz „Další
   na trase" na konci sekce (u rozšíření nabídnout i další sekci jádra)
   a seřazení přehledu podle trasy jako volitelný pohled.
+- **Plánované moduly v API.** Sekce, které ještě nejsou na disku, mají
+  v `content/osnova.json` pole `modules` (kontrakt kap. 2.1) s tím, co se v nich
+  bude učit. `loadCurriculum` je zatím nevrací (u nedostupné sekce posílá
+  `modules: []`), takže přehled u „připravuje se" neukáže nic. Až je API pošle,
+  UI je vykreslí bez odkazů (nejde je otevřít) a s rozpočtem minut sekce.
 - **Kontrakt kap. 11** zakazuje zmínky o AI i v textech lekcí. Podle E2 je
   potřeba ho upravit: zákaz platí pro kód platformy, komentáře, commity
   a atribuci, ne pro obsah `prace-s-ai` a `start-nastroje/uceni-s-ai`.

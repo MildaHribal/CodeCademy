@@ -1,0 +1,1 @@
+{ "type": "lab", "title": "Přihlašovací formulář na vlastní téma", "summary": "Sám napíšeš formulář s validací, přístupnými chybami a stavem odesílání — na téma, které si vybereš.", "minutes": 60, "runtime": "react" }

@@ -134,7 +134,9 @@ function reportSolutionRun(result, step, label, report, code = 'K1') {
 function planStepLike(module, step, label, { addJob, later, context }) {
   const isLab = module.type === 'lab';
   const timeout = timeoutOf(step);
-  const run = (files) => addJob({ runtime: step.runtime, files: toRunFiles(files), hints: step.hints, ...timeout });
+  // `libs` kroku (kontrakt kap. 6.10) — bez nich by se Tailwind ani Lenis do stránky nevložily.
+  const libs = Array.isArray(step.libs) && step.libs.length ? { libs: step.libs } : {};
+  const run = (files) => addJob({ runtime: step.runtime, files: toRunFiles(files), hints: step.hints, ...libs, ...timeout });
 
   if (isLab && step.solution.length === 0) {
     // Lab smí seed i řešení vynechat, verify ale bez řešení nemá co ověřit.
@@ -337,8 +339,8 @@ export function compareFiles(expectedFiles, actualFiles, { allowNewFiles = false
 
 function planLesson(module, { addJob, later }) {
   const { blocks, questions } = module.lesson;
-  const runChecked = (files, runtime, label, { predict = null } = {}) => {
-    const job = addJob({ runtime, files: toRunFiles(files), hints: [] });
+  const runChecked = (files, runtime, label, { predict = null, libs = [] } = {}) => {
+    const job = addJob({ runtime, files: toRunFiles(files), hints: [], ...(libs.length ? { libs } : {}) });
     later((results, report) => {
       const result = results[job];
       if (result.runnerError) return report.error('E1', `${label}: ${result.runnerError}`);
@@ -359,7 +361,7 @@ function planLesson(module, { addJob, later }) {
       liveNumber++;
       if (block.runtime === 'node') continue; // předpověď node se nespouští
       const label = `živá ukázka ${liveNumber}`;
-      runChecked(applyControlDefaults(block.files, block.controls), block.runtime, label, { predict: block.predict });
+      runChecked(applyControlDefaults(block.files, block.controls), block.runtime, label, { predict: block.predict, libs: block.libs ?? [] });
       const css = block.files.filter((file) => file.lang === 'css').map((file) => file.content).join('\n');
       const unused = block.controls.filter((control) => !css.includes(`var(${control.name}`));
       if (unused.length) later((_, report) => report.warning('E5', `${label}: ovládací prvek ${unused.map((c) => c.name).join(', ')} se v CSS nepoužívá (var(--…))`));

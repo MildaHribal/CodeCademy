@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Proč React", "summary": "Deklarativní UI, komponenta jako funkce vracející JSX a pravidla JSX, která tě jinak budou týdny štvát.", "minutes": 45, "runtime": "react" }

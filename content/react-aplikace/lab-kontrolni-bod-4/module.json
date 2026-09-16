@@ -1,0 +1,1 @@
+{ "type": "lab", "title": "Kontrolní bod: rezervace stolů", "summary": "Sám postavíš rezervaci stolů: data z API, detail, formulář s validací, stavy načítání a chyb.", "minutes": 120, "runtime": "react" }

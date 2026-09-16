@@ -187,6 +187,7 @@ export function renderProject(ctx, { module, nav }) {
     const { files } = await api.projectFiles(sectionId, moduleId);
     return runTests({
       runtime,
+      ...(Array.isArray(project.libs) && project.libs.length ? { libs: project.libs } : {}),
       files: files.map(({ name, content }) => ({ name, content })),
       hints: project.hints,
       signal: ctx.signal,
@@ -251,7 +252,7 @@ export function renderProject(ctx, { module, nav }) {
         if (preview) {
           preview.update({ runtime, files });
         } else {
-          preview = mountPreview(frameHost, { runtime, files });
+          preview = mountPreview(frameHost, { runtime, libs: project.libs ?? [], files });
           preview.onConsole?.((entry) => consolePanel.receive(entry));
           ctx.onCleanup(() => preview.destroy());
         }

@@ -1,0 +1,8 @@
+{
+  "type": "lesson",
+  "title": "Tailwind v komponentách",
+  "summary": "Složíš třídy podle props přes clsx a tailwind-merge tak, aby se utility nepřebíjely náhodou.",
+  "minutes": 45,
+  "runtime": "react",
+  "libs": ["tailwind"]
+}

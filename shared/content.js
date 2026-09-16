@@ -99,8 +99,16 @@ export function loadCurriculum(contentDir) {
         throw new ParseError(`neplatný slug sekce "${sectionId}"`, { id: 'osnova.json' });
       }
       const planned = typeof entry === 'string' ? {} : entry;
-      const s = readSection(contentDir, sectionId);
       const uroven = sectionLevel(planned.uroven, sectionId) ?? 'jadro';
+      // Rozbitá nebo rozepsaná sekce nesmí shodit celou osnovu: ohlásí se jako nedostupná
+      // s textem chyby, zbytek kurzu funguje dál (detail sekce chybu vypíše sám).
+      let s;
+      try {
+        s = readSection(contentDir, sectionId);
+      } catch (error) {
+        if (!(error instanceof ParseError)) throw error;
+        return { id: sectionId, title: planned.title ?? sectionId, intro: '', available: false, modules: [], uroven, outcomes: [], error: error.message };
+      }
       if (!s) {
         return {
           id: sectionId, title: planned.title ?? sectionId, intro: planned.summary ?? '', available: false, modules: [],
@@ -114,8 +122,14 @@ export function loadCurriculum(contentDir) {
         available: true,
         uroven,
         outcomes: Array.isArray(s.outcomes) ? s.outcomes : [],
-        modules: s.modules.map((moduleId) => {
-          const m = readModuleMeta(contentDir, sectionId, moduleId);
+        modules: s.modules.flatMap((moduleId) => {
+          let m;
+          try {
+            m = readModuleMeta(contentDir, sectionId, moduleId);
+          } catch (error) {
+            if (!(error instanceof ParseError)) throw error;
+            return [];  // rozepsaný modul se v přehledu neukáže, sekce zůstane funkční
+          }
           return {
             id: `${sectionId}/${moduleId}`,
             type: m.type,

@@ -46,7 +46,12 @@ function registeredExtensionsFor(fileContext) {
   return out;
 }
 
-function languageFor(lang) {
+/**
+ * Zvýrazňování podle jazyka souboru (`lang` z parseru, kap. 2.3). `jsx`/`tsx` zapínají
+ * v CodeMirroru režim JSX, jinak by `<p>{x}</p>` svítilo jako chyba (runtime react, kap. 6.11).
+ * @param {string} lang
+ */
+export function languageFor(lang) {
   switch (lang) {
     case 'html':
     case 'vue':

@@ -7,6 +7,7 @@ import { chromium } from 'playwright';
 import { BROWSER_ARGS } from './lib/runner-pool.js';
 import { sendJson } from './lib/static-app.js';
 import { startRunnerServer } from './lib/test-setup.js';
+import { parseStep } from '../shared/parse.js';
 
 let server;
 let browser;
@@ -584,6 +585,25 @@ describe('úložiště v sandboxu', () => {
     assert.deepEqual(result.results, [{ index: 0, pass: true }, { index: 1, pass: true }]);
     assert.deepEqual(result.errors, []);
   });
+
+  test('úložiště funguje i v runtime js a react (kap. 6.12)', async () => {
+    const js = await run({
+      runtime: 'js',
+      storage: { sessionStorage: { krok: '3' } },
+      files: [{ name: 'script.js', content: "localStorage.setItem('jmeno', 'Eva');\nconst krok = Number(sessionStorage.getItem('krok'));" }],
+      hints: [{ text: 'js', test: "assert.equal(localStorage.getItem('jmeno'), 'Eva'); assert.equal(sessionStorage.krok, '3'); assert.equal(krok, 3);" }],
+    });
+    assert.equal(js.results[0].pass, true, js.results[0].error);
+
+    const react = await run({
+      runtime: 'react',
+      storage: { localStorage: { theme: 'dark' } },
+      files: [{ name: 'App.jsx', content: "export default function App() {\n  return <p>{localStorage.getItem('theme')}</p>;\n}" }],
+      hints: [{ text: 'react', test: "assert.equal(document.querySelector('#root p').textContent, 'dark'); sessionStorage.otevreno = '1'; assert.equal(sessionStorage.getItem('otevreno'), '1');" }],
+    });
+    assert.equal(react.results[0].pass, true, react.results[0].error);
+    assert.deepEqual([...js.errors, ...react.errors], []);
+  });
 });
 
 describe('knihovny (libs, kap. 6.10)', () => {
@@ -926,6 +946,195 @@ export default function App() {
     assert.equal(result.results[0].pass, true, result.results[0].error);
     assert.deepEqual(result.errors, []);
   });
+
+  // Import map je v dom/vue/react vždycky; `libs` zapíná jen knihovny, které mění stránku (kap. 6.10).
+  test('gsap, motion a three jdou naimportovat i bez libs', async () => {
+    const result = await run({
+      runtime: 'dom',
+      files: [
+        { name: 'index.html', content: html('<div class="box">b</div>', '<script type="module" src="script.js"></script>') },
+        { name: 'script.js', content: "import gsap from 'gsap';\nimport { animate } from 'motion';\nimport * as THREE from 'three';\nwindow.pripravene = Boolean(gsap.to && animate && THREE.Scene);" },
+      ],
+      hints: [{ text: 'moduly', test: 'await helpers.waitFor(() => window.pripravene === true);' }],
+    });
+    assert.equal(result.results[0].pass, true, result.results[0].error);
+    assert.deepEqual(result.errors, []);
+  });
+
+  test('JSON: react jako ve Vite (bez atributu), dom jako modul s `with { type: "json" }`', async () => {
+    const data = '{ "produkty": [{ "jmeno": "Sluchátka", "cena": 1990 }] }';
+    const react = await run({
+      runtime: 'react',
+      files: [
+        { name: 'data.json', content: data },
+        { name: 'App.jsx', content: "import data from './data.json';\n\nexport default function App() {\n  return <ul>{data.produkty.map((p) => <li key={p.jmeno}>{p.jmeno}: {p.cena} Kč</li>)}</ul>;\n}" },
+      ],
+      hints: [{ text: 'react', test: "assert.equal(document.querySelector('#root li').textContent, 'Sluchátka: 1990 Kč');" }],
+    });
+    assert.equal(react.results[0].pass, true, react.results[0].error);
+
+    const dom = await run({
+      runtime: 'dom',
+      files: [
+        { name: 'index.html', content: html('<p id="out"></p>', '<script type="module" src="script.js"></script>') },
+        { name: 'data.json', content: '{ "jmeno": "Eva" }' },
+        { name: 'script.js', content: "import data from './data.json' with { type: 'json' };\ndocument.querySelector('#out').textContent = data.jmeno;" },
+      ],
+      hints: [{ text: 'dom', test: "await helpers.waitFor(() => document.querySelector('#out').textContent === 'Eva');" }],
+    });
+    assert.equal(dom.results[0].pass, true, dom.results[0].error);
+    assert.deepEqual([...react.errors, ...dom.errors], []);
+  });
+
+  test('react: varování o chybějícím key jde do logs, „Too many re-renders" do errors', async () => {
+    const seznam = await run({
+      runtime: 'react',
+      files: [{ name: 'App.jsx', content: "export default function App() {\n  return <ul>{['a', 'b'].map((x) => <li>{x}</li>)}</ul>;\n}" }],
+      hints: [{ text: 'key', test: "assert.equal(document.querySelectorAll('#root li').length, 2);" }],
+    });
+    assert.equal(seznam.results[0].pass, true, seznam.results[0].error);
+    assert.ok(seznam.logs.some((entry) => entry.level === 'error' && /unique "key" prop/.test(entry.text)), JSON.stringify(seznam.logs));
+
+    const smycka = await run({
+      runtime: 'react',
+      timeoutMs: 4000,
+      files: [{ name: 'App.jsx', content: "import { useState } from 'react';\n\nexport default function App() {\n  const [n, setN] = useState(0);\n  setN(n + 1);\n  return <p>{n}</p>;\n}" }],
+      hints: [{ text: 'nic', test: 'assert.ok(true);' }],
+    });
+    assert.ok(smycka.errors.some((error) => /Too many re-renders/.test(error)), smycka.errors.join('\n'));
+  });
+});
+
+describe('knihovny, na kterých stojí React sekce (kap. 6.10, 6.11)', () => {
+  test('react-router: MemoryRouter funguje, BrowserRouter a HashRouter v sandboxu ne', async () => {
+    const stranky = `import { Routes, Route, Link, useNavigate } from 'react-router';
+
+function Domu() {
+  const jdi = useNavigate();
+  return (
+    <div>
+      <h1>Domů</h1>
+      <Link to="/kosik">Košík</Link>
+      <button onClick={() => jdi('/kosik')}>Na košík</button>
+    </div>
+  );
+}
+
+export const cesty = (
+  <Routes>
+    <Route path="/" element={<Domu />} />
+    <Route path="/kosik" element={<h1>Košík</h1>} />
+  </Routes>
+);`;
+    const memory = await run({
+      runtime: 'react',
+      files: [
+        { name: 'cesty.jsx', content: stranky },
+        { name: 'App.jsx', content: "import { MemoryRouter } from 'react-router';\nimport { cesty } from './cesty';\n\nexport default function App() {\n  return <MemoryRouter>{cesty}</MemoryRouter>;\n}" },
+      ],
+      hints: [
+        { text: 'výchozí cesta', test: "assert.equal(document.querySelector('h1').textContent, 'Domů');" },
+        { text: 'Link', test: "await helpers.click(document.querySelector('a'));\nawait helpers.flush();\nassert.equal(document.querySelector('h1').textContent, 'Košík');" },
+        { text: 'useNavigate', test: "await helpers.click(document.querySelector('button'));\nawait helpers.flush();\nassert.equal(document.querySelector('h1').textContent, 'Košík');" },
+      ],
+    });
+    assert.deepEqual(memory.results, [{ index: 0, pass: true }, { index: 1, pass: true }, { index: 2, pass: true }]);
+    assert.deepEqual(memory.errors, []);
+
+    // Stránka je about:srcdoc s neprůhledným originem: history i new URL(…) selžou.
+    const browser = await run({
+      runtime: 'react',
+      files: [
+        { name: 'cesty.jsx', content: stranky },
+        { name: 'App.jsx', content: "import { BrowserRouter } from 'react-router';\nimport { cesty } from './cesty';\n\nexport default function App() {\n  return <BrowserRouter>{cesty}</BrowserRouter>;\n}" },
+      ],
+      hints: [{ text: 'nevykreslí se', test: "assert.equal(document.querySelector('h1'), null);" }],
+    });
+    assert.equal(browser.results[0].pass, true, 'BrowserRouter v sandboxu nic nevykreslí — kroky musí používat MemoryRouter');
+  });
+
+  test('radix-ui: dialog je v portálu mimo #root a Escape ho zavře', async () => {
+    const result = await run({
+      runtime: 'react',
+      files: [{ name: 'App.jsx', content: `import { Dialog } from 'radix-ui';
+
+export default function App() {
+  return (
+    <Dialog.Root>
+      <Dialog.Trigger>Otevřít</Dialog.Trigger>
+      <Dialog.Portal>
+        <Dialog.Content>
+          <Dialog.Title>Košík</Dialog.Title>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
+  );
+}` }],
+      hints: [{
+        text: 'portál',
+        test: `assert.equal(document.querySelector('[role="dialog"]'), null);
+await helpers.click(document.querySelector('button'));
+await helpers.flush();
+const dialog = document.querySelector('[role="dialog"]');
+assert.ok(dialog, 'dialog je v dokumentu');
+assert.equal(document.querySelector('#root').contains(dialog), false, 'dialog je v portálu mimo #root');
+await helpers.press(dialog, 'Escape');
+await helpers.waitFor(() => document.querySelector('[role="dialog"]') === null);`,
+      }],
+    });
+    assert.equal(result.results[0].pass, true, result.results[0].error);
+    assert.deepEqual(result.errors, []);
+  });
+
+  test('three: WebGL2 kreslí, pixely jde číst jen s preserveDrawingBuffer', async () => {
+    const scena = (options) => `import * as THREE from 'three';
+
+const canvas = document.querySelector('#scena');
+const renderer = new THREE.WebGLRenderer({ canvas, ${options} });
+renderer.setSize(200, 200, false);
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(60, 1, 0.1, 100);
+camera.position.z = 3;
+scene.add(new THREE.Mesh(new THREE.BoxGeometry(1.5, 1.5, 1.5), new THREE.MeshBasicMaterial({ color: 0x00ff00 })));
+renderer.render(scene, camera);
+window.hotovo = true;`;
+    const test = `await helpers.waitFor(() => window.hotovo);
+const canvas = document.querySelector('#scena');
+const gl = canvas.getContext('webgl2');
+assert.ok(gl, 'WebGL2 kontext');
+const pixely = new Uint8Array(4);
+gl.readPixels(100, 100, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixely);
+assert.ok(pixely[1] > 100, 'zelený pixel uprostřed: ' + Array.from(pixely).join(','));`;
+    const files = (options) => [
+      { name: 'index.html', content: '<canvas id="scena" width="200" height="200"></canvas>' },
+      { name: 'script.js', content: scena(options) },
+    ];
+    const s = await run({ runtime: 'dom', libs: ['three'], files: files('preserveDrawingBuffer: true'), hints: [{ text: 'pixel', test }] });
+    assert.equal(s.results[0].pass, true, s.results[0].error);
+    assert.deepEqual(s.errors, []);
+    // Bez `preserveDrawingBuffer` čtení pixelů někdy projde a někdy vrátí prázdný buffer
+    // (prohlížeč ho po kompozici zahodí) — krok o three ať ho zapíná, ať test nebliká.
+  });
+
+  test('motion: await animace i complete() dojedou na koncovou hodnotu', async () => {
+    const result = await run({
+      runtime: 'dom',
+      libs: ['motion'],
+      files: [{ name: 'index.html', content: '<div id="box" style="width:50px;height:50px"></div>' }],
+      hints: [
+        { text: 'await', test: `const { animate } = await import('motion');
+const box = document.querySelector('#box');
+await animate(box, { opacity: 0.25 }, { duration: 0.2 });
+assert.equal(getComputedStyle(box).opacity, '0.25', 'po await má animace dojet');` },
+        { text: 'complete', test: `const { animate } = await import('motion');
+const box = document.querySelector('#box');
+animate(box, { opacity: 0.4 }, { duration: 5 }).complete();
+await helpers.flush();
+assert.equal(getComputedStyle(box).opacity, '0.4', 'complete() skočí na konec');` },
+      ],
+    });
+    assert.deepEqual(result.results, [{ index: 0, pass: true }, { index: 1, pass: true }]);
+  });
 });
 
 describe('runtime node s balíčky (kap. 6.6)', () => {
@@ -981,6 +1190,57 @@ describe('runtime node s balíčky (kap. 6.6)', () => {
     assert.deepEqual(result.results, [{ index: 0, pass: true }, { index: 1, pass: true }, { index: 2, pass: true }], JSON.stringify(result.results, null, 2));
     // Úklid smaže jen odkaz, node_modules Akademie zůstanou.
     assert.ok(fs.existsSync(path.join(PACKAGES_DIR, 'express', 'package.json')));
+  });
+});
+
+
+// Ukázky kroků v kontraktu kap. 6.13 nesmí zestárnout: naparsují se a opravdu se spustí.
+describe('ukázky z kontraktu (kap. 6.13)', () => {
+  /** Bloky ```` `````md ```` ze sekce 6.13 kontraktu. */
+  function contractExamples() {
+    const contract = fs.readFileSync(path.join(import.meta.dirname, '..', 'docs', 'kontrakt.md'), 'utf8');
+    // Pozor: hranicí je nadpis kapitoly 7 — `---` je ve frontmatterech ukázek
+    // a `## --file--` v jejich sekcích.
+    const chapter = contract.split('### 6.13 ')[1]?.split('\n## 7. ')[0] ?? '';
+    const blocks = [];
+    let current = null;
+    for (const line of chapter.split('\n')) {
+      if (line.trim() === '`````md') current = [];
+      else if (line.trim() === '`````' && current) {
+        blocks.push(current.join('\n'));
+        current = null;
+      } else if (current) current.push(line);
+    }
+    return blocks;
+  }
+
+  const files = (list) => list.map(({ name, content }) => ({ name, content }));
+  const hints = (list) => list.map(({ text, test: source }) => ({ text, test: source }));
+
+  test('všechny tři ukázky: řešení projde, seed aspoň jeden test neprojde', async () => {
+    const examples = contractExamples();
+    assert.equal(examples.length, 3, 'kap. 6.13 má tři ukázky kroku');
+    const { runNodeTests } = await import('../server/node-runner.js');
+    const seen = [];
+
+    for (const [index, source] of examples.entries()) {
+      const step = parseStep(source, { id: `kontrakt/6.13/${index + 1}` });
+      const timeoutMs = Number(step.meta.timeoutMs) || (step.runtime === 'node' ? 10000 : 5000);
+      const request = { runtime: step.runtime, hints: hints(step.hints), timeoutMs, ...(step.libs ? { libs: step.libs } : {}) };
+      const execute = (list) => (step.runtime === 'node'
+        ? runNodeTests({ ...request, files: files(list) })
+        : run({ ...request, files: files(list) }));
+
+      const solved = await execute(step.solution);
+      assert.equal(solved.syntaxError, null, `${step.title}: ${JSON.stringify(solved.syntaxError)}`);
+      assert.deepEqual(solved.errors, [], step.title);
+      assert.ok(solved.results.every((item) => item.pass), `${step.title}: ${JSON.stringify(solved.results)}`);
+
+      const started = await execute(step.seed);
+      assert.ok(started.results.some((item) => !item.pass), `${step.title}: seed má aspoň jeden test neprojít`);
+      seen.push(`${step.runtime}${step.libs ? ` + ${step.libs.join(', ')}` : ''}`);
+    }
+    assert.deepEqual(seen, ['dom + tailwind, gsap', 'react + tailwind', 'node']);
   });
 });
 

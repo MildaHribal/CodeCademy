@@ -1,0 +1,20 @@
+{
+  "title": "React aplikace",
+  "intro": "Zatím jsi psal komponenty. Aplikace je něco jiného: víc stránek, data ze serveru, formuláře, přihlášení a testy — a rozhodnutí, kde co má bydlet.\n\nV téhle sekci projdeš celou cestu: projekt ve Vite s TypeScriptem, trasy s React Routerem, pět druhů stavu a pro každý správný nástroj, serverová data přes TanStack Query s cache a optimistickými úpravami, formuláře s validací, styly v komponentách, přihlášení proti API s cookie a testy, které komponentu používají jako uživatel. Končí to kontrolním bodem přes celý React a vlajkovým projektem do portfolia.\n\n**Předpoklady:** komponenty, props, stav a efekty z Reactu, `async`/`await` a `fetch`, základy TypeScriptu a testování.",
+  "modules": [
+    "vite-react-ts",
+    "routovani",
+    "workshop-routovani",
+    "druhy-stavu",
+    "tanstack-query",
+    "workshop-data-z-api",
+    "styly-v-reactu",
+    "formulare-a-validace",
+    "lab-formular-s-validaci",
+    "auth-z-klienta",
+    "testy-komponent",
+    "lab-kontrolni-bod-4",
+    "kviz",
+    "projekt-react-spa"
+  ]
+}
