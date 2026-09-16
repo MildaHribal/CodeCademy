@@ -1,0 +1,75 @@
+{
+  "title": "Moduly, npm, Vite a lint",
+  "intro": "Kód větší aplikace se nevejde do jednoho souboru a skoro nikdy nevzniká jen z vlastních řádků. V téhle sekci ho rozdělíš do ES modulů s malým veřejným rozhraním, naučíš se spravovat balíčky z npm (verze, lockfile, skripty, bezpečnost) a postavíš projekt ve Vite, který hlídají ESLint a Prettier.\n\nPostup: lekce o ES modulech a workshop s pokladnou kavárny rozsekanou do modulů, lekce o npm a pnpm, lekce o Vite a lekce o lintu a formátování, pak workshop, ve kterém ze seznamu úkolů ze sekce o DOM uděláš projekt ve Vite se skripty, lintem a kontrolou před commitem. Nakonec samostatně postavíš balíček s českými utilitami a projdeš kvízem.\n\n**Předpoklady:** celý JavaScript včetně `async`/`await` a DOM. **Od téhle sekce má každý projekt skript `npm run lint` a projde jím bez chyby.**",
+  "modules": [
+    "es-moduly",
+    "workshop-moduly",
+    "npm-a-pnpm",
+    "vite",
+    "lint-a-format",
+    "workshop-vite-projekt",
+    "lab-knihovna-utilit",
+    "kviz"
+  ],
+  "outcomes": [
+    {
+      "text": "Rozdělíš aplikaci do ES modulů se složkami, vstupním `index.js` a malým veřejným rozhraním.",
+      "links": [
+        "nastroje-moduly-vite/es-moduly#verejne-rozhrani-a-index-js",
+        "nastroje-moduly-vite/workshop-moduly/007",
+        "nastroje-moduly-vite/workshop-moduly/008"
+      ]
+    },
+    {
+      "text": "Vysvětlíš, proč je import živá vazba, a opravíš chyby `ERR_MODULE_NOT_FOUND`, chybějící výchozí export a `require` v ES modulu.",
+      "links": [
+        "nastroje-moduly-vite/es-moduly#zive-vazby",
+        "nastroje-moduly-vite/workshop-moduly/006",
+        "nastroje-moduly-vite/workshop-moduly/013"
+      ]
+    },
+    {
+      "text": "Přečteš `package.json`, rozlišíš `dependencies` a `devDependencies` a odhadneš, které verze pustí `^` a `~`.",
+      "links": [
+        "nastroje-moduly-vite/npm-a-pnpm#dependencies-a-devdependencies",
+        "nastroje-moduly-vite/npm-a-pnpm#verze-a-striska"
+      ]
+    },
+    {
+      "text": "Víš, proč se commituje lockfile, kdy použít `npm ci` a jak poznat riskantní závislost.",
+      "links": [
+        "nastroje-moduly-vite/npm-a-pnpm#lockfile-a-npm-ci",
+        "nastroje-moduly-vite/npm-a-pnpm#bezpecnost-a-cena-zavislosti"
+      ]
+    },
+    {
+      "text": "Založíš a sestavíš projekt ve Vite a vysvětlíš, co dělá bundler, k čemu je `public/` a co skončí v `dist/`.",
+      "links": [
+        "nastroje-moduly-vite/vite#proc-bundler",
+        "nastroje-moduly-vite/workshop-vite-projekt/002",
+        "nastroje-moduly-vite/workshop-vite-projekt/008"
+      ]
+    },
+    {
+      "text": "Předáš aplikaci nastavení přes `import.meta.env` a víš, proč do proměnných s `VITE_` nepatří tajemství.",
+      "links": [
+        "nastroje-moduly-vite/vite#promenne-prostredi-import-meta-env",
+        "nastroje-moduly-vite/workshop-vite-projekt/007"
+      ]
+    },
+    {
+      "text": "Nastavíš ESLint přes `eslint.config.js` a Prettier a pustíš je skriptem i hookem před commitem.",
+      "links": [
+        "nastroje-moduly-vite/lint-a-format#eslint-a-eslint-config-js",
+        "nastroje-moduly-vite/workshop-vite-projekt/013",
+        "nastroje-moduly-vite/workshop-vite-projekt/016"
+      ]
+    },
+    {
+      "text": "Sám postavíš malý balíček s `exports`, skriptem `lint` a README.",
+      "links": [
+        "nastroje-moduly-vite/lab-knihovna-utilit"
+      ]
+    }
+  ]
+}

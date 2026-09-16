@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Vite a bundlery", "summary": "Pochopíš, proč web potřebuje bundler, jak Vite běží při vývoji s HMR, jak zachází s CSS, obrázky a proměnnými prostředí a co přesně skončí ve složce dist.", "minutes": 45 }

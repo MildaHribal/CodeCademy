@@ -1,0 +1,1 @@
+{ "type": "lab", "title": "Balíček s českými utilitami", "summary": "Sám postavíš malý balíček cesky-text: funkce ve vlastních modulech, veřejné rozhraní přes exports, skript lint a README, podle kterého ho použije kdokoli.", "minutes": 75, "runtime": "node" }

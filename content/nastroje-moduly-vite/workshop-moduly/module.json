@@ -1,0 +1,1 @@
+{ "type": "workshop", "title": "Pokladna kavárny v modulech", "summary": "Rozsekáš pokladnu kavárny z jednoho souboru do modulů se složkou objednávek, vstupním index.js a malým veřejným rozhraním — a opravíš dvě kolegovy chyby v importech.", "minutes": 70, "runtime": "node" }

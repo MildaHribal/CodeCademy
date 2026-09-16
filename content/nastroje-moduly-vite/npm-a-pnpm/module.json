@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "npm, pnpm a package.json", "summary": "Přečteš package.json, odhadneš, které verze pustí stříška, pochopíš lockfile, skripty a exports a poznáš, kdy je závislost riziko.", "minutes": 45 }

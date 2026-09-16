@@ -1,0 +1,1 @@
+{ "type": "quiz", "title": "Kvíz: moduly, npm, Vite a lint", "summary": "Ověříš si exporty a živé vazby, rozsahy verzí, lockfile, proměnné prostředí ve Vite a rozdíl mezi lintem a formátováním — i nad cizím projektem.", "minutes": 25 }

@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Lint a formátování", "summary": "Rozlišíš, co najde linter a co formátovač, nastavíš ESLint přes eslint.config.js a Prettier a pustíš obojí automaticky před commitem.", "minutes": 35 }

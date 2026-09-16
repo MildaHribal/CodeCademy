@@ -1,0 +1,1 @@
+{ "type": "workshop", "title": "Seznam úkolů na stěhování jako projekt ve Vite", "summary": "Převedeš hotovou stránku se seznamem úkolů do projektu ve Vite: skripty v package.json, import CSS a obrázků, proměnné prostředí, sestavení pro podsložku, ESLint, Prettier a kontrolu před commitem.", "minutes": 90, "runtime": "node" }
