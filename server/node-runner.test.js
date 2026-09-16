@@ -330,6 +330,62 @@ describe('runNodeFile', () => {
   });
 });
 
+// Regrese: `npm run overit` staví runner Vitem a ten si v procesu nastaví NODE_ENV=production.
+// Kdyby se proměnná dědila do testů kroků, načetla by se produkční sestavení knihoven —
+// React bez `React.act`, a testy komponent (@testing-library/react) by padaly.
+describe('testy kroků běží v čistém prostředí', () => {
+  const original = process.env.NODE_ENV;
+
+  beforeEach(() => {
+    process.env.NODE_ENV = 'production';
+  });
+
+  afterEach(() => {
+    if (original === undefined) delete process.env.NODE_ENV;
+    else process.env.NODE_ENV = original;
+  });
+
+  test('harness ani jeho podprocesy nedědí NODE_ENV=production', async () => {
+    const result = await runNodeTests({
+      files: [
+        { name: 'modul.js', content: 'export const env = String(process.env.NODE_ENV);' },
+        {
+          name: 'server.js',
+          content: "import http from 'node:http';\nhttp.createServer((req, res) => res.end(String(process.env.NODE_ENV))).listen(process.env.PORT);",
+        },
+      ],
+      hints: [
+        { text: 'harness', test: "assert.equal(process.env.NODE_ENV, undefined, 'harness vidí NODE_ENV=' + process.env.NODE_ENV);" },
+        { text: 'importovaný soubor', test: "const m = await helpers.importFile('modul.js'); assert.equal(m.env, 'undefined');" },
+        {
+          text: 'helpers.run',
+          test: "const out = await helpers.run('node -p \"String(process.env.NODE_ENV)\"'); assert.equal(out.stdout.trim(), 'undefined', out.stdout + out.stderr);",
+        },
+        {
+          text: 'helpers.startServer',
+          test: [
+            "const server = await helpers.startServer('server.js');",
+            "const res = await fetch(server.url + '/');",
+            "assert.equal(await res.text(), 'undefined');",
+          ].join('\n'),
+        },
+      ],
+    });
+    assert.deepEqual(
+      result.results,
+      [{ index: 0, pass: true }, { index: 1, pass: true }, { index: 2, pass: true }, { index: 3, pass: true }],
+    );
+  });
+
+  test('runNodeFile spouští program bez NODE_ENV=production', async () => {
+    const result = await runNodeFile({
+      files: [{ name: 'main.js', content: 'console.log(String(process.env.NODE_ENV));' }],
+      main: 'main.js',
+    });
+    assert.equal(result.stdout.trim(), 'undefined');
+  });
+});
+
 describe('úklid, když server skončí uprostřed testu', () => {
   let scratch;
 

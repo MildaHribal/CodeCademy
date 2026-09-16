@@ -29,19 +29,28 @@ export async function buildClient(outDir, { input = null } = {}) {
   const build = config.build ?? {};
   const rollupOptions = build.rollupOptions ?? {};
 
-  await vite.build({
-    ...config,
-    configFile: false,
-    root: path.join(PROJECT_ROOT, 'client'),
-    logLevel: 'warn',
-    clearScreen: false,
-    build: {
-      ...build,
-      outDir,
-      emptyOutDir: true,
-      // Velikost bundlu tady nikoho nezajímá, varování by jen zašumělo výstup.
-      chunkSizeWarningLimit: 2000,
-      rollupOptions: input ? { ...rollupOptions, input } : rollupOptions,
-    },
-  });
+  // Vite si při buildu přepíše process.env.NODE_ENV na 'production'. Sestavení je tady jen
+  // mezikrok (verify i E2E pak ve stejném procesu spouští server a testy kroků), takže
+  // proměnnou vrátíme zpátky — jinak by produkční režim „prosákl" do všeho, co běží potom.
+  const previousNodeEnv = process.env.NODE_ENV;
+  try {
+    await vite.build({
+      ...config,
+      configFile: false,
+      root: path.join(PROJECT_ROOT, 'client'),
+      logLevel: 'warn',
+      clearScreen: false,
+      build: {
+        ...build,
+        outDir,
+        emptyOutDir: true,
+        // Velikost bundlu tady nikoho nezajímá, varování by jen zašumělo výstup.
+        chunkSizeWarningLimit: 2000,
+        rollupOptions: input ? { ...rollupOptions, input } : rollupOptions,
+      },
+    });
+  } finally {
+    if (previousNodeEnv === undefined) delete process.env.NODE_ENV;
+    else process.env.NODE_ENV = previousNodeEnv;
+  }
 }

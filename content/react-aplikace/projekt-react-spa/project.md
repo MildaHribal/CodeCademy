@@ -266,9 +266,7 @@ assert.ok(testFiles.some((name) => /\.tsx$/.test(name)), `aspoň jeden test má 
 const component = testFiles.filter((name) => /\.tsx$/.test(name)).map((name) => files[name]).join('\n');
 assert.match(component, /getByRole|findByRole/, 'test komponenty má hledat prvek dotazem podle role, ne podle třídy');
 
-// NODE_ENV=test: kontrola běží v prostředí, kde je NODE_ENV nastavené na production,
-// a Testing Library potřebuje vývojovou verzi Reactu. Ty si pouštíš prostě `npm test`.
-const result = await helpers.run('NODE_ENV=test npm test', { timeoutMs: 110000 });
+const result = await helpers.run('npm test', { timeoutMs: 110000 });
 assert.equal(result.code, 0, `npm test má projít bez chyby:\n${result.stdout}${result.stderr}`);
 ```
 

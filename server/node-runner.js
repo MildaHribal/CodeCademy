@@ -57,6 +57,11 @@ function childEnv({ packages = false, dir = null } = {}) {
   const env = { ...process.env };
   delete env.NODE_TEST_CONTEXT;
   delete env.NODE_OPTIONS;
+  // Testy kroků běží v čistém prostředí, nezávisle na tom, jak byl spuštěný server.
+  // Zděděné NODE_ENV=production (server pod produkčním správcem procesů, nebo `npm run overit`,
+  // kde si Vite build nastaví NODE_ENV sám) by knihovnám podstrčilo produkční sestavení —
+  // React by pak neměl `React.act` a testy komponent by padaly.
+  delete env.NODE_ENV;
   if (packages && dir) {
     env.PATH = [path.join(dir, 'node_modules', '.bin'), env.PATH].filter(Boolean).join(path.delimiter);
     env.npm_config_offline = 'true';

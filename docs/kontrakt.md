@@ -1724,19 +1724,17 @@ a nic se neinstaluje (i offline). V PATH je navíc `node_modules/.bin`, takže i
 hláškami nešpinilo `stdout` testu. Úklid po testu maže **jen ten symlink**,
 `node_modules` Akademie zůstávají.
 
-- **Kontrola typů (`npx tsc --noEmit`) nemá `@types/*`.** Nainstalovaný je `typescript`
-  (verze 7, nativní kompilátor), ale **ne** `@types/node` ani `@types/express`. Co to
-  znamená pro krok:
+- **Kontrola typů (`npx tsc --noEmit`) má i `@types/*`.** Nainstalovaný je `typescript`
+  (verze 7, nativní kompilátor) a v `devDependencies` Akademie i `@types/node`
+  a `@types/express`. Co to znamená pro krok:
   - Vlastní typy, generika, `zod` (typy si nese sám) a DOM/ES API (`console`, `Map`,
     `fetch`) se zkontrolují normálně.
-  - `import … from 'node:fs'` nebo `process` hlásí `TS2591 Cannot find name 'node:fs'`
-    (resp. `'process'`), `import express from 'express'` hlásí `TS7016` (chybí deklarace).
-  - Krok to obejde svým `tsconfig.json`: `include` jen soubory, které Node API nepoužívají,
-    a `"noImplicitAny": false`, když potřebuje `express` (pak je `app` typu `any`).
-    Vstupní soubor s `process.env` a `app.listen` nechá mimo kontrolu typů.
-  - Kdyby měla sekce o TypeScriptu učit typy nad Node API a Expressem naplno, chce to
-    doinstalovat `@types/node` a `@types/express` (změna `package.json` — mimo tento
-    kontrakt).
+  - `import … from 'node:fs'`, `process`, `import express from 'express'` i typy
+    `Request`/`Response` se zkontrolují taky — sekce o TypeScriptu smí učit typy nad
+    Node API a Expressem naplno.
+  - Krok si přinese `tsconfig.json` jen kvůli tomu, co chce sám (`include`, přísnost).
+    Obcházet chybějící deklarace (`"noImplicitAny": false`, vstupní soubor
+    s `process.env` a `app.listen` mimo `include`) už není potřeba.
 - **U projektu s `cwd`** (kap. 9) se symlink nevytváří a nic se nemaže — projekt má
   vlastní `node_modules` (a `npm install` si pouští uživatel).
 - Krok, který chce `npx tsc` nebo `npx vitest run`, si musí přinést svůj
@@ -2378,8 +2376,7 @@ app.post('/objednavky', (req, res) => {
 Co je na tom podstatné: `import express from 'express'` a `import { z } from 'zod'`
 fungují bez instalace (kap. 6.6). Krok si přinesl **svůj `eslint.config.js`** a
 `package.json` s `"type": "module"`; kdyby chtěl `npx tsc --noEmit`, přinesl by
-i `tsconfig.json` (a počítal s tím, že `@types/node` ani `@types/express` nejsou
-nainstalované — kap. 6.6). Kvůli `npx vitest run` a `npx eslint .` má frontmatter
+i `tsconfig.json` (`@types/node` i `@types/express` v projektu jsou, kap. 6.6). Kvůli `npx vitest run` a `npx eslint .` má frontmatter
 `timeoutMs: 30000`. `helpers.startServer('server.js')` si vezme volný port a po testu
 server zastaví — proto je `app.listen` ve zvláštním souboru a `app.js` server jen
 exportuje (to je i tak, jak se Express testuje ve skutečnosti).
