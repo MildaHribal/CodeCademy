@@ -1,0 +1,54 @@
+:root {
+  --papir: #fbf9f5;
+  --text: #1f1b16;
+  --akcent: #1f6f5c;
+  --ram: #e3ddd2;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  line-height: 1.6;
+  color: var(--text);
+  background: var(--papir);
+}
+
+a {
+  color: var(--akcent);
+}
+
+.obsah {
+  max-width: 60rem;
+  margin: 0 auto;
+  padding: 2rem clamp(1rem, 5vw, 3rem) 4rem;
+}
+
+label {
+  display: grid;
+  gap: 0.35rem;
+  font-weight: 600;
+}
+
+input,
+select,
+textarea {
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--ram);
+  border-radius: 0.5rem;
+  font: inherit;
+}
+
+button {
+  padding: 0.6rem 1.2rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--akcent);
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}

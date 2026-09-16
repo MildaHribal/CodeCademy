@@ -1,0 +1,10 @@
+import type { MetadataRoute } from 'next';
+
+export default function robots(): MetadataRoute.Robots {
+  const zaklad = process.env.NEXT_PUBLIC_URL ?? 'http://localhost:3000';
+
+  return {
+    rules: { userAgent: '*', allow: '/', disallow: '/moje' },
+    sitemap: `${zaklad}/sitemap.xml`,
+  };
+}

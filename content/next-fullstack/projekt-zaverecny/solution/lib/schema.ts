@@ -16,7 +16,8 @@ export const inzeraty = sqliteTable('inzeraty', {
   popis: text('popis').notNull().default(''),
   cena: integer('cena').notNull(),
   kategorie: text('kategorie').notNull(),
-  stav: text('stav', { enum: ['aktivni', 'rezervovano'] })
+  // `uzamceno` = rezervováno kupujícím; autor už s ním nesmí hýbat.
+  stav: text('stav', { enum: ['aktivni', 'uzamceno'] })
     .notNull()
     .default('aktivni'),
   autorId: text('autor_id')

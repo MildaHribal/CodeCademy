@@ -4,7 +4,7 @@ import { eq } from 'drizzle-orm';
 import { updateTag } from 'next/cache';
 import { redirect } from 'next/navigation';
 
-import { prihlasenyUzivatel } from './auth.ts';
+import { vyzadujUzivatele } from './auth.ts';
 import { db } from './db.ts';
 import { smiSmazat, smiUpravit } from './pravidla.ts';
 import { inzeraty } from './schema.ts';
@@ -25,8 +25,7 @@ const naSlug = (nazev: string) =>
     .replace(/^-|-$/g, '');
 
 export async function vytvorInzerat(_stav: StavAkce, formData: FormData): Promise<StavAkce> {
-  const uzivatel = await prihlasenyUzivatel();
-  if (!uzivatel) return { chyba: 'Musíš být přihlášený.' };
+  const uzivatel = await vyzadujUzivatele();
 
   const hodnoty = Object.fromEntries(formData) as Record<string, string>;
   const vysledek = ZaznamSchema.safeParse(hodnoty);
@@ -43,6 +42,7 @@ export async function vytvorInzerat(_stav: StavAkce, formData: FormData): Promis
     cena,
     kategorie,
     stav: 'aktivni',
+    // Autor se bere ze session, nikdy z formuláře.
     autorId: uzivatel.id,
     vytvoreno: new Date(),
   });
@@ -52,8 +52,7 @@ export async function vytvorInzerat(_stav: StavAkce, formData: FormData): Promis
 }
 
 export async function upravInzerat(_stav: StavAkce, formData: FormData): Promise<StavAkce> {
-  const uzivatel = await prihlasenyUzivatel();
-  if (!uzivatel) return { chyba: 'Musíš být přihlášený.' };
+  const uzivatel = await vyzadujUzivatele();
 
   const id = String(formData.get('id') ?? '');
   const [inzerat] = await db.select().from(inzeraty).where(eq(inzeraty.id, id)).limit(1);
@@ -71,8 +70,7 @@ export async function upravInzerat(_stav: StavAkce, formData: FormData): Promise
 }
 
 export async function smazInzerat(_stav: StavAkce, formData: FormData): Promise<StavAkce> {
-  const uzivatel = await prihlasenyUzivatel();
-  if (!uzivatel) return { chyba: 'Musíš být přihlášený.' };
+  const uzivatel = await vyzadujUzivatele();
 
   const id = String(formData.get('id') ?? '');
   const [inzerat] = await db.select().from(inzeraty).where(eq(inzeraty.id, id)).limit(1);

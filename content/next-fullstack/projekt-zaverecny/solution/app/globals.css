@@ -1,0 +1,128 @@
+:root {
+  --papir: #fbf9f5;
+  --text: #1f1b16;
+  --tlumene: #6b6157;
+  --akcent: #1f6f5c;
+  --ram: #e3ddd2;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  line-height: 1.6;
+  color: var(--text);
+  background: var(--papir);
+}
+
+.hlavicka {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 1rem clamp(1rem, 5vw, 3rem);
+  border-bottom: 1px solid var(--ram);
+}
+
+.hlavicka nav {
+  display: flex;
+  gap: 1rem;
+}
+
+.znacka {
+  font-size: 1.25rem;
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--text);
+}
+
+a {
+  color: var(--akcent);
+}
+
+.obsah {
+  max-width: 60rem;
+  margin: 0 auto;
+  padding: 2rem clamp(1rem, 5vw, 3rem) 4rem;
+}
+
+.seznam {
+  display: grid;
+  gap: 1rem;
+  padding: 0;
+  list-style: none;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+}
+
+.karta {
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--ram);
+  border-radius: 0.75rem;
+  background: #fff;
+}
+
+.cena {
+  font-weight: 600;
+  color: var(--akcent);
+}
+
+.chyba {
+  margin: 0.25rem 0 0;
+  color: #9d2e2e;
+  font-size: 0.9rem;
+}
+
+form.zaznam {
+  display: grid;
+  gap: 1rem;
+  max-width: 32rem;
+}
+
+label {
+  display: grid;
+  gap: 0.35rem;
+  font-weight: 600;
+}
+
+input,
+select,
+textarea {
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--ram);
+  border-radius: 0.5rem;
+  font: inherit;
+}
+
+button {
+  padding: 0.6rem 1.2rem;
+  border: 0;
+  border-radius: 999px;
+  background: var(--akcent);
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button[disabled] {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.kostra {
+  height: 6rem;
+  border-radius: 0.75rem;
+  background: var(--ram);
+}
+
+.paticka {
+  padding: 2rem;
+  border-top: 1px solid var(--ram);
+  color: var(--tlumene);
+  text-align: center;
+  font-size: 0.9rem;
+}

@@ -9,6 +9,11 @@ describe('ZaznamSchema', () => {
     expect(vysledek.data?.cena).toBe(7500);
   });
 
+  it('ořízne mezery kolem textu', () => {
+    const vysledek = ZaznamSchema.safeParse({ ...ukazkovyZaznam, nazev: '   Stan pro dva   ' });
+    expect(vysledek.data?.nazev).toBe('Stan pro dva');
+  });
+
   it('odmítne prázdný formulář a popíše každé pole česky', () => {
     const vysledek = ZaznamSchema.safeParse({});
     expect(vysledek.success).toBe(false);
@@ -24,5 +29,10 @@ describe('ZaznamSchema', () => {
 
   it('odmítne kategorii mimo seznam', () => {
     expect(ZaznamSchema.safeParse({ ...ukazkovyZaznam, kategorie: 'letadla' }).success).toBe(false);
+  });
+
+  it('odmítne nesmyslně dlouhý text', () => {
+    const dlouhy = 'a'.repeat(5000);
+    expect(ZaznamSchema.safeParse({ ...ukazkovyZaznam, nazev: dlouhy }).success).toBe(false);
   });
 });

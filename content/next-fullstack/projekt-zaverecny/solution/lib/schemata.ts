@@ -1,6 +1,9 @@
 import { z } from 'zod';
 
-/** Hlavní záznam aplikace. U vlastního tématu tady budou tvoje pole. */
+/**
+ * Hlavní záznam aplikace. U vlastního tématu tady budou tvoje pole —
+ * jméno schématu a `ukazkovyZaznam` ale nech, kontrola je hledá podle jména.
+ */
 export const ZaznamSchema = z.object({
   nazev: z
     .string('Vyplň název.')
@@ -18,15 +21,15 @@ export const ZaznamSchema = z.object({
 
 export type ZaznamVstup = z.infer<typeof ZaznamSchema>;
 
-/** Ukázka platných dat — používá ji kontrola i testy. */
-export const ukazkovyZaznam = {
+/** Ukázka platných dat tak, jak přijdou z formuláře — tedy samé řetězce. */
+export const ukazkovyZaznam: Record<string, string> = {
   nazev: 'Kolo Author Solution 29"',
   popis: 'Jeté dvě sezony, nový řetěz a brzdové destičky. Osobní předání v Brně.',
   cena: '7500',
   kategorie: 'sport',
 };
 
-/** Hlášky u polí ve tvaru, jaký čeká formulář. */
+/** Hlášky u polí ve tvaru, jaký čeká formulář: `{ nazev: ['Vyplň název.'] }`. */
 export function chybyPoli(chyba: z.ZodError): Record<string, string[] | undefined> {
   return z.flattenError(chyba).fieldErrors;
 }
