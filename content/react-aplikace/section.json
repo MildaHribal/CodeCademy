@@ -16,5 +16,62 @@
     "lab-kontrolni-bod-4",
     "kviz",
     "projekt-react-spa"
+  ],
+  "outcomes": [
+    {
+      "text": "Rozdělíš aplikaci na trasy s parametry, vnořenými layouty a stránkou 404.",
+      "links": [
+        "react-aplikace/routovani#trasy-deklarativne-routes-a-route",
+        "react-aplikace/workshop-routovani"
+      ]
+    },
+    {
+      "text": "Poznáš, do kterého z pěti druhů stavu hodnota patří, a zvolíš pro ni nástroj.",
+      "links": [
+        "react-aplikace/druhy-stavu#rozhodovaci-postup-ve-ctyrech-otazkach"
+      ]
+    },
+    {
+      "text": "Držíš filtr a řazení v adrese, takže odkaz na pohled jde poslat a funguje tlačítko Zpět.",
+      "links": [
+        "react-aplikace/routovani#stav-v-url-usesearchparams",
+        "react-aplikace/druhy-stavu#stav-v-adrese-co-ma-jit-poslat-odkazem"
+      ]
+    },
+    {
+      "text": "Načteš a změníš serverová data s cache, správným klíčem, invalidací a optimistickou úpravou.",
+      "links": [
+        "react-aplikace/tanstack-query#klic-musi-obsahovat-vsechno-na-cem-data-zavisi",
+        "react-aplikace/workshop-data-z-api"
+      ]
+    },
+    {
+      "text": "Postavíš formulář s validací a chybami, které uvidí i uslyší každý uživatel.",
+      "links": [
+        "react-aplikace/formulare-a-validace#chyby-ktere-uvidi-a-uslysi-kazdy",
+        "react-aplikace/lab-formular-s-validaci"
+      ]
+    },
+    {
+      "text": "Nastylíš komponenty jedním zvoleným řešením a poskládáš třídy podle stavu.",
+      "links": [
+        "react-aplikace/styly-v-reactu#css-modules-tridy-bez-kolizi",
+        "react-aplikace/styly-v-reactu#podminene-tridy-a-stav"
+      ]
+    },
+    {
+      "text": "Přihlásíš uživatele proti API s cookie, ochráníš trasu a po odhlášení uklidíš cache.",
+      "links": [
+        "react-aplikace/auth-z-klienta#chranena-trasa",
+        "react-aplikace/auth-z-klienta#odhlaseni-a-uklid-cache"
+      ]
+    },
+    {
+      "text": "Otestuješ komponentu dotazy podle role, čekáním na data a náhradou sítě.",
+      "links": [
+        "react-aplikace/testy-komponent#dotazy-podle-role-a-textu",
+        "react-aplikace/testy-komponent#nahrada-site-misto-skutecneho-api"
+      ]
+    }
   ]
 }

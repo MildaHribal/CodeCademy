@@ -695,6 +695,30 @@ react-aplikace/routovani#datovy-rezim-createbrowserrouter
 > jeden z nich se po Zpět rozejde s druhým. Adresa je [[zdroj pravdy]]: čti z ní,
 > zapisuj do ní, nekopíruj si ji do stavu.
 
+:::check
+Odkaz uvnitř vnořeného layoutu `/kola` má vést na `/kola/servis`. Proč `to="/servis"`
+skončí jinde a co s tím?
+
+### --expected--
+
+Lomítko na začátku dělá adresu absolutní
+
+### --accept--
+
+Má tam být to="servis", bez lomítka na začátku.
+Lomítko znamená adresu od kořene, relativní cíl se píše bez něj.
+
+### --why--
+
+`to="/servis"` je adresa od kořene aplikace, takže vnořená trasa nehraje roli.
+Relativní cíl (`to="servis"`) se skládá k aktuální trase. Když se odkaz
+„propadává" na 404, zkontroluj nejdřív tohle.
+
+### --see--
+
+react-aplikace/routovani#typicke-chyby-a-pasti
+:::
+
 ## Kde to najdeš v MDN
 
 - [History API](https://developer.mozilla.org/en-US/docs/Web/API/History_API) —
