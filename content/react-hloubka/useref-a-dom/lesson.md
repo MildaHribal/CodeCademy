@@ -38,7 +38,7 @@ Zápis do `current` je naopak jediný správný způsob, jak refu měnit obsah. 
 
 :::check pretest
 `const poleRef = useRef(null);` a v JSX `<input ref={poleRef} />`. Co je
-v `poleRef.current` v tělě komponenty **při prvním** renderu, ještě než se
+v `poleRef.current` v těle komponenty **při prvním** renderu, ještě než se
 cokoli objeví na stránce? Odpověz jedním slovem.
 
 ### --expected-- ignore-case
@@ -170,11 +170,11 @@ z políčka po odeslání zmizí a musíš do něj znovu kliknout.
 > popiš v JSX a nech na Reactu.
 
 :::check
-Proč se `poleRef.current.focus()` volá v obsluze odeslání, a ne v tělě komponenty hned za `const poleRef = useRef(null)`?
+Proč se `poleRef.current.focus()` volá v obsluze odeslání, a ne v těle komponenty hned za `const poleRef = useRef(null)`?
 
 ### --expected--
 
-v tělě komponenty je ref ještě prázdný
+v těle komponenty je ref ještě prázdný
 
 ### --accept--
 
@@ -298,7 +298,7 @@ idRef -> @ref
 :::
 
 Proměnná `idRef` ukazuje ve všech renderech na **tutéž** krabičku — proto si ji
-komponenta pamatuje. Obyčejná `let id = null` v tělě komponenty by se při každém
+komponenta pamatuje. Obyčejná `let id = null` v těle komponenty by se při každém
 renderu vyrobila znovu a časovač by se ztratil.
 
 :::check
@@ -425,7 +425,7 @@ export default function Karta() {
 :::
 
 Pravidlo je proto jednoduché: **`ref.current` čti a zapisuj v obsluze události
-nebo v efektu, nikdy v tělě komponenty.** Jediná výjimka je zápis výchozí hodnoty,
+nebo v efektu, nikdy v těle komponenty.** Jediná výjimka je zápis výchozí hodnoty,
 kterou nejde spočítat dřív (`if (ref.current === null) ref.current = drahyObjekt();`).
 
 :::check
@@ -588,7 +588,7 @@ odkaz na prvek div
 
 ### --why--
 
-Efekty běží po commitu, tedy potom, co React prvky vytvoří a naplní refy. Právě proto se měření, fokus i připojení observeru dělá v efektu, a ne v tělě komponenty.
+Efekty běží po commitu, tedy potom, co React prvky vytvoří a naplní refy. Právě proto se měření, fokus i připojení observeru dělá v efektu, a ne v těle komponenty.
 
 ### --see--
 

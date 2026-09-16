@@ -25,6 +25,7 @@ React se u potomků na props vůbec nekouká: když se vykreslí rodič, spustí
 ### --see--
 
 react-hloubka/render-a-rerender#kdyz-se-vykresli-rodic-vykresli-se-i-potomci
+react-zaklady/proc-react#jak-react-vykresli-stranku
 
 ## --question--
 
@@ -131,10 +132,11 @@ Reset stavu při změně dat se čistěji udělá změnou `key` komponenty; Reac
 ### --see--
 
 react-hloubka/useeffect-spravne#kdy-efekt-nepotrebujes
+react-zaklady/stav-jako-snimek#odvozena-hodnota-misto-stavu
 
 ## --question--
 
-Napiš, jaká hodnota bude v `poleRef.current` v tělě komponenty při prvním renderu, jestliže je v JSX `<input ref={poleRef} />`.
+Napiš, jaká hodnota bude v `poleRef.current` v těle komponenty při prvním renderu, jestliže je v JSX `<input ref={poleRef} />`.
 
 ### --expected--
 
@@ -187,6 +189,7 @@ Volat stejný hook z víc komponent je úplně běžné — právě kvůli tomu 
 ### --see--
 
 react-hloubka/vlastni-hooky#hook-sdili-logiku-ne-stav
+react-zaklady/udalosti-a-formulare#zvednuti-stavu
 
 ## --question--
 
@@ -358,6 +361,7 @@ Rozprostření vyrobí nové pole, ale objekty uvnitř jsou pořád ty samé. Pr
 ### --see--
 
 js-objekty/kopie-a-json#melka-kopie-spread-a-object-assign
+react-zaklady/stav-jako-snimek#pole-a-objekty-ve-stavu
 
 ## --question--
 
@@ -551,6 +555,7 @@ Součet je odvozená hodnota: dá se kdykoli spočítat ze `smeny` a `vybranaSlu
 ### --see--
 
 react-hloubka/useeffect-spravne#kdy-efekt-nepotrebujes
+react-zaklady/stav-jako-snimek#odvozena-hodnota-misto-stavu
 
 ## --question--
 

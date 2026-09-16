@@ -23,7 +23,7 @@ Jeden — React změny sloučí do jednoho renderu.
 
 #### --why--
 
-React dávkuje změny, které nastanou ve **jedné** obsluze události. Efekt ale běží až po commitu, tedy po renderu — a jeho `setSoucet` je nová žádost o aktualizaci.
+React dávkuje změny, které nastanou v **jedné** obsluze události. Efekt ale běží až po commitu, tedy po renderu — a jeho `setSoucet` je nová žádost o aktualizaci.
 
 ### --correct--
 

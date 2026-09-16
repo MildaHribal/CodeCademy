@@ -473,7 +473,7 @@ export default function App() {
 
 V konzoli je `render 0` dvakrát, po kliknutí `render 1` dvakrát. V hotové
 aplikaci (produkční build) se to nedeje. Zkus `StrictMode` odstranit a sleduj,
-jak se výpisy zdvojí i nezdvojí.
+jak se výpisy přestanou zdvojovat.
 
 > [!NOTE]
 > `StrictMode` se v projektu zapíná v `main.jsx` kolem celé aplikace. Kromě
