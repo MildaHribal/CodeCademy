@@ -603,3 +603,143 @@ se chová jako spouštěč a vypadá jako tvoje tlačítko.
 ### --see--
 
 react-ui-knihovny/workshop-sada-komponent
+
+## --card-- output
+
+Seznam vykresluje čtyři výpůjčky: Kolo 12, Kolo 07, Kolo 21, Kolo 03. Smažeš
+z pole **Kolo 07**. Který řádek na obrazovce přehraje `exit`?
+
+```jsx
+<AnimatePresence>
+  {rentals.map((rental, index) => (
+    <motion.li key={index} exit={{ opacity: 0, x: -40 }}>
+      {rental.bike}
+    </motion.li>
+  ))}
+</AnimatePresence>
+```
+
+### --expected--
+
+Kolo 03
+
+### --accept--
+
+poslední
+poslední řádek
+
+### --why--
+
+Myslíš si, že `AnimatePresence` pozná smazanou položku podle dat? Pozná ji jen podle
+`key`. Po smazání zůstanou klíče 0, 1, 2 a zmizí klíč 3 — ten patřil poslednímu
+řádku, takže odejde on a texty ostatních se přepíšou. Klíč musí být `rental.id`.
+
+### --see--
+
+react-ui-knihovny/motion-for-react#animatepresence-odchod-z-dom
+
+## --card-- output
+
+Uživatel má v systému zapnuté omezení pohybu. Co z téhle animace uvidí?
+
+```jsx
+<MotionConfig reducedMotion="user">
+  <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }}>
+    Tržba dne: 4 860 Kč
+  </motion.div>
+</MotionConfig>
+```
+
+### --expected--
+
+jen zesvětlení, bez posunu
+
+### --accept--
+
+karta se objeví na místě a jen se zprůhlední do plné viditelnosti
+opacity se animuje, y ne
+
+### --why--
+
+Myslíš si, že omezený pohyb vypne animace úplně? `reducedMotion="user"` zahodí jen
+transformace (`x`, `y`, `scale`, `rotate`), průhlednost animovat nechá — uživatel
+pořád pozná, že se něco změnilo, jen se nic nehýbe po obrazovce.
+
+### --see--
+
+react-ui-knihovny/motion-for-react#omezeny-pohyb
+
+## --card-- output
+
+Panel detailu je Radix `Dialog`. `Dialog.Content` je `asChild` kolem `motion.div`
+s `exit={{ x: '100%' }}` a celý `Dialog.Portal` je uvnitř `AnimatePresence`, ale bez
+`forceMount`. Co uvidíš po stisku Escape?
+
+### --expected--
+
+panel zmizí skokem, bez odjezdu
+
+### --accept--
+
+zavře se okamžitě bez animace
+odchodová animace se nepřehraje
+
+### --why--
+
+Myslíš si, že stačí `AnimatePresence` kolem? Radix obsah zavřeného dialogu odmontuje
+sám a hned, takže `AnimatePresence` nevidí, že by nějaký její přímý potomek zmizel.
+S `forceMount` necháš vykreslování na sobě a podmínku `{open && …}` napíšeš uvnitř
+`AnimatePresence`.
+
+### --see--
+
+react-ui-knihovny/motion-for-react#typicke-chyby-a-pasti
+
+## --card-- free
+
+Proč `exit` v Motionu nefunguje bez `AnimatePresence`, když `initial` a `animate`
+fungují samy?
+
+### --back--
+
+`initial` a `animate` se přehrají na prvku, který v DOM je. Při odchodu ho ale React
+odstraní hned, jak se změní podmínka nebo pole, takže by nebylo co animovat.
+`AnimatePresence` si pamatuje potomky z minulého vykreslení, zmizelého potomka (poznaný
+podle `key`) nechá ještě v DOM, přehraje na něm `exit` a teprve pak ho pustí. Proto
+musí být vykreslená pořád a podmínka patří dovnitř ní.
+
+### --see--
+
+react-ui-knihovny/motion-for-react#animatepresence-odchod-z-dom
+
+## --card-- free
+
+Jaký je rozdíl mezi `layout` a `layoutId` a kdy použiješ který?
+
+### --back--
+
+`layout` patří jednomu prvku: když se mu po překreslení změní pozice nebo velikost
+(řádek nad ním zmizel, karta se rozbalila), Motion rozdíl změří a dohraje `transform`em.
+`layoutId` spojí dva **různé** prvky — jeden zmizí, druhý se stejným `layoutId` vznikne
+jinde a Motion mezi nimi přeletí. `layout` na posun řádků v seznamu, `layoutId` na
+podtržítko aktivní záložky nebo náhled, který se rozbalí do detailu.
+
+### --see--
+
+react-ui-knihovny/motion-for-react#layout-animace-a-layoutid
+
+## --card-- free
+
+Kdy animaci přes Motion nepoužiješ?
+
+### --back--
+
+Když to zvládne CSS: hover, fokus nebo `data-state` u Radixu vyřeší `transition`
+a `@keyframes` bez JavaScriptu. Dál u vstupu celé stránky po načtení (uživatel čeká
+na obsah, který už mohl číst), u hodnot, které se mění často (řádek z websocketu by
+pořád skákal), a u běžné interakce delší než zhruba 400 ms. Motion má smysl tam, kde
+CSS nestačí: odchod z DOM, změna layoutu, gesta a pružiny.
+
+### --see--
+
+react-ui-knihovny/motion-for-react#kdy-animaci-nepouzit

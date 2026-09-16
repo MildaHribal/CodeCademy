@@ -1,0 +1,8 @@
+{
+  "type": "workshop",
+  "title": "Dashboard půjčovny elektrokol",
+  "summary": "Rozpohybuješ přehled půjčovny přes Motion: vstup karet, počítadlo tržby, ukazatel menu, mazání řádků, panel detailu a oznámení, které jde odtáhnout.",
+  "minutes": 75,
+  "runtime": "react",
+  "libs": ["tailwind", "motion"]
+}

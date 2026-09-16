@@ -114,6 +114,34 @@ import { Dialog } from 'radix-ui';
 - **Viditelný fokus**: `focus-visible:ring-2 focus-visible:ring-znacka` na každém interaktivním prvku.
 - **Kontrast a velikost cíle**: [[past na fokus]] nepomůže, když je stav vidět jen o odstín.
 
+## Motion for React
+
+| prop / hook | k čemu |
+|---|---|
+| `initial`, `animate`, `transition` | odkud, kam a jak (pružina `stiffness`/`damping` × tween `duration`/`ease`) |
+| `exit` | odchod z DOM, jen uvnitř `AnimatePresence` |
+| `variants` + `staggerChildren` | pojmenované stavy, rodič je rozdá potomkům postupně |
+| `layout` | doanimuje změnu pozice a velikosti z layoutu |
+| `layoutId` | přelet mezi dvěma prvky (podtržítko aktivní záložky) |
+| `whileHover`, `whileTap`, `whileFocus`, `drag` | gesta, `onDragEnd(event, info)` s `info.offset` |
+| `useScroll` → `useTransform` / `useSpring` | hodnota řízená scrollem, do `style`, ne do `animate` |
+| `MotionConfig reducedMotion="user"` | při omezeném pohybu zahodí posuny, průhlednost nechá |
+
+```jsx
+<AnimatePresence mode="popLayout">
+  {rentals.map((rental) => (
+    <motion.li key={rental.id} layout exit={{ opacity: 0 }}>
+      {rental.bike}
+    </motion.li>
+  ))}
+</AnimatePresence>
+```
+
+> [!PITFALL]
+> **Pasti `AnimatePresence`:** podmínka stojí nad ní místo uvnitř (odchod skokem);
+> `key={index}` (odejde poslední řádek místo smazaného); Radix `Dialog` bez
+> `forceMount` (obsah odmontuje Radix dřív, než Motion doanimuje).
+
 ## Pasti v testech a v náhledu
 
 | příznak | příčina | oprava |

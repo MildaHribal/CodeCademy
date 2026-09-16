@@ -8,7 +8,7 @@ kterou už znáš z `css-efekty-animace` v podobě `animate()` — v Reactu má 
 komponenty, které rozumí tomu, že prvky vznikají a zanikají.
 
 :::check pretest
-Máš `{zprava && <div className="transition-opacity">…</div>}`. Když `zprava`
+Máš `{message && <div className="transition-opacity">…</div>}`. Když `message`
 přepneš na `false`, jakou odchodovou animaci uvidíš?
 
 ### --expected--
@@ -37,8 +37,8 @@ skoro vůbec, Motion mění styl mimo React
 v Reactu prvky mizí ze stromu:
 
 ```jsx
-{vypujcky.map((vypujcka) => (
-  <li key={vypujcka.id}>{vypujcka.kolo}</li>
+{rentals.map((rental) => (
+  <li key={rental.id}>{rental.bike}</li>
 ))}
 ```
 
@@ -139,24 +139,24 @@ import { useState } from 'react';
 import { motion } from 'motion/react';
 
 export default function App() {
-  const [vpravo, setVpravo] = useState(false);
+  const [isRight, setIsRight] = useState(false);
 
   return (
     <div className="min-h-screen bg-slate-100 p-8">
       <button
-        onClick={() => setVpravo((stav) => !stav)}
+        onClick={() => setIsRight((current) => !current)}
         className="mb-6 rounded-lg bg-slate-900 px-4 py-2 text-sm text-white"
       >
         Přepnout
       </button>
       <div className="space-y-4">
         <motion.div
-          animate={{ x: vpravo ? 220 : 0 }}
+          animate={{ x: isRight ? 220 : 0 }}
           transition={{ type: 'spring', stiffness: 300, damping: 20 }}
           className="h-12 w-28 rounded-lg bg-violet-600"
         />
         <motion.div
-          animate={{ x: vpravo ? 220 : 0 }}
+          animate={{ x: isRight ? 220 : 0 }}
           transition={{ duration: 0.4, ease: 'easeInOut' }}
           className="h-12 w-28 rounded-lg bg-slate-400"
         />
@@ -192,9 +192,9 @@ rozdá — potomek pak nepotřebuje `initial` ani `animate` vůbec.
 Navíc rodič umí potomky rozestřídat v čase, čemuž se říká [[orchestrace]]:
 
 ```jsx
-const seznamVariants = {
-  zavreno: { opacity: 0 },
-  otevreno: { opacity: 1, transition: { staggerChildren: 0.08, delayChildren: 0.2 } },
+const listVariants = {
+  closed: { opacity: 0 },
+  open: { opacity: 1, transition: { staggerChildren: 0.08, delayChildren: 0.2 } },
 };
 ```
 
@@ -205,29 +205,29 @@ skupinu. Obojí patří do `transition` **rodiče**, ne potomka.
 ```jsx
 import { motion } from 'motion/react';
 
-const kola = ['Kolo 12 — Vršovice', 'Kolo 07 — Karlín', 'Kolo 21 — Smíchov', 'Kolo 03 — Holešovice'];
+const bikes = ['Kolo 12 — Vršovice', 'Kolo 07 — Karlín', 'Kolo 21 — Smíchov', 'Kolo 03 — Holešovice'];
 
-const seznam = {
-  skryto: {},
-  videt: { transition: { staggerChildren: 0.12 } },
+const list = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.12 } },
 };
 
-const radek = {
-  skryto: { opacity: 0, x: -24 },
-  videt: { opacity: 1, x: 0 },
+const row = {
+  hidden: { opacity: 0, x: -24 },
+  visible: { opacity: 1, x: 0 },
 };
 
 export default function App() {
   return (
     <motion.ul
-      variants={seznam}
-      initial="skryto"
-      animate="videt"
+      variants={list}
+      initial="hidden"
+      animate="visible"
       className="min-h-screen space-y-2 bg-slate-100 p-8"
     >
-      {kola.map((nazev) => (
-        <motion.li key={nazev} variants={radek} className="rounded-lg bg-white px-4 py-3 text-sm shadow-sm">
-          {nazev}
+      {bikes.map((name) => (
+        <motion.li key={name} variants={row} className="rounded-lg bg-white px-4 py-3 text-sm shadow-sm">
+          {name}
         </motion.li>
       ))}
     </motion.ul>
@@ -237,11 +237,11 @@ export default function App() {
 :::
 
 Zkus zvýšit `staggerChildren` na `0.4` a sleduj, jak se z toho stane pomalý výčet.
-Pak přidej do `seznam.videt.transition` ještě `staggerDirection: -1` a řádky
+Pak přidej do `list.visible.transition` ještě `staggerDirection: -1` a řádky
 naskáčou odspodu.
 
 > [!TIP]
-> Varianta smí být i funkce: `videt: (poradi) => ({ opacity: 1, transition: { delay: poradi * 0.05 } })`.
+> Varianta smí být i funkce: `visible: (index) => ({ opacity: 1, transition: { delay: index * 0.05 } })`.
 > Argument jí předáš props `custom={index}`. Hodí se, když prodleva nezávisí na
 > pořadí v DOM, ale na datech (třeba na stavu baterie).
 
@@ -265,9 +265,9 @@ a teprve pak to odstraní. Té animaci se říká [[odchodová animace]].
 
 Tři pravidla, která se porušují nejčastěji:
 
-- Podmínka (`{otevreno && …}`) musí být **uvnitř** `AnimatePresence`, ne kolem ní.
+- Podmínka (`{open && …}`) musí být **uvnitř** `AnimatePresence`, ne kolem ní.
 - Každý přímý potomek potřebuje stabilní `key` — takový, který patří k datům
-  (`vypujcka.id`), ne k pozici v poli.
+  (`rental.id`), ne k pozici v poli.
 - `mode` rozhoduje, co se stane při výměně: výchozí je překryv, `mode="wait"` počká,
   až starý odejde (skeleton → obsah), `mode="popLayout"` odcházející prvek vytrhne
   z layoutu, takže se zbytek posune hned.
@@ -278,14 +278,14 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 
 export default function App() {
-  const [videt, setVidet] = useState(true);
+  const [isVisible, setIsVisible] = useState(true);
 
   return (
     <div className="min-h-screen bg-slate-100 p-8">
-      <button onClick={() => setVidet(false)} className="mb-4 rounded bg-slate-900 px-3 py-2 text-sm text-white">
+      <button onClick={() => setIsVisible(false)} className="mb-4 rounded bg-slate-900 px-3 py-2 text-sm text-white">
         Zavřít
       </button>
-      {videt && (
+      {isVisible && (
         <AnimatePresence>
           <motion.p
             initial={{ opacity: 0 }}
@@ -306,7 +306,7 @@ export default function App() {
 --option-- Odstavec bude 1,2 s blednout a pak zmizí.
 --option-- Odstavec zůstane, protože `AnimatePresence` ho podrží napořád.
 --option*-- Odstavec zmizí okamžitě, bez blednutí.
---why-- Podmínka `vidět &&` stojí **nad** `AnimatePresence`, takže se při přepnutí odmontuje celá `AnimatePresence` i s odstavcem — a odmontovaná komponenta už nemá jak cokoli podržet. `AnimatePresence` musí zůstat vykreslená pořád a podmínka patří dovnitř ní.
+--why-- Podmínka `isVisible &&` stojí **nad** `AnimatePresence`, takže se při přepnutí odmontuje celá `AnimatePresence` i s odstavcem — a odmontovaná komponenta už nemá jak cokoli podržet. `AnimatePresence` musí zůstat vykreslená pořád a podmínka patří dovnitř ní.
 :::
 
 :::explain
@@ -354,27 +354,27 @@ Tak se dělá podtržítko aktivní záložky nebo náhled, který se rozbalí d
 import { useState } from 'react';
 import { motion } from 'motion/react';
 
-const zalozky = ['Přehled', 'Výpůjčky', 'Kola'];
+const tabs = ['Přehled', 'Výpůjčky', 'Kola'];
 
 export default function App() {
-  const [aktivni, setAktivni] = useState('Přehled');
+  const [active, setActive] = useState('Přehled');
 
   return (
     <div className="min-h-screen bg-slate-100 p-8">
       <div className="flex gap-1">
-        {zalozky.map((zalozka) => (
+        {tabs.map((tab) => (
           <button
-            key={zalozka}
-            onClick={() => setAktivni(zalozka)}
+            key={tab}
+            onClick={() => setActive(tab)}
             className="relative px-4 py-2 text-sm font-medium text-slate-700"
           >
-            {aktivni === zalozka && (
+            {active === tab && (
               <motion.span
-                layoutId="podtrzitko"
+                layoutId="underline"
                 className="absolute inset-x-1 bottom-0 h-0.5 rounded bg-violet-600"
               />
             )}
-            {zalozka}
+            {tab}
           </button>
         ))}
       </div>
@@ -384,7 +384,7 @@ export default function App() {
 ```
 :::
 
-Zkus `layoutId="podtrzitko"` z komponenty smazat: podtržítko pak jen skokem zmizí
+Zkus `layoutId="underline"` z komponenty smazat: podtržítko pak jen skokem zmizí
 a objeví se jinde. Pak zkus přidat `transition={{ type: 'spring', stiffness: 400, damping: 30 }}`.
 
 > [!PITFALL]
@@ -426,7 +426,7 @@ import { useState } from 'react';
 import { motion } from 'motion/react';
 
 export default function App() {
-  const [zavreno, setZavreno] = useState(false);
+  const [isDismissed, setIsDismissed] = useState(false);
 
   return (
     <div className="min-h-screen bg-slate-100 p-8">
@@ -435,23 +435,23 @@ export default function App() {
         whileTap={{ scale: 0.96 }}
         className="mb-8 rounded-lg bg-violet-600 px-5 py-2.5 text-sm font-medium text-white"
       >
-        Půjčit kolo
+        Půjčit bike
       </motion.button>
 
-      {!zavreno && (
+      {!isDismissed && (
         <motion.div
           drag="x"
           dragConstraints={{ left: 0, right: 0 }}
           dragElastic={0.6}
-          onDragEnd={(udalost, info) => {
-            if (Math.abs(info.offset.x) > 100) setZavreno(true);
+          onDragEnd={(event, info) => {
+            if (Math.abs(info.offset.x) > 100) setIsDismissed(true);
           }}
           className="w-72 cursor-grab rounded-xl bg-white p-4 text-sm shadow"
         >
           Kolo 07 hlásí baterii pod 15 %. Odtáhni mě do strany.
         </motion.div>
       )}
-      {zavreno && <p className="text-sm text-slate-500">Oznámení zavřeno.</p>}
+      {isDismissed && <p className="text-sm text-slate-500">Oznámení zavřeno.</p>}
     </div>
   );
 }
@@ -479,6 +479,71 @@ onDragEnd — druhý argument info má offset a velocity
 v onDragEnd podle info.offset
 :::
 
+## Animace řízená scrollem
+
+Tři hooky tvoří řetěz: `useScroll` vrací [[motion value]] s pozicí scrollu,
+`useTransform` ji přepočítá na jinou hodnotu a `useSpring` ji vyhladí. Výsledek
+předáš do `style` — ne do `animate`, protože hodnota se nemá „doanimovat", má
+scrollu přesně odpovídat.
+
+```jsx
+const { scrollYProgress } = useScroll();                 // 1. 0 až 1 podle scrollu stránky
+const smooth = useSpring(scrollYProgress, { stiffness: 200, damping: 30 }); // 2. vyhladit
+const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);           // 3. přepočítat
+```
+
+:::live react libs=tailwind
+```jsx
+import { motion, useScroll, useSpring } from 'motion/react';
+
+const rentals = Array.from({ length: 30 }, (_, index) => `Výpůjčka ${index + 1} — kolo ${(index % 12) + 1}`);
+
+export default function App() {
+  const { scrollYProgress } = useScroll();
+  const progress = useSpring(scrollYProgress, { stiffness: 200, damping: 30 });
+
+  return (
+    <div className="bg-slate-100">
+      <motion.div
+        style={{ scaleX: progress }}
+        className="fixed inset-x-0 top-0 h-1 origin-left bg-violet-600"
+      />
+      <ul className="space-y-2 p-8">
+        {rentals.map((rental) => (
+          <li key={rental} className="rounded-lg bg-white px-4 py-3 text-sm shadow-sm">{rental}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+```
+:::
+
+Posuň ukázku dolů a sleduj pruh nahoře. Zkus `style={{ scaleX: scrollYProgress }}`
+bez `useSpring` — pruh bude přesně kopírovat kolečko myši, i s trhnutími.
+
+Motion value se mění **bez překreslení komponenty**, stejně jako animace z `animate`.
+Kdybys pozici scrollu četl přes `useState` a posluchač `scroll`, komponenta by se
+překreslovala v každém snímku.
+
+> [!NOTE]
+> Tři věci, které v dokumentaci potkáš a stačí o nich vědět: `onExitComplete` na
+> `AnimatePresence` zavolá funkci, až všechny odchody doběhnou (třeba přesun fokusu);
+> `LayoutGroup` propojí `layout` animace sourozeneckých komponent, které o sobě
+> nevědí; `LazyMotion` s komponentou `m` místo `motion` zmenší balík, protože funkce
+> animací se načtou až když jsou potřeba.
+
+:::check
+Proč se hodnota ze `useScroll` předává do `style`, a ne do `animate`?
+
+### --expected--
+má přesně odpovídat scrollu, ne se k němu doanimovat
+
+### --accept--
+style ji propisuje přímo, animate by mezi hodnotami animoval s vlastní délkou
+animate by za scrollem zaostával
+:::
+
 ## Omezený pohyb
 
 Část uživatelů má v systému zapnuté „omezit pohyb" (macOS Předvolby, Windows
@@ -500,8 +565,8 @@ Když potřebuješ rozhodnout sám (třeba úplně vypnout automatické přehrá
 se hookem:
 
 ```jsx
-const omezeny = useReducedMotion();
-const posun = omezeny ? 0 : 24;
+const shouldReduceMotion = useReducedMotion();
+const offset = shouldReduceMotion ? 0 : 24;
 ```
 
 > [!NOTE]
@@ -563,7 +628,7 @@ CSS, Motion je na to zbytečný
 > [!PITFALL]
 > **`key={index}` v `AnimatePresence`.** Příznak: smažeš druhý řádek ze čtyř a odejde
 > poslední. Po smazání se indexy posunou, takže „klíč 3" najednou patří jiným datům
-> a Motion považuje za zaniklý ten poslední. Oprava: `key={vypujcka.id}`.
+> a Motion považuje za zaniklý ten poslední. Oprava: `key={rental.id}`.
 
 > [!PITFALL]
 > **Dva prvky se stejným `layoutId` naráz.** Příznak: podtržítko se roztáhne přes
@@ -574,7 +639,7 @@ CSS, Motion je na to zbytečný
 > **Radix `Dialog` s odchodovou animací bez `forceMount`.** Příznak: dialog hezky
 > vjede, ale zavře se skokem. Radix si obsah odmontuje sám, hned jak se zavře, takže
 > `AnimatePresence` nemá co podržet. Oprava: `Dialog.Portal forceMount` a
-> `Dialog.Content asChild forceMount` a podmínku `{otevreno && …}` si uvnitř
+> `Dialog.Content asChild forceMount` a podmínku `{open && …}` si uvnitř
 > `AnimatePresence` napiš sám.
 
 > [!PITFALL]
@@ -584,12 +649,11 @@ CSS, Motion je na to zbytečný
 > na `layout`, který rozdíl rozměrů dohraje `transform`em.
 
 > [!PITFALL]
-> **Nekonečná animace v komponentě, která se často překresluje.** Příznak: pulzování
-> se s každým překreslením restartuje a vypadá to roztřeseně. Motion animaci
-> neresetuje, když se prop nezmění — ale objektový literál `animate={{ scale: [1, 1.1, 1] }}`
-> je pokaždé nový objekt jen v identitě, ne v hodnotách, a to Motionu nevadí. Problém
-> nastane, až když se mění samotné hodnoty. Oprava: hodnoty spočítej mimo render,
-> nebo je zapamatuj přes `useMemo`.
+> **Prvek přilétá znovu při každé aktualizaci dat.** Příznak: karta tržby se po
+> každém obnovení čísel znovu vynoří zespodu, přestože se nic neotevřelo. Klíč karty
+> je `key={stats.updatedAt}`, takže React při nové verzi dat kartu odmontuje, připojí
+> novou a Motion na ní přehraje `initial` → `animate`. Oprava: klíč podle identity
+> věci (`key="revenue"`, `key={bike.id}`), ne podle verze dat.
 
 :::check
 Dialog z Radixu vjíždí hezky, ale zavírá se skokem. Co k odchodové animaci chybí?
@@ -613,7 +677,7 @@ forceMount — jinak Radix obsah odstraní dřív, než Motion doanimuje
 
 ## --question--
 
-Máš `<AnimatePresence>{vypujcky.map((v) => <motion.li key={v.id} exit={{ opacity: 0 }}>…</motion.li>)}</AnimatePresence>`.
+Máš `<AnimatePresence>{rentals.map((v) => <motion.li key={v.id} exit={{ opacity: 0 }}>…</motion.li>)}</AnimatePresence>`.
 Smažeš z pole prostřední výpůjčku. Napiš, co Motion udělá s tím `<li>` a kdy ho
 React odstraní z DOM.
 

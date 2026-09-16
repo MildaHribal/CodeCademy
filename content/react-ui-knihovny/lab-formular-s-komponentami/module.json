@@ -1,0 +1,8 @@
+{
+  "type": "lab",
+  "title": "Přihláška s komponentami",
+  "summary": "Samostatně poskládáš vícekrokovou přihlášku z vlastních komponent: pole s popisem a chybou, Radix primitiva, animovaný přechod kroků a souhrn v dialogu.",
+  "minutes": 90,
+  "runtime": "react",
+  "libs": ["tailwind"]
+}

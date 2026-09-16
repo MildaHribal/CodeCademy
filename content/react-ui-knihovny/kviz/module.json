@@ -1,0 +1,8 @@
+{
+  "type": "quiz",
+  "title": "Kvíz: UI knihovny v Reactu",
+  "summary": "clsx a tailwind-merge, varianty cva, Radix primitiva, shadcn/ui, AnimatePresence, layoutId a omezený pohyb na čtení cizího kódu.",
+  "minutes": 25,
+  "runtime": "react",
+  "libs": ["tailwind"]
+}

@@ -78,12 +78,32 @@ Plynulý přechod mezi dvěma pozicemi nebo velikostmi, které vyplynuly z layou
 ze změny vlastnosti. Motion si prvek změří před překreslením a po něm a rozdíl
 dohraje `transform`em; zapíná se prop `layout`.
 
-## --term-- omezený pohyb
+## --term-- motion value
 
-en: reduced motion
-aliases: omezeného pohybu, omezeným pohybem, omezený pohyb
-lekce: react-ui-knihovny/motion-for-react#omezeny-pohyb
+en: motion value
+aliases: motion values, motion value
+lekce: react-ui-knihovny/motion-for-react#animace-rizena-scrollem
 
-Systémové nastavení „omezit pohyb", které prohlížeč hlásí jako
-`prefers-reduced-motion: reduce`. V Motionu na něj reaguje `MotionConfig
-reducedMotion="user"`: zahodí posuny a zvětšení, průhlednost animovat nechá.
+Hodnota, kterou Motion drží mimo stav Reactu a při změně ji zapíše rovnou do stylu
+prvku (`useMotionValue`, `useScroll`, `useTransform`). Komponenta se kvůli ní
+nepřekresluje, proto se hodí pro hodnoty, které se mění v každém snímku.
+
+## --term-- složená komponenta
+
+en: compound component
+aliases: složené komponenty, složenou komponentu, složenou komponentou, složených komponent
+lekce: react-ui-knihovny/design-system-projektu#varianta-nova-komponenta-nebo-children
+
+Komponenta rozdělená na díly (`Card`, `CardHeader`, `CardContent`, `CardFooter`), které
+dodají jen vzhled a volající si z nich obsah poskládá přes `children`. Nahrazuje
+komponentu s mnoha boolean props, která by musela předvídat každé použití.
+
+## --term-- vzor rozhraní
+
+en: UI pattern
+aliases: vzory rozhraní, vzoru rozhraní, vzorem rozhraní, vzorů rozhraní
+lekce: react-ui-knihovny/design-system-projektu#vrstvy-tokeny-primitivy-komponenty-vzory
+
+Opakující se složení několika komponent s vlastními pravidly, třeba formulářové pole
+(popisek, pole, nápověda a chyba propojené přes `id`) nebo prázdný stav seznamu.
+V design systému je to patro nad komponentami.

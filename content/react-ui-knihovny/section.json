@@ -1,12 +1,16 @@
 {
   "title": "UI knihovny a animace v Reactu",
-  "intro": "Jak se v React projektech dnes skutečně staví rozhraní. Nejdřív Tailwind uvnitř komponent: podmíněné třídy přes `clsx`, konflikty utilit přes `tailwind-merge` a varianty v mapě místo skládaných řetězců. Pak vlastní sada komponent ve stylu shadcn/ui a přístupná primitiva Radix — u každé komponenty uvidíš, co bys musel napsat sám (fokus, Escape, role, portál) a proč to necháš na primitivu.",
+  "intro": "Jak se v React projektech dnes skutečně staví rozhraní. Nejdřív Tailwind uvnitř komponent: podmíněné třídy přes `clsx`, konflikty utilit přes `tailwind-merge` a varianty v mapě místo skládaných řetězců. Pak vlastní sada komponent ve stylu shadcn/ui a přístupná primitiva Radix — u každé komponenty uvidíš, co bys musel napsat sám (fokus, Escape, role, portál) a proč to necháš na primitivu. Nakonec animace přes Motion for React (vstup, odchod z DOM, změna layoutu, gesta a omezený pohyb) a malý design systém projektu: tokeny, škály, varianty a formulářové pole, které poskládáš do vícekrokové přihlášky.",
   "modules": [
     "tailwind-v-reactu",
     "workshop-sada-komponent",
     "shadcn-a-radix",
     "workshop-pristupne-komponenty",
-    "motion-for-react"
+    "motion-for-react",
+    "workshop-dashboard-s-animacemi",
+    "design-system-projektu",
+    "lab-formular-s-komponentami",
+    "kviz"
   ],
   "outcomes": [
     {
@@ -49,6 +53,43 @@
       "links": [
         "react-ui-knihovny/shadcn-a-radix#rizeny-a-nerizeny-rezim",
         "react-ui-knihovny/workshop-pristupne-komponenty"
+      ]
+    },
+    {
+      "text": "Rozanimuješ vstup, odchod z DOM a změnu layoutu přes `motion`, `AnimatePresence`, `layout` a `layoutId` a víš, proč odchod potřebuje stabilní `key`.",
+      "links": [
+        "react-ui-knihovny/motion-for-react#animatepresence-odchod-z-dom",
+        "react-ui-knihovny/motion-for-react#layout-animace-a-layoutid",
+        "react-ui-knihovny/workshop-dashboard-s-animacemi"
+      ]
+    },
+    {
+      "text": "Přidáš gesta (`whileHover`, `whileTap`, `drag`) a varianty se `staggerChildren`, respektuješ omezený pohyb přes `MotionConfig reducedMotion=\"user\"` a poznáš, kdy animaci nepsat vůbec.",
+      "links": [
+        "react-ui-knihovny/motion-for-react#gesta-whilehover-whiletap-drag",
+        "react-ui-knihovny/motion-for-react#omezeny-pohyb",
+        "react-ui-knihovny/motion-for-react#kdy-animaci-nepouzit",
+        "react-ui-knihovny/workshop-dashboard-s-animacemi"
+      ]
+    },
+    {
+      "text": "Založíš tokeny a škály projektu v `@theme` se sémantickými jmény, takže tmavý motiv i změna značky je úprava tokenů, ne komponent.",
+      "links": [
+        "react-ui-knihovny/design-system-projektu#tokeny-a-skaly-v-theme"
+      ]
+    },
+    {
+      "text": "Rozhodneš mezi variantou, novou komponentou a složenou komponentou přes `children` a postavíš přístupné formulářové pole s `useId`, `aria-describedby` a `aria-invalid`.",
+      "links": [
+        "react-ui-knihovny/design-system-projektu#varianta-nova-komponenta-nebo-children",
+        "react-ui-knihovny/design-system-projektu#formularove-pole-jako-vzor"
+      ]
+    },
+    {
+      "text": "Poskládáš vícekrokový formulář z vlastních komponent a Radix primitiv tak, že chyby hlásí čtečce, fokus drží při přechodu kroků i po zavření dialogu a animace respektují omezený pohyb.",
+      "links": [
+        "react-ui-knihovny/lab-formular-s-komponentami",
+        "react-ui-knihovny/motion-for-react#omezeny-pohyb"
       ]
     }
   ]

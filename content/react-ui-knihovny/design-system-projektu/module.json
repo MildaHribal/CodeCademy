@@ -1,0 +1,8 @@
+{
+  "type": "lesson",
+  "title": "Design systém projektu",
+  "summary": "Založíš tokeny, škály a pravidla pro varianty tak, aby sada komponent zůstala jednotná i po roce a formulářová pole byla přístupná.",
+  "minutes": 55,
+  "runtime": "react",
+  "libs": ["tailwind"]
+}
