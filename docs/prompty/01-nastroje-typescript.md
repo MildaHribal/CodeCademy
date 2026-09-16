@@ -3,6 +3,65 @@
 > Tohle je kompletní zadání. Přečti ho celé, pak si přečti dokumenty, na které odkazuje,
 > a teprve potom začni psát. Nespěchej — nekvalitní obsah se zahazuje a píše znovu.
 
+## Základní informace o projektu
+
+**Co to je:** Akademie je lokální interaktivní kurz webového vývoje v češtině, postavený ve stylu
+freeCodeCampu. Student otevře modul v prohlížeči, píše kód v editoru vedle zadání a mačká
+„Zkontrolovat". Testy uvnitř obsahu rozhodnou, jestli krok splnil. **Není to hra** — žádné body,
+odznaky, příběh ani povyšování.
+
+**Kde to je:** `/home/karel/akademie` — git repozitář, větev `main`. Pracuj přímo v něm.
+
+**Pro koho:** jeden student. Junior, weby dosud stavěl s pomocí AI a neumí vysvětlit, proč
+fungují. Chce se to naučit doopravdy, co nejrychleji, a chce, aby ho to bavilo. Cíl: vlastní
+projekty s dobrým designem a efekty a práce frontend/fullstack vývojáře. Píšeš obsah **jemu**,
+ne obecnému publiku.
+
+**Jak se to spouští:**
+
+```sh
+cd /home/karel/akademie
+./start.sh                 # aplikace na http://localhost:4300
+npm test                   # testy platformy
+npm run overit -- --concurrency 2 content/<sekce>   # kontrola obsahu (tvoje hlavní metrika)
+```
+
+**Z čeho to je postavené** (platformu needituješ, ale hodí se vědět, jak funguje):
+
+- Obsah jsou Markdown soubory v `content/`. Parser (`shared/parse.js`) je převede na data.
+- Kód studenta i testy běží v izolovaném iframu v prohlížeči (runtime `dom`, `js`, `vue`,
+  `react`) nebo v Node procesu (runtime `node`).
+- Kontrola `npm run overit` spustí každý krok v headless prohlížeči: testy musí nad výchozím
+  kódem **selhat** a nad tvým řešením **projít**. Tím se pozná, že test opravdu něco měří.
+- Server je Node bez frameworku, klient Vite + vanilla JS + CodeMirror.
+
+**Jakým stylem psát:**
+
+- **Výklad česky, tykání, věcně.** Žádné „super", „skvělé", vykřičníky ani smajlíky.
+- **Kód anglicky** (`const totalPrice`, `function formatDate`), **texty ve stránkách a výpisy
+  česky**. Nikdy české názvy proměnných a funkcí.
+- Vysvětluj **proč**, ne jen jak. Nejcennější část každé lekce jsou pasti: co se běžně pokazí,
+  jak vypadá chybová hláška a jak se to opraví.
+- Piš konkrétně a stručně, bez vaty a bez historie technologie na úvod. Příklady z reálného
+  světa a s českými daty, žádné `foo`, `bar` a lorem ipsum.
+- Používej zvýraznění střídmě: rámečky `> [!REMEMBER]` (pravidlo k zapamatování),
+  `> [!PITFALL]` (past), `> [!TIP]`, `> [!NOTE]`. Tučně nejvýš jedno místo v odstavci.
+- Nevysvětluj, co se student naučí až později. Když to musíš zmínit, napiš „k tomu se dostaneme
+  v sekci X, teď stačí vědět, že…".
+- O AI se v obsahu píše jen v sekcích `prace-s-ai` a `start-nastroje`, jinde ne.
+
+**Co je hotové a smíš na to odkazovat** (a brát jako vzor): celý JavaScript (`js-*`), celé CSS
+(`css-*`) a `node-zaklady`. Neuč znovu, co už učí — odkazuj se na ně.
+
+**Pravidla práce:**
+
+- Pracuj **jen ve své sekci** (`content/<sekce>/`). Do jiných sekcí a do platformy
+  (`client/`, `server/`, `shared/`, `tools/`, `docs/`) nesahej.
+- **Nikdy nemaž** `data/` (postup studenta) ani `moje-projekty/` (jeho projekty).
+- Neinstaluj balíčky a neměň `package.json`. Vše potřebné je nainstalované.
+- Když najdeš chybu platformy nebo rozpor v dokumentech, **napiš to do zprávy**, neobcházej to.
+- Commit zprávy česky a **bez jakékoli zmínky o AI** a bez `Co-Authored-By`.
+
 ## Tvůj úkol
 
 Sekce **`nastroje-typescript`** je z velké části napsaná, ale **kontrola neprochází**. Tvůj úkol
@@ -59,20 +118,6 @@ assert.equal(result.code, 0, `tsc má projít bez chyb, ale vypsal:\n${result.st
 - Dlouhé hlášky TypeScriptu **vysvětluj česky**: co která část hlášky znamená a kde se dívat.
   Tohle je pro studenta nejcennější část sekce.
 
-
-## Kdo jsi a co stavíš
-
-Pracuješ na projektu **Akademie** v `/home/karel/akademie` — je to lokální interaktivní kurz
-webového vývoje ve stylu freeCodeCamp. **Není to hra.** Běží na počítači jednoho studenta,
-výklad je **česky**, identifikátory v kódu **anglicky**.
-
-**Student:** junior. Weby dosud stavěl s pomocí AI a neumí vysvětlit, proč fungují. Chce se to
-naučit doopravdy, co nejrychleji, a chce, aby ho to bavilo. Cíl: vlastní projekty s dobrým
-designem a efekty a práce frontend/fullstack vývojáře.
-
-**Jak to funguje:** student otevře modul v prohlížeči, píše kód v editoru a mačká
-„Zkontrolovat". Testy v Markdown souboru rozhodnou, jestli krok splnil. Proto musí být
-každý test spustitelný a spravedlivý.
 
 ## Co si MUSÍŠ přečíst, než napíšeš první řádek
 
