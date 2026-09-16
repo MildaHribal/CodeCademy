@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "CI/CD", "summary": "Nastavíš workflow, které před nasazením pustí lint, typy, testy a build, a naplánuješ nasazení, ze kterého se jde vrátit.", "minutes": 40 }

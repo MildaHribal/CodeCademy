@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Výkon a přístupnost animací", "summary": "Udržíš animace na 60 fps, najdeš v panelu Performance, co je brzdí, a připravíš variantu pro lidi s omezeným pohybem.", "minutes": 45, "runtime": "dom", "libs": ["gsap"] }

@@ -1,0 +1,1 @@
+{ "type": "quiz", "title": "Kvíz: provoz", "summary": "Ověříš si konfiguraci z prostředí, logování, ukončení serveru, pořadí kroků v CI a vícefázový build — i v cizím kódu.", "minutes": 25 }

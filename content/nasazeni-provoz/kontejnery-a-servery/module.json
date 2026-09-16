@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Kontejnery, servery a HTTPS", "summary": "Napíšeš Dockerfile a compose s databází, postavíš před aplikaci reverse proxy s HTTPS a vybereš mezi VPS a platformou.", "minutes": 45 }

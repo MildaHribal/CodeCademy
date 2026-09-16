@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Klávesnice a fokus", "summary": "Projdeš stránku bez myši: co dostane fokus a v jakém pořadí, kdy `tabindex` 0 a −1, proč tlačítko a ne klikací `div`, jak funguje odkaz „Přeskočit na obsah“ a proč fokus musí být vidět.", "minutes": 35, "runtime": "dom" }

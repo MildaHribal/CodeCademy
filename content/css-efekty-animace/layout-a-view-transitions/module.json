@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Flip, View Transitions a Motion", "summary": "Zanimuješ změnu layoutu technikou FLIP a pluginem Flip, přechod v jednom dokumentu přes View Transitions a pružinu i gesta v Motion.", "minutes": 50, "runtime": "dom", "libs": ["gsap", "motion"] }

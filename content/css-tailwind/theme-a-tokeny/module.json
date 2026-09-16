@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "@theme a design tokeny", "summary": "Přeneseš paletu, písmo, rozestupy a stíny do @theme, použiješ tokeny v utilitách i v čistém CSS a tmavý motiv uděláš přepnutím sémantických tokenů.", "minutes": 45, "runtime": "dom" }

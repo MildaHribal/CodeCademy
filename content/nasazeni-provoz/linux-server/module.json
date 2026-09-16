@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Rozšíření: vlastní Linux server", "summary": "Nepovinné rozšíření: rozjedeš aplikaci na vlastním serveru — SSH klíče, firewall, systemd služba, Caddy, automatické aktualizace a zálohy.", "minutes": 45 }

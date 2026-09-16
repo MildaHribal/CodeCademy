@@ -1,0 +1,1 @@
+{ "type": "workshop", "title": "Hero sekce hudebního festivalu", "summary": "Postavíš úvodní obrazovku festivalu s nadpisem odhaleným po řádcích, plovoucími tvary a magnetickým tlačítkem na vstupenky.", "minutes": 85, "runtime": "dom", "libs": ["gsap"] }

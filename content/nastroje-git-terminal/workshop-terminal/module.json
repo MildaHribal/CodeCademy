@@ -1,0 +1,1 @@
+{ "type": "workshop", "title": "Úklid projektu v terminálu", "summary": "Uklidíš po kolegovi web kavárny: přesuneš obrázky, najdeš TODO, spočítáš prodeje a sepíšeš report jednou sérií příkazů.", "minutes": 55, "runtime": "node" }

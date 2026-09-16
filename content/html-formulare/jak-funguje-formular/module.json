@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Jak funguje formulář", "summary": "Odešleš formulář bez JavaScriptu a uvidíš, co a pod jakým jménem dorazí na server.", "minutes": 35, "runtime": "dom" }

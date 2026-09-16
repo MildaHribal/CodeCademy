@@ -1,0 +1,1 @@
+{ "type": "quiz", "title": "Kvíz: formuláře", "summary": "Ověříš si GET a POST, co se odešle a pod jakým jménem, popisky polí a validaci v prohlížeči.", "minutes": 25, "runtime": "dom" }

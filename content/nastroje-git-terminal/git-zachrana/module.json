@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Záchrana z průšvihů", "summary": "Vrátíš se z chybného commitu přes reset, revert a reflog a najdeš commit s chybou přes bisect.", "minutes": 40 }

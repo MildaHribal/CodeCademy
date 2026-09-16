@@ -1,0 +1,1 @@
+{ "type": "quiz", "title": "Kvíz: Tailwind", "summary": "Ověříš si, co vygeneruje třída, mobile-first varianty, group a peer, jmenné prostory @theme a rozhodnutí mezi @apply, komponentou a čistým CSS.", "minutes": 25 }

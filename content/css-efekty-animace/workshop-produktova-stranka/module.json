@@ -1,0 +1,1 @@
+{ "type": "workshop", "title": "Prezentace bezdrátových sluchátek", "summary": "Postavíš produktovou stránku sluchátek s plynulým scrollováním, pinovanou sekcí, parallaxem, počítadly parametrů a vodorovným pásem barev.", "minutes": 90, "runtime": "dom", "libs": ["gsap", "lenis", "motion"] }

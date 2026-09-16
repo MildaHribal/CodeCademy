@@ -1,0 +1,1 @@
+{ "type": "workshop", "title": "Server připravený na provoz", "summary": "Z API půjčovny kol uděláš službu, kterou jde nasadit: konfigurace z prostředí, health check, strukturované logy s request id a ukončení, které neutne rozpracované požadavky.", "minutes": 80, "runtime": "node" }

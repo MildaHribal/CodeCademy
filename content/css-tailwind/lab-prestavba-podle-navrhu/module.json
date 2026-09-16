@@ -1,0 +1,1 @@
+{ "type": "lab", "title": "Přestavba stránky podle návrhu", "summary": "Sám přestavíš stránku festivalu z čistého CSS do Tailwindu podle specifikace tokenů, ve světlém i tmavém motivu a bez kopírovaných bloků tříd.", "minutes": 90, "runtime": "dom", "libs": ["tailwind"] }

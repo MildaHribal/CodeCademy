@@ -1,0 +1,1 @@
+{ "type": "workshop", "title": "Vstupenka na koncert v utilitách", "summary": "Postavíš kartu koncertu s fotkou, datem, cenou, štítkem a tlačítkem jen z utilit Tailwindu.", "minutes": 60, "runtime": "dom", "libs": ["tailwind"] }

@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Validace v prohlížeči", "summary": "Zvaliduješ vstup atributy HTML, obarvíš chyby až ve správnou chvíli a vysvětlíš, proč to nenahradí kontrolu na serveru.", "minutes": 40, "runtime": "dom" }

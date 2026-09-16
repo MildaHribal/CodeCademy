@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Utility-first myšlení", "summary": "Přečteš dlouhý atribut class jako zkratky za CSS, které znáš, a víš, jaké deklarace z utilit vzniknou a proč Tailwind vygeneruje jen použité třídy.", "minutes": 45, "runtime": "dom" }

@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Co testovat a proč", "summary": "Napíšeš první test v node:test, rozlišíš unit, integrační a e2e test a poznáš křehký test dřív, než tě začne zdržovat.", "minutes": 45 }

@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Jak funguje web", "summary": "Projdeš cestu od adresy v prohlížeči k vykreslené stránce a přečteš si požadavek i odpověď v DevTools.", "minutes": 40, "runtime": "dom" }

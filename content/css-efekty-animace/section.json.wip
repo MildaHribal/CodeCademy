@@ -1,0 +1,6 @@
+{
+  "title": "Animace a efekty pro „wow“ web",
+  "intro": "rozepsáno",
+  "modules": ["gsap-zaklady", "workshop-animovana-hero", "scroll-efekty", "workshop-produktova-stranka"],
+  "outcomes": []
+}

@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Anatomie HTML dokumentu", "summary": "Napíšeš validní dokument s hlavičkou a tělem a uvidíš, jak prohlížeč tiše opravuje chyby ve vnořování.", "minutes": 45, "runtime": "dom" }

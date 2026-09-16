@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Relační databáze", "summary": "Založíš tabulky s typy, klíči a omezeními, pochopíš NULL a porovnáš SQLite s PostgreSQL.", "minutes": 40 }

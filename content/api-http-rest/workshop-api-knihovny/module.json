@@ -1,0 +1,1 @@
+{ "type": "workshop", "title": "API knihovny", "summary": "Postavíš API knih a výpůjček s parametry v adrese, stránkováním, řazením a správnými kódy odpovědí.", "minutes": 60, "runtime": "node" }

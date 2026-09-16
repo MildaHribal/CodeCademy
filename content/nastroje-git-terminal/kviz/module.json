@@ -1,0 +1,1 @@
+{ "type": "quiz", "title": "Kvíz: terminál a Git", "summary": "Ověříš si stav po sérii příkazů, merge proti rebase, reset proti revert a roury i v cizím skriptu.", "minutes": 25 }

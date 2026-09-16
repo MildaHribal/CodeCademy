@@ -1,0 +1,1 @@
+{ "type": "workshop", "title": "Landing sekce herního serveru", "summary": "Postavíš úvodní stránku herního serveru s hero sekcí, mobilní navigací, mřížkou funkcí, ceníkem VIP balíčků, FAQ a přihláškou do novinek.", "minutes": 80, "runtime": "dom", "libs": ["tailwind"] }

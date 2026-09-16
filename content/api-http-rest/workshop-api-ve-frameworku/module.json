@@ -1,0 +1,1 @@
+{ "type": "workshop", "title": "API ve frameworku", "summary": "Přepíšeš API knihovny do Express 5 s vlastním middlewarem, validací a jedním místem pro chyby.", "minutes": 50, "runtime": "node" }

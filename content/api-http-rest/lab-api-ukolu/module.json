@@ -1,0 +1,1 @@
+{ "type": "lab", "title": "Lab: API úkolů", "summary": "Sám napíšeš API úkolů s validací, stránkováním, filtrem, konzistentními chybami a CORS.", "minutes": 90, "runtime": "node" }

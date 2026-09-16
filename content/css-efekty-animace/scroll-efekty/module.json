@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Animace řízené scrollem a Lenis", "summary": "Rozjedeš efekty na scroll přes ScrollTrigger, Motion a CSS animation-timeline, zapneš plynulé scrollování s Lenis a poznáš, kdy scroll efekt škodí.", "minutes": 55, "runtime": "dom", "libs": ["gsap", "motion"] }

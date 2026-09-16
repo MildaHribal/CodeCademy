@@ -1,0 +1,1 @@
+{ "type": "lab", "title": "Záchrana repozitáře", "summary": "Sám dostaneš repozitář z pěti průšvihů včetně commitnutého .env a chyby k nalezení bisectem.", "minutes": 70, "runtime": "node" }

@@ -1,0 +1,1 @@
+{ "type": "workshop", "title": "Portfolio fotografky", "summary": "Postavíš galerii zakázek s filtrem, kde se fotky plynule přeskupí, detailem, který se z miniatury roztáhne přes celou obrazovku, a srdíčkem na pružině.", "minutes": 80, "runtime": "dom", "libs": ["gsap", "motion"] }

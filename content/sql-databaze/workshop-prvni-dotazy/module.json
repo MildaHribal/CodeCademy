@@ -1,0 +1,1 @@
+{ "type": "workshop", "title": "Katalog v SQL", "summary": "Napíšeš dotazy pro filmový katalog: výpis, řazení, filtry, hledání, stránkování, přidání, úpravu a smazání filmu — všechno s vázanými parametry.", "minutes": 75, "runtime": "node" }

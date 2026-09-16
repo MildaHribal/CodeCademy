@@ -1,0 +1,1 @@
+{ "type": "quiz", "title": "Kvíz: HTTP a REST", "summary": "Ověříš si stavové kódy, idempotenci, návrh adres, preflight a ETag, i v cizím routeru.", "minutes": 25 }

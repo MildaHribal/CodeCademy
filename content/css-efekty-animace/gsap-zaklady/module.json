@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Kdy knihovna a základy GSAP", "summary": "Vybereš mezi CSS, Web Animations API, GSAP a Motion a složíš první timeline s easingem, stagger a ovládáním.", "minutes": 55, "runtime": "dom", "libs": ["gsap"] }

@@ -1,0 +1,1 @@
+{ "type": "lab", "title": "Lab: Dockerfile a workflow", "summary": "Sám napíšeš Dockerfile, .dockerignore, compose s databází a CI workflow pro přiložené API jídelníčku.", "minutes": 75, "runtime": "node" }

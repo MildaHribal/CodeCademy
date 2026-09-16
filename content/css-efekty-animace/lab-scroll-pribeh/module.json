@@ -1,0 +1,1 @@
+{ "type": "lab", "title": "Scroll příběh", "summary": "Sám postavíš stránku, která vypráví příběh po kapitolách odhalených při scrollu, s pinovanou sekcí, parallaxem a plynulým scrollováním.", "minutes": 90, "runtime": "dom", "libs": ["gsap", "lenis"] }

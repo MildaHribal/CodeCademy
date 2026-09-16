@@ -1,0 +1,1 @@
+{ "type": "workshop", "title": "Testy pro Běžecký deník", "summary": "Otestuješ utility běžeckého deníku v node:test tak důkladně, že tvoje testy chytí každou podstrčenou chybu — i v async kódu.", "minutes": 75, "runtime": "node" }

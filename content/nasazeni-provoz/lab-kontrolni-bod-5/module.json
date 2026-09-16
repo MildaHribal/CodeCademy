@@ -1,0 +1,1 @@
+{ "type": "lab", "title": "Kontrolní bod: rezervační API", "summary": "Sám postavíš API rezervací zasedacích místností s registrací, rolemi, validací, ochranou proti dvojí rezervaci, stránkováním a provozními požadavky.", "minutes": 120, "runtime": "node" }

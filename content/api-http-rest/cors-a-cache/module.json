@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "CORS a cache", "summary": "Pochopíš, proč prohlížeč blokuje odpověď z cizího původu, nastavíš CORS včetně preflightu a cache hlavičky s ETag.", "minutes": 45 }

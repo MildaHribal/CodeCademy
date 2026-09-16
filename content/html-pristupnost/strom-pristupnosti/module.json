@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Strom přístupnosti", "summary": "Zjistíš, co z tvého HTML dostane čtečka: roli, přístupné jméno a stav každého prvku, jak se jméno počítá, kde to uvidíš v DevTools a proč ARIA přijde až na řadu, když HTML nestačí.", "minutes": 35, "runtime": "dom" }

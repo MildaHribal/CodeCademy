@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Responzivita a stavy", "summary": "Skládáš varianty md:, @container, hover:, focus-visible:, dark:, group a peer a víš, proč třída bez prefixu platí na mobilu.", "minutes": 50, "runtime": "dom" }

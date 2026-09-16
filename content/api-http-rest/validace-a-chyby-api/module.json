@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Validace a chyby na serveru", "summary": "Zvaliduješ vstup schématem, vrátíš konzistentní chyby a pohlídáš, aby ze serveru neunikly vnitřnosti.", "minutes": 45 }

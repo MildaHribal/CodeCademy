@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Z vývoje do produkce", "summary": "Připravíš aplikaci na produkci: konfiguraci z prostředí, tajemství, health check a SIGTERM.", "minutes": 40 }
