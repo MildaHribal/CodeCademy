@@ -1,0 +1,1 @@
+{ "type": "workshop", "title": "Konfigurátor designové lampy", "summary": "Postavíš 3D náhled stolní lampy z primitiv, kterou si zákazník otočí myší, přebarví, rozsvítí a kliknutím zjistí, z čeho je.", "minutes": 55, "runtime": "dom", "libs": ["three"] }

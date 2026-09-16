@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Spline: 3D scéna z editoru na webu", "summary": "Vložíš scénu ze Splinu na web i do Reactu, ovládneš ji z JavaScriptu a načteš ji tak, aby nezdržela stránku ani nevyřadila lidi s omezeným pohybem.", "minutes": 45, "runtime": "dom" }

@@ -1,0 +1,1 @@
+{ "type": "lab", "title": "Animované gradientní pozadí", "summary": "Sám napíšeš celoobrazovkové pozadí stránky ve vlastním shaderu, které reaguje na myš, šetří telefon a funguje i bez WebGL a s omezeným pohybem.", "minutes": 90, "runtime": "dom", "libs": ["three"] }

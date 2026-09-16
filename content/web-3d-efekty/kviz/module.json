@@ -1,0 +1,1 @@
+{ "type": "quiz", "title": "Kvíz: 3D, shadery a Spline", "summary": "Ověříš si kameru po změně velikosti, materiály a světla, Points proti InstancedMesh, uniformy a varying, líné načítání Splinu a co zpomalí 3D pozadí v cizím kódu.", "minutes": 25 }

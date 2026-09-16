@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Interakce, částice a výkon", "summary": "Napojíš scénu na myš a scroll, vytvoříš tisíce částic jedním objektem a udržíš 3D plynulé i na telefonu.", "minutes": 50, "runtime": "dom", "libs": ["three"] }

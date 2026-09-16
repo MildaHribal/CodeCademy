@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Scéna, kamera a render loop", "summary": "Postavíš první Three.js scénu s kamerou, materiálem, světlem a smyčkou, která přežije změnu velikosti okna.", "minutes": 50, "runtime": "dom", "libs": ["three"] }

@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Shadery: uniformy, gradienty a noise", "summary": "Napíšeš vlastní shader s gradientem a plynoucím noise a budeš ho řídit uniformami z JavaScriptu.", "minutes": 55, "runtime": "dom", "libs": ["three"] }

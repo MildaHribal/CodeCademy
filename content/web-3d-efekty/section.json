@@ -1,0 +1,76 @@
+{
+  "title": "3D a vizuální efekty",
+  "intro": "3D model, který si zákazník otočí a přebarví. Hvězdné pozadí, které se natáčí za myší. Barvy přelévající se jako polární záře. Scéna navržená designérkou ve Splinu. Tohle dělá z webu zážitek — a zároveň je to nejrychlejší způsob, jak web zpomalit, vybít telefon a vyřadit lidi, kterým pohyb vadí.\n\nV sekci se naučíš Three.js od scény, kamery a render smyčky přes interakci, částice a výkon po vlastní shadery s uniformami a noise. Pak vložíš na web scénu ze Splinu, ve vanilla JS i v Reactu. Postavíš konfigurátor lampy, 3D pozadí planetária, animované gradientní pozadí a produktovou stránku se Splinem — pokaždé s ohledem na telefony, přístupnost a omezený pohyb.\n\n**Předpoklady:** moduly a `async`/`await`, DOM a `IntersectionObserver`, pozicování v CSS a `prefers-reduced-motion`. Pro lab se Splinem v Reactu i `useEffect`, `useRef` a `Suspense`.",
+  "modules": [
+    "threejs-zaklady",
+    "workshop-konfigurator-lampy",
+    "interakce-a-castice",
+    "workshop-3d-pozadi",
+    "shadery",
+    "lab-shader-pozadi",
+    "spline",
+    "workshop-spline-klavesnice",
+    "lab-spline-react",
+    "kviz"
+  ],
+  "outcomes": [
+    {
+      "text": "Postavíš Three.js scénu s kamerou, objekty, materiály, světly a render smyčkou, která se přizpůsobí velikosti okna i hustotě displeje.",
+      "links": [
+        "web-3d-efekty/threejs-zaklady#scena-kamera-a-renderer",
+        "web-3d-efekty/threejs-zaklady#zmena-velikosti-platna",
+        "web-3d-efekty/workshop-konfigurator-lampy"
+      ]
+    },
+    {
+      "text": "Složíš model z primitiv do skupin s klouby a napojíš ho na HTML tlačítka, otáčení myší a `Raycaster` pro klik a najetí na část.",
+      "links": [
+        "web-3d-efekty/threejs-zaklady#skupiny-rodic-nese-sve-deti",
+        "web-3d-efekty/workshop-konfigurator-lampy/014",
+        "web-3d-efekty/workshop-konfigurator-lampy/015"
+      ]
+    },
+    {
+      "text": "Rozpohybuješ scénu podle myši a scrollu s plynulým dojezdem a vytvoříš tisíce částic jedním objektem `Points` nebo stovky tvarů přes `InstancedMesh`.",
+      "links": [
+        "web-3d-efekty/interakce-a-castice#plynule-natoceni-linearni-interpolace",
+        "web-3d-efekty/interakce-a-castice#castice-jeden-objekt-tisice-bodu",
+        "web-3d-efekty/workshop-3d-pozadi"
+      ]
+    },
+    {
+      "text": "Napíšeš vlastní `ShaderMaterial` s uniformami, gradientem a noise a řídíš ho z JavaScriptu a CSS proměnných.",
+      "links": [
+        "web-3d-efekty/shadery#uniformy-vstup-z-javascriptu",
+        "web-3d-efekty/shadery#noise-nahoda-ktera-plyne",
+        "web-3d-efekty/lab-shader-pozadi"
+      ]
+    },
+    {
+      "text": "Udržíš 3D efekt šetrný k telefonu a přístupný: pixel ratio, draw calls, pauza mimo obrazovku a na skryté kartě, úklid přes `dispose`, omezený pohyb a záloha bez WebGL.",
+      "links": [
+        "web-3d-efekty/interakce-a-castice#vykon-kreslit-mene-a-jen-kdyz-je-na-co-koukat",
+        "web-3d-efekty/interakce-a-castice#bez-webgl-a-s-omezenym-pohybem",
+        "web-3d-efekty/workshop-3d-pozadi/018",
+        "web-3d-efekty/workshop-3d-pozadi/020"
+      ]
+    },
+    {
+      "text": "Rozhodneš mezi Splinem a ručním Three.js a vložíš scénu ze Splinu na web i do Reactu: líně, s náhradním obrázkem a ovládanou z kódu přes jména objektů, proměnné a události.",
+      "links": [
+        "web-3d-efekty/spline#kdy-spline-a-kdy-three-js",
+        "web-3d-efekty/workshop-spline-klavesnice",
+        "web-3d-efekty/lab-spline-react"
+      ]
+    },
+    {
+      "text": "V cizím 3D kódu najdeš a opravíš chybějící přepočet kamery, pohyb bez času snímku, únik paměti a načítání scény, které obchází líné načítání.",
+      "links": [
+        "web-3d-efekty/workshop-konfigurator-lampy/010",
+        "web-3d-efekty/workshop-3d-pozadi/011",
+        "web-3d-efekty/workshop-spline-klavesnice/015",
+        "web-3d-efekty/kviz"
+      ]
+    }
+  ]
+}

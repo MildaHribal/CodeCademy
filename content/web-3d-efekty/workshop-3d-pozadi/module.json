@@ -1,0 +1,1 @@
+{ "type": "workshop", "title": "3D pozadí hero sekce planetária", "summary": "Postavíš úvodní sekci planetária s rotujícím Saturnem, hvězdným polem z tisíců částic a kamerou, která plyne za myší a odjíždí při scrollu, šetrně k telefonu i k omezenému pohybu.", "minutes": 70, "runtime": "dom", "libs": ["three"] }
