@@ -1,0 +1,67 @@
+{
+  "title": "Přístupnost",
+  "intro": "Web, který jde používat jen myší a očima, ztratí zákazníky: uživatele čteček, lidi s třesem rukou, se zvětšenou stránkou, se sluncem na displeji. Od roku 2025 je přístupnost u e-shopů a služeb v EU navíc povinná ze zákona. V téhle sekci se naučíš dívat na stránku tak, jak ji vidí čtečka a klávesnice, a opravovat ji hlavně správným HTML, ne kódem navíc.\n\nNejdřív zjistíš, kdo web používá jinak a co chce WCAG, pak co z tvého HTML dostane čtečka (role, přístupné jméno a stav) a jak se po stránce pohybuje klávesnice. S tím opravíš e-shop pražírny kávy, který šel ovládat jen myší. Po lekci o ARIA uděláš samostatný audit webu veterinární kliniky a nakonec postavíš vlastní portfolio o třech stránkách, v Gitu po malých commitech a nasazené na veřejnou adresu.\n\nPředpoklad: umíš napsat stránku a formulář v HTML a znáš základy CSS včetně `:focus-visible`.",
+  "modules": [
+    "proc-pristupnost",
+    "strom-pristupnosti",
+    "klavesnice-a-fokus",
+    "workshop-oprava-pristupnosti",
+    "aria-vzory",
+    "lab-audit",
+    "kviz",
+    "projekt-portfolio-html"
+  ],
+  "outcomes": [
+    {
+      "text": "Projdeš stránku klávesnicí a čtečkou a popíšeš, co uživatel uslyší a kde se zasekne.",
+      "links": [
+        "html-pristupnost/proc-pristupnost#vyzkousej-si-to-sam",
+        "html-pristupnost/proc-pristupnost#jak-ctecka-stranku-cte",
+        "html-pristupnost/klavesnice-a-fokus#co-dostane-fokus-a-jak-se-ovlada"
+      ]
+    },
+    {
+      "text": "U libovolného prvku určíš roli a přístupné jméno a ověříš je v DevTools na kartě Accessibility.",
+      "links": [
+        "html-pristupnost/strom-pristupnosti#pristupne-jmeno-a-jak-se-pocita",
+        "html-pristupnost/strom-pristupnosti#panel-accessibility-v-devtools"
+      ]
+    },
+    {
+      "text": "Najdeš a opravíš nejčastější chyby: chybějící `alt` a popisky, klikací `div`, přeskakující nadpisy, chybějící oblasti a neviditelný fokus.",
+      "links": [
+        "html-pristupnost/workshop-oprava-pristupnosti",
+        "html-pristupnost/lab-audit",
+        "html-pristupnost/proc-pristupnost#sest-nejcastejsich-chyb"
+      ]
+    },
+    {
+      "text": "Rozhodneš, kdy ARIA pomůže (`aria-expanded`, `aria-current`, `role=\"status\"`) a kdy stačí nebo je lepší nativní HTML.",
+      "links": [
+        "html-pristupnost/strom-pristupnosti#prvni-pravidlo-aria",
+        "html-pristupnost/aria-vzory#vzory-z-apg-a-kdy-je-html-uz-ma",
+        "html-pristupnost/aria-vzory#oznameni-role-status-a-role-alert"
+      ]
+    },
+    {
+      "text": "Schováš obsah správně pro oči, pro čtečku nebo pro oba a vysvětlíš, proč `aria-hidden` nepatří na ovládací prvek.",
+      "links": [
+        "html-pristupnost/aria-vzory#skryt-pro-oci-pro-ctecku-nebo-pro-oba",
+        "html-pristupnost/aria-vzory#past-aria-hidden-na-prvku-ktery-dostane-fokus"
+      ]
+    },
+    {
+      "text": "Ověříš kontrast textu a obrysu fokusu a víš, kde leží hranice 4,5 : 1 a 3 : 1.",
+      "links": [
+        "html-pristupnost/proc-pristupnost#sest-nejcastejsich-chyb",
+        "html-pristupnost/klavesnice-a-fokus#viditelny-fokus"
+      ]
+    },
+    {
+      "text": "Postavíš přístupný web o několika stránkách a zveřejníš ho po malých commitech na vlastní adrese.",
+      "links": [
+        "html-pristupnost/projekt-portfolio-html"
+      ]
+    }
+  ]
+}

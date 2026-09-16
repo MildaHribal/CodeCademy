@@ -56,7 +56,7 @@ input { font: inherit; padding: 0.4rem; border: 1px solid #a8a29e; border-radius
 
 Dvě chyby najednou. Pravidlo `*:focus { outline: none; }` smazalo obrys, takže po třetím Tabu netušíš, kde jsi. A „Odebírat" je `div`, na který se Tabem vůbec nedostaneš. Smaž řádek s `outline: none` a změň `div` na `<button type="button">` — obě chyby zmizí bez jediného řádku navíc.
 
-**Fokus** (*focus*) je místo, kam právě míří klávesnice: prvek, do kterého se píše nebo který Enter zmáčkne. V každé chvíli ho má nejvýš jeden prvek na stránce a JavaScript ho najde v `document.activeElement`.
+**[[fokus|Fokus]]** (*focus*) je místo, kam právě míří klávesnice: prvek, do kterého se píše nebo který Enter zmáčkne. V každé chvíli ho má nejvýš jeden prvek na stránce a JavaScript ho najde v `document.activeElement`.
 
 > [!REMEMBER]
 > **Fokus jde jen po ovládacích prvcích, v pořadí, v jakém stojí v HTML, a uživatel musí pořád vidět, kde je.** Nativní odkazy, tlačítka a pole tohle umí sama — dokud to nerozbiješ.
@@ -239,7 +239,7 @@ Akce na současné stránce je tlačítko. Odkaz by sliboval, že vede jinam, a 
 
 ## Odkaz „Přeskočit na obsah"
 
-Uživatel klávesnice by musel na každé stránce projít celou hlavičku a menu, než se dostane k obsahu. Proto první prvek stránky bývá **odkaz „Přeskočit na obsah"** (*skip link*): skrytý, dokud nedostane fokus, a vedoucí na kotvu hlavního obsahu.
+Uživatel klávesnice by musel na každé stránce projít celou hlavičku a menu, než se dostane k obsahu. Proto první prvek stránky bývá **[[odkaz Přeskočit na obsah|odkaz „Přeskočit na obsah"]]** (*skip link*): skrytý, dokud nedostane fokus, a vedoucí na kotvu hlavního obsahu.
 
 :::live
 ```html

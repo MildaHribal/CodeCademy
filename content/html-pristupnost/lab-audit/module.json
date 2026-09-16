@@ -1,0 +1,1 @@
+{ "type": "lab", "title": "Audit přístupnosti", "summary": "Samostatně projdeš web veterinární kliniky klávesnicí a v DevTools, najdeš deset skrytých chyb přístupnosti a opravíš je tak, aby se na vyšetření objednal i uživatel čtečky.", "minutes": 70, "runtime": "dom" }

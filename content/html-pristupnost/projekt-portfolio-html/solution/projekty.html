@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="cs">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Projekty — Ondřej Kovář</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#obsah">Přeskočit na obsah</a>
+
+    <header class="site-header">
+      <a class="site-header__name" href="index.html">Ondřej Kovář</a>
+      <nav aria-label="Hlavní menu">
+        <ul class="menu">
+          <li><a href="index.html">Úvod</a></li>
+          <li><a href="projekty.html" aria-current="page">Projekty</a></li>
+          <li><a href="kontakt.html">Kontakt</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="obsah" tabindex="-1">
+      <h1>Projekty</h1>
+      <p>Tři práce, na kterých je nejlíp vidět, jak přemýšlím o HTML a přístupnosti.</p>
+
+      <article class="project">
+        <h2>E-shop pražírny Zrnko</h2>
+        <p>Z obchodu, který šel ovládat jen myší, jsem udělal stránku pro klávesnici i čtečku: tlačítka místo klikacích bloků, osnova nadpisů, ohlášení košíku a viditelný fokus.</p>
+        <p class="project__tags">HTML · ARIA · přístupnost</p>
+        <a href="https://github.com/ondrejkovar-dev/prazirna-zrnko">Zdrojový kód e-shopu Zrnko na GitHubu</a>
+      </article>
+
+      <article class="project">
+        <h2>Audit webu veterinární kliniky</h2>
+        <p>Samostatný audit: deset chyb od chybějícího jazyka po formulář, který nešel odeslat klávesnicí. Ke každé opravě jsem sepsal, komu pomůže.</p>
+        <p class="project__tags">audit · formuláře · DevTools</p>
+        <a href="https://github.com/ondrejkovar-dev/audit-tlapka">Zpráva z auditu kliniky Tlapka</a>
+      </article>
+
+      <article class="project">
+        <h2>Digitální vizitka</h2>
+        <p>Vizitka s design tokeny, přechodem při najetí myší a výrazným obrysem pro klávesnici.</p>
+        <p class="project__tags">CSS · tokeny</p>
+        <a href="https://github.com/ondrejkovar-dev/vizitka">Zdrojový kód digitální vizitky</a>
+      </article>
+    </main>
+
+    <footer class="site-footer">
+      <p>© 2026 Ondřej Kovář · <a href="https://github.com/ondrejkovar-dev">Můj GitHub</a></p>
+    </footer>
+  </body>
+</html>

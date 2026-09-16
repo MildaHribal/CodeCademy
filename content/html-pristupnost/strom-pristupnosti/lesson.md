@@ -66,7 +66,7 @@ Pro čtečku jsou to ale tři úplně jiné věci:
 | `<span class="btn">Do košíku</span>` | obyčejný text „Do košíku", nic se tu nedá zmáčknout |
 | `<button>` jen s ikonou | tlačítko **bez jména** |
 
-Prohlížeč vedle DOM staví ještě jeden strom: **strom přístupnosti** (*accessibility tree*). Vynechá z něj, co nic nesděluje (obalové `div` bez obsahu, skryté prvky), a u každého uzlu drží pár údajů. Přes rozhraní operačního systému si ho pak čte čtečka, hlasové ovládání i nástroje na automatické testy.
+Prohlížeč vedle DOM staví ještě jeden strom: **[[strom přístupnosti]]** (*accessibility tree*). Vynechá z něj, co nic nesděluje (obalové `div` bez obsahu, skryté prvky), a u každého uzlu drží pár údajů. Přes rozhraní operačního systému si ho pak čte čtečka, hlasové ovládání i nástroje na automatické testy.
 
 > [!REMEMBER]
 > **Čtečka nepracuje s tím, co vidíš, ale se stromem přístupnosti — a v něm má každý prvek roli, přístupné jméno a stav.** Když některý z těch tří údajů chybí nebo lže, uživatel čtečky prvek nepozná nebo nepoužije.
@@ -97,7 +97,7 @@ Kurzor myši je čistě vizuální. Čtečka ani klávesnice o něm nevědí.
 
 ## Role: čím prvek je
 
-**Role** (*role*) říká, jaký druh ovládacího prvku nebo obsahu uzel je. Většina prvků HTML ji má vestavěnou, říká se jí implicitní role:
+**Role** (*role*) říká, jaký druh ovládacího prvku nebo obsahu uzel je. Většina prvků HTML ji má vestavěnou, říká se jí [[implicitní role]]:
 
 | HTML | role | čtečka ohlásí zhruba |
 |---|---|---|
@@ -145,7 +145,7 @@ generic
 
 ## Přístupné jméno a jak se počítá
 
-**Přístupné jméno** (*accessible name*) je text, podle kterého uživatel prvek pozná a hlasové ovládání ho najde. Prohlížeč ho počítá podle pevného pořadí a použije **první zdroj, který něco dá**:
+**[[přístupné jméno|Přístupné jméno]]** (*accessible name*) je text, podle kterého uživatel prvek pozná a hlasové ovládání ho najde. Prohlížeč ho počítá podle pevného pořadí a použije **první zdroj, který něco dá**:
 
 1. `aria-labelledby="id1 id2"` — text prvků s těmi `id`, spojený mezerou.
 2. `aria-label="…"` — text přímo v atributu.
@@ -294,7 +294,7 @@ Kdyby ve stromu nebylo, DevTools by u něj roli `button` neukázaly. Je tam, jen
 
 ## První pravidlo ARIA
 
-**ARIA** (*Accessible Rich Internet Applications*) je sada atributů `role` a `aria-*`, kterými přepíšeš nebo doplníš roli, jméno a stav ve stromu přístupnosti. Zní to jako univerzální oprava. Není.
+**[[ARIA]]** (*Accessible Rich Internet Applications*) je sada atributů `role` a `aria-*`, kterými přepíšeš nebo doplníš roli, jméno a stav ve stromu přístupnosti. Zní to jako univerzální oprava. Není.
 
 ARIA **mění jen strom přístupnosti, nic jiného**. `role="button"` na `div` řekne čtečce „tlačítko", ale prvek se nedostane do pořadí Tabu, nezmáčkne se Enterem ani mezerníkem a neodešle formulář. Slíbí něco, co nesplní.
 
@@ -319,7 +319,7 @@ body { font-family: system-ui, sans-serif; margin: 1rem; }
 
 Obě varianty vypadají stejně a čtečka obě ohlásí jako tlačítko. Klikni do náhledu a zkus Tab a Enter: dostaneš se jen na to pravé.
 
-Proto platí **první pravidlo ARIA**: když existuje prvek nebo atribut HTML, který už má roli, jméno, stav a chování, které potřebuješ, použij ho místo ARIA. `button` místo `role="button"`, `nav` místo `role="navigation"`, `<input type="checkbox">` místo `role="checkbox"`. ARIA přijde na řadu, až když HTML odpovídající prvek nemá — třeba u stavu `aria-expanded` nebo u oznámení, které má čtečka přečíst sama.
+Proto platí **[[první pravidlo ARIA]]**: když existuje prvek nebo atribut HTML, který už má roli, jméno, stav a chování, které potřebuješ, použij ho místo ARIA. `button` místo `role="button"`, `nav` místo `role="navigation"`, `<input type="checkbox">` místo `role="checkbox"`. ARIA přijde na řadu, až když HTML odpovídající prvek nemá — třeba u stavu `aria-expanded` nebo u oznámení, které má čtečka přečíst sama.
 
 > [!REMEMBER]
 > **Špatná ARIA je horší než žádná.** ARIA jen slibuje; klávesnici, fokus a chování musíš dodat sám, a nativní prvek to všechno umí zadarmo.

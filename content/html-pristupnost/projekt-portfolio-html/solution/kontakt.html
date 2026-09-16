@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="cs">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kontakt — Ondřej Kovář</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#obsah">Přeskočit na obsah</a>
+
+    <header class="site-header">
+      <a class="site-header__name" href="index.html">Ondřej Kovář</a>
+      <nav aria-label="Hlavní menu">
+        <ul class="menu">
+          <li><a href="index.html">Úvod</a></li>
+          <li><a href="projekty.html">Projekty</a></li>
+          <li><a href="kontakt.html" aria-current="page">Kontakt</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main id="obsah" tabindex="-1">
+      <h1>Kontakt</h1>
+      <p>Hledám první místo nebo stáž ve frontendu. Napiš mi, ozvu se do dvou pracovních dnů.</p>
+
+      <form class="contact">
+        <label for="contact-name">Jméno</label>
+        <input id="contact-name" name="name" type="text" autocomplete="name" required>
+
+        <label for="contact-email">E-mail</label>
+        <input id="contact-email" name="email" type="email" autocomplete="email" aria-describedby="contact-email-hint" required>
+        <p id="contact-email-hint" class="hint">Odpovím na tuhle adresu, nikam jinam ji nedám.</p>
+
+        <label for="contact-message">Zpráva</label>
+        <textarea id="contact-message" name="message" rows="5" required></textarea>
+
+        <button type="submit" class="button">Odeslat zprávu</button>
+      </form>
+
+      <h2>Jinde na webu</h2>
+      <ul>
+        <li><a href="mailto:ondrej.kovar@example.cz">Napsat e-mail na ondrej.kovar@example.cz</a></li>
+        <li><a href="https://www.linkedin.com/in/ondrejkovar-dev">Profil na LinkedInu</a></li>
+      </ul>
+    </main>
+
+    <footer class="site-footer">
+      <p>© 2026 Ondřej Kovář · <a href="https://github.com/ondrejkovar-dev">Můj GitHub</a></p>
+    </footer>
+  </body>
+</html>

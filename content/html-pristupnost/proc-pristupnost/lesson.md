@@ -131,7 +131,7 @@ Nejde jen o lidi s trvalým postižením. Stejnou překážku potká člověk s 
 
 A čím web ovládají:
 
-- **Čtečka obrazovky** (*screen reader*) čte stránku nahlas nebo na hmatový braillský řádek. Nejpoužívanější jsou JAWS a NVDA na Windows, VoiceOver v macOS a iOS, TalkBack v Androidu a Orca v Linuxu.
+- **[[čtečka obrazovky|Čtečka obrazovky]]** (*screen reader*) čte stránku nahlas nebo na hmatový braillský řádek. Nejpoužívanější jsou JAWS a NVDA na Windows, VoiceOver v macOS a iOS, TalkBack v Androidu a Orca v Linuxu.
 - **Klávesnice** místo myši: Tab, Shift+Tab, Enter, mezerník, šipky. Používají ji i lidé s třesem rukou a lidé ovládající počítač jedním tlačítkem (*switch*).
 - **Zvětšení**: zoom prohlížeče na 200–400 %, lupa systému, větší písmo.
 - **Hlasové ovládání**: uživatel řekne „klikni na Do košíku" a funguje to, jen když se prvek doopravdy jmenuje „Do košíku".
@@ -215,7 +215,7 @@ Na stránce nastavíš zoom na 400 % a objeví se vodorovný posuvník, takže t
 Uživatel čtečky nevidí rozvržení, ale nemusí poslouchat stránku odshora dolů. Čtečka mu z HTML sestaví přehledy a on mezi nimi skáče:
 
 - **Nadpisy** (v NVDA klávesa H, číslice 1–6 pro úroveň): osnova stránky. Proto `h1`–`h6` nesmí přeskakovat úrovně a velký tučný `div` nadpis není.
-- **Oblasti stránky** neboli landmarky (*landmarks*): `header`, `nav`, `main`, `footer`. Uživatel skočí rovnou na hlavní obsah nebo do navigace.
+- **Oblasti stránky** neboli [[landmark|landmarky]] (*landmarks*): `header`, `nav`, `main`, `footer`. Uživatel skočí rovnou na hlavní obsah nebo do navigace.
 - **Seznam odkazů** (v NVDA Insert+F7, ve VoiceOveru rotor): všechny odkazy pod sebou **bez okolního textu**. Tři odkazy „Více" tam zní jako „Více, Více, Více".
 - **Tabulátor**: jen prvky, které jde ovládat, a u každého jeho druh a jméno.
 
@@ -269,7 +269,7 @@ Automatická kontrola milionu webů (WebAIM Million, únor 2026) našla u 95,9 %
 | prázdné tlačítko | 30,6 % | čtečky, hlasové ovládání | text tlačítka, u ikony skryté jméno |
 | chybějící jazyk dokumentu | 13,5 % | čtečky | `<html lang="cs">` |
 
-**Kontrast** je poměr jasu textu a pozadí, od 1 : 1 (bílá na bílé) po 21 : 1 (černá na bílé). Běžný text potřebuje aspoň 4,5 : 1, velký text (od 24 px, nebo od 18,5 px tučně) aspoň 3 : 1. Porovnej tutéž cenu ve dvou odstínech šedé:
+**[[kontrast|Kontrast]]** je poměr jasu textu a pozadí, od 1 : 1 (bílá na bílé) po 21 : 1 (černá na bílé). Běžný text potřebuje aspoň 4,5 : 1, velký text (od 24 px, nebo od 18,5 px tučně) aspoň 3 : 1. Porovnej tutéž cenu ve dvou odstínech šedé:
 
 :::compare
 ```html
@@ -320,7 +320,7 @@ Prázdný `alt` říká „tenhle obrázek nic nesděluje" a čtečka ho přesko
 
 ## WCAG 2.2 ve zkratce
 
-Co je „přístupné", popisují pravidla **WCAG** (*Web Content Accessibility Guidelines*) organizace W3C. Aktuální verze 2.2 je od roku 2023 doporučením W3C a od října 2025 i mezinárodní normou ISO/IEC 40500:2025.
+Co je „přístupné", popisují pravidla **[[WCAG]]** (*Web Content Accessibility Guidelines*) organizace W3C. Aktuální verze 2.2 je od roku 2023 doporučením W3C a od října 2025 i mezinárodní normou ISO/IEC 40500:2025.
 
 WCAG stojí na čtyřech principech, zkratka **POUR**:
 

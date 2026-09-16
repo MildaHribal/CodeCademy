@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "ARIA: kdy a jak", "summary": "Pět míst, kde HTML nestačí: skrytí pro oči, pro čtečku nebo pro oba (`.visually-hidden`, `aria-hidden`, `hidden`, `inert`), popis pole přes `aria-describedby`, `aria-current`, oznámení `role=\"status\"` a `role=\"alert\"` a vzory z APG, které HTML už umí samo.", "minutes": 35, "runtime": "dom" }

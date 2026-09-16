@@ -1,0 +1,189 @@
+/* Základní vzhled portfolia. Barvy a písmo si přizpůsob, pravidla pro další prvky doplň sám. */
+
+:root {
+  --color-text: #1f2937;
+  --color-muted: #4b5563;
+  --color-accent: #4338ca;
+  --color-accent-soft: #eef2ff;
+  --color-surface: #ffffff;
+  --color-page: #f8fafc;
+  --color-line: #e5e7eb;
+  --space-s: 0.5rem;
+  --space-m: 1rem;
+  --space-l: 2rem;
+  --radius: 0.75rem;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  max-width: 48rem;
+  margin: 0 auto;
+  padding: 0 var(--space-m) var(--space-l);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--color-text);
+  background: var(--color-page);
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+h1 { font-size: clamp(2rem, 6vw, 2.75rem); }
+
+a {
+  color: var(--color-accent);
+  text-underline-offset: 0.2em;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+main:focus {
+  outline: none;
+}
+
+.skip-link {
+  position: absolute;
+  top: -4rem;
+  left: var(--space-m);
+  padding: var(--space-s) var(--space-m);
+  border-radius: 0 0 var(--radius) var(--radius);
+  background: var(--color-accent);
+  color: var(--color-surface);
+  transition: top 150ms ease;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+.site-header {
+  padding: var(--space-m) 0;
+  border-bottom: 1px solid var(--color-line);
+}
+
+.site-header__name {
+  font-weight: 800;
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.menu {
+  margin: var(--space-s) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.menu li {
+  display: inline-block;
+  margin-right: var(--space-m);
+}
+
+.menu a {
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.menu a:hover,
+.menu a[aria-current="page"] {
+  text-decoration: underline;
+  text-decoration-thickness: 3px;
+}
+
+.intro {
+  padding: var(--space-l) 0;
+}
+
+.intro__avatar {
+  border-radius: 50%;
+}
+
+.intro__lead {
+  font-size: 1.25rem;
+  color: var(--color-muted);
+}
+
+.button {
+  display: inline-block;
+  padding: 0.6rem 1.2rem;
+  border: 0;
+  border-radius: var(--radius);
+  background: var(--color-accent);
+  color: var(--color-surface);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 150ms ease, transform 150ms ease;
+}
+
+.button:hover {
+  background: #3730a3;
+  transform: translateY(-1px);
+}
+
+.project {
+  margin-bottom: var(--space-m);
+  padding: var(--space-m) var(--space-l) var(--space-l);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  box-shadow: 0 1px 2px rgb(31 41 55 / 0.06);
+}
+
+.project__tags {
+  font-size: 0.875rem;
+  color: var(--color-muted);
+}
+
+.contact label {
+  display: block;
+  margin-top: var(--space-m);
+  font-weight: 600;
+}
+
+.contact input,
+.contact textarea {
+  display: block;
+  width: 100%;
+  max-width: 28rem;
+  margin-top: 0.25rem;
+  padding: var(--space-s) 0.75rem;
+  border: 1px solid #6b7280;
+  border-radius: 0.5rem;
+  font: inherit;
+}
+
+.hint {
+  margin: 0.25rem 0 0;
+  font-size: 0.875rem;
+  color: var(--color-muted);
+}
+
+.contact .button {
+  margin-top: var(--space-l);
+}
+
+.site-footer {
+  margin-top: var(--space-l);
+  padding-top: var(--space-m);
+  border-top: 1px solid var(--color-line);
+  color: var(--color-muted);
+}
