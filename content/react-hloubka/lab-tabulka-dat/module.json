@@ -1,0 +1,1 @@
+{ "type": "lab", "title": "Tabulka dat", "summary": "Samostatně postavíš tabulku s filtrem, řazením, stránkováním a výběrem řádků nad jedním reducerem.", "minutes": 70, "runtime": "react" }

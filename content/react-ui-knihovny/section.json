@@ -1,0 +1,10 @@
+{
+  "title": "UI knihovny a animace v Reactu",
+  "intro": "Rozepsaná sekce.",
+  "modules": [
+    "tailwind-v-reactu",
+    "workshop-sada-komponent",
+    "shadcn-a-radix",
+    "workshop-pristupne-komponenty"
+  ]
+}

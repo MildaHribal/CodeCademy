@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Reducer a kontext", "summary": "Zvládneš složitější stav jedním reducerem a rozvedeš ho kontextem bez protahování props.", "minutes": 50, "runtime": "react" }

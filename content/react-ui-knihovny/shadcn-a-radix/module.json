@@ -1,0 +1,8 @@
+{
+  "type": "lesson",
+  "title": "shadcn/ui a Radix primitivy",
+  "summary": "Pochopíš, co za tebe řeší přístupné primitivum a proč shadcn/ui kopíruje kód do repozitáře.",
+  "minutes": 50,
+  "runtime": "react",
+  "libs": ["tailwind"]
+}

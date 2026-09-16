@@ -117,3 +117,11 @@ aliases: zvednout stav, zvednutí stavu nahoru, zvednutého stavu
 lekce: react-zaklady/udalosti-a-formulare#zvednuti-stavu
 
 Přesun stavu do nejbližšího společného rodiče komponent, které ho potřebují. Rodič ho posílá dolů v props spolu s funkcí, kterou ho potomek změní.
+
+## --term-- hook
+
+en: hook
+aliases: hooku, hooky, hooků, hookem, hookům
+lekce: react-zaklady/stav-jako-snimek#stav-v-usestate
+
+Funkce Reactu, která komponentě půjčuje jeho schopnosti — paměť mezi rendery, kontext, referenci. Pozná se podle předpony `use` a volá se vždy nahoře v těle komponenty, nikdy v podmínce ani v cyklu.

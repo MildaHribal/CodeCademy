@@ -1,0 +1,1 @@
+{ "type": "quiz", "title": "Kvíz: React do hloubky", "summary": "Rerender, závislosti efektu, úklid, refy, kontext a Suspense na čtení cizího kódu.", "minutes": 25, "runtime": "react" }

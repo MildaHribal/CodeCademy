@@ -1,0 +1,10 @@
+{
+  "type": "workshop",
+  "title": "Nastavení účtu hudební služby",
+  "summary": "Postavíš stránku nastavení se záložkami, menu, dialogem a přepínači nad Radix primitivy a ověříš ji klávesnicí.",
+  "minutes": 70,
+  "runtime": "react",
+  "libs": [
+    "tailwind"
+  ]
+}

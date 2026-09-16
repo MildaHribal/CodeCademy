@@ -6,22 +6,22 @@ věc: jedna komponenta, pár variant, a zvenku se dá dostylovat. Tahle lekce je
 tom, jak takovou komponentu napsat, aby se její třídy nepřebíjely náhodou.
 
 :::check pretest
-Komponenta `Button` má v sobě `className="px-4 py-2"`. Zavoláš ji jako
-`<Button className="px-8">Rezervovat</Button>` a obě třídy skončí v atributu
-`class`. Jaké bude vnitřní odsazení vlevo?
+Komponenta `Smazat` má v sobě `className="bg-red-600"`. Zavoláš ji jako
+`<Smazat className="bg-emerald-600">` a obě třídy skončí v atributu `class`.
+Jakou barvu bude mít pozadí?
 
 ### --answer--
-32 px — třída z props je v atributu napsaná později, takže vyhraje.
+Zelenou — třída z props je v atributu napsaná později, takže vyhraje.
 
 #### --why--
-Pořadí jmen v atributu `class` prohlížeč neřeší. Rozhoduje se jinde.
+Pořadí jmen v atributu `class` prohlížeč vůbec neřeší. Rozhoduje se jinde.
 
 ### --correct--
-16 px — `px-4` vyhraje, i když je v atributu napsaná dřív.
+Červenou — `bg-red-600` vyhraje, i když je v atributu napsaná dřív.
 :::
 
 :::check pretest
-Proč by v komponentě nestačilo napsat `` className={`bg-${tone}-600`} ``
+Proč by v ostrém projektu nestačilo napsat `` className={`bg-${tone}-600`} ``
 a barvu si tak složit z props?
 
 ### --answer--
@@ -32,7 +32,7 @@ a barvu si tak složit z props?
 ne v Reactu.
 
 ### --correct--
-Takový název třídy nikdy nebyl v žádném souboru, takže pro něj nevznikne CSS.
+Při buildu takový název ve zdrojových souborech nikdo nenajde, takže pro něj nevznikne CSS.
 :::
 
 ## Problém: stejný blok tříd na pěti místech
@@ -131,41 +131,42 @@ Co vrátí `clsx('px-4', undefined, { 'text-white': false, 'font-bold': true })`
 px-4 font-bold
 :::
 
-## Proč `px-8` z props nevyhraje
+## Kdo vyhraje, z JSX nepoznáš
 
 Tohle je ta past, kvůli které lidé Tailwind v komponentách nenávidí. Komponenta
-má v sobě `px-4`, volající pošle `px-8` — a vyhraje `px-4`.
+má v sobě barvu a odsazení, volající pošle jinou barvu a jiné odsazení — a projde
+jen půlka.
 
 :::live react libs=tailwind predict
 ```jsx
 import { clsx } from 'clsx';
 
-function Button({ className, children }) {
-  return <button className={clsx('rounded-lg bg-emerald-600 px-4 py-2 text-white', className)}>{children}</button>;
+function Smazat({ className, children }) {
+  return <button className={clsx('rounded-lg bg-red-600 px-4 py-2 text-white', className)}>{children}</button>;
 }
 
 export default function App() {
   return (
     <div className="p-6">
-      <Button className="px-8">Rezervovat</Button>
+      <Smazat className="bg-emerald-600 px-8">Smazat rezervaci</Smazat>
     </div>
   );
 }
 ```
---question-- Tlačítko má v atributu `class` napsané `px-4` a za ním `px-8`. Jak velké bude jeho vnitřní odsazení vlevo?
---option-- 32 px — `px-8` je v atributu napsaná později, takže přebije `px-4`.
---option*-- 16 px — o vítězi rozhoduje pořadí pravidel ve vygenerovaném CSS, ne v atributu.
---option-- 48 px — odsazení se sečte: 16 px z komponenty plus 32 px z props.
---why-- Obě třídy mají stejnou specificitu, takže vyhraje ta, která je v CSS souboru níž. Tailwind generuje utility v pevném pořadí podle velikosti, a `px-4` je až za `px-8`. Atribut `class` je jen seznam jmen, jeho pořadí prohlížeč ignoruje — viz [pořadí ve zdroji](see:css-kaskada/kaskada#poradi-ve-zdroji).
+--question-- Komponenta má natvrdo `bg-red-600 px-4`, zvenku dostala `bg-emerald-600 px-8`. Jak bude tlačítko vypadat?
+--option-- Zelené a široké — třídy z props jsou v atributu později, takže přebijí obě.
+--option*-- Červené a široké — u barvy vyhraje komponenta, u odsazení props.
+--option-- Zelené a úzké — pro každou vlastnost vyhraje ta třída, která přišla dřív.
+--why-- Obě dvojice tříd mají stejnou specificitu, takže rozhoduje pořadí pravidel ve vygenerovaném CSS — viz [pořadí ve zdroji](see:css-kaskada/kaskada#poradi-ve-zdroji). Tailwind si utility řadí po svém: `.px-4` je v souboru dřív než `.px-8` (a `px-8` tedy vyhraje), zato `.bg-emerald-600` je dřív než `.bg-red-600` (a vyhraje červená). Atribut `class` je jen neuspořádaný seznam jmen; jeho pořadí prohlížeč ignoruje.
 :::
 
-Poslední možnost mimochodem popisuje jinou domněnku: že se hodnoty utilit
-sčítají. Nesčítají — jsou to obyčejné deklarace `padding-inline` a druhá první
-prostě přebije.
+Zapamatovatelné pravidlo z toho neuděláš: `px-8` prošlo, `bg-emerald-600` ne.
+Který název je ve vygenerovaném CSS dřív, není tvoje věc a mezi verzemi
+Tailwindu se to může změnit. ==Z JSX to prostě nepoznáš.==
 
 > [!PITFALL]
-> Příznak: `<Button className="px-8">` vypadá stejně jako bez `className` a v
-> DevTools je `px-8` **přeškrtnutá**. Nepomůže přesunout `className` v `clsx`
+> Příznak: `<Smazat className="bg-emerald-600">` je pořád červené a v DevTools
+> je `bg-emerald-600` **přeškrtnutá**. Nepomůže přesunout `className` v `clsx`
 > na konec ani vymýšlet vyšší specificitu. Pomůže jedině tu původní třídu ze
 > seznamu **odebrat** — a přesně to dělá `tailwind-merge`.
 
@@ -231,27 +232,27 @@ function cn(...inputs) {
 }
 
 function Bez({ className, children }) {
-  return <button className={clsx('rounded-lg bg-emerald-600 px-4 py-2 text-white', className)}>{children}</button>;
+  return <button className={clsx('rounded-lg bg-red-600 px-4 py-2 text-white', className)}>{children}</button>;
 }
 
 function S({ className, children }) {
-  return <button className={cn('rounded-lg bg-emerald-600 px-4 py-2 text-white', className)}>{children}</button>;
+  return <button className={cn('rounded-lg bg-red-600 px-4 py-2 text-white', className)}>{children}</button>;
 }
 
 export default function App() {
   return (
     <div className="flex items-start gap-4 p-6">
-      <Bez className="px-8">Bez úklidu</Bez>
-      <S className="px-8">Po úklidu</S>
+      <Bez className="bg-emerald-600">Bez úklidu</Bez>
+      <S className="bg-emerald-600">Po úklidu</S>
     </div>
   );
 }
 ```
 :::
 
-Obě tlačítka dostala stejné props. Zkus v ukázce přepsat `px-8` na `px-12`
-a sleduj, že se hýbe jen to druhé — v prvním zůstává `px-4` z komponenty a
-přebíjí ho.
+Obě tlačítka dostala stejné props. Zkus v ukázce přepsat `bg-emerald-600` na
+`bg-sky-600` a sleduj, že se přebarví jen to druhé — v prvním zůstává červená
+z komponenty a přebíjí barvu z props.
 
 :::explain
 Vysvětli vlastními slovy, proč v komponentě potřebuješ `clsx` **i**
@@ -262,7 +263,7 @@ Vysvětli vlastními slovy, proč v komponentě potřebuješ `clsx` **i**
 hodnoty — řeší, **které** třídy se do atributu dostanou. `tailwind-merge` pak z
 toho řetězce odebere třídy, které si přebíjejí stejnou vlastnost, a nechá
 poslední. Bez něj by v atributu zůstaly obě a vyhrála by ta, která je ve
-vygenerovaném CSS níž — tedy ne nutně ta, kterou posílá volající.
+vygenerovaném CSS níž — a to je pokaždé jiná, podle názvu třídy.
 
 ## --checklist--
 - `clsx` skládá třídy z podmínek a zahazuje `false` a `undefined`.
@@ -296,19 +297,26 @@ function Stitek({ tone = 'volno', className, ...props }) {
 }
 ```
 
-Klíčové je to slovo **celý**. Tailwind hledá názvy tříd ve tvém zdrojovém kódu
-jako text. Když název složíš za běhu, v žádném souboru nikdy nebyl a Tailwind
-pro něj nevygeneruje ani řádek CSS.
+Klíčové je to slovo **celý**. Tailwind v projektu generuje CSS při buildu:
+prochází tvoje zdrojové soubory jako text a vyrobí pravidlo pro každý název
+třídy, který v nich najde. Název složený až za běhu v žádném souboru není,
+takže pro něj nevznikne ani řádek CSS.
 
 > [!PITFALL]
-> Příznak: `` className={`bg-${tone}-100`} `` nedělá vůbec nic — prvek je bez
-> pozadí a v DevTools má třídu `bg-akce-100`, ke které neexistuje žádné
-> pravidlo. Oprava: celé názvy tříd do mapy (`{ akce: 'bg-amber-100' }`), ať je
-> Tailwind najde ve zdrojáku.
+> Příznak v projektu: `` className={`bg-${tone}-100`} `` nedělá vůbec nic —
+> prvek je bez pozadí a v DevTools má třídu `bg-akce-100`, ke které neexistuje
+> žádné pravidlo. Oprava: celé názvy tříd do mapy (`{ akce: 'bg-amber-100' }`),
+> ať je Tailwind najde ve zdrojáku.
+
+> [!NOTE]
+> V náhledu Akademie ti složená třída **zafunguje** — tady Tailwind běží
+> v prohlížeči a kouká se na hotové HTML, ne na zdrojové soubory. Je to rozdíl
+> nástroje, ne pravidla: jakmile stejný kód projde buildem ve Vite, pozadí
+> zmizí. Proto se mapa celých názvů píše i tady.
 
 :::check
-Proč Tailwind nevygeneruje CSS pro třídu, jejíž název vznikne až za běhu
-v šablonovém řetězci?
+Proč se v projektu s buildem nevygeneruje CSS pro třídu, jejíž název vznikne až
+za běhu v šablonovém řetězci?
 
 ### --answer--
 Protože `bg-akce-100` není platný název tailwindové třídy.
@@ -487,7 +495,8 @@ react-ui-knihovny/tailwind-v-reactu#cn-clsx-a-tailwind-merge-v-jednom
 
 ## --question--
 
-Kolega napsal štítek takhle a stěžuje si, že „Tailwind nefunguje":
+Kolega napsal štítek takhle, v náhledu mu fungoval, ale po nasazení projektu
+si stěžuje, že „Tailwind nefunguje":
 
 ```jsx
 <span className={`rounded-full px-2 bg-${barva}-100`}>{text}</span>
@@ -505,9 +514,11 @@ Tailwind ten název ve zdrojových souborech nenajde, takže pro něj nevygeneru
 
 ### --why--
 
-Tailwind prochází zdrojové soubory jako text a generuje CSS jen pro názvy, které
-v nich najde. `bg-${barva}-100` v souboru není, takže pro `bg-akce-100` žádné
-pravidlo nevznikne. Řešení je mapa celých názvů tříd.
+Tailwind při buildu prochází zdrojové soubory jako text a generuje CSS jen pro
+názvy, které v nich najde. `bg-${barva}-100` v souboru není, takže pro
+`bg-akce-100` žádné pravidlo nevznikne. V prohlížečovém náhledu se stejný kód
+tváří dobře, protože tam Tailwind čte hotové HTML — o to zrádnější to je.
+Řešení je mapa celých názvů tříd.
 
 ### --see--
 

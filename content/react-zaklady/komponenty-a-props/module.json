@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Komponenty a props", "summary": "Props jako parametry komponenty, children, seznamy s key a podmíněné vykreslení — a proč props nikdy nepřepisuješ.", "minutes": 35, "runtime": "react" }

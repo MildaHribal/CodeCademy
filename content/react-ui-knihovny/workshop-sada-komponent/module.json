@@ -1,0 +1,10 @@
+{
+  "type": "workshop",
+  "title": "Komponenty rezervačního systému kadeřnictví",
+  "summary": "Postavíš sadu Button, Badge, Card, Input a Avatar s variantami přes cva a z nich stránku s volnými termíny.",
+  "minutes": 60,
+  "runtime": "react",
+  "libs": [
+    "tailwind"
+  ]
+}

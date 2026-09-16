@@ -41,7 +41,7 @@
       "text": "Rozdělíš UI na serverové a klientské komponenty a uhlídáš hranici i tajemství.",
       "links": [
         "next-fullstack/server-a-client-komponenty#use-client-hranice-ne-prepinac",
-        "next-fullstack/server-a-client-komponenty#tajemstvi-a-next-public"
+        "next-fullstack/server-a-client-komponenty#tajemstvi-a-verejne-promenne"
       ]
     },
     {

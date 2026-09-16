@@ -509,8 +509,7 @@ export default function Cart() {
 ### Dva prvky vedle sebe bez obalu
 
 > [!PITFALL]
-> **Komponenta nesmí vrátit dva prvky vedle sebe.** Příznak: kód nejde spustit a hlášení mluví o JSX —
-> `Adjacent JSX elements must be wrapped in an enclosing tag`. Oprava: obal je `<div>`, když ho potřebuješ i ve stylech, nebo [[fragment]] `<>…</>`, když nechceš do stránky přidávat nic.
+> **Komponenta nesmí vrátit dva prvky vedle sebe.** Příznak: kód nejde spustit a chyba ukazuje na řádek s druhým prvkem — v Akademii `Unexpected token, expected ","`, ve vlastním projektu s Vite `Adjacent JSX elements must be wrapped in an enclosing tag`. Oprava: obal je `<div>`, když ho potřebuješ i ve stylech, nebo [[fragment]] `<>…</>`, když nechceš do stránky přidávat nic.
 
 ### Značka bez uzavření
 
@@ -520,7 +519,7 @@ export default function Cart() {
 ### `class` místo `className`
 
 > [!PITFALL]
-> **`class="karta"` React ignoruje** a do konzole napíše `Invalid DOM property 'class'. Did you mean 'className'?` Příznak: prvek je ve stránce, ale bez jediného stylu. Oprava: `className`. Stejně na tom je `for` u `<label>`.
+> **`class="karta"` React do stránky zapíše, ale do konzole napíše `Invalid DOM property 'class'. Did you mean 'className'?`** Od Reactu 19 neznámé atributy propadnou do DOM, takže se styl náhodou použije a chyba se pozná ==jen podle červeného řádku v konzoli==. Oprava: `className`. Stejně na tom je `for` u `<label>`, ze kterého je `htmlFor`.
 
 ### `style` jako text
 

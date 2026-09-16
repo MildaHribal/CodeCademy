@@ -554,3 +554,8 @@ kurzy Joshe Comeaua, výzvy Frontend Mentoru a projekty The Odin Project.
 - **Konec modulu ukáže další krok.** Poslední krok workshopu nebo závěr lekce jednou větou
   řekne, co student postaví dál a co k tomu z právě naučeného použije („Příště z těchhle
   karet uděláš filtrovatelný katalog").
+
+- **Řádek konzole nikdy neporovnávej přes `===` se syrovým textem.** Student může mít
+  neviditelný rozdíl (rozložené `č`, pevná mezera, mezera na konci) a řešení je přitom správné.
+  Použij normalizaci: `const sameLine = (a) => a.normalize('NFC').replace(/ /g, ' ').replace(/\s+/g, ' ').trim();`
+  a porovnávej `sameLine(line.text) === sameLine('…')`.

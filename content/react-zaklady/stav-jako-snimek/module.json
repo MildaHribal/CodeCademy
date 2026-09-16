@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Stav jako snímek", "summary": "useState, proč je stav snímek renderu, funkce aktualizace, dávkování, změny bez mutace a odvozené hodnoty.", "minutes": 40, "runtime": "react" }

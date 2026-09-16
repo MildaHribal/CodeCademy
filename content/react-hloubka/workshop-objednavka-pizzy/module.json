@@ -1,0 +1,1 @@
+{ "type": "workshop", "title": "Objednávka pizzy ve třech krocích", "summary": "Postavíš průvodce objednávkou s reducerem, kontextem a rekapitulací, která počítá cenu.", "minutes": 55, "runtime": "react" }

@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Události a formuláře", "summary": "Obsluha události, řízená pole, select a checkbox, odeslání formuláře a zvednutí stavu do společného rodiče.", "minutes": 40, "runtime": "react" }

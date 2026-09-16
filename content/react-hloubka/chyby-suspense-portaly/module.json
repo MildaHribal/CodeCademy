@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Chyby, Suspense a portály", "summary": "Zachytíš pád komponenty, ukážeš stav načítání přes Suspense a vykreslíš obsah mimo svůj kout stránky.", "minutes": 50, "runtime": "react" }

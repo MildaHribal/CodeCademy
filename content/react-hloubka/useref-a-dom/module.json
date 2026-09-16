@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "useRef a DOM", "summary": "Sáhneš si na prvek ve stránce kvůli fokusu, scrollu a měření a odložíš si hodnotu mimo render.", "minutes": 40, "runtime": "react" }

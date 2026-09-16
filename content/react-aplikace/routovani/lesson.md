@@ -161,7 +161,6 @@ h1 { margin: 0 0 12px; font-size: 1.25rem; }
 ul { margin: 0; padding-left: 20px; }
 a { color: #1f6f4f; text-decoration-thickness: 1px; text-underline-offset: 3px; }
 a:hover { color: #123f2d; }
-:::
 ```
 :::
 

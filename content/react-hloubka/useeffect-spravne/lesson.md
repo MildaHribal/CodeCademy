@@ -531,7 +531,7 @@ přepnutí nastavil `neplatne = true`. Zkus obě doby v `doby` prohodit a sleduj
 jak chyba zmizí — pasti, které závisí na časování, se v testech chytají nejhůř.
 
 Na skutečný `fetch` se hodí `AbortController`; k němu ses dostal v sekci
-[Asynchronní JavaScript](see:js-async/fetch#zruseni-pozadavku-abortcontroller):
+[Asynchronní JavaScript](see:js-async/async-await#zruseni-abortcontroller-a-signal):
 
 ```jsx
 useEffect(() => {
