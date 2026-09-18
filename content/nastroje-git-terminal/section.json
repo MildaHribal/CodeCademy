@@ -1,0 +1,35 @@
+{
+  "title": "Git a terminál do hloubky",
+  "intro": "Základy terminálu a Gitu už ovládáš. Teď se podíváme na nástroje pod kapotou: roury, přesměrování, proměnné prostředí a jak Git reprezentuje commity jako graf. Naučíš se plynule přesouvat mezi větvemi, řešit konflikty při spojování a hlavně zachránit kód z průšvihu, když provedeš něco špatně.\n\n**Předpoklady:** `start-nastroje`\n**Doporučeno předem:** `js-async`",
+  "modules": [
+    "terminal-do-hloubky",
+    "workshop-terminal",
+    "git-model",
+    "workshop-vetve-a-konflikty",
+    "git-zachrana",
+    "lab-git-zachrana",
+    "kviz"
+  ],
+  "outcomes": [
+    {
+      "text": "Skládat příkazy v terminálu rourami a přesměrováním a najít text i soubory.",
+      "links": ["nastroje-git-terminal/terminal-do-hloubky#roury-vystup-jednoho-je-vstup-druheho"]
+    },
+    {
+      "text": "Rozumět PATH, proměnným prostředí, návratovému kódu a procesům na portech.",
+      "links": ["nastroje-git-terminal/terminal-do-hloubky#promenne-prostredi-a-path"]
+    },
+    {
+      "text": "Pracovat s větvemi, vyřešit konflikt a zvolit mezi merge a rebase.",
+      "links": ["nastroje-git-terminal/workshop-vetve-a-konflikty"]
+    },
+    {
+      "text": "Vrátit se z průšvihu přes reset, revert, reflog a najít commit s chybou přes bisect.",
+      "links": ["nastroje-git-terminal/git-zachrana"]
+    },
+    {
+      "text": "Přihlásit se k serveru přes SSH klíč.",
+      "links": ["nastroje-git-terminal/terminal-do-hloubky#ssh-prihlaseni-klicem"]
+    }
+  ]
+}

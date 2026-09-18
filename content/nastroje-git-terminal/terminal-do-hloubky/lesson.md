@@ -35,7 +35,7 @@ o tom, co dělá z terminálu nástroj: proudy, roury, hledání, prostředí a 
 
 ## Tři proudy a návratový kód
 
-Každý spuštěný program dostane od systému tři otevřené [[proud|proudy]]:
+Každý spuštěný program dostane od systému tři otevřené proudy:
 
 | proud | číslo | anglicky | kam jde normálně |
 |---|---|---|---|

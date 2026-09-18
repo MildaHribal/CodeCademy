@@ -120,10 +120,10 @@ $ cat .git/refs/heads/main
 446986f9d316c6a8d0916de9d692d18e930718a9
 ```
 
-- `git branch feature/mapa` vytvoří nový štítek na **stejném** commitu, kde stojíš.
+- `git branch mapa` vytvoří nový štítek na **stejném** commitu, kde stojíš.
 - `git commit` vytvoří commit, jehož rodičem je aktuální commit, a **posune
   aktuální větev** na ten nový. Ostatní větve se nehnou.
-- `git switch feature/mapa` přepne, na kterém štítku stojíš, a přepíše pracovní
+- `git switch mapa` přepne, na kterém štítku stojíš, a přepíše pracovní
   složku podle jeho snímku.
 
 Model si vyzkoušej v obyčejném JavaScriptu. Větve jsou objekt se jmény a hashi,
@@ -134,17 +134,17 @@ Model si vyzkoušej v obyčejném JavaScriptu. Větve jsou objekt se jmény a ha
 const branches = { main: 'c2' };
 let head = 'main';
 
-branches['feature/mapa'] = branches[head];
+branches['mapa'] = branches[head];
 branches[head] = 'c3';
 
-console.log(branches['feature/mapa']);
+console.log(branches['mapa']);
 ```
---question-- Druhý řádek od konce dělá to, co `git commit` na větvi `main`. Na jaký commit ukazuje `feature/mapa`?
+--question-- Druhý řádek od konce dělá to, co `git commit` na větvi `main`. Na jaký commit ukazuje `mapa`?
 --expected-- c2
---why-- Vytvoření větve zkopírovalo hash, ne vazbu na `main`. Commit posune jen větev, na které stojíš (`head`). `feature/mapa` zůstala na `c2` — přesně tak se chová Git.
+--why-- Vytvoření větve zkopírovalo hash, ne vazbu na `main`. Commit posune jen větev, na které stojíš (`head`). `mapa` zůstala na `c2` — přesně tak se chová Git.
 :::
 
-Zkus v ukázce přepnout `head = 'feature/mapa'` před posledním přiřazením a sleduj,
+Zkus v ukázce přepnout `head = 'mapa'` před posledním přiřazením a sleduj,
 která větev se posune.
 
 :::check
@@ -166,11 +166,11 @@ cyklotras krok po kroku. Vlevo jsou jména (větve a `HEAD`), vpravo commity se
 :::memory
 ```sh
 git commit -m "Přidej trasy"
-git switch -c feature/mapa
+git switch -c mapa
 git commit -m "Přidej mapu"
 git switch main
 git commit -m "Oprav patičku"
-git merge feature/mapa
+git merge mapa
 ```
 --step-- 1 | commit posune main
 HEAD = 'main'
@@ -178,29 +178,29 @@ main -> @c2
 @c2: c2 Přidej trasy (rodič @c1)
 @c1: c1 První verze
 --step-- 2 | nový štítek na stejném commitu, HEAD přešel na něj
-HEAD = 'feature/mapa'
+HEAD = 'mapa'
 main -> @c2
-feature/mapa -> @c2
+mapa -> @c2
 @c2: c2 Přidej trasy (rodič @c1)
 @c1: c1 První verze
 --step-- 3 | posune se jen větev, na které stojíš
-HEAD = 'feature/mapa'
+HEAD = 'mapa'
 main -> @c2
-feature/mapa -> @c3
+mapa -> @c3
 @c3: c3 Přidej mapu (rodič @c2)
 @c2: c2 Přidej trasy (rodič @c1)
 @c1: c1 První verze
 --step-- 4 | přepnutí nic nemaže, jen mění HEAD a pracovní složku
 HEAD = 'main'
 main -> @c2
-feature/mapa -> @c3
+mapa -> @c3
 @c3: c3 Přidej mapu (rodič @c2)
 @c2: c2 Přidej trasy (rodič @c1)
 @c1: c1 První verze
 --step-- 5 | historie se rozdělila
 HEAD = 'main'
 main -> @c4
-feature/mapa -> @c3
+mapa -> @c3
 @c4: c4 Oprav patičku (rodič @c2)
 @c3: c3 Přidej mapu (rodič @c2)
 @c2: c2 Přidej trasy (rodič @c1)
@@ -208,8 +208,8 @@ feature/mapa -> @c3
 --step-- 6 | merge commit má dva rodiče
 HEAD = 'main'
 main -> @c5
-feature/mapa -> @c3
-@c5: c5 Merge branch 'feature/mapa' (rodiče @c4 a @c3)
+mapa -> @c3
+@c5: c5 Merge branch 'mapa' (rodiče @c4 a @c3)
 @c4: c4 Oprav patičku (rodič @c2)
 @c3: c3 Přidej mapu (rodič @c2)
 @c2: c2 Přidej trasy (rodič @c1)
@@ -221,9 +221,9 @@ k commitům připíše štítky:
 
 ```text
 $ git log --oneline --graph --all --decorate
-*   446986f (HEAD -> main) Merge branch 'feature/mapa'
+*   446986f (HEAD -> main) Merge branch 'mapa'
 |\
-| * 2ce40c0 (feature/mapa) Přidej mapu
+| * 2ce40c0 (mapa) Přidej mapu
 * | ccc6270 Oprav patičku
 |/
 * 9ea2ba0 Přidej trasy
@@ -353,7 +353,7 @@ nastroje-git-terminal/git-model#vetev-je-ukazatel
 
 ## --question--
 
-Kolik rodičů má commit, který vznikl příkazem `git merge feature/mapa`, když se historie `main` a `feature/mapa` rozdělila?
+Kolik rodičů má commit, který vznikl příkazem `git merge mapa`, když se historie `main` a `mapa` rozdělila?
 
 ### --expected--
 2
