@@ -1,0 +1,7 @@
+{
+  "type": "lesson",
+  "title": "IndexedDB a úložiště",
+  "summary": "IndexedDB",
+  "minutes": 40,
+  "runtime": "dom"
+}

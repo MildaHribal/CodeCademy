@@ -1,0 +1,7 @@
+{
+  "type": "lesson",
+  "title": "SFC, Pinia a Vue Router",
+  "summary": "SFC",
+  "minutes": 40,
+  "runtime": "js"
+}

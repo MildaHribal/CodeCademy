@@ -1,0 +1,7 @@
+{
+  "type": "lab",
+  "title": "Lab: Datoborce",
+  "summary": "Zpracuj data z API do DOMu a ošetři chyby.",
+  "minutes": 60,
+  "runtime": "dom"
+}

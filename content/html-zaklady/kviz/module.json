@@ -1,0 +1,7 @@
+{
+  "type": "quiz",
+  "title": "Kvíz: HTML a web",
+  "summary": "Ověření znalostí.",
+  "minutes": 15,
+  "runtime": "dom"
+}

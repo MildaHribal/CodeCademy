@@ -1,0 +1,7 @@
+{
+  "type": "quiz",
+  "title": "Kvíz: Vue a Nuxt",
+  "summary": "Kvíz",
+  "minutes": 25,
+  "runtime": "js"
+}

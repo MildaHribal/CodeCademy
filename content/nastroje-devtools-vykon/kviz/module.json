@@ -1,0 +1,6 @@
+{
+  "type": "quiz",
+  "title": "Kvíz: DevTools a výkon",
+  "summary": "Ověříš si metriky, výběr panelu, co blokuje vykreslení a příčiny CLS.",
+  "minutes": 20
+}

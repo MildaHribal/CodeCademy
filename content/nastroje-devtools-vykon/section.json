@@ -1,0 +1,30 @@
+{
+  "title": "DevTools a výkon webu",
+  "intro": "Pomalý web ztrácí uživatele. V této sekci se naučíš do hloubky ovládat DevTools a hledat v nich příčiny zpomalení. Změříš a vylepšíš Core Web Vitals, zrychlíš načítání stránky a odstraníš dlouhé úlohy a úniky paměti.\n\n**Předpoklady:** `nastroje-moduly-vite`, `css-animace`",
+  "modules": [
+    "devtools-mapa",
+    "core-web-vitals",
+    "nacitani-stranky",
+    "workshop-zrychleni",
+    "lab-audit-vykonu",
+    "kviz"
+  ],
+  "outcomes": [
+    {
+      "text": "Najdeš příčinu problému přes Elements, Console, Sources, Network, Performance, Memory a Application.",
+      "links": ["devtools-mapa#devtools-do-hloubky"]
+    },
+    {
+      "text": "Změříš Core Web Vitals (LCP, INP, CLS) a vysvětlíš, co je ovlivňuje.",
+      "links": ["core-web-vitals#core-web-vitals"]
+    },
+    {
+      "text": "Zrychlíš načtení stránky (obrázky, písma, blokující skripty, cache).",
+      "links": ["nacitani-stranky#rychle-nacteni"]
+    },
+    {
+      "text": "Rozdělíš dlouhou úlohu a najdeš únik paměti.",
+      "links": ["devtools-mapa#uniky-pameti"]
+    }
+  ]
+}

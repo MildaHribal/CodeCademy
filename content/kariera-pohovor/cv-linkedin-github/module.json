@@ -1,0 +1,7 @@
+{
+  "type": "lesson",
+  "title": "CV, LinkedIn a GitHub",
+  "summary": "CV na jednu stranu, projekty s dopadem, LinkedIn titulek a profilové README na GitHubu.",
+  "minutes": 40,
+  "runtime": "js"
+}

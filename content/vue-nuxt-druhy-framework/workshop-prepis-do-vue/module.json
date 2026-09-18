@@ -1,0 +1,7 @@
+{
+  "type": "workshop",
+  "title": "Počítadlo kalorií ve Vue",
+  "summary": "Přepis do Vue",
+  "minutes": 60,
+  "runtime": "vue"
+}

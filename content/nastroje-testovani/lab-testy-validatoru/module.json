@@ -1,0 +1,1 @@
+{"type": "lab", "title": "Testy pro cizí kód", "summary": "Sám napíšeš sadu testů, která odhalí tři chyby v cizím validátoru.", "minutes": 60, "runtime": "node"}

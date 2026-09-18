@@ -1,0 +1,7 @@
+{
+  "type": "workshop",
+  "title": "Hodnocení hvězdičkami jako web component",
+  "summary": "Workshop",
+  "minutes": 60,
+  "runtime": "dom"
+}

@@ -1,0 +1,27 @@
+{
+  "title": "Vue a Nuxt jako druhý framework",
+  "intro": "Převod z Reactu do Vue a pochopení jeho fungování. Toto je rozšíření. Předpokládá znalost Reactu.",
+  "modules": [
+    "prevodni-tabulka",
+    "reaktivita-vue",
+    "workshop-prepis-do-vue",
+    "sfc-a-pinia",
+    "nuxt-v-kostce",
+    "lab-kosik-ve-vue",
+    "kviz"
+  ],
+  "outcomes": [
+    {
+      "text": "převést komponentu z Reactu do Vue podle převodní tabulky",
+      "links": [
+        "vue-nuxt-druhy-framework/prevodni-tabulka#anchor"
+      ]
+    },
+    {
+      "text": "vysvětlit reaktivitu Vue",
+      "links": [
+        "vue-nuxt-druhy-framework/reaktivita-vue#anchor"
+      ]
+    }
+  ]
+}

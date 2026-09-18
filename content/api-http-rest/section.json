@@ -1,0 +1,43 @@
+{
+  "title": "HTTP a návrh REST API",
+  "intro": "Metody a stavové kódy, návrh zdrojů, stránkování, validace na serveru, CORS, cache a přepis API do expressu (Hono).\n\nNaučíš se navrhovat API srozumitelná pro ostatní vývojáře, správně používat HTTP a bránit se chybám.\n\n**Předpoklady:** základy JavaScriptu, asynchronní kód (Promises, async/await), základy Node.js.",
+  "modules": [
+    "http-do-hloubky",
+    "navrh-rest",
+    "workshop-api-knihovny",
+    "validace-a-chyby-api",
+    "cors-a-cache",
+    "workshop-api-ve-frameworku",
+    "lab-api-ukolu",
+    "kviz"
+  ],
+  "outcomes": [
+    {
+      "text": "Vybereš správnou HTTP metodu a stavový kód pro CRUD operace.",
+      "links": [
+        "api-http-rest/http-do-hloubky#metody-bezpecne-a-idempotentni",
+        "api-http-rest/http-do-hloubky#stavove-kody-po-skupinach"
+      ]
+    },
+    {
+      "text": "Navrhneš RESTful URL strukturu a přidáš podporu pro stránkování.",
+      "links": [
+        "api-http-rest/navrh-rest#zdroje-a-adresy",
+        "api-http-rest/navrh-rest#strankovani-offset-a-kurzor"
+      ]
+    },
+    {
+      "text": "Ošetříš vstupy pomocí Zodu a vrátíš standardizovaný chybový formát.",
+      "links": [
+        "api-http-rest/validace-a-chyby-api#schema-v-zodu-na-serveru",
+        "api-http-rest/validace-a-chyby-api#centralni-zpracovani-chyb"
+      ]
+    },
+    {
+      "text": "Nastavíš CORS hlavičky pro volání API z webového prohlížeče.",
+      "links": [
+        "api-http-rest/cors-a-cache#stejny-puvod-a-cors-ze-strany-serveru"
+      ]
+    }
+  ]
+}

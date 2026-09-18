@@ -1,0 +1,7 @@
+{
+  "type": "lesson",
+  "title": "Portfolio",
+  "summary": "Tři vlajkové projekty, README s rozhodnutími, živé URL a čistá historie.",
+  "minutes": 40,
+  "runtime": "js"
+}

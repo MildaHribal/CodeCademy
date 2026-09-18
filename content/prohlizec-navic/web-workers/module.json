@@ -1,0 +1,7 @@
+{
+  "type": "lesson",
+  "title": "Web Workers",
+  "summary": "Workers",
+  "minutes": 40,
+  "runtime": "dom"
+}

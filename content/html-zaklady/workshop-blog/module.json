@@ -1,0 +1,7 @@
+{
+  "type": "workshop",
+  "title": "Článek na blogu",
+  "summary": "Pokročilejší stránka s tabulkou a obrázky.",
+  "minutes": 45,
+  "runtime": "dom"
+}

@@ -1,0 +1,6 @@
+{
+  "type": "lesson",
+  "title": "Jak jazykový model selhává",
+  "summary": "Poznáš typické chyby generovaného kódu: vymyšlené API, zastaralé vzory a sebejistý omyl.",
+  "minutes": 50
+}

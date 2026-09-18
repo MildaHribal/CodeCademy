@@ -1,0 +1,7 @@
+{
+  "type": "project",
+  "title": "Offline poznámky",
+  "summary": "Projekt",
+  "minutes": 90,
+  "runtime": "node"
+}

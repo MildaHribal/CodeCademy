@@ -1,0 +1,7 @@
+{
+  "type": "quiz",
+  "title": "Kvíz: prohlížeč navíc",
+  "summary": "Kvíz",
+  "minutes": 25,
+  "runtime": "dom"
+}

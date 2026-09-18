@@ -1,0 +1,7 @@
+{
+  "type": "workshop",
+  "title": "Feature v cizím projektu",
+  "summary": "Přidáš slevový kód do cizího projektu podle issue, podle jeho vzorů a bez rozbití testů.",
+  "minutes": 60,
+  "runtime": "node"
+}

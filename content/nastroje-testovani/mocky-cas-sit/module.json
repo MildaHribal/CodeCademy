@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Čas, síť a závislosti", "summary": "Otestuješ kód, který závisí na čase a na síti: vložíš závislost, nahradíš ji mock funkcí nebo falešnými časovači, popíšeš API v MSW a poznáš, kdy mock lže.", "minutes": 40 }

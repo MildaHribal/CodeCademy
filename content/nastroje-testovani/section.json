@@ -1,0 +1,20 @@
+{
+  "title": "Testování",
+  "intro": "V této sekci se naučíš psát spolehlivé testy, odhalovat chyby v cizím kódu a bezpečně refaktorovat.",
+  "modules": [
+    "proc-testovat",
+    "workshop-unit-testy",
+    "mocky-cas-sit",
+    "workshop-refaktoring",
+    "playwright",
+    "lab-testy-validatoru",
+    "kviz"
+  ],
+  "outcomes": [
+    {"text": "Rozhodneš, co a na jaké úrovni testovat, a poznáš křehký test.", "links": ["nastroje-testovani/proc-testovat"]},
+    {"text": "Napíšeš unit testy včetně okrajových případů a chyb.", "links": ["nastroje-testovani/workshop-unit-testy"]},
+    {"text": "Zmockuješ čas a síť.", "links": ["nastroje-testovani/mocky-cas-sit"]},
+    {"text": "Napíšeš E2E test v Playwrightu.", "links": ["nastroje-testovani/playwright"]},
+    {"text": "Bezpečně zrefaktoruješ kód pod ochranou testů.", "links": ["nastroje-testovani/workshop-refaktoring"]}
+  ]
+}

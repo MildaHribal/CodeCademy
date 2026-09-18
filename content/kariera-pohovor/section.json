@@ -1,0 +1,41 @@
+{
+  "title": "Portfolio, CV a pohovor",
+  "intro": "Tato sekce je tvůj průvodce od dokončení kurzu k první práci. Projdeme si, jak postavit portfolio, které zaujme, jak napsat CV, vypracovat typický domácí úkol a zvládnout technický i behaviorální pohovor.\n\nSekce nepředpokládá, že už umíš úplně všechno, ale je nejlepší do ní vstoupit ve chvíli, kdy máš hotové alespoň dva vlajkové projekty a uvažuješ o hledání práce.",
+  "modules": [
+    "trh-a-role",
+    "portfolio",
+    "cv-linkedin-github",
+    "domaci-ukol",
+    "lab-domaci-ukol",
+    "technicky-pohovor",
+    "behavioralni-a-anglictina",
+    "prvni-mesice",
+    "kviz-mock-pohovor"
+  ],
+  "outcomes": [
+    {
+      "text": "Připravit portfolio ze tří vlajkových projektů s README, které vysvětluje rozhodnutí a kompromisy.",
+      "links": ["kariera-pohovor/portfolio"]
+    },
+    {
+      "text": "Napsat CV na jednu stranu a vyladit LinkedIn a GitHub profil.",
+      "links": ["kariera-pohovor/cv-linkedin-github"]
+    },
+    {
+      "text": "Vypracovat domácí úkol v rozumném rozsahu s testy, README a čistou historií.",
+      "links": ["kariera-pohovor/domaci-ukol"]
+    },
+    {
+      "text": "Projít technický pohovor: vyprávění o projektu, live coding nahlas a frontend system design ve čtyřech krocích.",
+      "links": ["kariera-pohovor/technicky-pohovor"]
+    },
+    {
+      "text": "Odpovídat na behaviorální otázky metodou STAR, i anglicky.",
+      "links": ["kariera-pohovor/behavioralni-a-anglictina"]
+    },
+    {
+      "text": "Zvládnout první měsíce v práci: ptát se, zapracovat se, dostávat review.",
+      "links": ["kariera-pohovor/prvni-mesice"]
+    }
+  ]
+}

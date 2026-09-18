@@ -1,0 +1,7 @@
+{
+  "type": "workshop",
+  "title": "Oprav kód se 7 skrytými chybami",
+  "summary": "Najdeš sedm chyb ve vygenerovaném modulu, na každou napíšeš test a pak ji opravíš.",
+  "minutes": 50,
+  "runtime": "js"
+}

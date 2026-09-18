@@ -1,0 +1,7 @@
+{
+  "type": "lesson",
+  "title": "Service worker a PWA",
+  "summary": "PWA",
+  "minutes": 40,
+  "runtime": "dom"
+}

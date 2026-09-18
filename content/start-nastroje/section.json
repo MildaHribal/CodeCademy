@@ -1,0 +1,40 @@
+{
+  "title": "Start: nástroje a jak se učit",
+  "intro": "V této sekci se naučíš, jak efektivně procházet Akademií a ovládat základní nástroje vývojáře: VS Code, Terminál, Git a GitHub.",
+  "modules": [
+    "jak-se-ucit-v-akademii",
+    "uceni-s-ai",
+    "vs-code",
+    "terminal-minimum",
+    "workshop-prvni-repozitar",
+    "github-a-pages",
+    "kviz",
+    "projekt-profil-na-githubu"
+  ],
+  "outcomes": [
+    {
+      "text": "Učit se v Akademii účinně: předpovídat před spuštěním, brát nápovědy po stupních, opakovat s odstupem.",
+      "links": []
+    },
+    {
+      "text": "Používat AI k učení tak, aby vysvětlovala, a ne psala řešení za tebe.",
+      "links": []
+    },
+    {
+      "text": "Pracovat s projektem ve VS Code.",
+      "links": []
+    },
+    {
+      "text": "V terminálu se pohybovat po složkách a spustit program.",
+      "links": []
+    },
+    {
+      "text": "Založit Git repozitář, commitovat po malých krocích a pushnout na GitHub.",
+      "links": []
+    },
+    {
+      "text": "Zveřejnit statický web přes GitHub Pages.",
+      "links": []
+    }
+  ]
+}

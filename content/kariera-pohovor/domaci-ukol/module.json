@@ -1,0 +1,7 @@
+{
+  "type": "lesson",
+  "title": "Domácí úkol",
+  "summary": "Jak číst zadání, dodržet časový limit a napsat README a testy.",
+  "minutes": 40,
+  "runtime": "js"
+}

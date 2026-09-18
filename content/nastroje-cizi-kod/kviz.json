@@ -1,0 +1,6 @@
+{
+  "type": "quiz",
+  "title": "Kvíz: cizí kód",
+  "summary": "Ověříš si Git archeologii, výběr komentáře a velikost pull requestu.",
+  "minutes": 25
+}

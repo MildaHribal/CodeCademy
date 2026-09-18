@@ -1,0 +1,7 @@
+{
+  "type": "lab",
+  "title": "Kontrolní bod 3",
+  "summary": "Lab.",
+  "minutes": 30,
+  "runtime": "node"
+}

@@ -1,0 +1,1 @@
+{ "type": "workshop", "title": "Registrace a přihlášení", "summary": "Postavíš účty pro web běžeckého klubu: registraci s hashem hesla, přihlášení se session v cookie, odhlášení a routy jen pro přihlášené členy.", "minutes": 105, "runtime": "node" }

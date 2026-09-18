@@ -100,3 +100,11 @@ aliases: scrolljackingu, scrolljackingem
 lekce: css-efekty-animace/scroll-efekty#kdy-scroll-efekt-skodi
 
 Stránka převezme kontrolu nad scrollem: mění jeho směr, rychlost nebo přeskakuje sekce. Uživatel ztratí pocit, že stránku ovládá on.
+
+## --term-- FLIP
+lekce: css-efekty-animace/layout-a-view-transitions#technika-flip-rucne
+Technika animace (First, Last, Invert, Play), kde se prvek přesune do cílového stavu okamžitě, vypočítá se rozdíl (Invert) a z něj se přehraje animace zpět do cíle (Play). V GSAPu se na to používá plugin Flip.
+
+## --term-- pružinová animace
+lekce: css-efekty-animace/layout-a-view-transitions#motion-animate-s-pruzinou
+Fyzikálně založená animace, která místo pevného času a křivky používá tuhost, tlumení a hmotnost. Vypadá přirozeněji, zejména při přerušení. Zajišťuje ji funkce `spring` v knihovně Motion.

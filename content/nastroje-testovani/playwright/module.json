@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "End-to-end v Playwrightu", "summary": "Napíšeš e2e test, který najde prvky podle role a popisku, počká na stav stránky místo pevné pauzy, připraví si vlastní data a zkontroluje přístupnost přes axe-core.", "minutes": 45 }

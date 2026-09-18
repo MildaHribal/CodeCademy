@@ -1,0 +1,7 @@
+{
+  "type": "lesson",
+  "title": "fetch a API",
+  "summary": "Základy komunikace po síti pomocí fetch.",
+  "minutes": 40,
+  "runtime": "js"
+}

@@ -1,0 +1,7 @@
+{
+  "type": "lesson",
+  "title": "Reaktivita ve Vue",
+  "summary": "Reaktivita",
+  "minutes": 40,
+  "runtime": "js"
+}

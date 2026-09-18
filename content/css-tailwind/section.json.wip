@@ -1,0 +1,16 @@
+{
+  "title": "Tailwind CSS v4",
+  "intro": "TODO",
+  "modules": [
+    "utility-first",
+    "workshop-karta-v-utilitach",
+    "theme-a-tokeny",
+    "workshop-motiv-znacky",
+    "responzivita-a-stavy",
+    "workshop-landing-sekce",
+    "komponenty-bez-duplicit",
+    "lab-prestavba-podle-navrhu",
+    "kviz"
+  ],
+  "outcomes": []
+}

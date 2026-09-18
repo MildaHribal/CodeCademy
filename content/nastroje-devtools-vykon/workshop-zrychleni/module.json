@@ -1,0 +1,1 @@
+{ "type": "workshop", "title": "Zrychlení stránky festivalu", "summary": "Vezmeš pomalou stránku hudebního festivalu a zrychlíš ji: odstraníš skákání obsahu, blokující skript a líné načtení hlavní fotky, rozdělíš dlouhé úlohy, opravíš únik paměti a výkon si budeš měřit v živém panelu.", "minutes": 75, "runtime": "dom" }

@@ -1,0 +1,7 @@
+{
+  "type": "lab",
+  "title": "Code review s testy",
+  "summary": "Sám opravíš šest problémů v cizím pull requestu a napíšeš k nim komentáře.",
+  "minutes": 90,
+  "runtime": "node"
+}

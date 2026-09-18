@@ -1,0 +1,48 @@
+{
+  "title": "HTML a jak funguje web",
+  "intro": "V této sekci se naučíš, jak funguje web od napsání adresy až po vykreslení stránky, a jak vytvořit sémanticky správný HTML dokument.",
+  "modules": [
+    "jak-funguje-web",
+    "anatomie-dokumentu",
+    "mdn-a-dokumentace",
+    "workshop-recept",
+    "semanticka-struktura",
+    "workshop-blog",
+    "lab-profil",
+    "kviz"
+  ],
+  "outcomes": [
+    {
+      "text": "vysvětlit, co se stane mezi napsáním adresy a vykreslením stránky (URL, DNS, HTTP, DOM)",
+      "links": [
+        "html-zaklady/jak-funguje-web"
+      ]
+    },
+    {
+      "text": "napsat validní HTML dokument se sémantickou strukturou a landmarky",
+      "links": [
+        "html-zaklady/anatomie-dokumentu",
+        "html-zaklady/semanticka-struktura"
+      ]
+    },
+    {
+      "text": "správně použít nadpisy, odkazy, obrázky, seznamy a tabulky",
+      "links": [
+        "html-zaklady/workshop-recept",
+        "html-zaklady/workshop-blog"
+      ]
+    },
+    {
+      "text": "najít odpověď na MDN a přečíst tabulku podpory",
+      "links": [
+        "html-zaklady/mdn-a-dokumentace"
+      ]
+    },
+    {
+      "text": "prohlédnout si stránku v DevTools (Elements, Network)",
+      "links": [
+        "html-zaklady/jak-funguje-web"
+      ]
+    }
+  ]
+}

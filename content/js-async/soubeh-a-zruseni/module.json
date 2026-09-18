@@ -1,0 +1,7 @@
+{
+  "type": "lesson",
+  "title": "Souběh a zrušení",
+  "summary": "Promise.all, race a AbortController.",
+  "minutes": 40,
+  "runtime": "js"
+}

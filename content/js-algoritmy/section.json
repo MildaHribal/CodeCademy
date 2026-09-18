@@ -1,0 +1,34 @@
+{
+  "title": "Algoritmy a úlohy na pohovor",
+  "intro": "Příprava na technické pohovory a řešení komplexních úloh. Naučíš se analyzovat složitost, používat pokročilé datové struktury a vzory pro řešení algoritmických problémů.\n\n**Předpoklady:** Dobrá znalost polí, objektů a jejich metod v JavaScriptu.",
+  "modules": [
+    "postup-reseni",
+    "big-o",
+    "datove-struktury",
+    "workshop-vzory-uloh",
+    "razeni-a-rekurze",
+    "workshop-pohovorove-utility",
+    "lab-10-uloh",
+    "kviz"
+  ],
+  "outcomes": [
+    {
+      "text": "Odhadneš časovou a prostorovou složitost kódu.",
+      "links": [
+        "js-algoritmy/big-o#o-cem-to-je"
+      ]
+    },
+    {
+      "text": "Aplikuješ běžné vzory (two pointers, sliding window) na problémy.",
+      "links": [
+        "js-algoritmy/workshop-vzory-uloh"
+      ]
+    },
+    {
+      "text": "Navrhneš a implementuješ běžné utility (debounce, deepClone).",
+      "links": [
+        "js-algoritmy/workshop-pohovorove-utility"
+      ]
+    }
+  ]
+}

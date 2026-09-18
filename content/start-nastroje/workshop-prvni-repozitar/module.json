@@ -1,0 +1,7 @@
+{
+  "type": "workshop",
+  "title": "První repozitář",
+  "summary": "Založení Git repozitáře a první commity.",
+  "minutes": 40,
+  "runtime": "node"
+}

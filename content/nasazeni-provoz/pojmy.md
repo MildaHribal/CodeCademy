@@ -1,0 +1,13 @@
+- **produkční režim**: Běh aplikace pro reálné uživatele. Vyžaduje optimalizace, řešení chyb, bezpečnost a skrytí vývojářských detailů.
+- **tajemství**: Citlivé údaje (hesla, API klíče), které nesmí být v kódu. Předávají se typicky jako proměnné prostředí.
+- **health check**: Speciální endpoint (např. `/health`), na který se ptá nástroj pro monitorování nebo orchestrátor, aby zjistil, jestli je aplikace funkční a dokáže odbavovat požadavky.
+- **graceful shutdown**: Řízené ukončení aplikace (např. po přijetí signálu SIGTERM), při kterém aplikace nepřijímá nové požadavky, ale dokončí ty rozpracované.
+- **strukturované logy**: Logy ukládané jako JSON (místo prostého textu), které lze snadno parsovat, filtrovat a vyhledávat v monitorovacích systémech.
+- **kontejner**: Běžící instance obrazu, která izoluje aplikaci od okolí včetně závislostí a zaručuje, že se kód chová všude stejně.
+- **docker compose**: Nástroj, kterým pomocí souboru s konfigurací definujeme a spouštíme celá prostředí – např. aplikaci společně s databází.
+- **reverzní proxy**: Server stojící před aplikací (např. Caddy, Nginx), který přijímá HTTP(S) požadavky od uživatelů a přesměrovává je do aplikace. Typicky řeší HTTPS a zátěž.
+- **CI/CD**: Kontinuální integrace a kontinuální nasazování (Continuous Integration / Continuous Deployment). Automatické procesy pro kontrolu kódu, spouštění testů a nasazování nového kódu do produkce.
+- **proměnná prostředí**: Proměnná čtená v průběhu běhu programu z operačního systému (v Node.js přes `process.env`), často určená ke konfiguraci (např. `PORT`, `NODE_ENV`).
+- **Dockerfile**: Textový soubor s instrukcemi, jak sestavit obraz (image) pro kontejner dané aplikace.
+- **náhledové prostředí**: Testovací verze aplikace automaticky nasazená typicky z PR, kde lze otestovat chování před začleněním do hlavní větve.
+- **rollback**: Návrat na předchozí funkční verzi aplikace, pokud se nasazení ukáže jako chybné.

@@ -1,0 +1,7 @@
+{
+  "type": "project",
+  "title": "Rozpočet ve Vite a TypeScriptu",
+  "summary": "Projekt.",
+  "minutes": 60,
+  "runtime": "node"
+}

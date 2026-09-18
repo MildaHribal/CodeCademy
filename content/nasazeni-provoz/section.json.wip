@@ -1,0 +1,23 @@
+{
+  "title": "Nasazení a provoz",
+  "intro": "Pojďme dostat API z tvého počítače ven na internet. Cestou zjistíš, že provozní kód vypadá jinak než vývojový — potřebuješ hesla v proměnných prostředí, zdravý proces, strukturované logy pro odhalování chyb, sestavení do kontejneru a automatické nasazení přes CI/CD. Na konci samostatně postavíš backend připravený na produkční nápor.",
+  "prerequisites": ["auth-bezpecnost", "nastroje-testovani"],
+  "modules": [
+    "produkcni-rezim",
+    "logovani-a-chyby",
+    "workshop-pripraveny-server",
+    "kontejnery-a-servery",
+    "ci-cd",
+    "linux-server",
+    "lab-dockerfile-a-ci",
+    "kviz",
+    "lab-kontrolni-bod-5"
+  ],
+  "outcomes": [
+    "připravit aplikaci na produkci: konfigurace, tajemství, logování, health check, graceful shutdown (see: nasazeni-provoz/produkcni-rezim)",
+    "sestavit a spustit aplikaci v kontejneru s databází přes `docker compose` (see: nasazeni-provoz/kontejnery-a-servery)",
+    "nastavit CI, které před nasazením pustí lint, typy, testy a build (see: nasazeni-provoz/ci-cd)",
+    "nasadit aplikaci s HTTPS a vrátit se k předchozí verzi (see: nasazeni-provoz/ci-cd)",
+    "samostatně postavit API, které splňuje bezpečnostní i provozní požadavky (see: nasazeni-provoz/lab-kontrolni-bod-5)"
+  ]
+}

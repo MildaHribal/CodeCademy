@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Návrh schématu", "summary": "Rozdělíš data do tabulek s vazbami 1:N a M:N, zvolíš ON DELETE, uložíš čas bez posunu a změníš schéma běžící aplikace migrací.", "minutes": 35 }

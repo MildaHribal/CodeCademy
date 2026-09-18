@@ -1,0 +1,7 @@
+{
+  "type": "lesson",
+  "title": "Technický pohovor",
+  "summary": "Vyprávění o projektu, live coding nahlas a frontend system design ve 4 krocích.",
+  "minutes": 45,
+  "runtime": "js"
+}

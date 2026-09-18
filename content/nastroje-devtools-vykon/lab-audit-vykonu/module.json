@@ -1,0 +1,7 @@
+{
+  "type": "lab",
+  "title": "Audit výkonu",
+  "summary": "Sám najdeš a opravíš osm výkonových problémů, každý ověřený jedním testem.",
+  "minutes": 75,
+  "runtime": "dom"
+}

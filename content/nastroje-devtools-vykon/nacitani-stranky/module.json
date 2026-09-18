@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Rychlé načtení", "summary": "Zkrátíš cestu k prvnímu vykreslení: skripty s defer, obrázky s rozměry a prioritou, písma bez skákání, cache s otiskem a kód stažený až ve chvíli, kdy je potřeba.", "minutes": 45, "runtime": "dom" }

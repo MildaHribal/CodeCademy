@@ -1,0 +1,7 @@
+{
+  "type": "lab",
+  "title": "Typický domácí úkol",
+  "summary": "Seznam s vyhledáváním z mock API, stránkování, detail, stavy načítání a chyby.",
+  "minutes": 240,
+  "runtime": "dom"
+}

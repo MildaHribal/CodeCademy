@@ -1,0 +1,21 @@
+{
+  "title": "Soubory, realtime a úlohy na pozadí",
+  "intro": "Práce se soubory a živá data. Toto je rozšíření.",
+  "modules": [
+    "nahravani-souboru",
+    "realtime-prehled",
+    "workshop-sse",
+    "websockety",
+    "emaily-a-ulohy-na-pozadi",
+    "lab-notifikace",
+    "kviz"
+  ],
+  "outcomes": [
+    {
+      "text": "bezpečně přijmout nahraný soubor",
+      "links": [
+        "api-soubory-realtime/nahravani-souboru#anchor"
+      ]
+    }
+  ]
+}

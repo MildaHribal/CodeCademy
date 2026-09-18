@@ -5,3 +5,4 @@ moje-projekty/
 *.log
 .e2e/
 .idea/
+.aider*

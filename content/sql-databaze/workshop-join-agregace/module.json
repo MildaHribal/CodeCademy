@@ -1,0 +1,1 @@
+{ "type": "workshop", "title": "Recenze a hodnocení", "summary": "Postavíš databázi recenzí podniků: tabulku s cizími klíči a dotazy s JOIN, LEFT JOIN, GROUP BY, HAVING, poddotazem a upsertem pro stránku podniku a žebříčky.", "minutes": 95, "runtime": "node" }

@@ -1,0 +1,6 @@
+{
+  "type": "lesson",
+  "title": "Od issue k pull requestu",
+  "summary": "Projdeš cestu od reprodukce chyby k pull requestu, který se dá rychle zrevidovat.",
+  "minutes": 45
+}

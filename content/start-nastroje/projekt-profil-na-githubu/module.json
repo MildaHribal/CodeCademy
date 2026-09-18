@@ -1,0 +1,7 @@
+{
+  "type": "project",
+  "title": "Profil na GitHubu",
+  "summary": "Tvůj profil z minulé sekce nasazený na GitHub Pages.",
+  "minutes": 45,
+  "runtime": "node"
+}

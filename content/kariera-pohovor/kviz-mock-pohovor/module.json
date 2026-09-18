@@ -1,0 +1,7 @@
+{
+  "type": "quiz",
+  "title": "Mock pohovor",
+  "summary": "Otázky s psanou odpovědí a modelovou odpovědí ze všech témat.",
+  "minutes": 60,
+  "runtime": "js"
+}

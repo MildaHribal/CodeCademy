@@ -1,0 +1,35 @@
+{
+  "title": "Animace a efekty pro „wow“ web",
+  "intro": "V této sekci se naučíš vytvářet plynulé a výkonné animace. Zjistíš, jak rozpohybovat prvky na stránce pomocí GSAP, jak reagovat na posun stránky se ScrollTriggerem a jak implementovat složité layoutové přechody s View Transitions a FLIP technikou.\n\nPředpoklady: Znalost HTML, CSS, JavaScriptu (DOM a události).",
+  "modules": [
+    "gsap-zaklady",
+    "workshop-animovana-hero",
+    "scroll-efekty",
+    "workshop-produktova-stranka",
+    "layout-a-view-transitions",
+    "workshop-galerie-flip",
+    "vykon-a-pristupnost-animaci",
+    "lab-scroll-pribeh",
+    "kviz"
+  ],
+  "outcomes": [
+    {
+      "text": "Rozpohybuješ prvky na stránce plynule pomocí knihovny GSAP.",
+      "links": [
+        "css-efekty-animace/gsap-zaklady#timeline-sekvence-bez-pocitani-delay"
+      ]
+    },
+    {
+      "text": "Propojíš animace se scrollováním stránky pomocí ScrollTrigger.",
+      "links": [
+        "css-efekty-animace/scroll-efekty#scrolltrigger-trigger-start-a-end"
+      ]
+    },
+    {
+      "text": "Naprogramuješ plynulé přechody layoutu.",
+      "links": [
+        "css-efekty-animace/layout-a-view-transitions#view-transitions-vlastni-animace-a-sdileny-prvek"
+      ]
+    }
+  ]
+}

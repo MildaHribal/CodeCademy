@@ -1,0 +1,20 @@
+{
+  "title": "Práce v cizím kódu",
+  "intro": "Vítej v sekci **Práce v cizím kódu**. Tady se naučíš, jak přistupovat k repozitáři, který jsi nenapsal.\n\nPředpoklady: Máš za sebou testování a API.",
+  "modules": [
+    "orientace-v-cizim-kodu",
+    "workshop-feature-v-cizim-projektu",
+    "od-issue-k-pr",
+    "code-review",
+    "odhad-a-komunikace",
+    "lab-code-review",
+    "kviz"
+  ],
+  "outcomes": [
+    { "text": "Zorientovat se v neznámém repozitáři: README, skripty, vstupní body, testy, historie.", "links": ["nastroje-cizi-kod/orientace-v-cizim-kodu#mapa-repozitare"] },
+    { "text": "Projít cestu od issue k pull requestu: reprodukce, větev, malé commity, test, popis.", "links": ["nastroje-cizi-kod/od-issue-k-pr#reprodukce"] },
+    { "text": "Dávat code review věcně a srozumitelně a přijímat ho bez ega.", "links": ["nastroje-cizi-kod/code-review#jak-psat-komentar"] },
+    { "text": "Odhadnout úkol, včas se ozvat se zaseknutím a komunikovat stav.", "links": ["nastroje-cizi-kod/odhad-a-komunikace#timebox"] },
+    { "text": "Změnit cizí kód bezpečně: charakterizační test, minimální změna, dodržení konvencí.", "links": ["nastroje-cizi-kod/workshop-feature-v-cizim-projektu#testy"] }
+  ]
+}

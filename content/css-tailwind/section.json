@@ -1,0 +1,22 @@
+{
+  "title": "Tailwind CSS v4",
+  "intro": "V této sekci se naučíš používat Tailwind CSS. Tailwind není jen knihovna tříd, je to **utility-first framework**, který tě nutí přemýšlet o designu přímo v HTML. Místo neustálého přepínání mezi HTML a CSS píšeš třídy jako `bg-blue-500`, `flex` nebo `p-4`.\n\nK úspěšnému absolvování potřebuješ znát základy CSS z předchozích sekcí.",
+  "modules": [
+    "utility-first",
+    "workshop-karta-v-utilitach",
+    "theme-a-tokeny",
+    "workshop-motiv-znacky",
+    "responzivita-a-stavy",
+    "workshop-landing-sekce",
+    "komponenty-bez-duplicit",
+    "lab-prestavba-podle-navrhu",
+    "kviz"
+  ],
+  "outcomes": [
+    { "text": "Přečteš dlouhý atribut class a poznáš, co v CSS vygeneruje.", "links": ["css-tailwind/utility-first"] },
+    { "text": "Postavíš UI jen ze zabudovaných utilit.", "links": ["css-tailwind/workshop-karta-v-utilitach"] },
+    { "text": "Vytvoříš vlastní design tokeny pomocí @theme.", "links": ["css-tailwind/theme-a-tokeny"] },
+    { "text": "Zvládneš mobile-first design, hover a focus stavy s variantami.", "links": ["css-tailwind/responzivita-a-stavy"] },
+    { "text": "Víš, jak řešit duplicitní třídy, aniž bys opustil utility-first přístup.", "links": ["css-tailwind/komponenty-bez-duplicit"] }
+  ]
+}

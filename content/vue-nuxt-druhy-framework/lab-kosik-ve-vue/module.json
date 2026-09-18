@@ -1,0 +1,7 @@
+{
+  "type": "lab",
+  "title": "Košík ve Vue",
+  "summary": "Lab",
+  "minutes": 60,
+  "runtime": "vue"
+}

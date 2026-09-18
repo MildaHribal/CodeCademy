@@ -1,0 +1,34 @@
+{
+  "title": "Práce s AI při vývoji",
+  "intro": "V této sekci se naučíš, jak z jazykového modelu (LLM) udělat svého tutora a pomocníka, a ne generátor chyb. Předpokladem je orientace v cizím kódu (sekce `nastroje-cizi-kod`).",
+  "modules": [
+    "jak-llm-selhava",
+    "ai-jako-tutor",
+    "zadavani-agentovi",
+    "review-kodu-z-ai",
+    "workshop-oprav-skryte-chyby",
+    "kviz"
+  ],
+  "outcomes": [
+    {
+      "text": "Vysvětlíš, jak jazykový model generuje kód a proč selhává.",
+      "links": ["prace-s-ai/jak-llm-selhava#selhani-llm"]
+    },
+    {
+      "text": "Použiješ AI jako tutora pro vysvětlení bez hotového kódu.",
+      "links": ["prace-s-ai/ai-jako-tutor#sokratovsky-tutor"]
+    },
+    {
+      "text": "Zadáš úkol agentovi s kontextem, omezeními a testy.",
+      "links": ["prace-s-ai/zadavani-agentovi#dobre-zadani"]
+    },
+    {
+      "text": "Zreviduješ vygenerovaný kód, jako by to byl cizí pull request.",
+      "links": ["prace-s-ai/review-kodu-z-ai#checklist-pro-review"]
+    },
+    {
+      "text": "Rozpoznáš bezpečnostní a licenční rizika AI nástrojů.",
+      "links": ["prace-s-ai/review-kodu-z-ai#bezpecnost"]
+    }
+  ]
+}

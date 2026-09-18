@@ -1,0 +1,7 @@
+{
+  "type": "workshop",
+  "title": "Refaktoring starého kódu",
+  "summary": "Pokryješ existující kód testy a pak ho refaktoruješ, aniž rozbijete chování.",
+  "minutes": 45,
+  "runtime": "node"
+}
