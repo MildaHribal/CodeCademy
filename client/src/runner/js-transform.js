@@ -1,16 +1,8 @@
-// Příprava uživatelova JavaScriptu před spuštěním (ochrana smyček + importy).
 import { parse } from 'acorn';
 import { collectLoopGuardEdits } from './loop-guard.js';
 import { collectImportEdits } from './module-imports.js';
 import { applyEdits } from './source-edits.js';
 
-/**
- * @param {string} code
- * @param {{ sourceType?: 'script'|'module', lineOffset?: number,
- *   resolveSpecifier?: (specifier: string) => string|null }} options
- * @returns {string}  upravený kód; když kód nejde naparsovat, vrátí ho beze změny
- *   (prohlížeč pak sám ohlásí syntaktickou chybu se správným řádkem)
- */
 export function transformJs(code, { sourceType = 'script', lineOffset = 0, resolveSpecifier = null } = {}) {
   let ast;
   try {
@@ -23,7 +15,6 @@ export function transformJs(code, { sourceType = 'script', lineOffset = 0, resol
   return applyEdits(code, edits);
 }
 
-/** Je to ES modul? (jde naparsovat jen jako modul — obsahuje import/export) */
 export function isModuleSource(code) {
   const options = { ecmaVersion: 'latest', allowHashBang: true };
   try {

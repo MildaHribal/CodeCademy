@@ -1,10 +1,4 @@
 // Poznámky a „Nerozumím" (B9, kontrakt kap. 12.5).
-//
-// - obrazovka #/poznamky[/sekce] a položka Poznámky v horní liště,
-// - v lekci: panel Poznámky vedle obsahu lekce a otazník „Nerozumím" u odstavců výkladu,
-// - na pracovní ploše: tlačítko Poznámka v liště tlačítek a „Nerozumím" u odstavců zadání,
-// - u projektu: tlačítko Poznámka pod nadpisem,
-// - klávesa N (extensions/shortcuts.js) otevře panel přes událost appEvents 'notes:open'.
 import './notes.css';
 import { h, svg } from '../../dom.js';
 import { icons } from '../../icons.js';
@@ -21,16 +15,16 @@ import { attachNotUnderstood, nearestHeading } from './not-understood.js';
 import { renderNotes } from './screen.js';
 
 registerScreen({ name: 'notes', path: '/poznamky/:sectionId?', render: renderNotes });
-registerHeaderItem({ id: 'poznamky', order: 30, label: 'Poznámky', href: '#/poznamky', routes: ['notes'], icon: icons.note });
+registerHeaderItem({ id: 'poznamky', order: 30, label: 'Notes', href: '#/poznamky', routes: ['notes'], icon: icons.note });
 
 appEvents.on('notes:open', () => openNotesDrawer());
 
 function noteButton(className = 'btn btn--quiet') {
   return h(
     'button',
-    { type: 'button', class: `${className} notes-open`, title: 'Poznámka k tomuhle místu (N)', onclick: () => openNotesDrawer() },
+    { type: 'button', class: `${className} notes-open`, 'aria-label': 'Note / Poznámka', title: 'Note for this place (N)', onclick: () => openNotesDrawer() },
     svg(icons.note),
-    'Poznámka',
+    'Note',
   );
 }
 
@@ -77,7 +71,6 @@ projectExtensions.register({
     const { module } = project;
     const context = { section: module.sectionId, sectionTitle: module.sectionId, itemId: module.id, title: module.title };
     setNotesContext(context);
-    // API projektu nemá navigaci se jménem sekce — doplníme ho z osnovy (je v mezipaměti).
     loadCurriculum()
       .then((curriculum) => {
         const title = findSection(curriculum, module.sectionId)?.section.title;

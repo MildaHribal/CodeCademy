@@ -1,4 +1,3 @@
-// Postup uživatele (kontrakt kap. 8). Reset maže i data nástrojů přes ctx.onReset.
 export function register(router, ctx) {
   const { progress } = ctx;
 
@@ -17,7 +16,7 @@ export function register(router, ctx) {
 
   router.post('/api/progress/reset', async ({ readBody }) => {
     const { id } = await readBody();
-    const reset = progress.reset(id); // ověří id dřív, než na data sáhnou ostatní nástroje
+    const reset = progress.reset(id);
     await ctx.runResetters(id);
     return { ok: true, progress: reset };
   });

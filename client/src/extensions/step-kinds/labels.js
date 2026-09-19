@@ -33,7 +33,6 @@ export const DEBUG_STEPS = [
   'Ověř, že oprava funguje a nic dalšího se nerozbilo.',
 ];
 
-/** Štítek druhu kroku, nebo null pro běžný krok. */
 export function kindLabel(kind) {
   const label = KIND_LABELS[kind];
   if (!label) return null;

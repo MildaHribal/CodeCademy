@@ -1,9 +1,3 @@
-// Pokusy a statistiky (kontrakt kap. 12.2): POST/GET /api/attempts, GET /api/stats.
-//
-// Záznam neúspěšných kontrol, otevřených tipů, zobrazení řešení a aktivního času.
-// Po každém uložení vyvolá událost `attempts:recorded` — podle ní zakládá položky
-// opakování a počítá jistotu jiný nástroj (docs/platforma.md, kap. 1.5).
-// Logika bez HTTP je v _attempts-store.js.
 import { belongsTo } from '../progress.js';
 import {
   ATTEMPTS_FILE, applyAttempt, attemptTarget, buildStats, emptyAttempts, isQuestionId, migrateAttempts, validateAttemptBody,
@@ -12,7 +6,6 @@ import {
 export function register(router, ctx) {
   const store = ctx.createJsonStore(ATTEMPTS_FILE, { defaults: emptyAttempts, migrate: migrateAttempts });
 
-  // Reset postupu smaže i pokusy, které k id patří (u otázek podle modulu, kontrakt kap. 8).
   ctx.onReset((id) => {
     store.update((data) => {
       for (const key of Object.keys(data.items)) {
@@ -59,10 +52,8 @@ export function register(router, ctx) {
 
   router.get('/api/stats', () => buildStats(store.get(), statsContent()));
 
-  /** Id musí v obsahu existovat: otázka přes resolveItem, krok nebo modul v indexu obsahu. */
   function checkExists(id) {
     if (isQuestionId(id)) {
-      // Rozbitý soubor obsahu vyhodí ParseError (500) — to není chyba uživatele.
       if (ctx.resolveItem(id)?.type !== 'question') throw new ctx.InputError(`Otázka ${id} v obsahu neexistuje`);
       return;
     }
@@ -72,7 +63,6 @@ export function register(router, ctx) {
     if (!known) throw new ctx.InputError(`Krok nebo modul ${id} v obsahu neexistuje`);
   }
 
-  /** Obsah pro statistiky: jen čtení, rozbitý modul se přeskočí (statistiky kvůli němu nespadnou). */
   function statsContent() {
     const index = ctx.contentIndex();
     const order = new Map();

@@ -1,4 +1,3 @@
-// Přehled osnovy: kde pokračovat a obsah kurzu jako obsah učebnice (části → sekce).
 
 import { h } from '../dom.js';
 import { href, hrefForId } from '../router.js';
@@ -11,16 +10,8 @@ import { createSlots } from '../core/slots.js';
 import { withLoading, showLoadError } from './load.js';
 import { routeView } from '../extensions/orientation/route.js';
 
-// Pohled na obsah kurzu: po částech (témata), nebo podle doporučené trasy (pořadí průchodu).
-// Volba je jen pohodlí jednoho prohlížeče, proto localStorage (ne nastavení na serveru).
 const VIEW_KEY = 'akademie.overview.view';
 
-/**
- * Rozšíření přehledu osnovy („K opakování: 12", statistiky…):
- *   overviewExtensions.register({ id, order, setup(overview) { overview.addToSlot('before-toc', el); } })
- * API: curriculum, signal, onCleanup, page, addToSlot(name, el, { order })
- * sloty: 'head' (pod úvodem a panelem Pokračovat), 'before-toc' (nad obsahem kurzu), 'end'
- */
 export const overviewExtensions = createExtensionPoint('přehledu');
 
 export async function renderOverview(ctx, route = {}) {
@@ -69,13 +60,11 @@ export async function renderOverview(ctx, route = {}) {
     );
   ctx.root.append(page);
 
-  // Drobečky vedou na část osnovy adresou #/?cast=<id části>.
   const partHeading = route.query?.cast ? document.getElementById(`part-${route.query.cast}`) : null;
   partHeading?.closest('.toc-part')?.scrollIntoView({ block: 'start' });
   ctx.onCleanup(overviewExtensions.mount({ curriculum, signal: ctx.signal, onCleanup: ctx.onCleanup, page, addToSlot: slots.addToSlot }));
 }
 
-/** Kam pokračovat: naposledy otevřený nedokončený modul, jinak první nesplněný. */
 function findResumeTarget(curriculum) {
   const entries = allModules(curriculum);
   const lastId = progress.get().lastVisited;
@@ -87,9 +76,7 @@ function findResumeTarget(curriculum) {
       const entry = entries[index];
       const status = moduleStatus(entry.module);
       if (!status.done) {
-        // U workshopu jdeme přímo na krok, u ostatních na modul.
         const stepKey = lastId.split('/')[2];
-        // Přes adresu modulu vybere workshop první nesplněný krok od naposledy otevřeného (screens/module.js).
         const target = stepKey && !progress.isCompleted(lastId) ? hrefForId(lastId) : href.module(moduleId);
         return { entry, target, stepKey, started: true };
       }
@@ -117,7 +104,6 @@ function resumePanel(curriculum) {
   }
 
   const { entry, target, stepKey, started } = resume;
-  // Číslo kroku jen u rozpracovaného kroku; u splněného vybere modul první nesplněný krok sám.
   const stepText = stepKey && !progress.isCompleted(`${entry.module.id}/${stepKey}`) ? `, krok ${Number(stepKey)}` : '';
   return h(
     'div',
@@ -125,11 +111,10 @@ function resumePanel(curriculum) {
     h('p', { class: 'resume__label' }, started ? 'Rozpracováno' : 'Na řadě'),
     h('p', { class: 'resume__title' }, `${entry.module.title}${stepText}`),
     h('p', { class: 'resume__meta' }, `${MODULE_TYPE_LABELS[entry.module.type]} v sekci ${entry.section.title}`),
-    h('a', { class: 'btn btn--primary btn--large resume__action', href: target }, started ? 'Pokračovat' : 'Začít'),
+    h('a', { class: 'btn btn--primary btn--large resume__action', 'aria-label': started ? 'Continue / Pokračovat' : 'Start / Začít', href: target }, started ? 'Continue' : 'Start'),
   );
 }
 
-/** Obsah kurzu s přepínačem pohledu (po částech / podle doporučené trasy). */
 function tocSection(curriculum, { forceParts }) {
   const view = routeView(curriculum);
   const partsView = h('div', { class: 'toc' }, curriculum.parts.map((part, index) => partBlock(part, index + 1)));
@@ -171,11 +156,9 @@ function writeView(id) {
   try {
     localStorage.setItem(VIEW_KEY, id);
   } catch {
-    // bez úložiště se volba jen nezapamatuje
   }
 }
 
-/** Čísla sekcí jako v obsahu po částech („2.3"), aby šla sekce v obou pohledech poznat. */
 function sectionNumbers(curriculum) {
   const numbers = new Map();
   curriculum.parts.forEach((part, partIndex) =>
@@ -184,7 +167,6 @@ function sectionNumbers(curriculum) {
   return numbers;
 }
 
-/** Sekce v pořadí doporučené trasy; sekce mimo trasu (rozšíření…) pod ní. */
 function routeBlock(view, numbers) {
   const row = ({ part, section }) => sectionRow(section, numbers.get(section.id), { partTitle: part.title });
   return h(
@@ -254,7 +236,6 @@ function partBlock(part, number) {
   );
 }
 
-/** Štítek sekce navíc: rozšíření (nepovinné) a u trasy část, do které sekce patří. */
 function rowTags(section, partTitle) {
   const tags = [
     section.uroven === 'rozsireni'

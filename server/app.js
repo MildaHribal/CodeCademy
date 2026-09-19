@@ -1,11 +1,3 @@
-// HTTP server Akademie bez frameworku (kontrakt kap. 7–9).
-//
-// createApp() vrací http.Server, který ještě neposlouchá — spouští ho server/index.js,
-// testy i verify, každý na svém portu.
-//
-// Routy API nejsou tady: každý nástroj má svůj soubor server/routes/<nástroj>.js
-// s funkcí register(router, ctx) a server/routes/index.js je načte automaticky.
-// Tady zůstává jen jádro: ochrana požadavků, /vendor, statické soubory a chyby.
 import fs from 'node:fs';
 import http from 'node:http';
 import path from 'node:path';
@@ -17,7 +9,6 @@ import { createRequestContext, createRouter } from './router.js';
 import { registerRouteModules, routeModules } from './routes/index.js';
 
 const VUE_DIST = path.join(import.meta.dirname, '..', 'node_modules', 'vue', 'dist');
-// Jediné soubory, které /vendor vydá.
 const VENDOR_FILES = {
   'vue.esm-browser.js': path.join(VUE_DIST, 'vue.esm-browser.js'),
   'vue.esm-browser.prod.js': path.join(VUE_DIST, 'vue.esm-browser.prod.js'),
@@ -46,12 +37,6 @@ const MIME_TYPES = {
   '.wasm': 'application/wasm',
 };
 
-/**
- * @param {{ contentDir: string, dataDir: string, projectsDir: string, distDir: string,
- *   routes?: { name: string, register: Function }[] }} options
- *   routes — moduly rout (výchozí: všechny ze server/routes/); testy si můžou přidat vlastní
- * @returns {http.Server} server, který ještě neposlouchá
- */
 export function createApp({ contentDir, dataDir, projectsDir, distDir, routes = routeModules }) {
   const ctx = createContext({ contentDir, dataDir, projectsDir, distDir });
   const router = createRouter();
@@ -61,7 +46,7 @@ export function createApp({ contentDir, dataDir, projectsDir, distDir, routes = 
     checkLocalRequest(req);
     const { handler, params } = router.match(req.method, url.pathname);
     const data = await handler(createRequestContext(req, res, url, params));
-    if (res.headersSent || res.writableEnded) return; // obsluha odpověděla sama
+    if (res.headersSent || res.writableEnded) return;
     sendJson(res, 200, data === undefined ? { ok: true } : data);
   }
 
@@ -81,9 +66,6 @@ export function createApp({ contentDir, dataDir, projectsDir, distDir, routes = 
   }
 
   function sendFile(req, res, file, headers = {}) {
-    // Soubor otevřeme hned a synchronně. Když mezitím zmizel (třeba zrovna běží
-    // `vite build`) nebo nejde číst, skončí to chybovou odpovědí, ne pádem serveru
-    // na nezachycené chybě proudu.
     let fd;
     try {
       fd = fs.openSync(file, 'r');
@@ -109,7 +91,6 @@ export function createApp({ contentDir, dataDir, projectsDir, distDir, routes = 
       res.end();
       return;
     }
-    // pipeline (na rozdíl od .pipe) chyby čtení zachytí; hlavička už odešla, zbývá zavřít spojení.
     pipeline(fs.createReadStream(null, { fd }), res, (err) => {
       if (err) res.destroy();
     });
@@ -132,7 +113,6 @@ export function createApp({ contentDir, dataDir, projectsDir, distDir, routes = 
       sendFile(req, res, target);
       return;
     }
-    // SPA: cesty bez přípony dostanou index.html, o zbytek se postará router klienta.
     const indexFile = path.join(root, 'index.html');
     if (path.extname(relative) === '' && fs.existsSync(indexFile)) {
       sendFile(req, res, indexFile);
@@ -157,7 +137,6 @@ export function createApp({ contentDir, dataDir, projectsDir, distDir, routes = 
       }
       const { status, message } = describeError(err);
       if (status >= 500) console.error(err);
-      // U příliš velkého těla nečteme zbytek a spojení zavřeme.
       const headers = status === 413 ? { Connection: 'close' } : {};
       sendJson(res, status, { error: message }, headers);
     }
@@ -170,7 +149,6 @@ export function createApp({ contentDir, dataDir, projectsDir, distDir, routes = 
     ctx.runClosers();
     ctx.progress.flush();
   });
-  // Pro testy a nástroje: seznam rout a kontext (úložiště, flush).
   server.akademie = { ctx, routes: router.list() };
   return server;
 }

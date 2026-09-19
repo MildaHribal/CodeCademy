@@ -1,5 +1,3 @@
-// HTTP vrstva běžícího procesu (kontrakt kap. 12.7): routy, stavy 400/404/409, projekt a úklid.
-// Chování správce do hloubky testuje server/dev-process.test.js.
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
@@ -30,8 +28,6 @@ describe('routy /api/dev-process', () => {
 
   before(async () => {
     root = fs.mkdtempSync(path.join(os.tmpdir(), 'akademie-dev-process-routes-'));
-    // Vlastní instance rout s krátkou nečinností; automaticky načtenou dev-process.js vynecháme,
-    // jinak by se routy registrovaly dvakrát.
     const devRoutes = {
       name: 'dev-process.js',
       register(router, ctx) {
@@ -217,7 +213,6 @@ http.createServer((req, res) => res.end('Ahoj z projektu')).listen(process.env.P
     try {
       found = execFileSync('pgrep', ['-f', 'akademie-dev-routes-'], { encoding: 'utf8' });
     } catch {
-      // pgrep bez nálezu končí kódem 1
     }
     assert.equal(found.trim(), '');
   });

@@ -1,19 +1,13 @@
-// Lišta workshopu: pozice, seznam kroků s názvy a navigace mezi kroky (čísla 1…N se stavem splnění).
-//
-// „Krok 3 z 24" je tlačítko, které rozbalí seznam všech kroků s názvy a ✓ u splněných —
-// čísla v liště jsou rychlá navigace, seznam říká, co v kterém kroku je.
 
 import { h, svg } from '../dom.js';
 import { href } from '../router.js';
 import { icons } from '../icons.js';
 import { progress } from '../progress.js';
 
-/** Lišta nad sloupci. `slot` = prvek slotu 'bar' (na konci lišty). */
 export function createStepperBar({ steps, stepIndex, slot }) {
   return h('div', { class: 'workspace__bar' }, stepMenu(steps, stepIndex), stepper(steps, stepIndex), slot);
 }
 
-/** Po splnění kroku označí aktuální krok v liště i v seznamu jako hotový. */
 export function markStepperDone(root, { stepIndex, title }) {
   const label = `Krok ${stepIndex + 1}: ${title} (splněno)`;
   const current = root.querySelector('.stepper__item[aria-current="step"]');
@@ -27,8 +21,6 @@ export function markStepperDone(root, { stepIndex, title }) {
     entry.querySelector('.step-menu__status')?.replaceChildren(svg(icons.check, { size: 14, label: 'splněno' }));
   }
 }
-
-// ——— Seznam kroků s názvy ———
 
 function stepMenu(steps, currentIndex) {
   const current = steps[currentIndex];
@@ -70,7 +62,6 @@ function stepMenu(steps, currentIndex) {
     h('div', { class: 'step-menu__panel' }, list),
   );
 
-  // Rozbalený seznam: aktuální krok na očích, Escape a klik mimo ho zavřou.
   menu.addEventListener('toggle', () => {
     if (!menu.open) return;
     list.querySelector('[aria-current]')?.scrollIntoView({ block: 'center' });
@@ -93,8 +84,6 @@ function stepMenu(steps, currentIndex) {
   });
   return menu;
 }
-
-// ——— Čísla kroků ———
 
 function stepper(steps, currentIndex) {
   const prev = steps[currentIndex - 1];

@@ -1,5 +1,4 @@
 // Nástroj opakování (kontrakt kap. 12.3): obrazovka #/opakovani, položka v menu s počtem,
-// řádek „K opakování" na přehledu a tlačítko „Nezvládl bych to znovu" po splnění kroku.
 import './reviews.css';
 import { h, svg } from '../../dom.js';
 import { appEvents } from '../../core/events.js';
@@ -12,7 +11,6 @@ import { currentSummary, onReviewCount, refreshReviewCount } from './count.js';
 import { summaryLine } from './logic.js';
 import { renderReviews } from './screen.js';
 
-// Dvě šipky do kruhu — „vrátí se to" (viewBox 0 0 16 16, kreslené tahem).
 const REVIEW_ICON =
   '<path d="M13 6.5A5 5 0 0 0 4 4.2M3 9.5a5 5 0 0 0 9 2.3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>' +
   '<path d="M3.6 2v2.6h2.6M12.4 14v-2.6H9.8" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>';
@@ -22,7 +20,7 @@ registerScreen({ name: 'reviews', path: '/opakovani', render: renderReviews });
 registerHeaderItem({
   id: 'opakovani',
   order: 20,
-  label: 'Opakování',
+  label: 'Review',
   href: '#/opakovani',
   routes: ['reviews'],
   icon: REVIEW_ICON,
@@ -32,13 +30,9 @@ registerHeaderItem({
   },
 });
 
-// Počet v menu: při změně obrazovky (nejvýš jednou za chvíli) a hned po splnění nebo resetu,
-// protože splněný modul může aktivovat karty.
 appEvents.on('route:change', () => refreshReviewCount());
 appEvents.on('progress:complete', () => refreshReviewCount({ force: true }));
 appEvents.on('progress:reset', () => refreshReviewCount({ force: true }));
-
-// ——— Přehled: jeden řádek „K opakování: 12 (asi 8 min)" ———
 
 overviewExtensions.register({
   id: 'reviews-summary',
@@ -56,8 +50,6 @@ overviewExtensions.register({
     return off;
   },
 });
-
-// ——— Pracovní plocha: „Nezvládl bych to znovu" po splnění kroku nebo labu ———
 
 workspaceExtensions.register({
   id: 'reviews-self',

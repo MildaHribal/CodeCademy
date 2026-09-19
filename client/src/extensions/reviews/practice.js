@@ -1,6 +1,3 @@
-// Malá pracovní plocha pro opakování: kód od seedu, požadavky a kontrola testů.
-// Používá ji krok „znovu od začátku" (step) a karta `code js`. Nic se neukládá do postupu —
-// opakování nemá přepsat uložený kód kroku ani jeho splnění.
 
 import { h, svg } from '../../dom.js';
 import { icons } from '../../icons.js';
@@ -10,11 +7,6 @@ import { createConsolePanel } from '../../components/console-panel.js';
 import { createHintList } from '../../components/hint-list.js';
 import { transformRun } from '../../components/test-result.js';
 
-/**
- * @param {{ runtime, seed: File[], hints: { text, test }[], meta?: object, item?: object, title: string }} task
- * @param {{ onPass: () => void, onGiveUp: () => void, solution?: File[] | null }} handlers
- * @returns {{ element, mount(), destroy() }}
- */
 export function createPractice(task, { onPass, onGiveUp, solution = null }) {
   const runtime = task.runtime ?? 'js';
   // Knihovny úlohy (kontrakt kap. 6.10) — opakování spouští krok se stejnou stránkou jako plocha.
@@ -29,8 +21,8 @@ export function createPractice(task, { onPass, onGiveUp, solution = null }) {
 
   const hintList = createHintList(task.hints ?? [], { item: task.item ?? null });
   const status = h('p', { class: 'reviews-practice__status', role: 'status' });
-  const checkButton = h('button', { type: 'button', class: 'btn btn--primary btn--small', onclick: () => check() }, 'Zkontrolovat');
-  const giveUpButton = h('button', { type: 'button', class: 'btn btn--quiet btn--small', onclick: () => giveUp() }, 'Vzdávám');
+  const checkButton = h('button', { type: 'button', class: 'btn btn--primary btn--small', 'aria-label': 'Check / Zkontrolovat', onclick: () => check() }, 'Check');
+  const giveUpButton = h('button', { type: 'button', class: 'btn btn--quiet btn--small', 'aria-label': 'Give up / Vzdávám', onclick: () => giveUp() }, 'Give up');
   const solutionBox = h('div', { class: 'reviews-practice__solution', hidden: true });
 
   const editorHost = h('div', { class: 'reviews-practice__editor' });

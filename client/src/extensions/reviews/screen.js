@@ -1,8 +1,4 @@
 // Obrazovka #/opakovani: dnešní položky po jedné (kontrakt kap. 12.3).
-//
-// Server vybere, co je dnes na řadě (Leitner, denní strop, proložení po sekcích). Obrazovka
-// jen ukáže položku, pošle výsledek (POST /api/reviews/answer) a nabídne další. „Už to umím"
-// položku z opakování odebere (POST /api/reviews/remove).
 
 import { h, svg } from '../../dom.js';
 import { icons } from '../../icons.js';
@@ -81,13 +77,14 @@ export async function renderReviews(ctx) {
     });
 
     const saveStatus = h('p', { class: 'reviews__save', role: 'status' });
+    const isLast = index + 1 >= session.total;
     const nextButton = h(
       'button',
-      { type: 'button', class: 'btn btn--primary', hidden: true, onclick: () => goNext() },
-      index + 1 < session.total ? 'Další položka' : 'Dokončit',
+      { type: 'button', class: 'btn btn--primary', 'aria-label': isLast ? 'Finish / Dokončit' : 'Next item / Další položka', hidden: true, onclick: () => goNext() },
+      isLast ? 'Finish' : 'Next item',
       svg(icons.arrowRight),
     );
-    const removeButton = h('button', { type: 'button', class: 'btn btn--quiet btn--small reviews__remove', onclick: () => removeItem() }, 'Už to umím, nezobrazovat');
+    const removeButton = h('button', { type: 'button', class: 'btn btn--quiet btn--small reviews__remove', 'aria-label': "Already know this, don't show / Už to umím, nezobrazovat", onclick: () => removeItem() }, "Already know this, don't show");
 
     const rendered = renderReviewItem(item, {
       number: index + 1,

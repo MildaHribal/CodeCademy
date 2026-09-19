@@ -1,15 +1,9 @@
-// Soubory pracovní plochy: výchozí stav editoru a hlavní soubor pro Spustit.
 
 import { progress } from '../progress.js';
 
 const JS_FILE = /\.(m?js|cjs)$/;
 const COMMON_MAIN_FILES = ['index.js', 'server.js', 'main.js', 'app.js'];
 
-/**
- * Soubor, který spustí tlačítko Spustit (runtime node). Pořadí:
- * `main` ve frontmatteru kroku → `main` nebo `scripts.start` („node soubor.js“) v package.json
- * → obvyklá jména (index.js, server.js, main.js, app.js) → první .js soubor.
- */
 export function findMainFile(files, meta = {}) {
   const byName = (name) => (name ? files.find((f) => f.name === String(name).replace(/^\.\//, '')) : undefined);
   const fromMeta = byName(meta?.main);
@@ -23,7 +17,6 @@ export function findMainFile(files, meta = {}) {
       const fromPackage = byName(startScript?.[1]) ?? byName(pkg.main);
       if (fromPackage) return fromPackage;
     } catch {
-      // rozepsaný package.json — pokračujeme obvyklými jmény
     }
   }
 
@@ -34,10 +27,6 @@ export function findMainFile(files, meta = {}) {
   return files.find((f) => JS_FILE.test(f.name));
 }
 
-/**
- * Výchozí soubory: seed, přes který se položí rozpracovaný kód uživatele.
- * Zvýrazněná oblast zůstane, pokud se text před ní a za ní nezměnil.
- */
 export function initialFiles(item) {
   const saved = progress.savedFiles(item.id);
   if (!saved) return item.seed;

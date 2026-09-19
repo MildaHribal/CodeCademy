@@ -1,7 +1,4 @@
 // Živá ukázka v lekci (kontrakt kap. 5.2 a 5.3): malý editor, náhled (nebo konzole u `:::live js`)
-// a tlačítko Obnovit. Navíc:
-//   controls — ovládací prvky, jejichž hodnoty jdou do custom properties stránky náhledu,
-//   predict  — předpověď: náhled i konzole jsou skryté, dokud student netipne nebo neklikne „Nevím, ukaž".
 
 import { h, svg } from '../dom.js';
 import { icons } from '../icons.js';
@@ -19,15 +16,9 @@ import {
 
 let exampleCounter = 0;
 
-/**
- * host = prvek, který už je v dokumentu (iframe náhledu potřebuje být ve stránce).
- * @param {{ number: number, key?: string }} options  key = stabilní klíč (míchání voleb předpovědi)
- */
 export function createLiveExample(host, block, { number, key = `live-${number}` }) {
   return block.predict ? createPredictExample(host, block, { number, key }) : createPlainExample(host, block, { number });
 }
-
-// ——— Běžná ukázka (s ovládacími prvky nebo bez) ———
 
 function createPlainExample(host, block, { number }) {
   const isJs = block.runtime === 'js';
@@ -43,7 +34,7 @@ function createPlainExample(host, block, { number }) {
   consolePanel.element.classList.add('live__console');
   if (!isJs) consolePanel.element.hidden = true;
 
-  const resetButton = h('button', { type: 'button', class: 'btn btn--quiet btn--small', onclick: reset }, svg(icons.reset), 'Obnovit');
+  const resetButton = h('button', { type: 'button', class: 'btn btn--quiet btn--small', 'aria-label': 'Reset / Obnovit', onclick: reset }, svg(icons.reset), 'Reset');
   const controlPanel = controls.length ? createControlPanel(controls, { onInput: setValue }) : null;
 
   const element = h(
@@ -77,7 +68,6 @@ function createPlainExample(host, block, { number }) {
 
   const preview = mountPreview(previewHost, { runtime: block.runtime, libs: block.libs ?? [], files: previewFiles(original) });
   preview.onConsole?.((entry) => {
-    // U HTML/CSS ukázky se konzole ukáže, až když kód něco vypíše; nové spuštění ji zase schová.
     if (!isJs) consolePanel.element.hidden = entry.level === 'clear';
     consolePanel.receive(entry);
   });
@@ -85,7 +75,6 @@ function createPlainExample(host, block, { number }) {
 
   function setValue(name, value) {
     values = { ...values, [name]: value };
-    // Bez znovunačtení stránky, když to náhled umí; jinak nové spuštění s :root { … } na začátku CSS.
     if (typeof preview.setCssVariables === 'function') preview.setCssVariables({ [name]: value });
     else preview.update({ runtime: block.runtime, files: previewFiles(editor.getFiles()) });
     controlPanel.showDeclarations(stylesOf(editor.getFiles()), values);
@@ -114,7 +103,6 @@ function stylesOf(files) {
   return files.find((file) => file.name === 'styles.css')?.content ?? '';
 }
 
-/** Ovládací prvky (select, range, toggle) a živé deklarace s dosazenými hodnotami. */
 function createControlPanel(controls, { onInput }) {
   const uid = `controls-${++exampleCounter}`;
   const rows = controls.map((control, index) => {
@@ -141,7 +129,6 @@ function createControlPanel(controls, { onInput }) {
         update();
       };
     } else {
-      // toggle: vypnuto = options[0], zapnuto = options[1]
       input = h('input', { id, type: 'checkbox', class: 'live-control__toggle', role: 'switch' });
       output = h('output', { class: 'live-control__value', for: id });
       const update = () => {
@@ -184,7 +171,6 @@ function createControlPanel(controls, { onInput }) {
       declarations.replaceChildren(
         ...list.flatMap((declaration, index) => [
           index ? '\n' : '',
-          // `.kosik { gap: 1rem; }` — selektor jen tehdy, když ho parser deklarace zná.
           h('span', { class: 'live-controls__selector' }, declaration.selector ? `${declaration.selector} { ` : ''),
           h('span', { class: 'tok-propertyName' }, declaration.property),
           ': ',
@@ -195,8 +181,6 @@ function createControlPanel(controls, { onInput }) {
     },
   };
 }
-
-// ——— Předpověď ———
 
 function createPredictExample(host, block, { number, key }) {
   const runtime = block.runtime;
@@ -217,8 +201,8 @@ function createPredictExample(host, block, { number, key }) {
     h('p', { class: 'live__placeholder' }, svg(icons.eye), isNode ? 'Výstup uvidíš, až tipneš.' : 'Výsledek uvidíš, až tipneš.'),
   );
   const tipBox = h('div', { class: 'live__tip', hidden: true });
-  const dontKnow = h('button', { type: 'button', class: 'btn btn--quiet btn--small', onclick: () => reveal({ gaveUp: true }) }, 'Nevím, ukaž');
-  const resetButton = h('button', { type: 'button', class: 'btn btn--quiet btn--small', hidden: true }, svg(icons.reset), 'Obnovit');
+  const dontKnow = h('button', { type: 'button', class: 'btn btn--quiet btn--small', 'aria-label': "I don't know, show / Nevím, ukaž", onclick: () => reveal({ gaveUp: true }) }, "I don't know, show");
+  const resetButton = h('button', { type: 'button', class: 'btn btn--quiet btn--small', 'aria-label': 'Reset / Obnovit', hidden: true }, svg(icons.reset), 'Reset');
 
   let question;
   const questionHost = h('div', { class: 'live__question' });
@@ -228,8 +212,6 @@ function createPredictExample(host, block, { number, key }) {
       number,
       itemId: null,
       checkButton: true,
-      // Předpověď nemá smysl zkoušet znovu: skutečnost je po tipu vidět hned vedle, takže
-      // u špatného tipu rovnou ukážeme správnou odpověď i s vysvětlením mechanismu.
       onEvaluated: ({ correct, showAnswer }) => {
         if (!correct && !showAnswer) question.showAnswer?.();
         reveal({ gaveUp: false });
@@ -255,10 +237,9 @@ function createPredictExample(host, block, { number, key }) {
   );
   host.append(element);
 
-  // Starší typ otázky bez vlastního tlačítka: tip se potvrdí tady.
   if (question && typeof question.evaluate !== 'function') {
     dontKnow.before(
-      h('button', { type: 'button', class: 'btn btn--primary btn--small', onclick: () => question.isAnswered() && (question.reveal(), reveal({ gaveUp: false })) }, 'Ukázat výsledek'),
+      h('button', { type: 'button', class: 'btn btn--primary btn--small', 'aria-label': 'Show result / Ukázat výsledek', onclick: () => question.isAnswered() && (question.reveal(), reveal({ gaveUp: false })) }, 'Show result'),
     );
   }
 
@@ -334,7 +315,6 @@ function createPredictExample(host, block, { number, key }) {
   };
 }
 
-/** Kód předpovědi jen ke čtení (před tipem se nic nespouští). */
 function staticCode(files) {
   return h(
     'div',

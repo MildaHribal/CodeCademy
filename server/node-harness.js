@@ -1,12 +1,3 @@
-// Harness jednoho testu runtime node (kontrakt kap. 6.6).
-//
-// Rodič (node-runner.js) spustí tento soubor jako samostatný proces s IPC kanálem
-// a pošle mu zprávu { type: 'run', test, files, dir, timeoutMs }. Harness připraví
-// globály testu, spustí tělo testu jako async funkci a výsledek pošle zpátky zprávou
-// { type: 'result', pass, error, logs }. Pak skončí.
-//
-// Procesy spuštěné přes helpers.run a helpers.startServer zůstávají ve skupině procesů
-// harnessu. Rodič po testu (i po timeoutu) zabije celou skupinu, takže nic nezůstane viset.
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
 import fs from 'node:fs';
@@ -31,13 +22,11 @@ function wait(ms) {
 
 function childEnv(extra = {}) {
   const env = { ...process.env, ...extra };
-  // Proměnné testovacího běhu serveru nemají co dělat v uživatelově kódu.
   delete env.NODE_TEST_CONTEXT;
   delete env.NODE_OPTIONS;
   return env;
 }
 
-/** Na Linuxu najde všechny potomky procesu (přes /proc), aby šel zabít celý strom. */
 function descendantsOf(pid) {
   let entries;
   try {
@@ -49,12 +38,10 @@ function descendantsOf(pid) {
   for (const name of entries) {
     try {
       const stat = fs.readFileSync(`/proc/${name}/stat`, 'utf8');
-      // Formát: pid (jméno) stav ppid … — jméno může obsahovat mezery i závorky.
       const ppid = Number(stat.slice(stat.lastIndexOf(')') + 2).split(' ')[1]);
       if (!childrenByParent.has(ppid)) childrenByParent.set(ppid, []);
       childrenByParent.get(ppid).push(Number(name));
     } catch {
-      // Proces mezitím skončil.
     }
   }
   const out = [];
@@ -73,12 +60,10 @@ function killTree(pid, signal = 'SIGKILL') {
     try {
       process.kill(target, signal);
     } catch {
-      // Už neběží.
     }
   }
 }
 
-/** Rozdělí proud výstupu na řádky a každý řádek přidá do logs. */
 function lineCollector(logs, level) {
   let pending = '';
   const push = (text) => {
@@ -98,7 +83,6 @@ function lineCollector(logs, level) {
   };
 }
 
-/** Sbírá výstup do řetězce s horním limitem velikosti. */
 function outputBuffer() {
   let text = '';
   let truncated = false;
@@ -128,7 +112,6 @@ function freePort() {
   });
 }
 
-/** Zkusí se připojit na host:port. Vrátí true, když spojení projde. */
 function canConnect(host, port) {
   return new Promise((resolve) => {
     const socket = net.connect({ host, port });
@@ -143,8 +126,6 @@ function canConnect(host, port) {
 }
 
 function createHelpers({ dir, logs, testTimeoutMs = null }) {
-  // Výchozí limit helpers.run = limit testu (frontmatter timeoutMs), nejméně 10 s — `npx tsc`
-  // nebo `npx vitest run` pod zátěží trvá sekundy a nemá skončit dřív než test sám.
   const defaultRunTimeoutMs = Math.max(10000, Number(testTimeoutMs) || 0);
 
   let importCounter = 0;
@@ -169,7 +150,6 @@ function createHelpers({ dir, logs, testTimeoutMs = null }) {
 
   async function importFile(name) {
     const file = path.resolve(dir, name);
-    // Parametr v URL obejde cache modulů, takže se soubor pokaždé načte znovu.
     importCounter++;
     return import(`${pathToFileURL(file).href}?import=${Date.now()}-${importCounter}`);
   }
@@ -203,8 +183,6 @@ function createHelpers({ dir, logs, testTimeoutMs = null }) {
         clearTimeout(timer);
         outLines.flush();
         errLines.flush();
-        // Procesy, které příkaz pustil na pozadí (`… &`), zůstávají ve skupině procesů
-        // harnessu a rodič je zabije po skončení testu.
         startedChildren.delete(child);
         const result = { code, stdout: stdout.toString(), stderr: stderr.toString() };
         if (timedOut) {
@@ -219,7 +197,6 @@ function createHelpers({ dir, logs, testTimeoutMs = null }) {
         finish(127);
       });
       child.on('close', (code) => finish(timedOut ? null : code));
-      // Když výstup drží otevřený proces na pozadí, 'close' nepřijde — stačí konec bashe.
       child.on('exit', (code) => setTimeout(() => finish(timedOut ? null : code), 100));
     });
   }
@@ -266,7 +243,6 @@ function createHelpers({ dir, logs, testTimeoutMs = null }) {
       }
     };
 
-    // Počkáme, až server přijímá spojení (IPv4, případně IPv6, když poslouchá jen na ::1).
     const deadline = Date.now() + timeoutMs;
     for (;;) {
       if (exitCode !== undefined) {
@@ -298,17 +274,11 @@ function createHelpers({ dir, logs, testTimeoutMs = null }) {
   };
 }
 
-// Pozice argumentu se zprávou u asercí, které porovnávají hodnoty.
 const MESSAGE_ARGUMENT = {
   ok: 1, equal: 2, notEqual: 2, strictEqual: 2, notStrictEqual: 2, deepEqual: 2, notDeepEqual: 2,
   deepStrictEqual: 2, notDeepStrictEqual: 2, match: 2, doesNotMatch: 2,
 };
 
-/**
- * `node:assert/strict`, u kterého vlastní zpráva autora zůstane přesně taková, jak ji napsal.
- * Novější Node za ni připojuje vlastní rozdíl hodnot (`zpráva\n\n2 !== 3`) — ten ale výsledek
- * nese zvlášť v `actual`/`expected` a UI ho ukáže česky.
- */
 function createTestAssert(base) {
   const keepAuthorMessage = (error, message) => {
     if (error?.code === 'ERR_ASSERTION' && typeof message === 'string' && !error.generatedMessage) error.message = message;
@@ -331,15 +301,10 @@ function createTestAssert(base) {
 
 const testAssert = createTestAssert(assert);
 
-/** Hodnota jako text pro hlášky — stejný tvar jako formatValue v prohlížeči. */
 function formatValue(value) {
   return util.inspect(value, { depth: 2, breakLength: 72, maxArrayLength: 100 });
 }
 
-/**
- * Hláška chyby testu. Aserce s vlastní zprávou ji nechá; vygenerované hlášky node:assert
- * přeloží do češtiny stejně jako prohlížečový assert (kontrakt kap. 6.1).
- */
 function describeError(err) {
   if (!(err instanceof Error)) return String(err);
   if (err.name !== 'AssertionError' || !err.generatedMessage) return err.message || err.name;
@@ -386,7 +351,6 @@ function czechAssertionMessage(err) {
 function finish(pass, error, logs) {
   if (finished) return;
   finished = true;
-  // Servery a příkazy spuštěné testem se po testu zastaví samy.
   for (const child of startedChildren) {
     if (child.pid) killTree(child.pid);
   }
@@ -410,8 +374,6 @@ process.once('message', async ({ test, files, dir, timeoutMs }) => {
   }
 
   const helpers = createHelpers({ dir, logs, testTimeoutMs: timeoutMs });
-  // Počkáme, až zpráva opravdu odejde: nekonečná smyčka v testu by jinak zablokovala
-  // její odeslání a rodič by nevěděl, že test už běží.
   await new Promise((resolve) => process.send({ type: 'started' }, resolve));
   try {
     await body(testAssert, files, logs, errors, helpers);
@@ -421,15 +383,7 @@ process.once('message', async ({ test, files, dir, timeoutMs }) => {
   }
 });
 
-// Když test sám zavolá process.exit(), rodič se to dozví ukončením procesu bez výsledku.
-
-// Rodič (server) skončil dřív než test — třeba ho zabil SIGKILL. Harness je v jiné skupině
-// procesů, takže by po něm zůstal viset i se servery a příkazy, které test spustil.
-// (Zaseknutou synchronní smyčku tohle nezachrání — tu musí zabít rodič, proto server/index.js
-// při ukončení signálem vždy projde přes process.exit a úklid v node-runner.js.)
 process.on('disconnect', () => {
-  // Harness je vedoucí své skupiny procesů: zabije celou skupinu včetně sebe
-  // (i příkazy puštěné na pozadí, které už nikdo nesleduje).
   try {
     process.kill(-process.pid, 'SIGKILL');
   } catch {

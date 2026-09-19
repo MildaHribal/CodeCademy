@@ -1,14 +1,7 @@
-// Pokusy (data/pokusy.json, kontrakt kap. 12.2): logika bez HTTP a bez disku.
-//
-// Tady je jen to, co jde otestovat jako obyčejné funkce: kontrola těla požadavku,
-// započtení jednoho pokusu do záznamu a sestavení statistik. Routy a úložiště jsou
-// v server/routes/attempts.js. Soubor začíná podtržítkem, takže ho server nenačítá
-// jako routy (server/routes/index.js).
 import { itemTarget, parseItemId } from '../../shared/refs.js';
 
 export const ATTEMPTS_FILE = 'pokusy.json';
 
-/** Nejvyšší přírůstek aktivního času v jednom požadavku (1 hodina). */
 export const MAX_ACTIVE_MS = 3_600_000;
 
 const STATS_LIMITS = { topFailedHints: 10, wrongQuestions: 20 };
@@ -23,7 +16,6 @@ export function emptyAttempts() {
   return { version: 1, items: {} };
 }
 
-/** Načtená data → aktuální tvar, nebo null (poškozený soubor se odloží, platforma kap. 1.1). */
 export function migrateAttempts(data) {
   if (!isPlainObject(data) || !isPlainObject(data.items)) return null;
   return { ...data, version: 1 };
@@ -50,20 +42,10 @@ export function isQuestionId(id) {
   return typeof id === 'string' && id.startsWith('q:');
 }
 
-/**
- * Cíl položky (kontrakt kap. 2.10): u otázky id modulu, jinak id samo.
- * Podle cíle se pozná sekce a to, jestli položka patří k resetovanému id.
- */
 export function attemptTarget(id) {
   return isQuestionId(id) ? itemTarget(id) ?? id : id;
 }
 
-/**
- * Zkontroluje tělo POST /api/attempts a vrátí ho očištěné (jen známá pole, která přišla).
- * Existenci id v obsahu kontroluje volající (potřebuje obsah kurzu).
- * @param {unknown} body
- * @param {{ fail(message: string): never }} errors — `fail` vyhodí chybu 400 s českou zprávou
- */
 export function validateAttemptBody(body, { fail }) {
   if (!isPlainObject(body)) fail('Tělo požadavku musí být objekt');
   const unknown = Object.keys(body).filter((key) => !BODY_KEYS.includes(key));
@@ -112,18 +94,10 @@ export function validateAttemptBody(body, { fail }) {
   return clean;
 }
 
-/**
- * Započítá jeden požadavek do záznamu (pravidla kontraktu kap. 12.2).
- * @param {object | null} previous  záznam před požadavkem (nemění se)
- * @param {object} body             očištěné tělo z validateAttemptBody
- * @param {string} nowIso           čas požadavku
- * @returns {{ attempt: object, firstOk: boolean }}  firstOk = tímto požadavkem poprvé ok: true
- */
 export function applyAttempt(previous, body, nowIso) {
   const attempt = { ...emptyAttempt(), ...structuredClone(previous ?? {}) };
   let firstOk = false;
 
-  // Řešení se započte dřív než výsledek: „podíval se na řešení a pak to prošlo" je s pomocí.
   if (body.solutionViewed === true) {
     attempt.solutionViewed = true;
     if (attempt.firstOkAt === null) attempt.assisted = true;
@@ -157,19 +131,6 @@ export function applyAttempt(previous, body, nowIso) {
   return { attempt, firstOk };
 }
 
-/**
- * Podklad obrazovky #/statistiky (kontrakt kap. 12.2). Položky, které v obsahu už nejsou,
- * se vynechají. Obsah dodá volající přes funkce, aby tahle funkce nesahala na disk.
- *
- * @param {{ items: Record<string, object> }} data  obsah pokusy.json
- * @param {{
- *   order(id: string): number | null,                       // pořadí kroku/modulu v osnově, null = v obsahu není
- *   item(id: string): { title: string, hints: { text: string }[] } | null,   // krok, lab nebo projekt
- *   module(id: string): { title: string } | null,           // jakýkoli modul (čas, řešení)
- *   question(id: string): { moduleId: string, text: string, see: string[] } | null,
- *   sections: { id: string, title: string }[],              // dostupné sekce v pořadí osnovy
- * }} content
- */
 export function buildStats(data, content) {
   const topFailedHints = [];
   const wrongQuestions = [];
@@ -195,7 +156,6 @@ export function buildStats(data, content) {
     addTime(timeBySectionId, id, attempt);
     const failedHints = Object.entries(attempt.failedHints ?? {});
     if (failedHints.length === 0 && !attempt.solutionViewed) continue;
-    // Krok, lab nebo projekt mají požadavky; u ostatních modulů stačí titulek.
     const item = content.item(id) ?? content.module(id);
 
     for (const [key, fails] of failedHints) {

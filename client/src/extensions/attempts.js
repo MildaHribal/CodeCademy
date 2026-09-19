@@ -1,6 +1,4 @@
 // Záznam pokusů z pracovní plochy (krok workshopu, lab) a z projektu (kontrakt kap. 12.2):
-// výsledek každé kontroly (ok, indexy selhaných požadavků) a aktivní čas na obrazovce.
-// Tipy a zobrazení řešení posílají nápovědy (hints.js) a porovnání s řešením (solution-diff.js).
 import { appEvents } from '../core/events.js';
 import { workspaceExtensions } from '../workspace/extensions.js';
 import { projectExtensions } from '../screens/project.js';
@@ -10,17 +8,12 @@ import { failedHintIndexes } from './hints/logic.js';
 
 const ACTIVITY_EVENTS = ['keydown', 'pointerdown', 'pointermove', 'wheel', 'input'];
 
-/** Obrazovky, které právě měří čas — při zavírání karty se jejich čas ještě odešle. */
 const openSessions = new Set();
 
 window.addEventListener('pagehide', () => {
   for (const session of openSessions) session.flush({ keepalive: true });
 });
 
-/**
- * Měření času jedné obrazovky: posluchače aktivity na dokumentu a odeslání zbytku při odchodu.
- * @returns {{ takeActiveMs(): number, flush(options?): void, stop(): void }}
- */
 function startSession(id) {
   const timer = createActiveTimer();
   const onActivity = () => timer.activity();
@@ -28,11 +21,10 @@ function startSession(id) {
   for (const name of ACTIVITY_EVENTS) document.addEventListener(name, onActivity, { capture: true, passive: true });
   document.addEventListener('scroll', onActivity, { capture: true, passive: true });
   document.addEventListener('visibilitychange', onVisibility);
-  timer.activity(); // otevření obrazovky je taky aktivita
+  timer.activity();
 
   const session = {
     takeActiveMs: () => timer.take(),
-    /** Odešle čas, který ještě nebyl odeslán s kontrolou. */
     flush({ keepalive = false } = {}) {
       const activeMs = timer.take();
       if (activeMs > 0) recordQuietly({ id, activeMs }, { keepalive });
@@ -50,7 +42,6 @@ function startSession(id) {
   return session;
 }
 
-/** Tělo pokusu po kontrole: výsledek, selhané požadavky a aktivní čas od posledního odeslání. */
 function checkBody(id, run, passed, session) {
   const body = { id, ok: Boolean(passed) };
   if (!passed) body.failed = failedHintIndexes(run);

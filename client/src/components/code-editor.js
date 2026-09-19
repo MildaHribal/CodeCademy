@@ -1,8 +1,4 @@
-// Editor kódu nad CodeMirror 6: záložky souborů, zvýrazněná oblast `--edit--`
 // (docs/kontrakt.md, kap. 3) a klávesová zkratka Ctrl+Enter pro kontrolu.
-//
-// Každý soubor má vlastní EditorState (vlastní historii Ctrl+Z, kurzor, scroll),
-// jeden EditorView mezi nimi přepíná podle vybrané záložky.
 
 import { EditorView, basicSetup } from 'codemirror';
 import { EditorState, StateField, StateEffect, Prec } from '@codemirror/state';
@@ -14,17 +10,6 @@ import { javascript } from '@codemirror/lang-javascript';
 import { oneDark } from '@codemirror/theme-one-dark';
 import { h } from '../dom.js';
 import { createRegistry } from '../core/registry.js';
-
-// ——— Registr rozšíření CodeMirroru (lint, doplňování, zvýraznění…) ———
-//
-//   registerEditorExtension({
-//     id: 'js-lint',
-//     order: 10,
-//     // Zavolá se pro každý soubor v každém editoru; vrátí extension, pole, nebo null.
-//     extension: ({ name, lang, region, runtime, context, compact, item }) => (lang === 'js' ? jsLinter() : null),
-//   });
-//
-// context: 'workspace' (krok, lab) | 'live' (živá ukázka v lekci) | jiný text, který předá volající.
 
 const editorExtensions = createRegistry('Rozšíření editoru');
 
@@ -46,11 +31,6 @@ function registeredExtensionsFor(fileContext) {
   return out;
 }
 
-/**
- * Zvýrazňování podle jazyka souboru (`lang` z parseru, kap. 2.3). `jsx`/`tsx` zapínají
- * v CodeMirroru režim JSX, jinak by `<p>{x}</p>` svítilo jako chyba (runtime react, kap. 6.11).
- * @param {string} lang
- */
 export function languageFor(lang) {
   switch (lang) {
     case 'html':
@@ -75,10 +55,6 @@ export function languageFor(lang) {
       return [];
   }
 }
-
-// ——— Zvýrazněná oblast ———
-// Pamatujeme si ji jako rozsah znaků { from, to }. Při každé úpravě dokumentu se
-// rozsah posune (mapPos), takže oblast "roste" s tím, co do ní uživatel napíše.
 
 const setRegion = StateEffect.define();
 
@@ -105,12 +81,10 @@ const regionDecorations = EditorView.decorations.compute([regionField, 'doc'], (
   return Decoration.set(ranges);
 });
 
-/** Převede oblast z parseru (1-based řádky, včetně) na rozsah znaků v dokumentu. */
 function regionToRange(doc, region) {
   if (!region) return null;
   const clampLine = (n) => doc.line(Math.min(Math.max(n, 1), doc.lines));
   if (region.end < region.start) {
-    // Prázdná oblast: kurzor na začátek řádku `start` (nebo konec souboru).
     const pos = region.start > doc.lines ? doc.length : doc.line(region.start).from;
     return { from: pos, to: pos, empty: true };
   }
@@ -133,14 +107,8 @@ const editorTheme = EditorView.theme(
 
 let editorCount = 0;
 
-/**
- * @param {HTMLElement} parent
- * @param {{ files: {name, lang, content, region?}[], onChange?: (files) => void, onSubmit?: () => void, label?: string,
- *   compact?: boolean, runtime?: string, context?: string, item?: object }} options
- *   runtime, context a item se jen předávají registrovaným rozšířením editoru
- */
 export function createCodeEditor(parent, { files, onChange, onSubmit, label = 'Editor kódu', compact = false, runtime = null, context = 'editor', item = null }) {
-  const idPrefix = `editor${++editorCount}`; // víc editorů na stránce nesmí mít stejná id záložek
+  const idPrefix = `editor${++editorCount}`;
   const states = new Map();
   let activeName = null;
   let currentFiles = files;
@@ -169,7 +137,6 @@ export function createCodeEditor(parent, { files, onChange, onSubmit, label = 'E
     regionField,
     regionDecorations,
     EditorView.contentAttributes.of({ 'aria-label': label }),
-    // V malém editoru živé ukázky zalamujeme dlouhé řádky, ať není nutné posouvat do stran.
     compact ? EditorView.lineWrapping : [],
     EditorView.updateListener.of((update) => {
       if (update.docChanged) onChange?.(getFiles());
@@ -186,7 +153,6 @@ export function createCodeEditor(parent, { files, onChange, onSubmit, label = 'E
     });
     const range = regionToRange(state.doc, file.region);
     if (!range) return state;
-    // Kurzor na konec prvního řádku oblasti — tam uživatel obvykle začne psát.
     const cursor = range.empty ? range.from : state.doc.lineAt(range.from).to;
     return state.update({ effects: setRegion.of(range), selection: { anchor: cursor } }).state;
   }
@@ -243,7 +209,6 @@ export function createCodeEditor(parent, { files, onChange, onSubmit, label = 'E
     currentFiles = nextFiles;
     states.clear();
     for (const file of nextFiles) states.set(file.name, buildState(file));
-    // Začneme souborem, kde má uživatel psát; jinak hlavním souborem kroku (meta.main u node), jinak prvním.
     const start = nextFiles.find((f) => f.region) ?? nextFiles.find((f) => f.name === item?.meta?.main) ?? nextFiles[0];
     activeName = null;
     if (start) select(start.name, { scrollToRegion: true });
@@ -263,16 +228,12 @@ export function createCodeEditor(parent, { files, onChange, onSubmit, label = 'E
   return {
     element: root,
     getFiles,
-    /** Nahradí obsah všech souborů (např. Obnovit krok). Nevolá onChange. */
     setFiles: load,
     focus: () => view.focus(),
-    /** Jméno souboru v aktivní záložce. */
     activeFile: () => activeName,
-    /** Přepne na záložku souboru. */
     selectFile: (name) => {
       if (states.has(name)) select(name);
     },
-    /** Přepne na soubor, postaví kurzor na začátek řádku (1-based) a odscrolluje k němu. */
     revealLine(name, line) {
       if (!states.has(name)) return false;
       if (name !== activeName) select(name);
@@ -282,7 +243,6 @@ export function createCodeEditor(parent, { files, onChange, onSubmit, label = 'E
       view.focus();
       return true;
     },
-    /** EditorView aktivního souboru (pro rozšíření, která potřebují přímý přístup). */
     get view() {
       return view;
     },

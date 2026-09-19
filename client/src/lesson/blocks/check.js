@@ -1,7 +1,4 @@
 // Blok `check`: kontrolní otázka uprostřed výkladu a otázka předem (kontrakt kap. 5.4).
-//
-// :::check          — hodnotí se: pokusy, opakování (id q:<modul>#<klíč>) a podmínka splnění lekce
-// :::check pretest  — nehodnotí se: po odpovědi „Uvidíme za chvíli" a odpověď bez ✗, nikam se neposílá
 import { h } from '../../dom.js';
 import { createQuestion } from '../../components/question.js';
 
@@ -10,16 +7,11 @@ export function lessonQuestionId(moduleId, question) {
   return moduleId && question?.key ? `q:${moduleId}#${question.key}` : null;
 }
 
-/**
- * Otázka s vlastním tlačítkem Zkontrolovat. Když registrovaný typ otázky starší rozhraní
- * (jen reveal()) tlačítko neumí, přidá ho tahle funkce.
- * @returns {{ question: object, element: HTMLElement, isSolved(): boolean }}
- */
 export function createStandaloneQuestion(question, options) {
   let legacySolved = false;
   const instance = createQuestion(question, { ...options, checkButton: true });
   if (typeof instance.evaluate !== 'function') {
-    const button = h('button', { type: 'button', class: 'btn btn--primary btn--small' }, 'Zkontrolovat');
+    const button = h('button', { type: 'button', class: 'btn btn--primary btn--small', 'aria-label': 'Check / Zkontrolovat' }, 'Check');
     button.addEventListener('click', () => {
       if (!instance.isAnswered()) return instance.focus();
       const correct = instance.reveal();
@@ -36,7 +28,6 @@ export function createStandaloneQuestion(question, options) {
   };
 }
 
-// Pořadí hodnocených otázek v jedné lekci (pretest se nepočítá) — pro popisek „kontrolní otázka 2".
 const gradedCounters = new WeakMap();
 
 export const checkBlock = {

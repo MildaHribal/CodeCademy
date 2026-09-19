@@ -1,17 +1,8 @@
 // Objekt `helpers` dostupný v testech (kontrakt kap. 6.2 a 6.3).
-//
-// POZOR: funkce se do iframu vkládá jako text, nesmí používat nic mimo své tělo.
 
-/**
- * @param {{ stripComments: Function, findCssRules: Function, setTimeout: Function,
- *   requestResize: (width: number, height: number) => Promise<void>,
- *   waitForLayout: (limitMs: number) => Promise<void>,
- *   importFile: (name: string) => Promise<object>, flush?: () => Promise<void> }} bridge
- */
 export function createHelpers(bridge) {
   const setTimer = bridge.setTimeout;
   const wait = (ms = 0) => new Promise((resolve) => setTimer(resolve, ms));
-  // Krátká pauza, aby stihly doběhnout reakce stránky (mikroúlohy, překreslení Vue…).
   const tick = () => wait(0);
 
   function requireElement(element, helperName) {
@@ -32,7 +23,6 @@ export function createHelpers(bridge) {
     return new MouseEvent(type, { bubbles: true, cancelable: true, composed: true, view: window, button: 0, buttons });
   }
 
-  /** Nativní setter `value` — obejde případné přepsání vlastností frameworkem. */
   function setNativeValue(element, value) {
     let proto = Object.getPrototypeOf(element);
     while (proto) {
@@ -86,12 +76,10 @@ export function createHelpers(bridge) {
       if (typeof element.focus === 'function') element.focus();
       element.dispatchEvent(pointer('pointerup', 0));
       element.dispatchEvent(mouse('mouseup', 0));
-      // Syntetický click spouští i výchozí akce (zaškrtnutí, odeslání formuláře).
       element.dispatchEvent(mouse('click', 0));
       await tick();
     },
 
-    /** Smaže dosavadní hodnotu a napíše `text` znak po znaku (`input` po každém znaku, na konci `change`). */
     async type(element, text) {
       requireElement(element, 'type');
       if (typeof element.focus === 'function') element.focus();
@@ -112,7 +100,6 @@ export function createHelpers(bridge) {
       await tick();
     },
 
-    /** Odešle formulář jako uživatel (spustí validaci i událost `submit`). Přijme i tlačítko ve formuláři. */
     async submit(formOrButton) {
       requireElement(formOrButton, 'submit');
       if (formOrButton instanceof HTMLFormElement) formOrButton.requestSubmit();
@@ -121,7 +108,6 @@ export function createHelpers(bridge) {
       await tick();
     },
 
-    /** Změní velikost iframu a počká, až ji stránka uvidí (media queries, layout). */
     async resize(width, height) {
       const targetWidth = Math.round(Number(width));
       const targetHeight = height === undefined ? window.innerHeight : Math.round(Number(height));
@@ -133,14 +119,12 @@ export function createHelpers(bridge) {
       while ((window.innerWidth !== targetWidth || window.innerHeight !== targetHeight) && Date.now() < deadline) {
         await wait(10);
       }
-      // innerWidth už novou velikost zná, layout ji ale může převzít až o chvíli později.
       await bridge.waitForLayout(Math.max(0, deadline - Date.now()));
       await tick();
     },
 
     importFile: (name) => bridge.importFile(name),
 
-    /** Počká, až React dokončí vykreslení (i efekty) a doběhnou mikroúlohy a Tailwind. */
     flush: () => (bridge.flush ? bridge.flush() : wait(0)),
   };
 }

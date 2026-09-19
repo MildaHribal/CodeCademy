@@ -1,28 +1,14 @@
-// Jeden běh v čerstvém iframu: načte stránku, spustí (nejvýš jeden) test a uklidí.
 import { composePage } from './compose.js';
 import { createRunId, listenToFrame, sendToFrame } from './protocol.js';
 import { createHiddenFrame, resizeFrame } from './sandbox-frame.js';
 import { startWatchdog } from './watchdog.js';
 
-// Čas navíc pro načtení stránky (parsování, Vue z /vendor, React a knihovny z /api/vendor…), než začne běžet limit testu.
 const LOAD_GRACE_MS = 2000;
-// Rezerva po startu testu: vlastní časovač iframu (timeoutMs) i ochrana smyček mají doběhnout dřív.
 const TEST_GRACE_MS = 1000;
 
 export const FRAME_TIMEOUT_MESSAGE = 'Test nedoběhl včas — nekonečná smyčka?';
 export const FRAME_CANCELLED_MESSAGE = 'Kontrola byla zrušena.';
 
-/**
- * @param {{ runtime: 'dom'|'js'|'vue'|'react', files: Array<{name: string, content: string}>, libs?: string[],
- *   test: string|null, timeoutMs: number, signal?: AbortSignal|null }} options
- *   test = null → jen načíst stránku; signal → zrušení (iframe se hned odstraní)
- *   inspect = deklarace CSS → po načtení najde neaktivní (výsledek v `inspect`)
- *   storage = počáteční obsah náhradního localStorage/sessionStorage ({ localStorage: { klíč: text } })
- * @returns {Promise<{ pass: boolean, error?: string, phase?: 'load'|'test', details?: object,
- *   logs: Array<{level, text}>, errors: string[] }>}
- *   phase (jen u selhání): 'load' = stránka se zasekla ještě před spuštěním testu
- *   details (jen u selhání): errorName, u asercí operator/actual/expected/generatedMessage/diff
- */
 export function runInFrame({ runtime, files, libs = [], test, timeoutMs, signal = null, inspect = null, storage = null }) {
   return new Promise((resolve) => {
     if (signal?.aborted) {
@@ -90,7 +76,7 @@ export function runInFrame({ runtime, files, libs = [], test, timeoutMs, signal 
       watchdog.cancel();
       stopListening();
       signal?.removeEventListener('abort', onAbort);
-      frame.remove(); // odstraněním iframu Chrome ukončí i zaseknutý kód uvnitř
+      frame.remove();
       resolve({ ...outcome, logs, errors });
     }
 
@@ -101,7 +87,6 @@ export function runInFrame({ runtime, files, libs = [], test, timeoutMs, signal 
 
 const DETAIL_FIELDS = ['errorName', 'operator', 'actual', 'expected', 'generatedMessage', 'diff'];
 
-/** Z výsledku iframu vezme jen známá pole (iframe spouští cizí kód, nevěříme mu). */
 function pickDetails(message) {
   const details = {};
   for (const field of DETAIL_FIELDS) {

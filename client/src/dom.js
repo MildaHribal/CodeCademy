@@ -1,10 +1,3 @@
-// Malý pomocník na tvorbu DOM prvků bez frameworku.
-//
-//   h('button', { class: 'btn', onclick: save }, 'Uložit')
-//
-// Atributy začínající "on" se připojí jako posluchače událostí, `class` a `style`
-// se nastaví přímo, ostatní přes setAttribute. Potomci můžou být řetězce, prvky,
-// pole nebo null/false (ty se přeskočí), takže jde psát podmínky přímo v zápisu.
 
 export function h(tag, attrs = {}, ...children) {
   const el = document.createElement(tag);
@@ -19,7 +12,7 @@ export function h(tag, attrs = {}, ...children) {
     } else if (key === 'dataset') {
       Object.assign(el.dataset, value);
     } else if (key in el && typeof value !== 'string') {
-      el[key] = value; // např. checked, disabled, value
+      el[key] = value;
     } else {
       el.setAttribute(key, value === true ? '' : value);
     }
@@ -36,13 +29,11 @@ export function append(parent, children) {
   return parent;
 }
 
-/** Nahradí obsah prvku novými potomky. */
 export function replace(parent, ...children) {
   parent.replaceChildren();
   return append(parent, children);
 }
 
-/** Jednoduchá SVG ikona ze sady v icons.js. */
 export function svg(pathData, { size = 16, label = null } = {}) {
   const ns = 'http://www.w3.org/2000/svg';
   const el = document.createElementNS(ns, 'svg');

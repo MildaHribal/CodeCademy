@@ -1,36 +1,17 @@
-// Kontrola „kód nejde spustit" (kontrakt kap. 6.1) — jedna implementace pro prohlížečový
-// runner, server (node-runner) i lint v editoru.
-//
-// JavaScript se naparsuje přes acorn jako klasický skript i jako ES modul. Chyba je jen
-// tehdy, když kód nejde naparsovat ani jedním způsobem. Hlášky se drží tvaru, který píše
-// Chrome (`Unexpected token ')'`, `Unexpected end of input`), aby student v editoru, ve
-// výsledku testů i v DevTools viděl totéž.
 import { parse } from 'acorn';
 
-/** Text neověřeného požadavku, když kód nejde spustit (kontrakt kap. 6.1). */
 export const SYNTAX_SKIPPED_MESSAGE = 'Neověřeno — kód nejde spustit';
 
 const JS_FILE = /\.(m?js|cjs)$/i;
 const HTML_FILE = /\.html?$/i;
-// Typy <script>, které prohlížeč spustí jako JavaScript.
 const CLASSIC_SCRIPT_TYPE = /^(text|application)\/(x-)?(javascript|ecmascript)$/i;
 
-// Víceznakové operátory, nejdelší první (pro text chybového tokenu).
 const PUNCTUATORS = [
   '>>>=', '...', '===', '!==', '**=', '<<=', '>>=', '>>>', '&&=', '||=', '??=',
   '=>', '==', '!=', '<=', '>=', '&&', '||', '??', '?.', '++', '--', '+=', '-=', '*=', '/=', '%=',
   '&=', '|=', '^=', '<<', '>>', '**',
 ];
 
-/**
- * Najde první syntaktickou chybu v souborech kroku.
- *
- * @param {Array<{ name: string, content: string }>} files
- * @param {{ includeHtml?: boolean }} options  includeHtml: kontrolovat i inline <script> v .html
- *   (runtime node HTML nespouští, proto ho vypíná)
- * @returns {null | { file: string, line: number, column: number, message: string }}
- *   řádek a sloupec jsou 1-based v celém souboru (u inline skriptu v HTML souboru)
- */
 export function findSyntaxError(files, { includeHtml = true } = {}) {
   for (const file of files ?? []) {
     const name = String(file?.name ?? '');
@@ -45,7 +26,6 @@ export function findSyntaxError(files, { includeHtml = true } = {}) {
         return {
           file: name,
           line: script.line + error.line - 1,
-          // Na prvním řádku skriptu je před kódem ještě značka <script>.
           column: error.line === 1 ? script.column + error.column - 1 : error.column,
           message: error.message,
         };
@@ -55,11 +35,6 @@ export function findSyntaxError(files, { includeHtml = true } = {}) {
   return null;
 }
 
-/**
- * RunResult pro kód, který nejde naparsovat: žádný test se nespustil (kontrakt kap. 6.1).
- * @param {Array<object>} hints
- * @param {{ file: string, line: number, column: number, message: string }} syntaxError
- */
 export function syntaxErrorResult(hints, syntaxError) {
   return {
     ok: false,
@@ -70,18 +45,12 @@ export function syntaxErrorResult(hints, syntaxError) {
   };
 }
 
-/**
- * Zkusí kód naparsovat jako skript i jako modul.
- * @returns {null | { line: number, column: number, message: string }}
- */
 export function checkJsSyntax(code) {
   const source = String(code ?? '');
   const asScript = tryParse(source, 'script');
   if (!asScript) return null;
   const asModule = tryParse(source, 'module');
   if (!asModule) return null;
-  // Oba pokusy selhaly. Věrnější bývá ten, který se v kódu dostal dál: soubor s `import`
-  // selže jako skript hned na prvním řádku, jako modul až na skutečné chybě.
   const error = asModule.pos > asScript.pos ? asModule : asScript;
   return {
     line: error.loc?.line ?? 1,
@@ -90,18 +59,16 @@ export function checkJsSyntax(code) {
   };
 }
 
-/** Vrátí výjimku acornu, nebo null, když kód jde naparsovat. */
 function tryParse(source, sourceType) {
   try {
     parse(source, { ecmaVersion: 'latest', sourceType, allowHashBang: true, locations: true });
     return null;
   } catch (error) {
-    if (typeof error?.pos !== 'number') throw error; // chyba acornu samotného, ne kódu
+    if (typeof error?.pos !== 'number') throw error;
     return error;
   }
 }
 
-/** Z hlášky acornu `Unexpected token (3:14)` udělá `Unexpected token ')'` jako v Chrome. */
 function chromeLikeMessage(error, source) {
   const message = String(error.message).replace(/\s*\(\d+:\d+\)$/, '');
   if (message !== 'Unexpected token') return message;
@@ -116,14 +83,9 @@ function chromeLikeMessage(error, source) {
   return `Unexpected token '${punctuator}'`;
 }
 
-/**
- * Inline skripty z HTML, které prohlížeč spustí (bez `src`, typ prázdný, JavaScript nebo `module`).
- * @returns {Array<{ content: string, line: number, column: number }>}  kde obsah začíná (1-based)
- */
 export function extractInlineScripts(html) {
   const text = String(html ?? '');
   const scripts = [];
-  // Komentáře přeskočíme celé, aby se v nich nehledaly značky.
   const pattern = /<!--[\s\S]*?(?:-->|$)|<script\b((?:"[^"]*"|'[^']*'|[^'">])*)>([\s\S]*?)(?:<\/script\s*>|$)/gi;
   for (const match of text.matchAll(pattern)) {
     if (match[0].startsWith('<!--')) continue;

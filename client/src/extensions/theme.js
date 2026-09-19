@@ -1,18 +1,10 @@
 // Barevný motiv: světlý, tmavý, nebo podle systému (kontrakt kap. 12.6).
-//
-// Motiv se přepíná atributem data-theme na <html> — barvy jsou jen tokeny v styles/tokens.css,
-// takže nic dalšího se měnit nemusí. U volby „podle systému" dostane <html> skutečně použitý
-// motiv (light/dark) a změna v systému se projeví hned. Zvolená hodnota je v data-theme-choice.
-//
-// Volba se ukládá na server (nastavení). Do localStorage se zapisuje jen nápověda pro první
-// vykreslení, aby stránka při načtení neblikla světlou barvou, než odpoví server.
 import { registerHeaderItem } from '../core/header.js';
 import { settings } from './settings/client.js';
 import { nextTheme, resolveTheme, THEMES } from './settings/logic.js';
 
 const HINT_KEY = 'akademie.theme';
 
-// Ikony (viewBox 0 0 16 16), kreslené tahem jako ostatní ikony aplikace.
 const ICONS = {
   light:
     '<circle cx="8" cy="8" r="3" fill="none" stroke="currentColor" stroke-width="1.6"/>' +
@@ -22,7 +14,7 @@ const ICONS = {
     '<circle cx="8" cy="8" r="5.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8 2.5a5.5 5.5 0 0 1 0 11z" fill="currentColor"/>',
 };
 
-const SHORT_LABELS = { system: 'Motiv: systém', light: 'Motiv: světlý', dark: 'Motiv: tmavý' };
+const SHORT_LABELS = { system: 'Theme: System', light: 'Theme: Light', dark: 'Theme: Dark' };
 
 const media = window.matchMedia?.('(prefers-color-scheme: dark)') ?? null;
 let choice = readHint() ?? 'system';
@@ -32,7 +24,7 @@ function readHint() {
     const value = localStorage.getItem(HINT_KEY);
     return THEMES.includes(value) ? value : null;
   } catch {
-    return null; // úložiště nemusí být dostupné (anonymní okno)
+    return null;
   }
 }
 
@@ -40,11 +32,9 @@ function writeHint(value) {
   try {
     localStorage.setItem(HINT_KEY, value);
   } catch {
-    // bez nápovědy jen při příštím načtení možná krátce blikne světlý motiv
   }
 }
 
-/** Nastaví motiv na <html>. */
 export function applyTheme(value) {
   choice = THEMES.includes(value) ? value : 'system';
   const root = document.documentElement;
@@ -54,12 +44,9 @@ export function applyTheme(value) {
   renderToggle();
 }
 
-// ——— Přepínač v horní liště ———
-
 let removeToggle = null;
 
 function renderToggle() {
-  // Popisek i ikona se mění s volbou — položku hlavičky proto zaregistrujeme znovu.
   removeToggle?.();
   removeToggle = registerHeaderItem({
     id: 'theme',

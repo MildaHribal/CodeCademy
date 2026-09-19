@@ -1,22 +1,8 @@
-// Neaktivní CSS (po vzoru Firefoxu): deklarace, která je platná, ale na prvcích, kterých
-// se týká, nic nedělá — `justify-content` bez flex/grid, `flex-grow` u prvku, jehož rodič
-// není flex, `z-index`/`top` u `position: static`, `width` u řádkového prvku.
-//
-// POZOR: funkce se do iframu vkládá jako text (runner/frame-script.js), nesmí používat
-// nic mimo své tělo.
 
-/**
- * @param {Document} doc  vykreslená stránka
- * @param {Array<{ id: number, property: string, selector: string }>} declarations
- * @returns {Array<{ id: number, property: string, reason: string, elements: number }>}
- *   reason: 'container' (chybí flex/grid na prvku), 'flex-container', 'grid-container',
- *   'flex-parent' (rodič není flex), 'flex-or-grid-parent', 'grid-parent', 'static', 'inline'
- */
 export function findInactiveDeclarations(doc, declarations) {
   const view = doc.defaultView;
   const FLEX = ['flex', 'inline-flex'];
   const GRID = ['grid', 'inline-grid'];
-  // Nahrazené prvky mají šířku a výšku i jako řádkové.
   const REPLACED = ['IMG', 'INPUT', 'TEXTAREA', 'SELECT', 'BUTTON', 'VIDEO', 'CANVAS', 'IFRAME', 'OBJECT', 'EMBED', 'SVG', 'AUDIO', 'PROGRESS', 'METER'];
 
   const RULES = {
@@ -36,7 +22,6 @@ export function findInactiveDeclarations(doc, declarations) {
   const displayOf = (element) => view.getComputedStyle(element).display;
   const parentDisplay = (element) => {
     let parent = element.parentElement;
-    // `display: contents` rodič se v rozvržení nepočítá — rozhoduje jeho rodič.
     while (parent && displayOf(parent) === 'contents') parent = parent.parentElement;
     return parent ? displayOf(parent) : 'block';
   };
@@ -51,7 +36,6 @@ export function findInactiveDeclarations(doc, declarations) {
       case 'grid-parent': return !GRID.includes(parentDisplay(element));
       case 'static': {
         if (view.getComputedStyle(element).position !== 'static') return false;
-        // z-index funguje i u flex a grid položek bez position.
         return !(property === 'z-index' && [...FLEX, ...GRID].includes(parentDisplay(element)));
       }
       case 'inline': return displayOf(element) === 'inline' && !REPLACED.includes(element.tagName.toUpperCase());
@@ -68,7 +52,7 @@ export function findInactiveDeclarations(doc, declarations) {
     try {
       elements = Array.from(doc.querySelectorAll(declaration.selector));
     } catch {
-      continue; // selektor s pseudoelementem nebo neplatný — nejde ověřit
+      continue;
     }
     if (elements.length === 0) continue;
     if (elements.every((element) => isInactive(element, kind, property))) {

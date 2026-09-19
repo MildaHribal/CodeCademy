@@ -1,21 +1,8 @@
-// Tabulka rout API. Každý nástroj si routy přidá v server/routes/<nástroj>.js:
-//
-//   export function register(router, ctx) {
-//     router.get('/api/reviews/due', () => store.get());
-//     router.post('/api/reviews/answer', async ({ readBody }) => { … });
-//     router.get('/api/module/:section/:module', ({ params, query }) => …);
-//   }
-//
-// Obsluha dostane { req, res, url, params, query, readBody, signal } a vrátí data,
-// která se pošlou jako JSON se stavem 200 (undefined → { ok: true }). Když obsluha
-// odpověď pošle sama (res), vrácená hodnota se ignoruje. Chyby: throw new HttpError(…)
-// nebo InputError (viz server/errors.js).
 import { HttpError } from './errors.js';
 import { abortOnDisconnect, readJsonBody } from './http.js';
 
 const METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'];
 
-/** '/api/module/:section/:module' → { pattern: RegExp, names: ['section', 'module'] } */
 export function compilePath(path) {
   if (typeof path !== 'string' || !path.startsWith('/')) {
     throw new Error(`Cesta routy musí začínat lomítkem: ${path}`);
@@ -66,16 +53,10 @@ export function createRouter() {
   return {
     ...api(null),
 
-    /** Stejný router, jen chyby (duplicitní routa) uvedou, odkud routa přišla. */
     forSource: (source) => api(source),
 
-    /** Seznam rout pro výpis a testy: [{ method, path, source }]. */
     list: () => routes.map(({ method, path, source }) => ({ method, path, source })),
 
-    /**
-     * Najde obsluhu pro požadavek. Vyhodí 404 (žádná cesta) nebo 405 (cesta je, metoda ne).
-     * @returns {{ handler: Function, params: Record<string, string> }}
-     */
     match(method, pathname) {
       const matching = routes
         .map((route) => ({ route, match: pathname.match(route.pattern) }))
@@ -99,7 +80,6 @@ export function createRouter() {
   };
 }
 
-/** Objekt, který dostane obsluha routy. */
 export function createRequestContext(req, res, url, params) {
   let signal = null;
   return {
@@ -109,7 +89,6 @@ export function createRequestContext(req, res, url, params) {
     params,
     query: url.searchParams,
     readBody: () => readJsonBody(req),
-    /** AbortSignal zrušený při zavření spojení klientem (vytvoří se až při prvním použití). */
     get signal() {
       signal ??= abortOnDisconnect(res);
       return signal;

@@ -1,52 +1,24 @@
-// Poznámky v data/poznamky/<sekce>.md (kontrakt kap. 12.5).
-//
-// Jeden obyčejný markdown soubor na sekci, `obecne.md` pro poznámky mimo sekci. Uživatel si ho
-// smí upravit i ručně v editoru, proto se nic neukládá do JSON a „verze" souboru je čas jeho
-// poslední změny (mtime). PUT s `baseUpdated` tak pozná, že se soubor mezitím změnil jinde.
-//
-//   GET  /api/notes                     → { notes: [{ section, title, updated, size }] }
-//   GET  /api/notes/:section            → { section, content, updated }
-//   PUT  /api/notes/:section            { content, baseUpdated? } → { ok, updated } (409 při změně)
-//   POST /api/notes/:section/append     { kind, source, title, text, quote? } → { ok, updated }
-//
-// Zápis je atomický: nejdřív <soubor>.tmp, pak rename přes původní soubor. Zapisuje se
-// synchronně, takže dva požadavky se v jednom procesu nikdy nepromíchají.
 import fs from 'node:fs';
 import path from 'node:path';
 
 export const GENERAL_NOTES = 'obecne';
 export const GENERAL_TITLE = 'Obecné poznámky';
 export const NOTE_KINDS = ['note', 'quote', 'explain', 'plan'];
-/** Největší tělo připsaného záznamu (kontrakt kap. 12.5). */
 export const APPEND_LIMIT_BYTES = 100 * 1024;
 
-// Reference na výklad (kontrakt kap. 2.9): sekce/modul[/krok][#kotva].
 const SLUG = '[a-z0-9]+(?:-[a-z0-9]+)*';
 const REF_PATTERN = new RegExp(`^${SLUG}/${SLUG}(?:/\\d{3})?(?:#${SLUG})?$`);
 
-/**
- * Text připsaného záznamu přesně podle kontraktu:
- *
- *   (prázdný řádek)
- *   ## {title}
- *
- *   <!-- zdroj: {source} · {čas} · {kind} -->
- *
- *   > {citace, každý řádek s "> "}      ← jen když je citace
- *
- *   {text}
- */
 export function formatNoteEntry({ kind, source, title, text, quote = '' }, time) {
   const lines = ['', `## ${title}`, '', `<!-- zdroj: ${source} · ${time} · ${kind} -->`, ''];
   if (quote) {
     lines.push(...quote.split('\n').map((line) => `> ${line}`), '');
   }
   if (text) lines.push(text);
-  else lines.pop(); // bez textu nekončí záznam dvěma prázdnými řádky
+  else lines.pop();
   return `${lines.join('\n')}\n`;
 }
 
-/** Připojí záznam k dosavadnímu obsahu souboru (obsah bez koncového \n ho dostane). */
 export function appendEntry(content, entry) {
   if (content && !content.endsWith('\n')) return `${content}\n${entry}`;
   return content + entry;
@@ -54,7 +26,6 @@ export function appendEntry(content, entry) {
 
 const normalizeNewlines = (value) => value.replace(/\r\n?/g, '\n');
 
-/** Ověří a upraví tělo append. Vyhodí InputError s českou zprávou. */
 export function validateAppendBody(body, InputError) {
   const { kind, source, title, text = '', quote } = body;
   if (!NOTE_KINDS.includes(kind)) {
@@ -75,7 +46,6 @@ export function validateAppendBody(body, InputError) {
   return {
     kind,
     source,
-    // Nadpis musí zůstat na jednom řádku, jinak by rozbil markdown souboru.
     title: title.replace(/\s+/g, ' ').trim(),
     text: cleanText,
     quote: cleanQuote,
@@ -83,11 +53,9 @@ export function validateAppendBody(body, InputError) {
 }
 
 export function register(router, ctx) {
-  // ctx.dataPath hlídá, že cesta nevede ven z data/ (slug sekce je ověřený i tak).
   const notesDir = () => path.dirname(ctx.dataPath(`poznamky/${GENERAL_NOTES}.md`));
   const fileOf = (section) => ctx.dataPath(`poznamky/${section}.md`);
 
-  /** Dostupné sekce v pořadí osnovy: [{ id, title }]. */
   function availableSections() {
     return ctx
       .loadCurriculum()
@@ -96,7 +64,6 @@ export function register(router, ctx) {
       .map(({ id, title }) => ({ id, title }));
   }
 
-  /** `:section` = slug dostupné sekce nebo `obecne`, jinak 400. Vrací titulek. */
   function checkSection(section) {
     if (section === GENERAL_NOTES) return GENERAL_TITLE;
     ctx.checkSlugs(section);
@@ -105,7 +72,6 @@ export function register(router, ctx) {
     return found.title;
   }
 
-  /** { content, updated } — prázdný obsah a updated null, když soubor není. */
   function readNotes(section) {
     const file = fileOf(section);
     try {
@@ -142,7 +108,6 @@ export function register(router, ctx) {
     const ordered = [
       { id: GENERAL_NOTES, title: GENERAL_TITLE },
       ...availableSections(),
-      // Soubory sekcí, které z osnovy zmizely, se neztratí — jsou na konci.
       ...[...existing].sort().map((id) => ({ id, title: id })),
     ];
     const seen = new Set();

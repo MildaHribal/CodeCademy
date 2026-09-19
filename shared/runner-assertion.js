@@ -1,24 +1,8 @@
-// Podrobnosti o selhaném testu pro RunResult (kontrakt kap. 6.1): jméno chyby a u asercí
-// `operator`, `actual`, `expected`, `generatedMessage` a u deepEqual `diff`.
-//
-// Používá ho prohlížečový runner (uvnitř iframu) i node-harness. Hodnoty na text převádí
-// funkce `format` z volajícího (formatValue v prohlížeči, util.inspect v Node).
-//
-// POZOR: funkce se do iframu vkládá jako text (runner/frame-script.js), nesmí používat
-// nic mimo své tělo.
-
-/**
- * @param {unknown} error  výjimka z testu
- * @param {(value: unknown) => string} format
- * @returns {{ errorName: string, operator?: string, actual?: string, expected?: string,
- *   generatedMessage?: boolean, diff?: Array<{ path: string, actual: string, expected: string }> }}
- */
 export function describeAssertion(error, format) {
   const MAX_TEXT = 2000;
   const MAX_DIFF = 10;
   const MAX_DEPTH = 20;
   const MISSING = '(chybí)';
-  // Aserce, které porovnávají hodnotu s očekáváním (u fail/throws/rejects se nic neporovnává).
   const COMPARING = new Set([
     'strictEqual', 'notStrictEqual', 'deepStrictEqual', 'notDeepStrictEqual',
     'equal', 'notEqual', 'deepEqual', 'notDeepEqual', 'match', 'doesNotMatch', '==', 'ok',
@@ -50,7 +34,6 @@ export function describeAssertion(error, format) {
   }
   return details;
 
-  /** Cesty k lišícím se listům dvou hodnot: `items[2].price`, nejvýš MAX_DIFF položek. */
   function diffLeaves(actualRoot, expectedRoot) {
     const out = [];
     const seen = [];
@@ -70,7 +53,6 @@ export function describeAssertion(error, format) {
       const bothContainers = isPlainContainer(actual) && isPlainContainer(expected)
         && Array.isArray(actual) === Array.isArray(expected);
       if (!bothContainers || depth > MAX_DEPTH || seen.some(([a, b]) => a === actual && b === expected)) {
-        // List (nebo jiný druh objektu): liší se, když se liší jeho zápis.
         const actualText = show(actual);
         const expectedText = show(expected);
         if (isObject(actual) && isObject(expected) && actualText === expectedText) return;

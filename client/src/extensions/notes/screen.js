@@ -1,9 +1,3 @@
-// Obrazovka #/poznamky[/sekce]: poznámky po sekcích jako čitelný text i jako upravitelný soubor.
-//
-// Vlevo seznam souborů poznámek (obecné + sekce, kde něco je) a výběr další sekce, vpravo
-// vybraný soubor. „Upravit" otevře celý markdown; při uložení se pošle `baseUpdated`, takže
-// když se soubor mezitím změnil (jiné okno, ruční úprava), nic se nepřepíše (409).
-// Stránka se dá vytisknout jako tahák před pohovorem.
 import { h, svg } from '../../dom.js';
 import { icons } from '../../icons.js';
 import { renderMarkdown } from '../../markdown.js';
@@ -84,7 +78,6 @@ function renderSidebar(sidebar, { list, sections, sectionId }) {
     );
   });
 
-  // Sekce bez poznámek jdou otevřít výběrem — soubor vznikne s první poznámkou.
   const withoutNotes = sections.filter((section) => !known.has(section.id));
   const picker = withoutNotes.length
     ? h(

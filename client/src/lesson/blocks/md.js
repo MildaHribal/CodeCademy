@@ -1,4 +1,3 @@
-// Blok `md`: výklad v markdownu. Nadpisy dostanou kotvy (shared/anchors.js).
 import { renderMarkdown } from '../../markdown.js';
 
 export const mdBlock = {

@@ -1,23 +1,11 @@
-// „Nerozumím" u odstavce: najeď myší na odstavec výkladu (nebo označ kus textu) a vlevo
-// se ukáže otazník. Kliknutí otevře panel poznámek s citací odstavce.
-//
-//   const off = attachNotUnderstood(container, { findHeading: (element) => ({ anchor, text }) | null });
-//
-// Jedno plovoucí tlačítko na celou stránku; posouvá se k odstavci, nad kterým je myš.
 import { h, svg } from '../../dom.js';
 import { icons } from '../../icons.js';
 import { openNotesDrawer } from './drawer.js';
 
-// Co je „odstavec" výkladu. Interaktivní části (otázky, ukázky, editor) se neoznačují.
 const BLOCKS = 'p, li, pre, blockquote, table, dd';
 const SKIP = 'button, input, textarea, select, .cm-editor, .question, .questions, .lesson__live, .lesson__finish, .notes-drawer, form';
 const HIDE_DELAY_MS = 350;
 
-/**
- * @param {HTMLElement} container  kde hledat odstavce (článek lekce, zadání kroku)
- * @param {{ findHeading?: (element: Element) => ({ anchor: string, text: string } | null) }} options
- * @returns {() => void} odpojení
- */
 export function attachNotUnderstood(container, { findHeading = () => null } = {}) {
   const button = h(
     'button',
@@ -27,7 +15,7 @@ export function attachNotUnderstood(container, { findHeading = () => null } = {}
   );
   document.body.append(button);
 
-  let target = null; // prvek odstavce
+  let target = null;
   let selectionText = '';
   let hideTimer = null;
 
@@ -35,7 +23,6 @@ export function attachNotUnderstood(container, { findHeading = () => null } = {}
     const element = node instanceof Element ? node : node?.parentElement;
     const block = element?.closest(BLOCKS);
     if (!block || !container.contains(block) || block.closest(SKIP) || !block.closest('.prose')) return null;
-    // Odstavec uvnitř položky seznamu nebo citace: bereme ten nejvnitřnější blok s textem.
     return block.textContent.trim() ? block : null;
   }
 
@@ -66,7 +53,7 @@ export function attachNotUnderstood(container, { findHeading = () => null } = {}
   }
 
   const onOver = (event) => {
-    if (selectionText) return; // označený text má přednost před odstavcem pod myší
+    if (selectionText) return;
     const block = blockFor(event.target);
     if (block) showFor(block);
   };
@@ -86,7 +73,6 @@ export function attachNotUnderstood(container, { findHeading = () => null } = {}
       scheduleHide();
     }
   };
-  // Posun stránky nebo panelu zadání: tlačítko by viselo mimo odstavec, schováme ho.
   const onScroll = () => {
     if (!button.hidden && !selectionText) {
       button.hidden = true;
@@ -98,12 +84,10 @@ export function attachNotUnderstood(container, { findHeading = () => null } = {}
   button.addEventListener('pointerleave', () => {
     if (!selectionText) scheduleHide();
   });
-  // mousedown by jinak zrušil označený text dřív, než ho klik přečte.
   button.addEventListener('mousedown', (event) => event.preventDefault());
   button.addEventListener('click', () => {
     if (!target) return;
     const heading = findHeading(target);
-    // Markdown zalamuje odstavce v souboru — citace odstavce je jeden řádek, jen blok kódu drží řádky.
     const raw = selectionText || target.textContent;
     const quote = target.closest('pre') ? raw : raw.replace(/\s+/g, ' ');
     openNotesDrawer({
@@ -131,11 +115,9 @@ export function attachNotUnderstood(container, { findHeading = () => null } = {}
   };
 }
 
-/** Nejbližší nadpis s kotvou nad prvkem (z lesson.headings()). */
 export function nearestHeading(headings, element) {
   let found = null;
   for (const heading of headings) {
-    // DOCUMENT_POSITION_FOLLOWING: prvek je v dokumentu až za nadpisem.
     if (heading.element.compareDocumentPosition(element) & Node.DOCUMENT_POSITION_FOLLOWING) found = heading;
     else break;
   }

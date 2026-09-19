@@ -1,10 +1,4 @@
 // Odstupňované nápovědy u kroku, labu a projektu (kontrakt kap. 3.3, B1).
-//
-// Skládá se ze dvou prvků, které si obrazovka umístí sama:
-// - `button`  „Potřebuju nápovědu (k ze n)" → další tip; po posledním tipu „Porovnat s řešením",
-// - `panel`   otevřené tipy, po posledním tipu (nebo u kroku bez tipů) odkazy na výklad a porovnání.
-// Po 2 neúspěšných kontrolách v řadě se tlačítko zvýrazní a zvýrazní se požadavek i tip,
-// který k němu patří. Rozhodování je v logic.js.
 import { h, replace } from '../../dom.js';
 import { renderMarkdown } from '../../markdown.js';
 import { attemptsApi, recordQuietly } from '../attempts/api.js';
@@ -15,28 +9,18 @@ import { renderSeeLinks } from './see-links.js';
 
 let panelCounter = 0;
 
-/**
- * @param {{
- *   id: string,                 // id kroku, labu nebo projektu (pro pokusy)
- *   item: { help?: { text: string, hintIndex: number | null }[], see?: string[] },
- *   hintList: { itemElement(index: number): HTMLElement | null },
- *   onCompare: () => void,      // otevře porovnání s řešením (s potvrzením řeší volající)
- *   signal: AbortSignal,
- * }} options
- * @returns {{ button: HTMLButtonElement, panel: HTMLElement, checked(result: { passed: boolean, run: object }): void }}
- */
 export function createHintsUi({ id, item, hintList, onCompare, signal }) {
   const help = Array.isArray(item.help) ? item.help : [];
   const see = Array.isArray(item.see) ? item.see : [];
   const titleId = `hint-tips-title-${++panelCounter}`;
 
-  let opened = 0; // otevřené tipy (vždy prvních N)
-  let failStreak = 0; // neúspěšné kontroly v řadě (failsSinceOk)
-  let lastFailed = null; // první selhaný požadavek poslední kontroly
+  let opened = 0;
+  let failStreak = 0;
+  let lastFailed = null;
   let passed = false;
-  let panelRequested = false; // krok bez tipů: uživatel si panel otevřel
-  let checkedLocally = false; // kontrola proběhla dřív, než se načetl stav ze serveru
-  let focusedRequirement = null; // <li> požadavku se zvýrazněním hint--focus
+  let panelRequested = false;
+  let checkedLocally = false;
+  let focusedRequirement = null;
 
   const button = h('button', { type: 'button', class: 'btn hint-tips__button' });
   const status = h('p', { class: 'visually-hidden', role: 'status' });
@@ -84,7 +68,6 @@ export function createHintsUi({ id, item, hintList, onCompare, signal }) {
       if (!checkedLocally) failStreak = Number(saved.failsSinceOk) || 0;
       render();
     } catch {
-      // Bez uloženého stavu nápovědy fungují dál, jen začínají od nuly.
     }
   }
 
@@ -123,7 +106,7 @@ export function createHintsUi({ id, item, hintList, onCompare, signal }) {
         seeLinks ? 'Vrať se k výkladu, nebo porovnej svůj kód s autorovým řešením.' : 'Můžeš porovnat svůj kód s autorovým řešením.',
       ),
       seeLinks,
-      h('div', { class: 'actions' }, h('button', { type: 'button', class: 'btn hint-tips__compare', onclick: () => onCompare() }, 'Porovnat s řešením')),
+      h('div', { class: 'actions' }, h('button', { type: 'button', class: 'btn hint-tips__compare', 'aria-label': 'Compare with solution / Porovnat s řešením', onclick: () => onCompare() }, 'Compare with solution')),
     ];
   }
 
@@ -140,7 +123,6 @@ export function createHintsUi({ id, item, hintList, onCompare, signal }) {
       focusedRequirement = hintList.itemElement(lastFailed);
       focusedRequirement?.classList.add('hint--focus');
     }
-    // Tip k selhanému požadavku zvýrazníme, když už je otevřený; jinak k němu vede zvýrazněné tlačítko.
     const tipIndex = focusTipIndex(help, opened, lastFailed);
     if (tipIndex !== null && tipIndex < opened) list.children[tipIndex]?.classList.add('hint-tips__tip--focus');
     if (!wasHighlighted) status.textContent = 'Dvakrát v řadě to neprošlo. Nápověda je připravená.';
@@ -149,7 +131,6 @@ export function createHintsUi({ id, item, hintList, onCompare, signal }) {
   return {
     button,
     panel,
-    /** Výsledek kontroly: počítá neúspěchy v řadě a zvýraznění. */
     checked({ passed: nowPassed, run }) {
       checkedLocally = true;
       passed = Boolean(nowPassed);

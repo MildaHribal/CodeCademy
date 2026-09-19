@@ -1,4 +1,3 @@
-// Osnova a moduly (kontrakt kap. 7).
 import { HttpError } from '../errors.js';
 
 export function register(router, ctx) {

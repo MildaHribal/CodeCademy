@@ -1,13 +1,4 @@
-// Markdown → HTML (marked) a obarvení bloků kódu stejným parserem, jaký používá editor.
-// Obsah kurzu je lokální a důvěryhodný, proto se HTML z markdownu vkládá přímo.
-// Texty ze serveru nebo z uživatelova kódu (chyby testů, výstupy) se vkládají
-// vždy přes textContent, nikdy přes markdown.
-//
 // Navíc proti běžnému markdownu (kontrakt kap. 2.6, 2.9 a 5.11):
-//   > [!REMEMBER] / [!PITFALL] / [!TIP] / [!NOTE]   rámečky ve stylu GitHub alerts
-//   ==zvýraznění==                                   podbarvení jako zvýrazňovač
-//   [[pojem]] a [[pojem|text]]                        pojem s definicí v bublině (GET /api/terms)
-//   [text](see:sekce/modul#kotva)                     odkaz na výklad přes refHref
 
 import { Marked } from 'marked';
 import { highlightCode, classHighlighter } from '@lezer/highlight';
@@ -28,11 +19,8 @@ const PARSERS = {
   mjs: javascriptLanguage.parser,
 };
 
-// ——— Rámečky ———
-
 const stroke = (d) => `<path d="${d}" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>`;
 
-/** Typy rámečků: nadpis v UI a ikona (SVG, viewBox 0 0 16 16). Barvy jsou tokeny --callout-<typ>-*. */
 export const CALLOUT_TYPES = {
   remember: { title: 'Zapamatuj si', icon: stroke('M4.5 2.5h7v11L8 10.9l-3.5 2.6z') },
   pitfall: {
@@ -60,7 +48,6 @@ const calloutExtension = {
     const first = CALLOUT_START.exec(src);
     if (!first) return undefined;
     const type = first[1].toLowerCase();
-    // Neznámý typ zůstane obyčejnou citací (verify hlásí [M1]).
     if (!CALLOUT_TYPES[type]) return undefined;
     let raw = first[0];
     const body = [];
@@ -87,14 +74,11 @@ const calloutExtension = {
   },
 };
 
-// ——— ==zvýraznění== ———
-
 const markExtension = {
   name: 'mark',
   level: 'inline',
   start: (src) => src.indexOf('=='),
   tokenizer(src) {
-    // Obsah nezačíná ani nekončí mezerou nebo `=`, takže `a === b` v textu zvýraznění nevyrobí.
     const match = /^==([^\s=](?:[^=\n]*[^\s=])?)==(?!=)/.exec(src);
     if (!match) return undefined;
     return { type: 'mark', raw: match[0], tokens: this.lexer.inlineTokens(match[1]) };
@@ -103,8 +87,6 @@ const markExtension = {
     return `<mark class="mark">${this.parser.parseInline(token.tokens)}</mark>`;
   },
 };
-
-// ——— [[pojem|text]] ———
 
 const termExtension = {
   name: 'term',
@@ -128,7 +110,6 @@ function escapeAttribute(text) {
 
 const markdown = new Marked({ gfm: true, breaks: false, extensions: [calloutExtension, markExtension, termExtension] });
 
-/** Markdown → HTML řetězec (bez obarvení kódu a bez pojmů). Používají ho i testy v Node. */
 export function markdownToHtml(text, { inline = false } = {}) {
   return inline ? markdown.parseInline(text ?? '') : markdown.parse(text ?? '');
 }
@@ -151,7 +132,6 @@ function addHeadingAnchors(root, text, slugger) {
   const selector = ANCHOR_LEVELS.map((level) => `h${level}`).join(', ');
   const elements = [...root.querySelectorAll(selector)];
   const headings = anchoredHeadings(text, slugger);
-  // Nadpis zapsaný přímo v HTML parser nevidí — pak počty nesedí a kotvy se nepřiřadí.
   if (headings.length !== elements.length) return;
   elements.forEach((element, index) => {
     element.id = anchorElementId(headings[index].anchor);
@@ -170,7 +150,6 @@ function enhance(root) {
   for (const link of root.querySelectorAll('a[href]')) {
     const href = link.getAttribute('href');
     if (/^https?:/.test(href)) {
-      // Odkazy mimo aplikaci otevírat v nové kartě, ať uživatel neztratí rozdělanou práci.
       link.target = '_blank';
       link.rel = 'noopener noreferrer';
     } else if (href.startsWith('see:')) {
@@ -200,10 +179,6 @@ function linkToLesson(link, ref) {
   link.classList.add('see-link');
 }
 
-/**
- * Obarvený kód rozdělený na řádky (pro výpisy s čísly řádků, např. :::memory).
- * @returns {DocumentFragment[]}  jeden fragment na řádek
- */
 export function highlightLines(source, lang) {
   const lines = [document.createDocumentFragment()];
   const parser = PARSERS[lang];
@@ -229,7 +204,6 @@ export function highlightLines(source, lang) {
   return lines;
 }
 
-/** Obarví blok kódu: rozdělí text na úseky se třídami tok-* (styly v styles/prose.css). */
 function highlightInto(codeEl, parser) {
   const source = codeEl.textContent;
   const fragment = document.createDocumentFragment();
@@ -248,15 +222,11 @@ function highlightInto(codeEl, parser) {
     highlightCode(source, parser.parse(source), classHighlighter, putText, putBreak);
     codeEl.replaceChildren(fragment);
   } catch {
-    // Když se obarvení nepovede, zůstane čistý text — obsah je důležitější než barvy.
   }
 }
 
-// ——— Pojmy: načtení a bublina s definicí ———
-
 let termsPromise = null;
 
-/** Mapa termLookupKey(pojem nebo alias) → pojem. Načte se jednou za běh aplikace. */
 export function loadTermIndex() {
   termsPromise ??= apiRequest('GET', '/api/terms')
     .then(({ terms = [] }) => {
@@ -270,7 +240,7 @@ export function loadTermIndex() {
       return index;
     })
     .catch((error) => {
-      termsPromise = null; // příště to zkusíme znovu
+      termsPromise = null;
       console.warn('Pojmy se nepodařilo načíst', error);
       return new Map();
     });
@@ -283,7 +253,6 @@ async function connectTerms(elements) {
     if (!element.isConnected && !element.parentNode) continue;
     const term = index.get(element.dataset.term);
     if (!term) {
-      // Neexistující pojem: jen zobrazený text (verify hlásí [S5]).
       element.replaceWith(...element.childNodes);
       continue;
     }
@@ -302,7 +271,7 @@ async function connectTerms(elements) {
 
 const HOVER_OPEN_MS = 350;
 const HOVER_CLOSE_MS = 200;
-let popover = null; // { element, owner, pinned }
+let popover = null;
 let hoverTimer = null;
 
 function attachTermPopover(button, term) {
@@ -339,7 +308,6 @@ function openTermPopover(button, term, { pinned }) {
   title.className = 'term-popover__title';
   title.textContent = term.term;
   element.append(title);
-  // Anglický termín jen když se od českého liší (u „index“ by „anglicky index“ nic neřeklo).
   if (term.en && term.en.toLowerCase() !== term.term.toLowerCase()) {
     const en = document.createElement('p');
     en.className = 'term-popover__en';
@@ -374,7 +342,6 @@ function openTermPopover(button, term, { pinned }) {
   button.setAttribute('aria-expanded', 'true');
   button.setAttribute('aria-controls', element.id);
   popover = { element, owner: button, pinned };
-  // Otevření kliknutím (i klávesou) přesune fokus do bubliny, aby šlo Tabem na odkazy.
   if (pinned) element.focus({ preventScroll: true });
 }
 
@@ -410,7 +377,6 @@ if (typeof document !== 'undefined') {
       closeTermPopover({ restoreFocus: false });
     }
   });
-  // Posun vnitřního panelu (zadání kroku) by bublinu odtrhl od pojmu.
   document.addEventListener(
     'scroll',
     (event) => {

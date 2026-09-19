@@ -1,17 +1,8 @@
 // Vytvoření sandboxovaného iframu (kontrakt kap. 6.8).
 
-// Bez allow-same-origin: kód v iframu nemá přístup k aplikaci a Chrome ho spouští
-// v odděleném procesu, takže zaseknutý iframe nezamrazí stránku.
 export const SANDBOX = 'allow-scripts allow-modals allow-forms';
 export const TEST_VIEWPORT = { width: 1024, height: 768 };
 
-/**
- * Neviditelný iframe pro testy. Záměrně leží v okně (průhledný, pod obsahem), ne mimo
- * obrazovku: iframe mimo viditelnou oblast Chrome přestane vykreslovat, a pak nefungují
- * requestAnimationFrame, ResizeObserver ani CSS přechody. Průhlednost je 0.01, ne 0: úplně
- * průhledný iframe z cizího originu Chrome po první animaci (Web Animations, Motion, GSAP
- * přes CSS) přiškrtí na pár snímků za sekundu a animace v testu by trvaly sekundy.
- */
 export function createHiddenFrame({ width = TEST_VIEWPORT.width, height = TEST_VIEWPORT.height } = {}) {
   const frame = createFrame('Běh testu');
   frame.setAttribute('aria-hidden', 'true');
@@ -30,7 +21,6 @@ export function createHiddenFrame({ width = TEST_VIEWPORT.width, height = TEST_V
   return frame;
 }
 
-/** Viditelný iframe náhledu, vyplní svůj kontejner. */
 export function createPreviewFrame() {
   const frame = createFrame('Náhled stránky');
   Object.assign(frame.style, { display: 'block', width: '100%', height: '100%', border: '0', background: '#fff' });

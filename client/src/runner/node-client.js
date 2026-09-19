@@ -1,4 +1,3 @@
-// Runtime node: testy běží na serveru (POST /api/run-node).
 
 export async function runNodeTestsRemote({ files, hints, timeoutMs, signal = null }) {
   try {
@@ -6,7 +5,6 @@ export async function runNodeTestsRemote({ files, hints, timeoutMs, signal = nul
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ runtime: 'node', files, hints, timeoutMs }),
-      // Zrušený požadavek zavře spojení a server testy, které ještě běží, ukončí.
       signal,
     });
     const body = await response.json().catch(() => null);
@@ -22,7 +20,7 @@ export async function runNodeTestsRemote({ files, hints, timeoutMs, signal = nul
       logs: [],
       errors: [],
       syntaxError: null,
-      runnerError: message, // navíc oproti RunResult: selhal runner, ne kód uživatele
+      runnerError: message,
     };
   }
 }

@@ -1,13 +1,10 @@
 // Volba jistoty u otázky: „Jsem si jistý" / „Tipuju" (kontrakt kap. 4.5 a 12.4).
-// Nepovinná — bez volby se odpověď pošle bez jistoty. Po chybě s jistotou otázka
-// ukáže „Tady ses mýlil s jistotou" (question.js).
 import './confidence.css';
 import { h } from '../../dom.js';
 import { nextQuestionUid } from './uid.js';
 
 export const CONFIDENCE_LABELS = { sure: 'Jsem si jistý', guess: 'Tipuju' };
 
-/** @returns {{ element, value(): 'sure'|'guess'|null, reset(), setDisabled(disabled) }} */
 export function createConfidencePicker({ onChange } = {}) {
   const name = `confidence-${nextQuestionUid()}`;
   const inputs = [];
@@ -19,7 +16,6 @@ export function createConfidencePicker({ onChange } = {}) {
       value,
       class: 'confidence__input',
       onchange: () => onChange?.(value),
-      // Druhé kliknutí na zvolenou možnost volbu zruší (jistota je nepovinná).
       onclick: (event) => {
         if (event.target.dataset.wasChecked === 'true') {
           event.target.checked = false;

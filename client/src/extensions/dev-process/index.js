@@ -1,8 +1,4 @@
 // Nástroj dev-process: HTTP klient u běžícího Node procesu (kontrakt kap. 12.7).
-//
-// - Pracovní plocha s runtime node: HTTP klient pod výstupem (slot output-after).
-//   Relaci procesu vytváří výstup kroku (workspace/output-node.js), tady se jen najde.
-// - Projekt s runtime node: panel „Spustit projekt jako server" s výstupem a HTTP klientem.
 import './dev-process.css';
 import { h, svg } from '../../dom.js';
 import { icons } from '../../icons.js';
@@ -21,14 +17,12 @@ workspaceExtensions.register({
   id: 'dev-process',
   order: 50,
   setup(ws) {
-    // U „Seřaď řádky" se nic nespouští jako server, HTTP klient by jen mátl.
     if (!ws.isNode || ws.kind === 'parsons') return undefined;
     const session = sessionFor(ws.elements.output);
     if (!session) return undefined;
 
     const client = createHttpClient({ session, draftKey: ws.item.id });
     const removeClient = ws.addToSlot('output-after', client.element, { order: 50 });
-    // Upravený kód: běžící server má starou verzi, stav to připomene.
     ws.on('files-change', () => session.markChanged());
 
     return () => {
@@ -52,7 +46,6 @@ projectExtensions.register({
   },
 });
 
-/** Panel projektu: spustit projekt z moje-projekty/ jako server, výstup a HTTP klient. */
 function createProjectPanel(project) {
   const { module } = project;
   const session = createDevProcessSession();
@@ -61,9 +54,9 @@ function createProjectPanel(project) {
   const client = createHttpClient({ session, draftKey: module.id });
   const titleId = `dev-project-title-${module.id.replace(/\W/g, '-')}`;
 
-  const runLabel = h('span', {}, 'Spustit server');
-  const runButton = h('button', { type: 'button', class: 'btn btn--primary' }, svg(icons.play), runLabel);
-  const stopButton = h('button', { type: 'button', class: 'btn', hidden: true }, svg(STOP_ICON), 'Zastavit');
+  const runLabel = h('span', {}, 'Run server');
+  const runButton = h('button', { type: 'button', class: 'btn btn--primary', 'aria-label': 'Run server / Spustit server' }, svg(icons.play), runLabel);
+  const stopButton = h('button', { type: 'button', class: 'btn', 'aria-label': 'Stop / Zastavit', hidden: true }, svg(STOP_ICON), 'Stop');
   const message = h('p', { class: 'result__warning', hidden: true });
 
   const element = h(
@@ -90,7 +83,8 @@ function createProjectPanel(project) {
     runButton.disabled = starting || stopping;
     stopButton.hidden = !running;
     stopButton.disabled = stopping;
-    runLabel.textContent = running ? 'Spustit znovu' : 'Spustit server';
+    runLabel.textContent = running ? 'Run again' : 'Run server';
+    runButton.setAttribute('aria-label', running ? 'Run again / Spustit znovu' : 'Run server / Spustit server');
   });
   const onPageHide = () => session.dispose();
   window.addEventListener('pagehide', onPageHide);
@@ -100,7 +94,6 @@ function createProjectPanel(project) {
     message.textContent = text ?? '';
   }
 
-  /** Hlavní soubor: `main` z frontmatteru, jinak podle package.json a obvyklých jmen. */
   async function resolveMain() {
     const fromMeta = module.project.meta?.main;
     if (typeof fromMeta === 'string' && fromMeta) return fromMeta;

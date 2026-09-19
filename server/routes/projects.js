@@ -1,4 +1,3 @@
-// Projekty ve VS Code: založení složky, soubory a kontrola (kontrakt kap. 9).
 import fs from 'node:fs';
 import fsp from 'node:fs/promises';
 import path from 'node:path';
@@ -8,7 +7,6 @@ import { runNodeTests } from '../node-runner.js';
 export function register(router, ctx) {
   const projectsRoot = path.resolve(ctx.projectsDir);
 
-  /** Načte modul typu projekt, jinak vyhodí 404/400. */
   function loadProject(section, module) {
     ctx.checkSlugs(section, module);
     if (!ctx.moduleExists(section, module)) throw new HttpError(404, `Modul ${section}/${module} neexistuje`);
@@ -19,7 +17,6 @@ export function register(router, ctx) {
 
   function projectDir(section, module) {
     const dir = path.resolve(projectsRoot, `${section}--${module}`);
-    // Slugy cestu ven z adresáře nepustí, ale kontrola navíc nic nestojí.
     if (path.dirname(dir) !== projectsRoot) throw new HttpError(400, 'Neplatná cesta projektu');
     return dir;
   }

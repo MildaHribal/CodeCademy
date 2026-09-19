@@ -7,7 +7,6 @@ import { hashKey } from './answers.js';
 import { buildContentIndex, loadCurriculum, loadModule, loadSection, loadSectionExtras, loadTerms, resolveContentItem } from './content.js';
 import { ParseError } from './parse.js';
 
-/** Vytvoří dočasný adresář s obsahem podle mapy { 'cesta/soubor': 'obsah' }. */
 function makeContent(tree) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'akademie-content-test-'));
   for (const [name, content] of Object.entries(tree)) {
@@ -240,7 +239,6 @@ test('loadCurriculum: rozepsaná sekce ani modul neshodí celou osnovu', (t) => 
   fs.writeFileSync(path.join(dir, 'osnova.json'), JSON.stringify({
     parts: [{ id: 'cast', title: 'Část', sections: ['rozbita', { id: 'planovana', title: 'Plánovaná', summary: 'Zatím nic.' }] }],
   }));
-  // sekce se section.json, jehož modul ještě nemá module.json
   fs.mkdirSync(path.join(dir, 'rozbita', 'chybejici-modul'), { recursive: true });
   fs.writeFileSync(path.join(dir, 'rozbita', 'section.json'), JSON.stringify({ title: 'Rozbitá', modules: ['chybejici-modul'] }));
 

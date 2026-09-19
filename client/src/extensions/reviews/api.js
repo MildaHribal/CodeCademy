@@ -6,9 +6,7 @@ const segment = encodeURIComponent;
 export const reviewsApi = {
   summary: ({ signal } = {}) => apiRequest('GET', '/api/reviews/summary', undefined, { signal }),
   due: ({ signal } = {}) => apiRequest('GET', '/api/reviews/due', undefined, { signal }),
-  /** @param {{ id: string, ok: boolean, confidence?: 'sure' | 'guess' | null }} body */
   answer: (body) => apiRequest('POST', '/api/reviews/answer', body),
-  /** reason: 'assisted' | 'fails' | 'self' | 'explain' | 'outcome' */
   add: (id, reason) => apiRequest('POST', '/api/reviews/add', { id, reason }),
   remove: (id) => apiRequest('POST', '/api/reviews/remove', { id }),
 };

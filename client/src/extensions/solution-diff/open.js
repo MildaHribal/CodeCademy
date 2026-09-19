@@ -1,9 +1,4 @@
 // Porovnání s řešením pro pracovní plochu (krok, lab) a pro projekt (kontrakt kap. 3.3, B2).
-//
-// - Před splněním jde řešení otevřít jen s potvrzením; krok se na serveru uloží jako
-//   vyřešený s pomocí (`assisted`) a opakování ho nabídne znovu naslepo.
-// - Po splnění se ukáže hned jako „Jak to napsal autor".
-// Každé zobrazení se pošle do pokusů jako solutionViewed: true.
 import { api } from '../../api.js';
 import { progress } from '../../progress.js';
 import { recordQuietly } from '../attempts/api.js';
@@ -21,7 +16,6 @@ const CONFIRM_BEFORE_PASS = {
 const INTRO_AFTER_PASS = 'Jak to napsal autor — tvoje řešení je taky správné. Podívej se, v čem se liší.';
 const INTRO_BEFORE_PASS = 'Autorovo řešení. Řádky se znaménkem + v tvém kódu chybí, řádky s − autor nemá.';
 
-/** Řešení položky z modulu načteného i s řešeními (?solution=1). */
 function authorFiles(moduleWithSolutions, itemId) {
   switch (moduleWithSolutions.type) {
     case 'workshop':
@@ -40,10 +34,6 @@ async function loadAuthorFiles(module, itemId) {
   return authorFiles(full, itemId);
 }
 
-/**
- * Otevře porovnání na pracovní ploše.
- * @param ws  API pracovní plochy
- */
 export function openWorkspaceSolution(ws) {
   const state = ws.state();
   const solved = state.passed || state.completed;
@@ -55,11 +45,6 @@ export function openWorkspaceSolution(ws) {
   });
 }
 
-/**
- * Otevře porovnání u projektu: soubory ze složky projektu na disku × složka solution/.
- * @param project  API obrazovky projektu
- * @param {{ passed?: boolean }} [options]  passed = kontrola v tomhle zobrazení prošla
- */
 export function openProjectSolution(project, { passed = false } = {}) {
   const { module } = project;
   return open({
@@ -82,6 +67,6 @@ function open({ id, solved, onCleanup, load }) {
     onViewed: () => recordQuietly({ id, solutionViewed: true }),
     labels: { mine: 'Tvůj kód', author: 'Autor' },
   });
-  onCleanup?.(() => handle.close()); // odchod z obrazovky okno zavře
+  onCleanup?.(() => handle.close());
   return handle;
 }

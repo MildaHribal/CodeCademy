@@ -1,4 +1,3 @@
-// Hledání (#/hledat): ve vlně 2 jen místo v menu a obrazovka „připravuje se"
 // (kontrakt kap. 12.8). Vyhledávání v obsahu doplní vlna 3.
 import { h } from '../dom.js';
 import { icons } from '../icons.js';
@@ -37,4 +36,4 @@ registerScreen({
   },
 });
 
-registerHeaderItem({ id: 'hledat', order: 10, label: 'Hledat', href: '#/hledat', routes: ['search'], icon: icons.search });
+registerHeaderItem({ id: 'hledat', order: 10, label: 'Search', href: '#/hledat', routes: ['search'], icon: icons.search });

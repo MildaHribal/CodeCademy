@@ -1,4 +1,3 @@
-// Detail sekce: úvod a seznam modulů s typem, délkou a stavem.
 
 import { h, svg, append } from '../dom.js';
 import { href } from '../router.js';
@@ -13,13 +12,6 @@ import { createSlots } from '../core/slots.js';
 import { withLoading, showLoadError } from './load.js';
 import { partHref } from '../extensions/orientation/route.js';
 
-/**
- * Rozšíření stránky sekce (kalibrace jistoty, tahák, „Po sekci umíš", „Další na trase"…):
- *   sectionExtensions.register({ id, order, setup(sectionPage) { sectionPage.addToSlot('end', el); } })
- * API: curriculum, part, section, signal, onCleanup, page, addToSlot(name, el, { order })
- * sloty: 'head' (pod nadpisem), 'after-progress' (pod ukazatelem postupu), 'end' (pod seznamem modulů)
- * Jen u sekcí, které existují (section.available).
- */
 export const sectionExtensions = createExtensionPoint('sekce');
 
 export async function renderSection(ctx, { sectionId }) {

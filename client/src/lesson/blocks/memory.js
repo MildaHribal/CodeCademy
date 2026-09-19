@@ -1,6 +1,4 @@
 // Blok `memory`: ručně popsané stavy paměti (kontrakt kap. 5.6).
-// Vlevo kód s čísly řádků (zvýrazněný řádek N), vpravo proměnné a objekty; odkazy jsou šipky.
-// Krokuje se tlačítky nebo šipkami ←/→. Kód se nespouští.
 import { h, svg } from '../../dom.js';
 import { icons } from '../../icons.js';
 import { highlightLines } from '../../markdown.js';
@@ -69,7 +67,6 @@ export const memoryBlock = {
     function renderStep() {
       const step = steps[current];
       if (!step) return;
-      // V prvním kroku je nové všechno — zvýrazňují se až změny proti předchozímu stavu.
       const changed = current === 0 ? { bindings: new Set(), objects: new Set() } : changedInStep(steps[current - 1], step);
 
       for (const line of lineElements) {
@@ -124,7 +121,6 @@ export const memoryBlock = {
       renderStep();
     }
 
-    /** Šipky od tečky odkazu k objektu; kreslí se až podle skutečné polohy prvků. */
     function drawArrows() {
       if (!element.isConnected) return;
       const box = diagram.getBoundingClientRect();
@@ -146,7 +142,6 @@ export const memoryBlock = {
         const fromObject = source.classList.contains('memory__inline-ref');
         let d;
         if (fromObject) {
-          // Odkaz z objektu na jiný objekt: oblouk vpravo od sloupce objektů.
           const x2 = to.right - box.left;
           const y2 = to.top + to.height / 2 - box.top;
           const bend = Math.max(x1, x2) + 28;

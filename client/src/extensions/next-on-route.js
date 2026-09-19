@@ -1,5 +1,4 @@
 // „Další na trase" na konci stránky sekce (kontrakt kap. 2.1). Trasa jen radí — odkaz vede
-// na další sekci doporučené trasy, u rozšíření navíc na další sekci jádra.
 import './next-on-route.css';
 import { h } from '../dom.js';
 import { href } from '../router.js';
@@ -45,12 +44,11 @@ sectionExtensions.register({
   },
 });
 
-/** Úvod sekce je markdown; na kartičku stačí první věta bez formátování. */
 function firstSentence(markdown) {
   const plain = markdown
-    .replace(/\[\[([^\]|]+)\|([^\]]+)\]\]/g, '$2') // [[pojem|text]] → text
-    .replace(/\[\[([^\]]+)\]\]/g, '$1') // [[pojem]] → pojem
-    .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1') // [text](url) → text
+    .replace(/\[\[([^\]|]+)\|([^\]]+)\]\]/g, '$2')
+    .replace(/\[\[([^\]]+)\]\]/g, '$1')
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
     .replace(/==/g, '')
     .replace(/[`*_]/g, '')
     .replace(/\s+/g, ' ')

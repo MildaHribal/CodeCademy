@@ -1,12 +1,4 @@
 // Vykreslení jedné položky opakování podle typu (kontrakt kap. 12.3, ReviewItem).
-//
-// Každý renderer vrací { element, mount?(), destroy?() } a výsledek ohlásí jednou přes
-// onAnswer(ok, confidence). Jak se hodnotí:
-//   question, karta output/css — první vyhodnocení otázky (s volbou jistoty);
-//                                „Ukaž odpověď" bez pokusu = nevěděl
-//   karta free                 — ukáže modelovou odpověď, uživatel se ohodnotí sám
-//   karta code, step           — ok = všechny testy prošly, „Vzdávám" = nevěděl
-//   explain                    — napíše bod vlastními slovy, pak model a sebehodnocení
 
 import { h } from '../../dom.js';
 import { renderMarkdown } from '../../markdown.js';
@@ -15,10 +7,6 @@ import { createQuestion } from '../../components/question.js';
 import { createCodeSetPanel } from '../../components/quiz-code-set.js';
 import { createPractice } from './practice.js';
 
-/**
- * @param {object} item  ReviewItem z GET /api/reviews/due
- * @param {{ number: number, total: number, onAnswer: (ok: boolean, confidence?: string | null) => void }} options
- */
 export function renderReviewItem(item, options) {
   switch (item.type) {
     case 'question':
@@ -36,7 +24,6 @@ export function renderReviewItem(item, options) {
   }
 }
 
-/** Otázka kvízu/lekce nebo karta `output`/`css`: volby až po „Ukaž volby", jistota, bez prozrazení. */
 function questionItem(question, item, { number, total, onAnswer }) {
   let reported = false;
   const report = (ok, confidence) => {
@@ -48,7 +35,7 @@ function questionItem(question, item, { number, total, onAnswer }) {
     key: `${item.id}#opakovani`,
     number,
     total,
-    itemId: null, // do pokusů se odpověď v opakování neposílá — jistotu přičte /api/reviews/answer
+    itemId: null,
     askConfidence: true,
     checkButton: true,
     recallFirst: Array.isArray(question.answers),
@@ -63,11 +50,10 @@ function questionItem(question, item, { number, total, onAnswer }) {
   };
 }
 
-/** Pohovorová otázka: odpověz v hlavě, porovnej s modelovou odpovědí, ohodnoť se. */
 function freeCard(card, { onAnswer }) {
   const back = h('div', { class: 'reviews-free__back', hidden: true });
   const verdictButtons = h('div', { class: 'actions reviews-free__verdict', hidden: true });
-  const show = h('button', { type: 'button', class: 'btn btn--primary btn--small' }, 'Ukaž odpověď');
+  const show = h('button', { type: 'button', class: 'btn btn--primary btn--small', 'aria-label': 'Show answer / Ukaž odpověď' }, 'Show answer');
 
   show.addEventListener('click', () => {
     show.hidden = true;
@@ -83,8 +69,8 @@ function freeCard(card, { onAnswer }) {
     onAnswer(ok, null);
   };
   verdictButtons.append(
-    h('button', { type: 'button', class: 'btn', onclick: () => decide(true) }, 'Věděl jsem'),
-    h('button', { type: 'button', class: 'btn', onclick: () => decide(false) }, 'Nevěděl jsem'),
+    h('button', { type: 'button', class: 'btn', 'aria-label': 'I knew this / Věděl jsem', onclick: () => decide(true) }, 'I knew this'),
+    h('button', { type: 'button', class: 'btn', 'aria-label': "I didn't know / Nevěděl jsem", onclick: () => decide(false) }, "I didn't know"),
   );
 
   return {
@@ -101,7 +87,6 @@ function freeCard(card, { onAnswer }) {
   };
 }
 
-/** Karta `code js`: napiš kód, spustí se test karty. */
 function codeCard(card, { onAnswer }) {
   const practice = createPractice(
     { runtime: card.runtime ?? 'js', seed: card.seed, hints: card.hints, title: 'Karta s kódem', item: card },
@@ -114,7 +99,6 @@ function codeCard(card, { onAnswer }) {
   };
 }
 
-/** Krok workshopu nebo lab znovu od seedu: bez popisu, jen s požadavky. */
 function stepItem(step, { onAnswer }) {
   const practice = createPractice(
     { runtime: step.runtime, seed: step.seed, hints: step.hints, meta: step.meta, title: step.title, item: step },
@@ -138,12 +122,11 @@ function stepItem(step, { onAnswer }) {
   };
 }
 
-/** Bod checklistu z „Vysvětli vlastními slovy", který minule chyběl. */
 function explainItem(explain, { onAnswer }) {
   const textarea = h('textarea', { class: 'text-answer__input reviews-explain__input', rows: '4', 'aria-label': 'Tvoje vysvětlení' });
   const reveal = h('div', { class: 'reviews-explain__reveal', hidden: true });
   const verdictButtons = h('div', { class: 'actions', hidden: true });
-  const show = h('button', { type: 'button', class: 'btn btn--primary btn--small' }, 'Porovnat se vzorem');
+  const show = h('button', { type: 'button', class: 'btn btn--primary btn--small', 'aria-label': 'Compare with model / Porovnat se vzorem' }, 'Compare with model');
 
   show.addEventListener('click', () => {
     show.hidden = true;
@@ -164,8 +147,8 @@ function explainItem(explain, { onAnswer }) {
     onAnswer(ok, null);
   };
   verdictButtons.append(
-    h('button', { type: 'button', class: 'btn', onclick: () => decide(true) }, 'Tentokrát to v mém vysvětlení je'),
-    h('button', { type: 'button', class: 'btn', onclick: () => decide(false) }, 'Pořád mi to chybí'),
+    h('button', { type: 'button', class: 'btn', 'aria-label': 'Included this time / Tentokrát to v mém vysvětlení je', onclick: () => decide(true) }, 'Included this time'),
+    h('button', { type: 'button', class: 'btn', 'aria-label': 'Still missing / Pořád mi to chybí', onclick: () => decide(false) }, 'Still missing'),
   );
 
   return {

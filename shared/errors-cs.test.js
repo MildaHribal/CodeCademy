@@ -3,7 +3,6 @@ import assert from 'node:assert/strict';
 import { ERROR_PATTERNS, explainError, groupUndefinedNames } from './errors-cs.js';
 import { parseRef } from './refs.js';
 
-// Ke každému vzoru aspoň jedna skutečná hláška (Chrome, Firefox, Node, acorn, runner).
 const SAMPLES = {
   'cannot-read-undefined': ["TypeError: Cannot read properties of undefined (reading 'name') (script.js:3)", `TypeError: can't access property "name", item is undefined`],
   'cannot-read-null': ["TypeError: Cannot read properties of null (reading 'addEventListener')"],

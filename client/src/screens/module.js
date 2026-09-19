@@ -1,4 +1,3 @@
-// Modul: načte data a předá je obrazovce podle typu (lekce, workshop, lab, kvíz, projekt).
 
 import { h } from '../dom.js';
 import { href, redirect } from '../router.js';
@@ -17,7 +16,6 @@ import { renderProject } from './project.js';
 export async function renderModule(ctx, { sectionId, moduleId, stepKey }) {
   const id = `${sectionId}/${moduleId}`;
 
-  // Osnova a postup jsou potřeba jen pro navigaci — když selžou, modul se ukáže i tak.
   let data;
   try {
     data = await withLoading(
@@ -33,7 +31,6 @@ export async function renderModule(ctx, { sectionId, moduleId, stepKey }) {
   } catch (error) {
     const title = error.status === 404 ? 'Tenhle modul neexistuje' : 'Modul se nepodařilo načíst';
     ctx.setCrumbs([{ label: sectionId, href: href.section(sectionId) }, { label: moduleId }]);
-    // Když osnova jde načíst, ukážeme v navigaci aspoň skutečné názvy.
     loadCurriculum()
       .then((curriculum) => {
         const found = findSection(curriculum, sectionId);
@@ -61,7 +58,6 @@ export async function renderModule(ctx, { sectionId, moduleId, stepKey }) {
   };
 
   ctx.setTitle(module.title);
-  // Drobečky: část → sekce → modul (→ krok). Všechno kromě poslední položky jsou odkazy.
   const crumbs = [
     found ? { label: found.part.title, href: partHref(found.part.id) } : null,
     { label: section.title, href: nav.sectionHref },

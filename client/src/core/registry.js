@@ -1,13 +1,4 @@
-// Stavebnice rozšiřovacích bodů: registr položek, události a extension point.
-// Nic tu nesahá na DOM, takže to jde použít i v Node testech.
 
-/**
- * Registr položek s unikátním `id` a volitelným `order` (menší = dřív).
- *
- *   const items = createRegistry('položka hlavičky');
- *   items.add({ id: 'opakovani', order: 20, label: 'Opakování' });
- *   items.list();   // seřazené podle order, pak podle pořadí registrace
- */
 export function createRegistry(label) {
   const entries = new Map();
   let counter = 0;
@@ -24,10 +15,6 @@ export function createRegistry(label) {
   };
 }
 
-/**
- * Jednoduché události: on(name, fn) → odhlášení, emit(name, payload).
- * Chyba jednoho posluchače nezastaví ostatní ani toho, kdo událost vyvolal.
- */
 export function createEmitter() {
   const listeners = new Map();
   return {
@@ -48,15 +35,6 @@ export function createEmitter() {
   };
 }
 
-/**
- * Extension point obrazovky (pracovní plocha, lekce, projekt, kvíz).
- *
- *   export const workspaceExtensions = createExtensionPoint('pracovní plochy');
- *   workspaceExtensions.register({ id: 'hints', order: 10, setup(api) { …; return () => úklid } });
- *   workspaceExtensions.mount(api);   // volá jádro obrazovky; vrátí funkci, která vše uklidí
- *
- * Chyba v setup jednoho rozšíření obrazovku nerozbije (zapíše se do konzole).
- */
 export function createExtensionPoint(label) {
   const registry = createRegistry(`Rozšíření ${label}`);
   return {

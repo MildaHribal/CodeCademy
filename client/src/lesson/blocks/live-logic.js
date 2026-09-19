@@ -1,6 +1,3 @@
-// Výpočty pro živé ukázky bez DOM: ovládací prvky (```controls), porovnání :::compare
-// a výstup předpovědi. Soubor nesahá na document, testuje se v Node
-// (tools/lesson-blocks-unit.test.js).
 
 const STYLES_FILE = 'styles.css';
 
@@ -13,21 +10,15 @@ export function controlCssValue(control, raw = control.default) {
   return String(raw);
 }
 
-/** Výchozí hodnoty všech prvků jako custom properties: { '--gap': '1rem', … }. */
 export function defaultControlValues(controls = []) {
   return Object.fromEntries(controls.map((control) => [control.name, controlCssValue(control)]));
 }
 
-/** `:root { --a: x; --b: y; }` — blok, který nastaví hodnoty prvků pro běh bez ovládání. */
 export function cssVariablesPrelude(values) {
   const declarations = Object.entries(values).map(([name, value]) => `${name}: ${value};`);
   return declarations.length ? `:root { ${declarations.join(' ')} }\n` : '';
 }
 
-/**
- * Soubory pro náhled: na začátek styles.css předřadí `:root { … }` s hodnotami prvků
- * (soubor vznikne, když chybí). Soubory v editoru zůstanou beze změny.
- */
 export function withVariablesPrelude(files, values) {
   const prelude = cssVariablesPrelude(values);
   if (!prelude) return files;
@@ -38,22 +29,15 @@ export function withVariablesPrelude(files, values) {
 
 const VAR_CALL = /var\(\s*(--[a-zA-Z0-9_-]+)\s*(?:,((?:[^()]|\([^()]*\))*))?\)/g;
 
-/** Dosadí hodnoty do všech `var(--jméno)`; neznámé proměnné nechá být. */
 export function resolveVariables(value, values) {
   return value.replace(VAR_CALL, (whole, name) => (name in values ? values[name] : whole));
 }
 
-/**
- * Deklarace ze styles.css, jejichž hodnota používá některý z ovládacích prvků, s dosazenou
- * hodnotou — UI je ukazuje vedle ovládání (`justify-content: center;`).
- * @returns {{ selector: string, property: string, value: string, resolved: string, names: string[] }[]}
- */
 export function controlledDeclarations(css, values) {
   const names = Object.keys(values);
   if (!names.length) return [];
   const source = String(css ?? '').replace(/\/\*[\s\S]*?\*\//g, '');
   const out = [];
-  // Pravidla bez vnoření: selektor { deklarace }. U @media se vezme vnitřní pravidlo.
   const rule = /([^{}]*)\{([^{}]*)\}/g;
   for (const match of source.matchAll(rule)) {
     const selector = match[1].trim().split('\n').pop().trim();
@@ -75,14 +59,6 @@ function escapeRegExp(text) {
   return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-// ——— :::compare ———
-
-/**
- * Parser vrací u :::compare už sloučené soubory každé varianty (`společný + '\n' + variantní`).
- * Pro úpravu společného kódu je potřeba je zase rozdělit: společná část = shodné řádky
- * od začátku souboru v obou variantách, zbytek patří variantě.
- * @returns {{ common: File[], extras: File[][] }}  extras[i] = části varianty i (jen neprázdné)
- */
 export function splitCompareVariants(variants) {
   const [a = [], b = []] = variants.map((variant) => variant.files ?? []);
   const names = [...new Set([...a, ...b].map((file) => file.name))];
@@ -94,7 +70,6 @@ export function splitCompareVariants(variants) {
     const fileB = b.find((file) => file.name === name);
     const lang = (fileA ?? fileB).lang;
     if (!fileA || !fileB) {
-      // Soubor jen v jedné variantě je celý její.
       const index = fileA ? 0 : 1;
       extras[index].push({ name, lang, content: (fileA ?? fileB).content });
       continue;
@@ -113,7 +88,6 @@ export function splitCompareVariants(variants) {
   return { common, extras };
 }
 
-/** Složí soubory varianty ze společné části a části varianty (opak splitCompareVariants). */
 export function composeVariant(common, extra) {
   const names = [...new Set([...common, ...extra].map((file) => file.name))];
   return names.map((name) => {
@@ -125,8 +99,6 @@ export function composeVariant(common, extra) {
     return { name, lang, content: `${shared.content}\n${own.content}` };
   });
 }
-
-// ——— Předpověď ———
 
 /** Skutečný výstup ukázky js tak, jak ho porovnává verify (kontrakt kap. 5.3). */
 export function consoleOutputText(entries) {

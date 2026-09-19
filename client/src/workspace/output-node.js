@@ -1,8 +1,4 @@
-// Pravý panel pro runtime node: Spustit, Zastavit, stav procesu a jeho výstup.
-//
 // Program běží přes /api/dev-process (kontrakt kap. 12.7) jako skutečný proces: skript
-// doběhne a ukáže výstup, server běží dál a jde na něj posílat požadavky (HTTP klient
-// v rozšíření dev-process, slot output-after). Při odchodu z obrazovky se proces zastaví.
 
 import { h, svg } from '../dom.js';
 import { icons } from '../icons.js';
@@ -14,10 +10,6 @@ import '../extensions/dev-process/dev-process.css';
 
 const STOP_ICON = '<rect x="4" y="4" width="8" height="8" rx="1.2" fill="currentColor"/>';
 
-/**
- * @param {{ item, slots, signal: AbortSignal, getFiles: () => object[] }} options
- * @returns {{ element, consolePanel, runButton, stopButton, session }}
- */
 export function createNodeOutput({ item, slots, signal, getFiles }) {
   const consolePanel = createConsolePanel({
     emptyText: 'Tlačítkem Spustit pustíš program. Jeho výstup se ukáže tady, server poběží, dokud ho nezastavíš.',
@@ -27,25 +19,25 @@ export function createNodeOutput({ item, slots, signal, getFiles }) {
 
   const clearButton = h(
     'button',
-    { type: 'button', class: 'btn btn--quiet btn--small', onclick: () => consolePanel.clear() },
-    'Vyčistit',
+    { type: 'button', class: 'btn btn--quiet btn--small', 'aria-label': 'Clear / Vyčistit', onclick: () => consolePanel.clear() },
+    'Clear',
   );
   const stopButton = h(
     'button',
-    { type: 'button', class: 'btn btn--small', hidden: true, onclick: () => stopProgram() },
+    { type: 'button', class: 'btn btn--small', 'aria-label': 'Stop / Zastavit', hidden: true, onclick: () => stopProgram() },
     svg(STOP_ICON),
-    'Zastavit',
+    'Stop',
   );
-  const runLabel = h('span', {}, 'Spustit');
-  const runButton = h('button', { type: 'button', class: 'btn btn--small', onclick: () => runProgram() }, svg(icons.play), runLabel);
+  const runLabel = h('span', {}, 'Run');
+  const runButton = h('button', { type: 'button', class: 'btn btn--small', 'aria-label': 'Run / Spustit', onclick: () => runProgram() }, svg(icons.play), runLabel);
 
   const element = h(
     'section',
-    { class: 'pane pane--output output--node', 'aria-label': 'Výstup programu' },
+    { class: 'pane pane--output output--node', 'aria-label': 'Program output / Výstup programu' },
     h(
       'div',
       { class: 'pane__head' },
-      h('h2', {}, 'Výstup'),
+      h('h2', {}, 'Output'),
       h('div', { class: 'pane__tools' }, slots.element('output-tools'), clearButton, stopButton, runButton),
     ),
     status.element,
@@ -58,7 +50,6 @@ export function createNodeOutput({ item, slots, signal, getFiles }) {
   const offButtons = session.on('change', syncButtons);
   syncButtons(session.state());
 
-  // Odchod z obrazovky nebo zavření karty: vlastní běžící proces zastavit.
   const onPageHide = () => session.dispose();
   window.addEventListener('pagehide', onPageHide);
   signal.addEventListener(
@@ -77,7 +68,8 @@ export function createNodeOutput({ item, slots, signal, getFiles }) {
     runButton.disabled = starting || stopping;
     stopButton.hidden = !running;
     stopButton.disabled = stopping;
-    runLabel.textContent = running ? 'Spustit znovu' : 'Spustit';
+    runLabel.textContent = running ? 'Run again' : 'Run';
+    runButton.setAttribute('aria-label', running ? 'Run again / Spustit znovu' : 'Run / Spustit');
   }
 
   async function runProgram() {

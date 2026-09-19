@@ -1,5 +1,4 @@
 // Stránka sekce navíc (kontrakt kap. 2.2, 2.6, 2.7): „Po sekci umíš" (outcomes), tahák
-// s tiskem a pojmy sekce. Data bere z GET /api/section/:section; sekce bez nich nic nepřidá.
 import './sections.css';
 import { h, svg } from '../../dom.js';
 import { icons } from '../../icons.js';
@@ -59,7 +58,6 @@ function outcomesBlock(outcomes, section) {
   );
 }
 
-/** Odkaz „Kde se to učíš"; u kotvy v lekci se po načtení lekce doplní text nadpisu. */
 function outcomeLink(ref, section) {
   const link = h('a', { href: refHref(ref), class: 'section-outcomes__link' }, outcomeLinkLabel(ref, section));
   const parsed = parseRef(ref);
@@ -69,7 +67,7 @@ function outcomeLink(ref, section) {
       .then((detail) => {
         link.textContent = outcomeLinkLabel(ref, section, detail.lesson?.headings ?? []);
       })
-      .catch(() => {}); // bez nadpisu zůstane titulek lekce, odkaz funguje dál
+      .catch(() => {});
   }
   return link;
 }
@@ -95,7 +93,6 @@ function cheatsheetBlock(markdown, section) {
 
   function print() {
     details.open = true;
-    // Tiskový styl (sections.css) podle atributu schová všechno kromě taháku.
     document.body.dataset.print = 'cheatsheet';
     const done = () => delete document.body.dataset.print;
     window.addEventListener('afterprint', done, { once: true });

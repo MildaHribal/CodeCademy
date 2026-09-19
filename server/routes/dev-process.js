@@ -1,17 +1,10 @@
-// Běžící Node proces a HTTP klient (kontrakt kap. 12.7). Logika je v server/dev-process.js,
-// tady jen routy, ověření projektu a úklid při zavření serveru.
 import fs from 'node:fs';
 import path from 'node:path';
 import { createDevProcessManager } from '../dev-process.js';
 
-/**
- * Routy nástroje. `options` přebijí výchozí limity správce (testy: krátká nečinnost).
- * Automatické načtení rout volá jen register(router, ctx).
- */
 export function registerDevProcess(router, ctx, options = {}) {
   const projectsRoot = path.resolve(ctx.projectsDir);
 
-  /** Adresář projektu uživatele; 400/404 pro neplatný projekt, 409 když ještě nezačal. */
   function projectDir(project) {
     if (!ctx.isPlainObject(project)) throw new ctx.InputError('"project" musí být objekt { section, module }');
     const { section, module } = project;

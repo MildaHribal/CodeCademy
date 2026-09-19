@@ -1,11 +1,3 @@
-// Lint v editoru (B4): podtržení chyb přímo v kódu, česky.
-//
-// - JavaScript (.js, inline <script> v .html): syntaktická chyba přes acorn (shared/syntax-check.js).
-// - JSON: neplatný soubor.
-// - CSS neplatné: deklarace, kterou prohlížeč nepřijme (CSS.supports), s návrhem opravy.
-// - CSS neaktivní (jen pracovní plocha dom/vue): platná deklarace, která na svých prvcích
-//   nic nedělá — ověří se na stránce složené v neviditelném iframu (runner/inspect-css.js).
-// - Chyby za běhu: nezachycená chyba z náhledu se označí na svém řádku.
 import './lint.css';
 import { StateEffect } from '@codemirror/state';
 import { EditorView } from '@codemirror/view';
@@ -22,10 +14,8 @@ import { renderDiagnosticMessage } from './render.js';
 const LINT_DELAY_MS = 500;
 const LINTED_FILE = /\.(m?js|cjs|html?|css|json)$/i;
 
-// Pracovní plochy podle položky kroku: editor rozšíření dostane jen `item`, ne plochu.
 const workspaces = new WeakMap();
 
-// „Přelintuj teď" — pošle se do editoru, když z náhledu přijde chyba za běhu.
 const refreshLint = StateEffect.define();
 
 workspaceExtensions.register({
@@ -72,7 +62,7 @@ registerEditorExtension({
 });
 
 function lintExtension({ name, runtime, context, compact, item }) {
-  let inspection = null; // běžící ověření neaktivního CSS (zruší se novým během)
+  let inspection = null;
 
   async function source(view) {
     const text = view.state.doc.toString();
@@ -85,7 +75,6 @@ function lintExtension({ name, runtime, context, compact, item }) {
     const entry = item ? workspaces.get(item) : null;
     const hasSyntaxError = found.some((diagnostic) => diagnostic.source === 'Syntaxe');
     for (const error of entry?.runtimeErrors.get(name) ?? []) {
-      // Syntaktickou chybu už hlásí kontrola syntaxe, podruhé z náhledu ji neukazujeme.
       if (hasSyntaxError && /^SyntaxError\b/.test(error.message)) continue;
       if (error.line <= view.state.doc.lines) found.push(runtimeDiagnostic(text, error));
     }
@@ -111,7 +100,6 @@ function lintExtension({ name, runtime, context, compact, item }) {
     if (!declarations.length) return [];
     const files = ws.getFiles().map((file) => (file.name === name ? { name, content: text } : { name: file.name, content: file.content }));
     try {
-      // Knihovny kroku (kap. 6.10): bez nich by Tailwind nevygeneroval styly a lint by hlásil falešné nálezy.
       const libs = Array.isArray(item?.libs) ? item.libs : [];
       const items = await inspectCss({ runtime, libs, files, declarations, signal: controller.signal });
       return controller.signal.aborted ? [] : inactiveDiagnostics(declarations, items);
@@ -140,7 +128,6 @@ function cssSupports(property, value) {
 
 let cachedProperties = null;
 
-/** Vlastnosti, které prohlížeč zná (pro „myslel jsi…?"): longhandy z getComputedStyle + časté zkratky. */
 function knownCssProperties() {
   if (cachedProperties) return cachedProperties;
   const fromBrowser = typeof getComputedStyle === 'function' ? Array.from(getComputedStyle(document.documentElement)) : [];
@@ -148,7 +135,6 @@ function knownCssProperties() {
   return cachedProperties;
 }
 
-// Barvy podtržení a značek jen přes tokeny (výchozí téma lintu má barvy natvrdo).
 const lintTheme = EditorView.theme({
   '.cm-lintRange': { backgroundImage: 'none', paddingBottom: '0' },
   '.cm-lintRange-error': { textDecoration: 'underline wavy var(--tok-invalid)', textUnderlineOffset: '3px', textDecorationSkipInk: 'none' },

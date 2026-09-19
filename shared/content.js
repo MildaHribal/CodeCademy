@@ -1,4 +1,3 @@
-// Načítání osnovy a modulů z disku (jen Node). Formát je v docs/kontrakt.md.
 import fs from 'node:fs';
 import path from 'node:path';
 import { parseStep, parseQuiz, parseLesson, parseCards, parseTerms, ParseError, langOf, RUNTIMES } from './parse.js';
@@ -6,9 +5,7 @@ import { createKeyAllocator } from './answers.js';
 import { parseItemId } from './refs.js';
 
 export const MODULE_TYPES = ['lesson', 'workshop', 'lab', 'quiz', 'project'];
-/** Úroveň sekce v osnově: jádro kurzu, nebo nepovinné rozšíření. */
 export const SECTION_LEVELS = ['jadro', 'rozsireni'];
-/** Volitelné soubory sekce, které se načítají jako surový text (parsují je nástroje). */
 export const SECTION_EXTRAS = { cards: 'cards.md', pojmy: 'pojmy.md', tahak: 'tahak.md' };
 const SLUG = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 const SKIP_DIRS = new Set(['node_modules', '.git', 'dist', '.nuxt', '.output', '.vite', 'coverage']);
@@ -22,7 +19,6 @@ function readJson(file, id) {
   catch (e) { throw new ParseError(`neplatný JSON v ${path.basename(file)}: ${e.message}`, { id }); }
 }
 
-/** Rekurzivně načte textové soubory adresáře: [{ name (relativní, s /), lang, content }]. */
 export function readTextTree(dir) {
   const out = [];
   const walk = (abs, rel) => {
@@ -77,15 +73,6 @@ function sectionLevel(value, sectionId) {
   return value;
 }
 
-/**
- * Celá osnova pro přehled. Sekce, které v osnova.json jsou, ale na disku ještě ne,
- * mají available: false a prázdné moduly.
- *
- * Navíc propouští (kontrakt vlny 2):
- * - `section.uroven` — 'jadro' | 'rozsireni' z položky osnova.json (slug = 'jadro'), jiná hodnota = ParseError
- * - `section.outcomes` — pole „Po sekci umíš" ze section.json tak, jak je (bez klíčů), výchozí []
- * - `curriculum.doporucenaTrasa` — pole id sekcí z osnova.json, [] když chybí (kontrakt kap. 2.1)
- */
 export function loadCurriculum(contentDir) {
   const osnova = readJson(path.join(contentDir, 'osnova.json'), 'osnova.json');
   if (!Array.isArray(osnova.parts)) throw new ParseError('osnova.json potřebuje pole "parts"', { id: 'osnova.json' });
@@ -100,8 +87,6 @@ export function loadCurriculum(contentDir) {
       }
       const planned = typeof entry === 'string' ? {} : entry;
       const uroven = sectionLevel(planned.uroven, sectionId) ?? 'jadro';
-      // Rozbitá nebo rozepsaná sekce nesmí shodit celou osnovu: ohlásí se jako nedostupná
-      // s textem chyby, zbytek kurzu funguje dál (detail sekce chybu vypíše sám).
       let s;
       try {
         s = readSection(contentDir, sectionId);
@@ -128,7 +113,7 @@ export function loadCurriculum(contentDir) {
             m = readModuleMeta(contentDir, sectionId, moduleId);
           } catch (error) {
             if (!(error instanceof ParseError)) throw error;
-            return [];  // rozepsaný modul se v přehledu neukáže, sekce zůstane funkční
+            return [];
           }
           return {
             id: `${sectionId}/${moduleId}`,
@@ -153,10 +138,6 @@ export function loadCurriculum(contentDir) {
   return { parts, doporucenaTrasa };
 }
 
-/**
- * Volitelné soubory sekce jako surový text: { cards, pojmy, tahak } (string, nebo null když soubor chybí).
- * Formát (kontrakt kap. 2) parsují nástroje, které soubory používají.
- */
 export function loadSectionExtras(contentDir, sectionId) {
   if (typeof sectionId !== 'string' || !SLUG.test(sectionId)) {
     throw new ParseError(`neplatný slug sekce "${sectionId}"`, { id: String(sectionId) });
@@ -173,11 +154,6 @@ export function loadSectionExtras(contentDir, sectionId) {
   return out;
 }
 
-/**
- * Stránka sekce: výstupy s klíči, tahák, pojmy a karty (kontrakt kap. 2.7).
- * @returns {null | { id, title, intro, outcomes: { key, text, links }[], cheatsheet: string|null, terms: Term[], cards: Card[] }}
- *   null = sekce na disku není (routa vrátí 404). Rozbitý soubor sekce vyhodí ParseError.
- */
 export function loadSection(contentDir, sectionId) {
   const extras = loadSectionExtras(contentDir, sectionId);
   const section = readSection(contentDir, sectionId);
@@ -193,10 +169,6 @@ export function loadSection(contentDir, sectionId) {
   };
 }
 
-/**
- * Výstupy „Po sekci umíš" ze section.json s klíči `hashKey(text)` (kontrakt kap. 2.2).
- * @param {object} section  obsah section.json
- */
 export function sectionOutcomes(section, sectionId) {
   if (section.outcomes === undefined) return [];
   if (!Array.isArray(section.outcomes)) throw new ParseError('"outcomes" v section.json musí být pole', { id: sectionId });
@@ -213,7 +185,6 @@ export function sectionOutcomes(section, sectionId) {
   });
 }
 
-/** Pojmy všech dostupných sekcí v pořadí osnovy (kontrakt kap. 2.7): { terms: Term[] }. */
 export function loadTerms(contentDir) {
   const terms = [];
   for (const part of loadCurriculum(contentDir).parts) {
@@ -226,7 +197,6 @@ export function loadTerms(contentDir) {
   return { terms };
 }
 
-/** Všechny existující moduly: [{ sectionId, moduleId }] v pořadí osnovy. */
 export function listModules(contentDir) {
   return loadCurriculum(contentDir).parts.flatMap((p) =>
     p.sections.flatMap((s) => s.modules.map((m) => {
@@ -235,17 +205,12 @@ export function listModules(contentDir) {
     })));
 }
 
-/** Krok, lab nebo projekt bez řešení a jiných přístupů (API je bez `?solution=1` neposílá). */
 function stripSolution(item) {
   if (!item) return item;
   const { solution, approaches, ...rest } = item;
   return rest;
 }
 
-/**
- * Detail modulu včetně obsahu.
- * @param {{ includeSolutions?: boolean }} opts — API je posílá jen na požádání, verify vždy.
- */
 export function loadModule(contentDir, sectionId, moduleId, { includeSolutions = true } = {}) {
   if (!SLUG.test(sectionId)) throw new ParseError(`neplatný slug sekce "${sectionId}"`, { id: `${sectionId}/${moduleId}` });
   const m = readModuleMeta(contentDir, sectionId, moduleId);
@@ -272,9 +237,7 @@ export function loadModule(contentDir, sectionId, moduleId, { includeSolutions =
       return { ...base, steps };
     }
     case 'lab': {
-      // Lab smí seed i řešení vynechat (kontrakt kap. 3) — uživatel pak začíná s prázdnými soubory.
       const lab = parseStep(read('lab.md'), { id, defaultRuntime: base.runtime, defaultTitle: m.title, fileKind: 'lab' });
-      // Bez řešení zůstane aspoň počet přístupů, aby UI vědělo, jestli nabídnout „Jiné přístupy" (kap. 3.8).
       return { ...base, lab: includeSolutions ? lab : { ...stripSolution(lab), approachesCount: lab.approaches.length } };
     }
     case 'quiz':
@@ -291,18 +254,12 @@ export function loadModule(contentDir, sectionId, moduleId, { includeSolutions =
   }
 }
 
-// ---------------------------------------------------------------------------
-// Převod id položky opakování a pokusů na obsah (kontrakt kap. 2.10, 12.3)
-// ---------------------------------------------------------------------------
-
-/** Načte modul, nebo vrátí null, když na disku není. Rozbitý obsah vyhodí ParseError. */
 function moduleOrNull(contentDir, target) {
   const [sectionId, moduleId] = target.split('/');
   if (!moduleId || !fs.existsSync(path.join(contentDir, sectionId, moduleId, 'module.json'))) return null;
   return loadModule(contentDir, sectionId, moduleId, { includeSolutions: false });
 }
 
-/** Krok workshopu (`s/m/NNN`) nebo lab (`s/m`) jako { module, item }, jinak null. */
 function stepOrLab(contentDir, target) {
   const module = moduleOrNull(contentDir, target.split('/').slice(0, 2).join('/'));
   if (!module) return null;
@@ -315,26 +272,11 @@ function stepOrLab(contentDir, target) {
   return null;
 }
 
-/** Otázky lekce, které se hodnotí (`:::check` bez pretestu a `# --questions--`), v pořadí souboru. */
 function lessonQuestions(lesson) {
   const checks = (lesson.blocks ?? []).filter((block) => block.kind === 'check' && !block.pretest).map((block) => block.question);
   return [...checks, ...(lesson.questions ?? [])];
 }
 
-/**
- * Obsah položky podle id z kontraktu kap. 2.10 — společný podklad pro opakování (ReviewItem bez `box`
- * a `due`, kap. 12.3), pokusy (ověření id `q:`) a statistiky.
- *
- * @returns {null | {
- *   id: string,
- *   type: 'question' | 'card' | 'step' | 'explain',
- *   source: { sectionId: string, moduleId: string | null, title: string, see: string[] },
- *   content: object,   // question: Question (+ codeSet u sady # --code--); card: Card;
- *                      // step: { stepId, runtime, title, hints, seed, meta }; explain: { prompt, point, model }
- * }}
- * null = id je neplatné, nebo položka v obsahu není (osiřelá). Rozbitý soubor obsahu vyhodí ParseError,
- * aby volající položku omylem nesmazal. `outcome:` je plánované (vlna 3) → null.
- */
 export function resolveContentItem(contentDir, id) {
   const parsed = parseItemId(id);
   if (!parsed) return null;
@@ -413,11 +355,6 @@ export function resolveContentItem(contentDir, id) {
   return null;
 }
 
-// ---------------------------------------------------------------------------
-// Index obsahu (hledání, kotvy, přehledy nástrojů) s mezipamětí podle mtime
-// ---------------------------------------------------------------------------
-
-/** Mezipaměť pro každý adresář obsahu: rozparsované soubory podle cesty, mtime a velikosti. */
 const indexCaches = new Map();
 
 function cacheFor(contentDir) {
@@ -430,10 +367,6 @@ function cacheFor(contentDir) {
   return cache;
 }
 
-/**
- * Přečte a zpracuje soubor jen tehdy, když se od posledního čtení změnil (mtime, velikost).
- * Vrací { value } nebo { missing: true }; chybu `parse` vrací jako { error }.
- */
 function readCached(cache, file, parse, signature) {
   let stat;
   try {
@@ -465,19 +398,6 @@ function parseJsonText(text, id) {
   }
 }
 
-/**
- * Lehký index celého obsahu: sekce, moduly, kroky a nadpisy lekcí s kotvami.
- * Soubory se parsují jen při změně (mtime/velikost); když se nezměnilo nic,
- * vrátí se stejný objekt jako minule. Rozbitý modul index neshodí — skončí v `errors`.
- *
- * @returns {{
- *   sections: { id, partId, title, available, uroven, modules: string[], extras: { cards: boolean, pojmy: boolean, tahak: boolean } }[],
- *   modules: { id, sectionId, moduleId, type, title, summary, minutes, runtime, steps: string[] }[],
- *   steps: { id, moduleId, number, title }[],
- *   headings: { moduleId, level, text, anchor }[],   // kotvy nadpisů lekcí (úroveň 2 a 3, kontrakt kap. 2.8)
- *   errors: { id, message }[],
- * }}
- */
 export function buildContentIndex(contentDir) {
   const cache = cacheFor(contentDir);
   const signature = [];
@@ -502,7 +422,6 @@ export function buildContentIndex(contentDir) {
     }
   }
 
-  // Seznam souborů (a tím podpis) závisí i na adresářích kroků — ty se čtou pokaždé.
   const collected = { sections: [], modules: [], steps: [], headings: [] };
   for (const { id: sectionId, partId, planned } of sectionEntries) {
     const dir = path.join(contentDir, sectionId);

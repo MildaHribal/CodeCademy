@@ -1,13 +1,3 @@
-// Pracovní plocha kroku workshopu a labu: zadání | editor | náhled a konzole.
-//
-// Tok práce: uživatel píše kód → náhled se živě obnovuje a kód se průběžně ukládá →
-// Zkontrolovat (Ctrl+Enter) spustí testy → nápovědy ukážou, co prošlo →
-// po úspěchu se krok označí jako splněný a Ctrl+Enter vede na další krok.
-//
-// Jádro. Nástroje sem nepřidávají kód — používají workspaceExtensions, sloty, události,
-// registerStepKind (workspace/extensions.js) a registry výsledků testů a editoru.
-// Části plochy jsou v samostatných souborech: brief.js, output-browser.js, output-node.js,
-// stepper.js, result.js, files.js.
 
 import { h } from '../dom.js';
 import { href } from '../router.js';
@@ -32,11 +22,6 @@ export { findMainFile } from './files.js';
 
 const SLOT_NAMES = ['brief-head', 'brief-after-description', 'brief-after-hints', 'actions', 'output-tools', 'output-after', 'bar'];
 
-/**
- * @param ctx  kontext obrazovky (main.js)
- * @param {{ module, item, nav, steps?: object[], stepIndex?: number }} options
- *   item = krok workshopu nebo lab (výstup parseStep bez řešení)
- */
 export function renderWorkspace(ctx, { module, item, nav, steps = null, stepIndex = 0 }) {
   ctx.setLayout('workspace');
 
@@ -46,28 +31,22 @@ export function renderWorkspace(ctx, { module, item, nav, steps = null, stepInde
   const libs = Array.isArray(item.libs) ? item.libs : [];
   const isNode = runtime === 'node';
   // Druh kroku (kontrakt kap. 3.1): step | debug | parsons | recall | choose. Vlastní plochu místo
-  // editoru má jen druh zaregistrovaný přes registerStepKind, ostatní používají editor kódu.
   const kind = item.kind ?? item.meta?.kind ?? 'step';
   const nextStep = isWorkshop ? steps[stepIndex + 1] ?? null : null;
 
-  let passed = false; // poslední kontrola prošla
-  let changedSincePass = false; // uživatel od té doby upravil kód
+  let passed = false;
+  let changedSincePass = false;
   let checking = false;
-  let editCount = 0; // počet úprav kódu — pozná, že uživatel psal i během běžící kontroly
-  let failedChecks = 0; // neúspěšné kontroly od otevření plochy
+  let editCount = 0;
+  let failedChecks = 0;
 
   const slots = createSlots(SLOT_NAMES, {
-    // U náhledu dom/vue je nadpis bez nástrojů — slot je tam vlastní krabička .pane__tools.
     'output-tools': !isNode && runtime !== 'js' ? { className: 'pane__tools' } : {},
   });
-
-  // ——— Levý panel: zadání a nápovědy ———
 
   const hintList = createHintList(item.hints, { item });
   const brief = createBriefPane({ item, module, isWorkshop, hintList, slots, onCheck: () => check(), onReset: resetCode });
   const result = brief.result;
-
-  // ——— Prostřední panel: editor (nebo plocha jiného druhu kroku) ———
 
   const editorPane = h('section', { class: 'pane pane--editor', 'aria-label': 'Editor kódu' });
   const editorOptions = {
@@ -83,18 +62,12 @@ export function renderWorkspace(ctx, { module, item, nav, steps = null, stepInde
   const editor = customKind ? customKind.createEditor(editorPane, editorOptions) : createCodeEditor(editorPane, editorOptions);
   ctx.onCleanup(() => editor.destroy());
 
-  // ——— Pravý panel: náhled a konzole (u node tlačítko Spustit a výstup) ———
-
   const output = isNode
     ? createNodeOutput({ item, slots, signal: ctx.signal, getFiles: () => editor.getFiles() })
     : createBrowserOutput({ runtime, libs, slots });
   const consolePanel = output.consolePanel;
   let preview = null;
 
-  // ——— Poskládání obrazovky ———
-
-  // Runtime js nemá stránku, jen konzoli: ta patří pod editor (35 % výšky), ať kód a výpis
-  // jsou pod sebou jako v terminálu a editor dostane víc šířky. Ostatní runtime mají tři sloupce.
   const consoleBelowEditor = runtime === 'js';
   const columns = consoleBelowEditor
     ? createColumns(
@@ -116,23 +89,19 @@ export function renderWorkspace(ctx, { module, item, nav, steps = null, stepInde
   const root = h(
     'div',
     { class: `workspace workspace--${runtime}` },
-    // Lišta s kroky jen u workshopu; lab je jediné zadání.
     isWorkshop ? createStepperBar({ steps, stepIndex, slot: slots.element('bar') }) : null,
     columns,
   );
   ctx.root.append(root);
 
-  // Náhled připojíme až po vložení do stránky — iframe potřebuje být v dokumentu.
   if (!isNode) {
     preview = output.mount(editor.getFiles());
     ctx.onCleanup(() => preview.destroy());
   }
 
-  // Na širokém okně rovnou do editoru; na úzkém by skok kurzoru odscrolloval zadání z obrazovky.
   if (window.matchMedia('(min-width: 901px)').matches) editor.focus();
   ctx.root.querySelector('.stepper__item[aria-current]')?.scrollIntoView({ block: 'nearest', inline: 'center' });
 
-  // Ctrl+Enter mimo editor (v editoru ji obslouží CodeMirror a událost dál nepustí).
   const onKeyDown = (event) => {
     if (event.key === 'Enter' && (event.ctrlKey || event.metaKey) && !event.defaultPrevented) {
       event.preventDefault();
@@ -141,8 +110,6 @@ export function renderWorkspace(ctx, { module, item, nav, steps = null, stepInde
   };
   document.addEventListener('keydown', onKeyDown);
   ctx.onCleanup(() => document.removeEventListener('keydown', onKeyDown));
-
-  // ——— API pro rozšíření ———
 
   const ws = {
     item,
@@ -192,12 +159,9 @@ export function renderWorkspace(ctx, { module, item, nav, steps = null, stepInde
   ctx.onCleanup(workspaceExtensions.mount(ws));
   emit('mount');
 
-  // ——— Chování ———
-
   function handleChange(files) {
     editCount++;
     progress.saveCode(item.id, files);
-    // Náhled se obnoví sám se zpožděním; konzoli před novým spuštěním vyčistí signál 'clear'.
     preview?.update({ runtime, libs, files });
     if (passed) {
       changedSincePass = true;
@@ -228,9 +192,7 @@ export function renderWorkspace(ctx, { module, item, nav, steps = null, stepInde
         libs,
         files,
         hints: item.hints,
-        // Při odchodu z obrazovky se kontrola zruší (zaseknutý test by brzdil i další obrazovku).
         signal: ctx.signal,
-        // Limit na jeden test smí krok zvýšit ve frontmatteru (`timeoutMs: 20000`), jinak výchozí.
         ...(typeof item.meta?.timeoutMs === 'number' ? { timeoutMs: item.meta.timeoutMs } : {}),
       });
     } catch (error) {
@@ -247,8 +209,6 @@ export function renderWorkspace(ctx, { module, item, nav, steps = null, stepInde
     hintList.setResults(run.results ?? [], run);
     passed = Boolean(run.ok);
     if (!passed) failedChecks++;
-    // Když uživatel během kontroly kód upravil, výsledek platí pro starší verzi —
-    // další Ctrl+Enter pak musí kontrolovat znovu, ne přeskočit na další krok.
     changedSincePass = editCount !== editsAtStart;
 
     if (passed) {
@@ -260,7 +220,6 @@ export function renderWorkspace(ctx, { module, item, nav, steps = null, stepInde
       }
       if (ctx.signal.aborted) return;
       markStepperDone(ctx.root, { stepIndex, title: item.title });
-      // Kód upravený během kontroly se musí zkontrolovat znovu — pak tlačítko zůstává.
       brief.setPassed(!changedSincePass);
       showResult(result, 'pass', {
         item,
@@ -287,12 +246,11 @@ export function renderWorkspace(ctx, { module, item, nav, steps = null, stepInde
     if (nextStep) {
       return h(
         'a',
-        { class: 'btn btn--primary', href: href.step(nextStep.id) },
-        h('span', { class: 'btn__label' }, 'Další krok'),
+        { class: 'btn btn--primary', 'aria-label': 'Next step / Další krok', href: href.step(nextStep.id) },
+        h('span', { class: 'btn__label' }, 'Next step'),
         h('kbd', { class: 'btn__kbd' }, 'Ctrl+Enter'),
       );
     }
-    // Bez dalšího modulu je `nextModuleLink` sám odkazem zpět na sekci — nepřidávej ho dvakrát.
     return h('span', { class: 'result__links' }, nextModuleLink(nav), nav.nextModule ? backLink(nav) : null);
   }
 

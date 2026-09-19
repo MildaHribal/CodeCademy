@@ -2,15 +2,15 @@ import { h } from '../dom.js';
 import { errorNotice } from '../components/status.js';
 
 export function renderNotFound(ctx) {
-  ctx.setTitle('Stránka nenalezena');
+  ctx.setTitle('Page not found');
   ctx.root.append(
     h(
       'div',
       { class: 'page' },
       errorNotice({
-        title: 'Tahle stránka neexistuje',
-        message: 'Odkaz je možná starý nebo v něm je překlep.',
-        actions: [h('a', { class: 'btn', href: '#/' }, 'Zpět na přehled')],
+        title: 'Page not found / Tahle stránka neexistuje',
+        message: 'The link might be old or mistyped.',
+        actions: [h('a', { class: 'btn', 'aria-label': 'Back to overview / Zpět na přehled', href: '#/' }, 'Back to overview')],
       }),
     ),
   );

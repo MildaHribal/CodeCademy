@@ -1,12 +1,9 @@
 // Panel s delším „cizím" kódem u sady otázek `# --code--` (kontrakt kap. 4.3):
-// 1–3 soubory jen ke čtení, s čísly řádků, přepínání souborů záložkami.
-// Používá ho kvíz a opakování (otázka ze sady má `codeSet`).
 
 import { h } from '../dom.js';
 import { renderMarkdown } from '../markdown.js';
 import { nextQuestionUid } from './questions/uid.js';
 
-/** Obarvený blok kódu s čísly řádků (čísla jsou mimo výběr textu, kopíruje se jen kód). */
 function codeView(file) {
   const content = String(file.content ?? '').replace(/\n$/, '');
   const longestTicks = Math.max(2, ...[...content.matchAll(/`+/g)].map((m) => m[0].length));
@@ -22,10 +19,6 @@ function codeView(file) {
   return h('div', { class: 'code-set__view', tabindex: '0', role: 'region', 'aria-label': `Soubor ${file.name}` }, gutter, highlighted);
 }
 
-/**
- * @param {{ title: string, files: { name, lang, content }[] }} codeSet
- * @returns {HTMLElement}
- */
 export function createCodeSetPanel(codeSet) {
   const uid = nextQuestionUid();
   const files = codeSet.files ?? [];

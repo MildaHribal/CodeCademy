@@ -1,4 +1,3 @@
-// Pomocné funkce pro HTTP: JSON odpovědi a těla, ochrana lokálních požadavků, limity.
 import { ParseError } from '../shared/parse.js';
 import { HttpError, InputError } from './errors.js';
 
@@ -16,7 +15,6 @@ export function sendJson(res, status, data, headers = {}) {
   res.end(body);
 }
 
-/** Přečte tělo požadavku jako JSON objekt (prázdné tělo = {}). Chyby jsou HttpError 400/413. */
 export function readJsonBody(req) {
   return new Promise((resolve, reject) => {
     const chunks = [];
@@ -54,7 +52,6 @@ export function readJsonBody(req) {
   });
 }
 
-/** Hostitel bez portu z hlavičky Host nebo z URL v Origin. */
 function hostnameOf(value) {
   try {
     return new URL(value.includes('://') ? value : `http://${value}`).hostname;
@@ -63,11 +60,6 @@ function hostnameOf(value) {
   }
 }
 
-/**
- * Ochrana API proti cizím stránkám otevřeným v prohlížeči: server umí spouštět kód,
- * takže přijímá jen požadavky na lokální adresu (proti DNS rebindingu) a měnící
- * požadavky jen z lokálních stránek (proti CSRF).
- */
 export function checkLocalRequest(req) {
   const host = req.headers.host;
   if (host && !LOOPBACK_HOSTS.has(hostnameOf(host))) {
@@ -79,7 +71,6 @@ export function checkLocalRequest(req) {
   }
 }
 
-/** Omezí počet současně běžících úloh, ať pár požadavků nezahltí počítač. */
 export function createLimiter(limit) {
   let running = 0;
   const queue = [];
@@ -98,10 +89,6 @@ export function createLimiter(limit) {
   });
 }
 
-/**
- * AbortSignal, který se zruší, když klient zavře spojení dřív, než dostal odpověď
- * (uživatel mezitím odešel z obrazovky). Běžící práci pak nemá smysl dál dělat.
- */
 export function abortOnDisconnect(res) {
   const controller = new AbortController();
   res.on('close', () => {
@@ -110,7 +97,6 @@ export function abortOnDisconnect(res) {
   return controller.signal;
 }
 
-/** Ověří `timeoutMs` z požadavku a omezí ho na rozsah 100…max. */
 export function clampTimeout(value, fallback, max) {
   if (value === undefined || value === null) return fallback;
   if (typeof value !== 'number' || !Number.isFinite(value) || value <= 0) {
@@ -119,7 +105,6 @@ export function clampTimeout(value, fallback, max) {
   return Math.min(Math.max(Math.round(value), 100), max);
 }
 
-/** Převede výjimku na HTTP stav a českou zprávu. */
 export function describeError(err) {
   if (err instanceof HttpError) return { status: err.status, message: err.message };
   if (err instanceof InputError) return { status: 400, message: err.message };

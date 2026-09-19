@@ -1,12 +1,4 @@
-// Převod libovolné hodnoty na čitelný text (pro konzoli a hlášky assertů).
-// Formát se drží `util.inspect` z Node, aby výpisy vypadaly stejně v prohlížeči i na serveru.
-//
-// POZOR: funkce se do iframu vkládá jako text, nesmí používat nic mimo své tělo.
 
-/**
- * @param {unknown} value
- * @param {{ rawStrings?: boolean }} options  rawStrings: řetězec na nejvyšší úrovni bez uvozovek (jako console.log)
- */
 export function formatValue(value, { rawStrings = false } = {}) {
   const MAX_DEPTH = 2;
   const MAX_ITEMS = 100;
@@ -86,7 +78,7 @@ export function formatValue(value, { rawStrings = false } = {}) {
     if (v instanceof Date) return Number.isNaN(v.getTime()) ? 'Invalid Date' : v.toISOString();
     if (v instanceof RegExp) return String(v);
     if (v instanceof Error) return v.message ? `${v.name}: ${v.message}` : v.name;
-    if (v instanceof Promise) return 'Promise {}'; // stav Promise zvenku zjistit nejde
+    if (v instanceof Promise) return 'Promise {}';
     if (v instanceof WeakMap || v instanceof WeakSet) return `${v.constructor.name} { <items unknown> }`;
 
     const isArray = Array.isArray(v);

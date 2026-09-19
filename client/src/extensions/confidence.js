@@ -1,5 +1,4 @@
 // Jistota odpovědí na stránce sekce: jedna věta kalibrace (kontrakt kap. 12.4),
-// když uživatel odpověděl s „Jsem si jistý" aspoň pětkrát.
 import './reviews/reviews.css';
 import { h } from '../dom.js';
 import { sectionExtensions } from '../screens/section.js';

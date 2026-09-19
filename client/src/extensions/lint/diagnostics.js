@@ -1,14 +1,8 @@
-// Nálezy lintu jako čistá data (bez CodeMirroru a bez DOM), testují se v Node.
-//
-// Nález: { from, to, severity: 'error' | 'warning' | 'info', message, hint?, original?, causes?, source }
-//   from/to = pozice znaků v souboru, message = česká věta s `inline kódem`,
-//   original = anglická hláška prohlížeče (u chyb JS), source = odkud nález je.
 import { explainError } from '../../../../shared/errors-cs.js';
 import { checkJsSyntax, findSyntaxError } from '../../../../shared/syntax-check.js';
 import { findInvalidDeclarations } from './css-check.js';
 import { scanCss } from './css-scan.js';
 
-/** Pozice znaku pro řádek a sloupec (1-based) v textu; mimo rozsah se ořízne. */
 export function offsetAt(text, line, column = 1) {
   const lines = String(text).split('\n');
   const lineIndex = Math.min(Math.max(1, line), lines.length) - 1;
@@ -17,7 +11,6 @@ export function offsetAt(text, line, column = 1) {
   return offset + Math.min(Math.max(0, column - 1), lines[lineIndex].length);
 }
 
-/** Rozsah „od sloupce do konce slova" (aspoň jeden znak, jinak konec řádku). */
 function rangeAt(text, line, column) {
   const from = offsetAt(text, line, column);
   const rest = String(text).slice(from);
@@ -27,7 +20,6 @@ function rangeAt(text, line, column) {
   return { from: lineStart, to: Math.max(from, lineStart) };
 }
 
-/** Syntaktická chyba JS (soubor .js) nebo inline skriptu (soubor .html). */
 export function syntaxDiagnostics(name, text) {
   const error = /\.html?$/i.test(name)
     ? findSyntaxError([{ name, content: text }])
@@ -45,7 +37,6 @@ export function syntaxDiagnostics(name, text) {
   }];
 }
 
-/** Neplatný JSON (soubor .json): pozice z hlášky JSON.parse. */
 export function jsonDiagnostics(name, text) {
   if (!/\.json$/i.test(name) || !String(text).trim()) return [];
   try {
@@ -66,7 +57,6 @@ export function jsonDiagnostics(name, text) {
   }
 }
 
-/** Neplatné CSS deklarace (soubor .css). */
 export function cssDiagnostics(name, text, { supports, knownProperties } = {}) {
   if (!/\.css$/i.test(name) || typeof supports !== 'function') return [];
   return findInvalidDeclarations(text, { supports, knownProperties }).map((problem) => ({
@@ -79,11 +69,6 @@ export function cssDiagnostics(name, text, { supports, knownProperties } = {}) {
   }));
 }
 
-/**
- * Deklarace, které má smysl ověřit na vykreslené stránce (neaktivní CSS):
- * jen běžná pravidla nejvyšší úrovně, mimo @media/@supports/@container a vnoření.
- * @returns {Array<{ id: number, property: string, selector: string, from: number, to: number }>}
- */
 export function inspectableDeclarations(text) {
   return scanCss(text)
     .filter((declaration) => declaration.selector && !declaration.nested)
@@ -113,7 +98,6 @@ const INACTIVE_HINTS = {
   inline: 'Přidej `display: inline-block` nebo `block`.',
 };
 
-/** Výsledek inspectCss → nálezy lintu. */
 export function inactiveDiagnostics(declarations, items) {
   const byId = new Map(declarations.map((declaration) => [declaration.id, declaration]));
   return (items ?? [])
@@ -131,7 +115,6 @@ export function inactiveDiagnostics(declarations, items) {
     });
 }
 
-/** Nezachycená chyba z náhledu ({ text, line, column }) → nález na jejím řádku. */
 export function runtimeDiagnostic(text, { line, column = 1, message }) {
   const explanation = explainError(message);
   const lineStart = offsetAt(text, line, 1);

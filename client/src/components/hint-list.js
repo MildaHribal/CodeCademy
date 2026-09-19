@@ -1,5 +1,3 @@
-// Seznam nápověd (požadavků) se stavem: neověřeno / ověřuje se / prošlo / selhalo.
-// Chybová zpráva testu se dá rozbalit — pomáhá pochopit, co přesně nesedí.
 
 import { h, svg } from '../dom.js';
 import { icons } from '../icons.js';
@@ -13,10 +11,6 @@ const STATUS = {
   fail: { icon: icons.cross, label: 'Nesplněno' },
 };
 
-/**
- * @param {{ text, test }[]} hints
- * @param {{ ordered?: boolean, item?: object }} options — item se předává rendererům výsledku
- */
 export function createHintList(hints, { ordered = false, item: owner = null } = {}) {
   const items = hints.map((hint) => {
     const status = h('span', { class: 'hint__status' });
@@ -33,7 +27,6 @@ export function createHintList(hints, { ordered = false, item: owner = null } = 
     item.status.replaceChildren(svg(icon, { size: 18, label }));
     item.detail.replaceChildren();
     if (key === 'idle' && note) {
-      // Test se nespustil (runner ho přeskočil) — vysvětlení bez rozbalování.
       item.detail.append(h('p', { class: 'hint__note' }, note));
     } else if (key === 'fail') {
       const detail = renderHintFailure({ result, hint: hints[index], index, run, item: owner });
@@ -45,10 +38,6 @@ export function createHintList(hints, { ordered = false, item: owner = null } = 
     element: list,
     reset: () => items.forEach((item) => setStatus(item, 'idle')),
     running: () => items.forEach((item) => setStatus(item, 'running')),
-    /**
-     * results: [{ index, pass, error?, skipped?, note? }] z RunResult; `run` = celý RunResult pro renderery.
-     * `note` u přeskočeného požadavku nahradí výchozí vysvětlení.
-     */
     setResults(results, run = null) {
       items.forEach((item, index) => {
         const result = results.find((r) => r.index === index);
@@ -57,9 +46,7 @@ export function createHintList(hints, { ordered = false, item: owner = null } = 
         else setStatus(item, result.pass ? 'pass' : 'fail', { result, index, run });
       });
     },
-    /** Prvek <li> požadavku (pro zvýraznění, tipy u požadavku…). */
     itemElement: (index) => items[index]?.li ?? null,
-    /** Stav požadavku: 'idle' | 'running' | 'pass' | 'fail'. */
     status: (index) => items[index]?.li.dataset.status ?? null,
   };
   api.reset();

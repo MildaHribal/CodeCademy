@@ -1,16 +1,3 @@
-// Položky menu v horní liště (Hledat, Opakování, Poznámky, Pískoviště, Statistiky…).
-// Jádro žádné položky nemá — přidávají je nástroje:
-//
-//   registerHeaderItem({
-//     id: 'opakovani', order: 20, label: 'Opakování', href: '#/opakovani',
-//     icon: icons.reset,                   // nepovinné: SVG cesta z icons.js
-//     routes: ['reviews'],                 // nepovinné: na kterých obrazovkách je položka aktivní
-//     badge: () => '12',                   // nepovinné: krátký text vedle popisku (volá se při každém překreslení)
-//     onClick: (event) => {},              // nepovinné: místo odkazu akce (např. otevřít hledání)
-//     shortcut: 'Ctrl+K',                  // nepovinné: jen popisek v title
-//   });
-//
-// Menu se překreslí při každé změně obrazovky; refreshHeader() ho překreslí hned (např. nový počet).
 import { h, svg } from '../dom.js';
 import { createRegistry } from './registry.js';
 
@@ -27,13 +14,11 @@ export function registerHeaderItem(item) {
   };
 }
 
-/** Připojí menu do prvku v hlavičce (volá main.js jednou). */
 export function mountHeaderMenu(element) {
   container = element;
   refreshHeader();
 }
 
-/** Nastaví aktuální obrazovku a překreslí menu. */
 export function setHeaderRoute(route) {
   currentRoute = route;
   refreshHeader();
@@ -62,7 +47,6 @@ export function refreshHeader() {
         const attrs = {
           class: 'app-menu__item',
           'aria-current': active ? 'page' : null,
-          // title vždy: na úzkém okně je vidět jen ikona a popisek zmizí.
           title: item.shortcut ? `${item.label} (${item.shortcut})` : item.label,
           dataset: { item: item.id },
         };

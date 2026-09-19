@@ -1,10 +1,5 @@
 // Výpočty pro :::memory bez DOM (kontrakt kap. 5.6): co se mezi dvěma stavy změnilo
-// a rozdělení zápisu objektu na text a odkazy @id.
 
-/**
- * Rozdělí zápis objektu (`{ name: 'Ema', tags: @tags }`) na úseky textu a odkazů.
- * @returns {({ text: string } | { ref: string })[]}
- */
 export function splitObjectText(text) {
   const parts = [];
   let last = 0;
@@ -17,11 +12,6 @@ export function splitObjectText(text) {
   return parts;
 }
 
-/**
- * Jména proměnných a id objektů, které jsou v kroku nové nebo jiné než v předchozím.
- * U prvního kroku je nové všechno.
- * @returns {{ bindings: Set<string>, objects: Set<string> }}
- */
 export function changedInStep(previous, step) {
   const bindings = new Set();
   const objects = new Set();

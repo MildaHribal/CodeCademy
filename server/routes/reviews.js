@@ -1,13 +1,3 @@
-// Fronta opakování (kontrakt kap. 12.3): /api/reviews/*.
-//
-// Položky vznikají:
-// - z první odpovědi na otázku lekce nebo kvízu (událost attempts:recorded z POST /api/attempts),
-// - z karet cards.md, jakmile je karta aktivní (při každém summary a due),
-// - z kroku, který uživatel splnil s řešením nebo po 3+ neúspěších (attempts:recorded),
-// - ručně přes POST /api/reviews/add („Nezvládl bych to znovu", nezaškrtnutý bod explain).
-//
-// Po odpovědi v opakování vyvolá událost `reviews:answered` ({ id, ok, confidence, sectionId }),
-// ze které si jistotu počítá confidence.js.
 import { parseCards } from '../../shared/parse.js';
 import { HttpError } from '../errors.js';
 import {
@@ -17,12 +7,6 @@ import {
   parseReviewId, sortDue,
 } from './_reviews-store.js';
 
-/**
- * @param {object} router
- * @param {object} ctx
- * @param {{ now?: () => Date, resolveItem?: (id) => object|null, listCards?: () => { sectionId, cards }[] }} [options]
- *   now, resolveItem a listCards jdou v testech podstrčit (výchozí: skutečný čas a obsah přes ctx)
- */
 export function register(router, ctx, options = {}) {
   const now = options.now ?? (() => new Date());
   const resolveItem = options.resolveItem ?? ((id) => ctx.resolveItem(id));
@@ -35,16 +19,12 @@ export function register(router, ctx, options = {}) {
     return { today: localDate(date), now: date.toISOString() };
   };
 
-  // ——— Reset postupu maže i položky opakování (včetně „Už to umím") ———
-
   ctx.onReset((id) => {
     store.update((data) => {
       for (const key of Object.keys(data.items)) if (belongsToTarget(key, id)) delete data.items[key];
       for (const key of Object.keys(data.removed)) if (belongsToTarget(key, id)) delete data.removed[key];
     });
   });
-
-  // ——— Založení položek z pokusů ———
 
   ctx.on('attempts:recorded', ({ id, body, attempt, firstOk } = {}) => {
     if (typeof id !== 'string') return;
@@ -60,7 +40,6 @@ export function register(router, ctx, options = {}) {
       return;
     }
 
-    // Krok nebo lab poprvé splněný s pomocí (řešení před splněním, nebo 3+ neúspěchy) → znovu od seedu.
     if (!firstOk || !(attempt?.assisted || attempt?.fails >= 3)) return;
     const stepId = `step:${id}`;
     if (!parseReviewId(stepId) || !safeResolve(resolveItem, stepId)) return;
@@ -70,8 +49,6 @@ export function register(router, ctx, options = {}) {
       delete data.removed[stepId];
     });
   });
-
-  // ——— Routy ———
 
   router.get('/api/reviews/summary', () => {
     const { today } = clock();
@@ -122,7 +99,6 @@ export function register(router, ctx, options = {}) {
     const { id, reason } = await readBody();
     if (typeof id !== 'string' || !parseReviewId(id)) throw new ctx.InputError('"id" musí být id položky opakování (např. step:sekce/modul/001)');
     if (!ADD_REASONS.includes(reason)) throw new ctx.InputError(`"reason" musí být jedno z: ${ADD_REASONS.join(', ')}`);
-    // Rozbitý obsah (ParseError) propadne jako 500 — neexistující obsah je chyba vstupu.
     if (!resolveItem(id)) throw new ctx.InputError(`Položka ${id} v obsahu kurzu neexistuje`);
 
     const { today, now: nowIso } = clock();
@@ -149,12 +125,6 @@ export function register(router, ctx, options = {}) {
     });
   });
 
-  // ——— Fronta na dnešek ———
-
-  /**
-   * Založí aktivní karty, smaže osiřelé položky a spočítá, co se dnes nabídne.
-   * Obsah se během jednoho požadavku převádí na položky jen jednou (mezipaměť).
-   */
   function buildQueue(today) {
     const resolved = new Map();
     const resolveOnce = (id) => {
@@ -162,7 +132,6 @@ export function register(router, ctx, options = {}) {
         try {
           resolved.set(id, { value: resolveItem(id) });
         } catch (error) {
-          // Rozbitý obsah: položku nechat (nesmí se smazat jako osiřelá), jen ji dnes nenabízet.
           resolved.set(id, { error });
         }
       }
@@ -196,7 +165,6 @@ export function register(router, ctx, options = {}) {
     return { total: due.length, answeredToday: done, offered, estimateMinutes: estimateMinutes(seconds) };
   }
 
-  /** Karty, které jsou aktivní a ještě nejsou v opakování ani odebrané, se založí s termínem dnes. */
   function activateCards(today) {
     let sections;
     try {
@@ -237,7 +205,6 @@ export function register(router, ctx, options = {}) {
   }
 }
 
-/** Karty všech dostupných sekcí: [{ sectionId, cards }]. Sekce s rozbitým cards.md se přeskočí. */
 function cardsFromContent(ctx) {
   const out = [];
   for (const section of ctx.contentIndex().sections) {

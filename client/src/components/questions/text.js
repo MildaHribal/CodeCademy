@@ -1,19 +1,10 @@
 // Otázka s psanou odpovědí (--expected--, kontrakt kap. 4.2). Stejná komponenta slouží
-// pro otázky kvízu a lekce, :::check i pro karty opakování typu `output` a `css`.
-//
-// Porovnání odpovědi dělá výhradně shared/answers.js (checkTextAnswer) — stejná normalizace
-// jako ve verify: mezery, " = ', koncový středník; u karty `css` pořadí deklarací.
 
 import { h, replace } from '../../dom.js';
 import { renderMarkdown } from '../../markdown.js';
 import { checkTextAnswer } from '../../../../shared/answers.js';
 import { nextQuestionUid } from './uid.js';
 
-/**
- * @param {{ type, text, expected, accept?: string[], ignoreCase?: boolean, why?: string }} question
- * @param {{ number: number, total?: number, onChange?: () => void, onSubmit?: () => void, label?: string }} options
- *   onSubmit — Enter v jednořádkovém poli (Ctrl+Enter ve víceřádkovém)
- */
 export function createTextQuestion(question, { number, total, onChange, onSubmit, label = 'Tvoje odpověď' }) {
   const uid = nextQuestionUid();
   const promptId = `text-q-${uid}-prompt`;
@@ -60,7 +51,6 @@ export function createTextQuestion(question, { number, total, onChange, onSubmit
 
   function renderSolution() {
     const accept = (question.accept ?? []).filter(Boolean);
-    // replace() z dom.js přeskočí null (replaceChildren by ho vypsal jako text „null").
     replace(
       solution,
       h('p', { class: 'text-answer__solution-title' }, 'Správná odpověď'),
@@ -79,7 +69,6 @@ export function createTextQuestion(question, { number, total, onChange, onSubmit
     grade: () => checkTextAnswer(question, input.value),
     answer: () => input.value,
 
-    /** Po vyhodnocení: barva pole a (když se smí) správná odpověď s vysvětlením. */
     showResult({ correct, showAnswer, pretest = false, locked = true }) {
       input.disabled = locked;
       box.dataset.state = pretest ? 'pretest' : correct ? 'correct' : 'wrong';

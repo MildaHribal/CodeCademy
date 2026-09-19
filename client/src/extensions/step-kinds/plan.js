@@ -1,5 +1,4 @@
 // „Než začneš" nad zadáním labu a projektu (kontrakt kap. 3.8). Nepíše ho autor.
-// Vyplnění je nepovinné; odpovědi se připíšou do poznámek sekce (kind 'plan').
 import { h, svg } from '../../dom.js';
 import { icons } from '../../icons.js';
 import { apiRequest } from '../../api-request.js';
@@ -11,7 +10,6 @@ export const PLAN_QUESTIONS = [
   { id: 'verify', label: 'Jak ověříš první požadavek', hint: 'Co spustíš nebo kam se podíváš.', rows: 2 },
 ];
 
-/** Text poznámky z vyplněných odpovědí (jen neprázdné), nebo '' když není nic vyplněné. */
 export function planNoteText(answers) {
   return PLAN_QUESTIONS.filter((q) => answers[q.id]?.trim())
     .map((q) => `**${q.label}:**\n\n${answers[q.id].trim()}`)
@@ -20,9 +18,6 @@ export function planNoteText(answers) {
 
 let planCounter = 0;
 
-/**
- * @param {{ sectionId: string, itemId: string, title: string, open?: boolean }} options
- */
 export function createPlanPanel({ sectionId, itemId, title, open = true }) {
   const uid = `plan-${++planCounter}`;
   const fields = PLAN_QUESTIONS.map((question) => {
@@ -40,7 +35,7 @@ export function createPlanPanel({ sectionId, itemId, title, open = true }) {
     };
   });
   const status = h('p', { class: 'plan__status', role: 'status' });
-  const saveButton = h('button', { type: 'button', class: 'btn btn--small' }, 'Uložit plán do poznámek');
+  const saveButton = h('button', { type: 'button', class: 'btn btn--small', 'aria-label': 'Save plan to notes / Uložit plán do poznámek' }, 'Save plan to notes');
 
   const element = h(
     'details',

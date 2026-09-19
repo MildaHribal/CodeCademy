@@ -25,7 +25,6 @@ describe('nastavení', () => {
       distDir: path.join(root, 'dist'),
       routes: routeModules.filter((m) => m.name === 'settings.js'),
     });
-    // Porty balíku poznámek a nastavení: 4500–4519 (docs/platforma.md, kap. 7.1).
     baseUrl = `http://127.0.0.1:${await listenInRange(server, { from: 4500, to: 4519 })}`;
   }
 

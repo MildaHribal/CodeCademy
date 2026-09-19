@@ -1,5 +1,3 @@
-// Fronta opakování přes HTTP (kontrakt kap. 12.3). Obsah otázek a karet je sestavený ručně
-// ve tvaru kontraktu (kap. 2.5, 4.4); kroky se převádějí skutečným obsahem z fixture.
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
@@ -12,8 +10,6 @@ import { register as registerConfidence } from './confidence.js';
 import { DAILY_LIMIT, addDays, localDate } from './_reviews-store.js';
 
 const contentDir = path.join(import.meta.dirname, '..', 'test-fixtures', 'reviews', 'content');
-
-// ——— Ručně sestavený obsah ———
 
 const choiceQuestion = (key, text = 'Co vypíše `typeof 1`?') => ({
   key, type: 'choice', text, multiple: false,
@@ -29,7 +25,6 @@ const cards = {
   ],
 };
 
-/** Položky, které v obsahu „existují". Změnou množiny test simuluje smazaný obsah. */
 let existing;
 let brokenIds;
 
@@ -64,7 +59,6 @@ describe('opakování /api/reviews', () => {
   const answered = [];
 
   const setNow = (text) => {
-    // místní čas serveru
     const [date, time = '10:00'] = text.split(' ');
     const [y, m, d] = date.split('-').map(Number);
     const [hh, mm] = time.split(':').map(Number);
@@ -130,7 +124,6 @@ describe('opakování /api/reviews', () => {
   const items = () => ctx.createJsonStore('opakovani.json').get().items;
   const removed = () => ctx.createJsonStore('opakovani.json').get().removed;
 
-  /** Jako by POST /api/attempts (balík pokusů) zaznamenal odpověď. */
   const recordAttempt = (id, body, extra = {}) => ctx.emit('attempts:recorded', { id, body: { id, ...body }, attempt: {}, previous: null, firstOk: false, ...extra });
 
   describe('založení z první odpovědi', () => {
@@ -164,8 +157,8 @@ describe('opakování /api/reviews', () => {
       await recordAttempt('alfa/workshop/001', { ok: true }, { firstOk: true, attempt: { assisted: true, fails: 0 } });
       await recordAttempt('alfa/workshop/002', { ok: true }, { firstOk: true, attempt: { assisted: false, fails: 3 } });
       await recordAttempt('alfa/workshop/002', { ok: true }, { firstOk: false, attempt: { assisted: true, fails: 9 } });
-      await recordAttempt('alfa/workshop/999', { ok: true }, { firstOk: true, attempt: { assisted: true } }); // krok neexistuje
-      await recordAttempt('alfa/kviz', { ok: true }, { firstOk: true, attempt: { assisted: true } }); // kvíz není krok ani lab
+      await recordAttempt('alfa/workshop/999', { ok: true }, { firstOk: true, attempt: { assisted: true } });
+      await recordAttempt('alfa/kviz', { ok: true }, { firstOk: true, attempt: { assisted: true } });
       const data = items();
       assert.deepEqual(Object.keys(data).sort(), ['step:alfa/workshop/001', 'step:alfa/workshop/002']);
       assert.equal(data['step:alfa/workshop/001'].reason, 'assisted');
@@ -178,7 +171,7 @@ describe('opakování /api/reviews', () => {
     test('správně → o krabičku výš; s „Tipuju" krabička zůstává; špatně → 1 zítra', async () => {
       const id = 'q:alfa/kviz#00000001';
       existing.add(id);
-      await recordAttempt(id, { ok: true, confidence: 'sure' }); // box 2
+      await recordAttempt(id, { ok: true, confidence: 'sure' });
 
       let res = await call('POST', '/api/reviews/answer', { id, ok: true, confidence: 'sure' });
       assert.deepEqual(res, { status: 200, data: { ok: true, item: { id, box: 3, due: addDays(today(), 7) } } });
@@ -240,7 +233,7 @@ describe('opakování /api/reviews', () => {
           'q:alfa/kviz#00000003': item(1, '2026-09-12'),
           'q:beta/kviz#00000001': item(3, '2026-09-12'),
           'explain:alfa/lekce#00000005': item(1, '2026-09-13'),
-          'q:alfa/kviz#00000009': item(1, '2026-09-14'), // až zítra
+          'q:alfa/kviz#00000009': item(1, '2026-09-14'),
         },
         removed: {},
       };
@@ -252,7 +245,6 @@ describe('opakování /api/reviews', () => {
       assert.equal(due.total, 5);
       assert.equal(due.answeredToday, 0);
       assert.equal(due.limit, DAILY_LIMIT);
-      // Pořadí podle due: alfa#1, alfa#2, alfa#3 (box 1), beta#1 (box 3), explain; proložení: alfa, beta, alfa, alfa, alfa.
       assert.deepEqual(due.items.map((i) => i.id), [
         'q:alfa/kviz#00000001', 'q:beta/kviz#00000001', 'q:alfa/kviz#00000002', 'q:alfa/kviz#00000003', 'explain:alfa/lekce#00000005',
       ]);
@@ -261,7 +253,6 @@ describe('opakování /api/reviews', () => {
         type: 'question', box: 1, due: '2026-09-10', source: { sectionId: 'alfa', moduleId: 'alfa/kviz', title: 'Kvíz alfa', see: [] },
       });
       assert.equal(first.content.key, '00000001');
-      // 4 otázky × 30 s + explain 45 s = 165 s → 3 min
       assert.equal(due.estimateMinutes, 3);
 
       assert.deepEqual((await call('GET', '/api/reviews/summary')).data, { date: '2026-09-13', due: 5, estimateMinutes: 3 });
@@ -288,7 +279,6 @@ describe('opakování /api/reviews', () => {
       assert.equal(due.items.length, 12);
       assert.equal((await call('GET', '/api/reviews/summary')).data.due, 12);
 
-      // Druhý den se strop obnoví.
       setNow('2026-09-14');
       due = (await call('GET', '/api/reviews/due')).data;
       assert.equal(due.answeredToday, 0);
@@ -305,13 +295,11 @@ describe('opakování /api/reviews', () => {
       assert.deepEqual({ type: due.items[0].type, due: due.items[0].due, box: due.items[0].box }, { type: 'card', due: '2026-09-13', box: 1 });
       assert.equal(items()['card:alfa#aaaa0001'].reason, 'card');
 
-      // Workshop je splněný, až když jsou splněné všechny kroky → teprve pak karta s see na krok a polovina sekce (2 ze 3).
       await call('POST', '/api/progress/complete', { id: 'alfa/workshop/001' });
       assert.equal((await call('GET', '/api/reviews/due')).data.total, 1);
       await call('POST', '/api/progress/complete', { id: 'alfa/workshop/002' });
       due = (await call('GET', '/api/reviews/due')).data;
       assert.deepEqual(due.items.map((i) => i.id).sort(), ['card:alfa#aaaa0001', 'card:alfa#aaaa0002', 'card:alfa#aaaa0003']);
-      // free 60 + output 45 + css 45 = 150 s → 3 min
       assert.equal(due.estimateMinutes, 3);
     });
 

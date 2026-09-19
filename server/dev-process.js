@@ -1,12 +1,3 @@
-// Běžící Node proces pro tlačítko Spustit a HTTP klienta (kontrakt kap. 12.7).
-//
-// Na rozdíl od node-runner.js (testy s limitem času) tady proces smí běžet dlouho:
-// server, který jen poslouchá, není nekonečná smyčka. Zastaví ho až uživatel (stop),
-// nový start, 10 minut nečinnosti nebo konec serveru Akademie.
-//
-// Vždy běží nejvýš jeden proces. Spouští se „detached", takže je vedoucím vlastní
-// skupiny procesů — do ní patří i všechno, co sám spustí. Zastavení posílá signál celé
-// skupině: nejdřív SIGTERM (server se může slušně ukončit), po chvíli SIGKILL.
 import { spawn } from 'node:child_process';
 import fs from 'node:fs';
 import fsp from 'node:fs/promises';
@@ -17,12 +8,12 @@ import path from 'node:path';
 import { HttpError, InputError } from './errors.js';
 
 export const DEV_PROCESS_DEFAULTS = {
-  idleMs: 10 * 60 * 1000, // zastavit po 10 minutách bez start/request/stop
-  startWaitMs: 5000, // jak dlouho start čeká, než port začne přijímat spojení
-  killGraceMs: 2000, // SIGTERM → SIGKILL
-  maxChunks: 5000, // kolik záznamů výstupu držíme
-  maxOutputBytes: 1024 * 1024, // …nebo kolik textu
-  maxBodyBytes: 1024 * 1024, // tělo odpovědi v HTTP klientovi
+  idleMs: 10 * 60 * 1000,
+  startWaitMs: 5000,
+  killGraceMs: 2000,
+  maxChunks: 5000,
+  maxOutputBytes: 1024 * 1024,
+  maxBodyBytes: 1024 * 1024,
   requestTimeoutMs: 10000,
   maxRequestTimeoutMs: 30000,
   tempPrefix: 'akademie-dev-',
@@ -34,8 +25,6 @@ const JS_FILE = /\.(m?js|cjs)$/;
 const TEXT_TYPE = /^text\/|json|javascript|xml|x-www-form-urlencoded/i;
 const POLL_MS = 50;
 
-// Skupiny procesů všech správců v tomhle procesu. Když server Akademie skončí jakkoli
-// (i bez server.close()), nesmí po něm nic běžet.
 const liveGroups = new Set();
 process.on('exit', () => {
   for (const pgid of liveGroups) signalGroup(pgid, 'SIGKILL');
@@ -46,7 +35,7 @@ function signalGroup(pgid, signal) {
     process.kill(-pgid, signal);
     return true;
   } catch {
-    return false; // skupina už neexistuje
+    return false;
   }
 }
 
@@ -61,7 +50,6 @@ function groupAlive(pgid) {
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-/** Volný port od systému (0 = „dej mi jakýkoli"). */
 export function findFreePort() {
   return new Promise((resolve, reject) => {
     const probe = net.createServer();
@@ -74,7 +62,6 @@ export function findFreePort() {
   });
 }
 
-/** Přijímá port spojení? Zkusí se krátce připojit. */
 function canConnect(host, port, timeoutMs = 300) {
   return new Promise((resolve) => {
     const socket = net.connect({ host, port });
@@ -88,7 +75,6 @@ function canConnect(host, port, timeoutMs = 300) {
   });
 }
 
-/** Proměnné prostředí pro proces uživatele (bez nastavení testů, které by ho zmátly). */
 function baseEnv() {
   const env = { ...process.env };
   delete env.NODE_TEST_CONTEXT;
@@ -96,7 +82,6 @@ function baseEnv() {
   return env;
 }
 
-/** Ověří, že jméno souboru je relativní cesta uvnitř adresáře. */
 function resolveInside(dir, name) {
   if (typeof name !== 'string' || !name || name.includes('\0') || path.isAbsolute(name)) {
     throw new InputError(`Neplatné jméno souboru "${name}"`);
@@ -106,7 +91,6 @@ function resolveInside(dir, name) {
   return target;
 }
 
-/** Hlavní soubor: zadaný `main`, jinak index.js, jinak první .js ze seznamu jmen. */
 export function pickMain(names, main) {
   if (main !== undefined && main !== null) {
     if (typeof main !== 'string' || !main) throw new InputError('"main" musí být jméno souboru');
@@ -118,7 +102,6 @@ export function pickMain(names, main) {
   return first;
 }
 
-/** Ověří a vrátí env z požadavku (klíče VELKÝMI písmeny, hodnoty řetězce). */
 export function checkEnv(env) {
   if (env === undefined || env === null) return {};
   if (typeof env !== 'object' || Array.isArray(env)) throw new InputError('"env" musí být objekt { JMENO: "hodnota" }');
@@ -135,7 +118,6 @@ function checkFiles(files) {
   }
 }
 
-/** Zapíše soubory do nového dočasného adresáře. */
 async function writeTempFiles(files, prefix) {
   const dir = await fsp.realpath(await fsp.mkdtemp(path.join(os.tmpdir(), prefix)));
   try {
@@ -158,7 +140,6 @@ async function writeTempFiles(files, prefix) {
   return dir;
 }
 
-/** Soubory .js v kořeni adresáře projektu, abecedně. */
 function rootJsFiles(dir) {
   return fs
     .readdirSync(dir, { withFileTypes: true })
@@ -167,7 +148,6 @@ function rootJsFiles(dir) {
     .sort();
 }
 
-/** „po 10 minutách" / „po 30 s" podle délky nečinnosti. */
 function idleText(ms) {
   if (ms >= 60000 && ms % 60000 === 0) {
     const minutes = ms / 60000;
@@ -176,13 +156,8 @@ function idleText(ms) {
   return `po ${Math.max(1, Math.round(ms / 1000))} s`;
 }
 
-/** Délka textu v bajtech UTF-8 (limit výstupu je v bajtech). */
 const byteLength = (text) => Buffer.byteLength(text, 'utf8');
 
-/**
- * Výstup procesu: záznamy s pořadovým číslem `seq` od 0. Drží se nejvýš `maxChunks`
- * záznamů a `maxBytes` textu; nejstarší se zahazují.
- */
 export function createOutputBuffer({ maxChunks, maxBytes }) {
   let chunks = [];
   let bytes = 0;
@@ -200,7 +175,6 @@ export function createOutputBuffer({ maxChunks, maxBytes }) {
         bytes -= byteLength(chunks.shift().text);
       }
     },
-    /** Záznamy od `since` (včetně). `truncated` = část požadovaného výstupu už zahozená. */
     since(since) {
       const oldest = chunks.length ? chunks[0].seq : nextSeq;
       return {
@@ -217,7 +191,6 @@ export function createOutputBuffer({ maxChunks, maxBytes }) {
   };
 }
 
-/** Česká zpráva pro chybu síťového požadavku na proces uživatele. */
 export function describeRequestError(error, { port, timeoutMs }) {
   switch (error.code) {
     case 'ECONNREFUSED':
@@ -235,7 +208,6 @@ export function describeRequestError(error, { port, timeoutMs }) {
   }
 }
 
-/** Tělo odpovědi jako text, když to jde, jinak base64. */
 export function encodeBody(buffer, contentType) {
   if (TEXT_TYPE.test(contentType ?? '')) return { body: buffer.toString('utf8'), bodyEncoding: 'utf8' };
   if (!contentType) {
@@ -243,13 +215,11 @@ export function encodeBody(buffer, contentType) {
       const text = new TextDecoder('utf-8', { fatal: true }).decode(buffer);
       return { body: text, bodyEncoding: 'utf8' };
     } catch {
-      // není platné UTF-8 → base64
     }
   }
   return { body: buffer.toString('base64'), bodyEncoding: 'base64' };
 }
 
-/** Hlavičky odpovědi: malá písmena, víc hodnot spojených ', ', set-cookie '\n'. */
 function responseHeaders(res) {
   const headers = {};
   for (const [name, value] of Object.entries(res.headers)) {
@@ -258,24 +228,17 @@ function responseHeaders(res) {
   return headers;
 }
 
-/**
- * Správce běžícího procesu. Jeden na server Akademie (routa server/routes/dev-process.js).
- *
- * @param {{ projectDir?: (project) => string, ...DEV_PROCESS_DEFAULTS }} options
- *   projectDir({ section, module }) → absolutní adresář projektu (ověřený volajícím)
- */
 export function createDevProcessManager(options = {}) {
   const config = { ...DEV_PROCESS_DEFAULTS, ...options };
   const output = createOutputBuffer({ maxChunks: config.maxChunks, maxBytes: config.maxOutputBytes });
 
   let counter = 0;
-  let current = null; // interní stav posledního procesu (i skončeného)
+  let current = null;
   let idleTimer = null;
   let lastActivity = Date.now();
-  let queue = Promise.resolve(); // start a stop se nepřekrývají
+  let queue = Promise.resolve();
   let closed = false;
 
-  /** Postupné provádění start/stop — dva rychlé starty po sobě nespustí dva procesy. */
   function serialize(task) {
     const run = queue.then(task);
     queue = run.catch(() => {});
@@ -297,7 +260,6 @@ export function createDevProcessManager(options = {}) {
     };
   }
 
-  /** Aktivita (start, request, stop) odkládá zastavení pro nečinnost. */
   function touch() {
     lastActivity = Date.now();
     clearTimeout(idleTimer);
@@ -316,18 +278,15 @@ export function createDevProcessManager(options = {}) {
     if (closed || proc?.status !== 'running') return;
     const remaining = config.idleMs - (Date.now() - lastActivity);
     if (remaining > 0) {
-      armIdle(remaining); // časovač vystřelil o chlup dřív
+      armIdle(remaining);
       return;
     }
     serialize(() => {
-      // Zastavení čeká ve frontě (třeba za startem) — mezitím mohla přijít aktivita,
-      // která si nový časovač nastavila sama.
       if (current !== proc || Date.now() - lastActivity < config.idleMs) return false;
       return stopProcess(proc, `Zastaveno ${idleText(config.idleMs)} nečinnosti.`);
     });
   }
 
-  /** Sleduje, kdy port začne přijímat spojení (běží, dokud proces žije a neposlouchá). */
   async function watchListening(proc) {
     while (proc.status === 'running' && !proc.listening) {
       for (const host of ['127.0.0.1', '::1']) {
@@ -429,7 +388,6 @@ export function createDevProcessManager(options = {}) {
             else if (signal) output.push('system', `Proces ukončil signál ${signal}.`);
             else output.push('system', `Proces skončil s kódem ${code}.`);
           }
-          // Po hlavním procesu nesmí zůstat nic z jeho skupiny ani dočasné soubory.
           if (proc.pid) {
             signalGroup(proc.pid, 'SIGKILL');
             liveGroups.delete(proc.pid);
@@ -446,16 +404,13 @@ export function createDevProcessManager(options = {}) {
           if (current === proc) output.push('stderr', `Proces nejde spustit: ${error.message}`);
           finish(null, null);
         });
-        // 'close' počká na zavření výstupu, takže poslední řádky stihnou dorazit.
         child.on('close', (code, signal) => finish(code, signal));
-        // Když výstup drží otevřený proces na pozadí, stačí konec hlavního procesu.
         child.on('exit', (code, signal) => setTimeout(() => finish(code, signal), 200));
       });
 
       touch();
       watchListening(proc);
 
-      // Odpověď: port přijímá spojení, proces skončil, nebo vypršel čas — nic z toho není chyba.
       const deadline = Date.now() + config.startWaitMs;
       while (proc.status === 'running' && !proc.listening && Date.now() < deadline) {
         await Promise.race([
@@ -464,12 +419,11 @@ export function createDevProcessManager(options = {}) {
         ]);
       }
       if (proc.status === 'exited') await proc.exited;
-      touch(); // nečinnost se počítá až od odpovědi, ne od spuštění
+      touch();
       return publicProcess(proc);
     });
   }
 
-  /** Zastaví proces: SIGTERM skupině, po killGraceMs SIGKILL. Počká na konec. */
   async function stopProcess(proc, reason) {
     if (!proc || proc.status !== 'running') return false;
     proc.stopReason = reason ?? 'Proces zastaven.';
@@ -481,7 +435,6 @@ export function createDevProcessManager(options = {}) {
     const deadline = Date.now() + config.killGraceMs;
     while (Date.now() < deadline && groupAlive(proc.pid)) await sleep(POLL_MS);
     if (groupAlive(proc.pid)) signalGroup(proc.pid, 'SIGKILL');
-    // Počkat, až skupina opravdu zmizí (SIGKILL je okamžitý, ale proces se uklízí chvilku).
     const killDeadline = Date.now() + 2000;
     while (Date.now() < killDeadline && groupAlive(proc.pid)) await sleep(10);
     await proc.exited;
@@ -496,7 +449,6 @@ export function createDevProcessManager(options = {}) {
     });
   }
 
-  /** HTTP požadavek na běžící proces uživatele. */
   async function request(body = {}) {
     const method = typeof body.method === 'string' ? body.method.toUpperCase() : body.method === undefined ? 'GET' : null;
     if (!HTTP_METHODS.includes(method)) throw new InputError(`"method" musí být jedno z: ${HTTP_METHODS.join(', ')}`);
@@ -521,7 +473,7 @@ export function createDevProcessManager(options = {}) {
     const outgoing = {};
     for (const [name, value] of Object.entries(headers)) {
       const lower = name.toLowerCase();
-      if (lower === 'host' || lower === 'content-length') continue; // doplní server
+      if (lower === 'host' || lower === 'content-length') continue;
       outgoing[name] = value;
     }
     outgoing.host = `${proc.host === '::1' ? '[::1]' : '127.0.0.1'}:${proc.port}`;
@@ -588,7 +540,6 @@ export function createDevProcessManager(options = {}) {
           }
         });
         res.on('end', done);
-        // Server spojení přerušil uprostřed těla: vrátíme, co přišlo.
         res.on('aborted', done);
         res.on('error', () => done());
       });
@@ -606,7 +557,6 @@ export function createDevProcessManager(options = {}) {
     return { process: publicProcess(), ...output.since(since) };
   }
 
-  /** Konec serveru Akademie: proces se zabije hned (synchronně), bez čekání. */
   function close() {
     closed = true;
     clearTimeout(idleTimer);
@@ -629,7 +579,6 @@ export function createDevProcessManager(options = {}) {
     output: getOutput,
     process: () => publicProcess(),
     close,
-    /** Pro testy: PID vedoucího skupiny posledního procesu. */
     pid: () => current?.pid ?? null,
   };
 }

@@ -1,12 +1,7 @@
-// Pomocné funkce pro práci s textem zdrojáků: helpers.normalize a helpers.stripComments
-// v testech runtime node (kontrakt kap. 6.2 a 6.6).
-
-/** Sloučí všechny bílé znaky do jedné mezery a ořízne okraje. */
 export function normalize(src) {
   return String(src ?? '').replace(/\s+/g, ' ').trim();
 }
 
-/** Odstraní komentáře ze zdrojáku v jazyce `css`, `js` nebo `html`. */
 export function stripComments(src, lang = 'js') {
   const text = String(src ?? '');
   switch (String(lang).toLowerCase()) {
@@ -20,7 +15,6 @@ export function stripComments(src, lang = 'js') {
   }
 }
 
-/** Zkopíruje řetězec v uvozovkách začínající na pozici i. Vrací index za koncem řetězce. */
 function copyQuoted(src, i, out) {
   const quote = src[i];
   out.push(quote);
@@ -57,7 +51,6 @@ function stripCssComments(src) {
   return out.join('');
 }
 
-// Po těchto znacích nebo slovech začíná `/` regulární výraz, jinak je to dělení.
 const REGEX_AFTER_CHARS = new Set(['', '(', ',', '=', ':', '[', '!', '&', '|', '?', '{', '}', ';', '+', '-', '*', '%', '<', '>', '~', '^']);
 const REGEX_AFTER_WORDS = new Set(['return', 'typeof', 'case', 'do', 'else', 'in', 'of', 'new', 'delete', 'void', 'throw', 'yield', 'await']);
 
@@ -73,18 +66,12 @@ function regexAllowedAfter(out) {
   return REGEX_AFTER_WORDS.has(word);
 }
 
-/**
- * Odstraní // a /* *\/ komentáře z JavaScriptu. Řetězce, šablonové řetězce (včetně
- * vnořených ${…}) a regulární výrazy nechá beze změny.
- */
 function stripJsComments(src) {
   const out = [];
-  // Zásobník rozpracovaných ${ … } v šablonových řetězcích: počet otevřených { v každém.
   const templateBraces = [];
   let i = 0;
 
   const copyTemplate = () => {
-    // Jsme uvnitř `…`: kopírujeme až po konec řetězce nebo po začátek ${.
     while (i < src.length) {
       const ch = src[i];
       if (ch === '\\') {
@@ -134,7 +121,6 @@ function stripJsComments(src) {
       const end = src.indexOf('*/', i + 2);
       i = end === -1 ? src.length : end + 2;
     } else if (ch === '/' && regexAllowedAfter(out)) {
-      // Regulární výraz: až po neescapované / mimo [třídu znaků].
       let inClass = false;
       out.push(ch);
       i++;

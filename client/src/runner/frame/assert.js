@@ -1,10 +1,5 @@
-// Podmnožina `node:assert/strict` pro testy v prohlížeči.
-// Chování (co projde a co selže) je stejné jako v Node. Vygenerované hlášky jsou česky
 // (kontrakt kap. 6.1) — stejné texty dává node-harness.js pro runtime node.
-//
-// POZOR: funkce se do iframu vkládá jako text, nesmí používat nic mimo své tělo.
 
-/** @param {(value: unknown) => string} formatValue */
 export function createAssert(formatValue) {
   class AssertionError extends Error {
     constructor({ message, actual, expected, operator, generatedMessage }) {
@@ -37,7 +32,7 @@ export function createAssert(formatValue) {
     if (Object.getPrototypeOf(a) !== Object.getPrototypeOf(b)) return false;
     const tag = Object.prototype.toString.call(a);
     if (tag !== Object.prototype.toString.call(b)) return false;
-    if (pairs.some(([x, y]) => x === a && y === b)) return true; // cyklické struktury
+    if (pairs.some(([x, y]) => x === a && y === b)) return true;
     pairs = [...pairs, [a, b]];
 
     if (a instanceof Date && !Object.is(a.getTime(), b.getTime())) return false;
@@ -76,7 +71,6 @@ export function createAssert(formatValue) {
     return keysA.every((key) => Object.prototype.propertyIsEnumerable.call(b, key) && isDeepStrictEqual(a[key], b[key], pairs));
   }
 
-  /** Ověří vyhozenou chybu proti `expected` (třída, RegExp, objekt nebo validační funkce). */
   function matchesExpected(error, expected, operatorName, message) {
     if (expected === undefined) return;
     if (typeof expected === 'function') {
@@ -215,7 +209,6 @@ export function createAssert(formatValue) {
     },
   });
 
-  // Jména z node:assert/strict, ať fungují oba zápisy.
   assert.strictEqual = assert.equal;
   assert.notStrictEqual = assert.notEqual;
   assert.deepStrictEqual = assert.deepEqual;

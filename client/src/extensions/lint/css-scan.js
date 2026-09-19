@@ -1,6 +1,3 @@
-// Jednoduchý průchod CSS: najde deklarace s pozicemi v textu a s tím, v jakém pravidle
-// a v jakých @pravidlech leží. Nestaví úplný strom — lintu stačí seznam deklarací.
-// Bez DOM, testuje se v Node (tools/lint-unit.test.js).
 
 /**
  * @typedef {{ property: string, value: string, from: number, to: number, valueFrom: number,
@@ -15,8 +12,8 @@
 export function scanCss(text) {
   const source = String(text ?? '');
   const declarations = [];
-  const stack = []; // { kind: 'rule' | 'at', header }
-  let bufferStart = -1; // začátek rozepsaného úseku (selektor, hlavička nebo deklarace)
+  const stack = [];
+  let bufferStart = -1;
   let parenDepth = 0;
   let i = 0;
 
@@ -29,7 +26,7 @@ export function scanCss(text) {
     const start = bufferStart;
     bufferStart = -1;
     const top = stack[stack.length - 1];
-    if (!top) return; // mimo blok (např. @import …;)
+    if (!top) return;
     const raw = source.slice(start, end);
     const colon = findTopLevelColon(raw);
     if (colon === -1) return;
@@ -92,7 +89,6 @@ function skipString(source, start) {
   return Math.min(i + 1, source.length);
 }
 
-/** První dvojtečka mimo závorky a řetězce (hodnota `url(http://…)` ji smí obsahovat). */
 function findTopLevelColon(text) {
   let depth = 0;
   for (let i = 0; i < text.length; i++) {
@@ -109,7 +105,6 @@ function stripComments(text) {
   return text.replace(/\/\*[\s\S]*?(\*\/|$)/g, ' ');
 }
 
-/** Pozice (index znaku) → { line, column }, obojí 1-based. */
 export function positionAt(text, index) {
   const before = String(text).slice(0, index);
   const line = before.split('\n').length;

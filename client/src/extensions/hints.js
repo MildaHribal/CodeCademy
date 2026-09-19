@@ -1,6 +1,4 @@
 // Nápovědy, když se student zasekne (B1, kontrakt kap. 3.3): na pracovní ploše (krok, lab)
-// a u projektu. Tlačítko je vidět vždy, nic se nezamyká. Posledním stupněm je porovnání
-// s řešením (solution-diff/open.js), před splněním s potvrzením.
 import './hints/hints.css';
 import { h } from '../dom.js';
 import { appEvents } from '../core/events.js';

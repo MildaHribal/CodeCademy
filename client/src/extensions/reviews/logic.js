@@ -1,14 +1,10 @@
-// Opakování na klientu: texty a průběh jednoho sezení bez DOM
-// (testuje je tools/reviews-unit.test.js).
 
 import { plural } from '../../text.js';
 
-/** „K opakování: 12 (asi 8 min)" — jediný řádek na přehledu, bez sérií a bodů. */
 export function summaryLine({ due, estimateMinutes }) {
   return `K opakování: ${due} (asi ${Math.max(1, estimateMinutes)} min)`;
 }
 
-/** Popisek druhu položky nad otázkou. */
 export function itemKindLabel(item) {
   if (item.type === 'question') return item.content?.codeSet ? 'Otázka nad kódem' : 'Otázka';
   if (item.type === 'step') return 'Krok znovu od začátku';
@@ -30,7 +26,6 @@ export function calibrationSentence({ sure } = {}) {
   return `Když jsi byl jistý, měl jsi pravdu v ${Math.round((sure.correct / sure.total) * 100)} %.`;
 }
 
-/** Text o denním stropu, když dnes zbylo víc splatných položek, než se nabídlo. */
 export function limitNote({ total, answeredToday, limit, offered }) {
   const left = total - offered;
   if (left <= 0) return null;
@@ -38,27 +33,20 @@ export function limitNote({ total, answeredToday, limit, offered }) {
   return `Dnes se nabízí nejvýš ${limit} položek. ${plural(left, ['další položka počká', 'další položky počkají', 'dalších položek počká'])} na zítra.`;
 }
 
-/**
- * Průběh sezení: položky po jedné, každá se hodnotí jednou.
- *   const session = createReviewSession(items);
- *   session.current(); session.record(id, ok); session.skip(id); session.next();
- */
 export function createReviewSession(items) {
   let position = 0;
-  const outcomes = new Map(); // id → true | false | 'removed'
+  const outcomes = new Map();
 
   return {
     total: items.length,
     position: () => position,
     current: () => items[position] ?? null,
     isFinished: () => position >= items.length,
-    /** Zapíše výsledek položky. Druhé zapsání téže položky se ignoruje (vrátí false). */
     record(id, ok) {
       if (outcomes.has(id)) return false;
       outcomes.set(id, Boolean(ok));
       return true;
     },
-    /** „Už to umím" — položka zmizela z opakování, do výsledku se nepočítá. */
     remove(id) {
       outcomes.set(id, 'removed');
     },

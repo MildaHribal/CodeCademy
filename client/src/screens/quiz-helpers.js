@@ -1,12 +1,9 @@
-// Výpočty kvízu bez DOM (testuje je tools/reviews-unit.test.js): skóre, skupiny otázek
-// nad sadou kódu `# --code--` a odkazy „kde si to zopakovat".
 
 import { parseRef, refHref } from '../../../shared/refs.js';
 
 /** Adresa v UI pro referenci `sekce/modul[/krok][#kotva]` (kontrakt kap. 2.9), neplatná → null. */
 export const seeHref = (ref) => refHref(ref);
 
-/** Id modulu z reference (`js-pole/co-je-pole#kopie` → `js-pole/co-je-pole`), nebo null. */
 export const refModuleId = (ref) => parseRef(ref)?.moduleId ?? null;
 
 /**
@@ -26,7 +23,6 @@ export function groupByCodeSet(entries) {
   return groups;
 }
 
-/** Podíl správně zodpovězených otázek (poslední vyhodnocení každé otázky). */
 export function quizScore(correctByIndex, total) {
   if (!total) return 0;
   let correct = 0;
@@ -34,5 +30,4 @@ export function quizScore(correctByIndex, total) {
   return correct / total;
 }
 
-/** Kvíz je splněný, když skóre dosáhne hranice `pass` (s tolerancí zaokrouhlení). */
 export const isPassing = (score, pass) => score >= pass - 1e-9;

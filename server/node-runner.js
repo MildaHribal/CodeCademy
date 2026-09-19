@@ -1,9 +1,3 @@
-// Běh testů a souborů v runtime node (kontrakt kap. 6.6–6.8).
-//
-// Každý test běží ve vlastním procesu `node node-harness.js`. Proces se spouští
-// „detached", takže je vedoucím nové skupiny procesů — do ní patří i všechno, co test
-// spustí (helpers.run, helpers.startServer). Po skončení testu nebo po timeoutu se
-// zabije celá skupina najednou přes process.kill(-pid).
 import { spawn } from 'node:child_process';
 import fs from 'node:fs';
 import fsp from 'node:fs/promises';
@@ -14,12 +8,10 @@ import { findSyntaxError, syntaxErrorResult } from '../shared/syntax-check.js';
 import { InputError } from './errors.js';
 
 const HARNESS = path.join(import.meta.dirname, 'node-harness.js');
-// Rezerva na start procesu; test samotný má limit timeoutMs od chvíle, kdy začne běžet.
 const STARTUP_GRACE_MS = 5000;
 const MAX_OUTPUT = 1024 * 1024;
 const CANCELLED_MESSAGE = 'Neověřeno — kontrola byla zrušena.';
 
-// Skupiny procesů, které právě běží. Když server skončí, nesmí po něm nic zůstat.
 const activeGroups = new Set();
 process.on('exit', () => {
   for (const pgid of activeGroups) killGroup(pgid);
@@ -29,11 +21,9 @@ function killGroup(pgid, signal = 'SIGKILL') {
   try {
     process.kill(-pgid, signal);
   } catch {
-    // Skupina už neexistuje.
   }
 }
 
-/** Počká, až ze skupiny procesů nezbude nikdo (nejdéle maxMs), ať po testu nic neběží. */
 async function waitForGroupExit(pgid, maxMs = 2000) {
   const deadline = Date.now() + maxMs;
   while (Date.now() < deadline) {
@@ -46,21 +36,12 @@ async function waitForGroupExit(pgid, maxMs = 2000) {
   }
 }
 
-/** node_modules Akademie: balíčky (express, zod, typescript, vitest, eslint…) pro kód v dočasném adresáři. */
 export const PACKAGES_DIR = path.join(import.meta.dirname, '..', 'node_modules');
 
-/**
- * Prostředí procesů. V dočasném adresáři navíc `node_modules/.bin` v PATH (`tsc`, `vitest`,
- * `eslint` jdou i bez npx) a npm offline bez hlášek — `npx tsc` nic nestahuje a nešumí ve výstupu.
- */
 function childEnv({ packages = false, dir = null } = {}) {
   const env = { ...process.env };
   delete env.NODE_TEST_CONTEXT;
   delete env.NODE_OPTIONS;
-  // Testy kroků běží v čistém prostředí, nezávisle na tom, jak byl spuštěný server.
-  // Zděděné NODE_ENV=production (server pod produkčním správcem procesů, nebo `npm run overit`,
-  // kde si Vite build nastaví NODE_ENV sám) by knihovnám podstrčilo produkční sestavení —
-  // React by pak neměl `React.act` a testy komponent by padaly.
   delete env.NODE_ENV;
   if (packages && dir) {
     env.PATH = [path.join(dir, 'node_modules', '.bin'), env.PATH].filter(Boolean).join(path.delimiter);
@@ -74,12 +55,6 @@ function childEnv({ packages = false, dir = null } = {}) {
   return env;
 }
 
-/**
- * Dočasný adresář dostane `node_modules` jako odkaz na node_modules Akademie, takže
- * `import express from 'express'` i `npx tsc` fungují bez instalace (kontrakt kap. 6.6).
- * Když soubory kroku mají vlastní `node_modules/…`, odkaz se nevytváří.
- * @returns {Promise<boolean>} jestli odkaz vznikl
- */
 async function linkPackages(dir) {
   const target = path.join(dir, 'node_modules');
   if (fs.existsSync(target) || !fs.existsSync(PACKAGES_DIR)) return false;
@@ -91,7 +66,6 @@ async function linkPackages(dir) {
   }
 }
 
-/** Ověří, že jméno souboru je relativní cesta, která nevede ven z adresáře. */
 function resolveInside(dir, name) {
   if (typeof name !== 'string' || !name || name.includes('\0') || path.isAbsolute(name)) {
     throw new InputError(`Neplatné jméno souboru "${name}"`);
@@ -109,10 +83,6 @@ function checkFiles(files) {
   }
 }
 
-/**
- * Připraví pracovní adresář. Bez `cwd` vytvoří dočasný a zapíše do něj soubory;
- * s `cwd` (projekt uživatele) použije ten adresář a na nic v něm nesahá.
- */
 async function prepareWorkspace(files, cwd) {
   if (cwd) {
     const dir = await fsp.realpath(path.resolve(cwd));
@@ -128,7 +98,6 @@ async function prepareWorkspace(files, cwd) {
         await fsp.mkdir(path.dirname(target), { recursive: true });
         await fsp.writeFile(target, file.content);
       } catch (err) {
-        // Jména se navzájem vylučují (soubor `a` i `a/b.js`, nebo `a/` jako adresář) — chyba vstupu.
         if (['EEXIST', 'ENOTDIR', 'EISDIR'].includes(err.code)) {
           throw new InputError(`Soubor "${file.name}" nejde zapsat — koliduje s jiným souborem nebo adresářem`);
         }
@@ -139,7 +108,6 @@ async function prepareWorkspace(files, cwd) {
     await cleanup();
     throw err;
   }
-  // fs.rm s recursive odkaz jen odstraní, do node_modules Akademie nesahá.
   const packages = await linkPackages(dir);
   return { dir, packages, cleanup };
 }
@@ -150,7 +118,6 @@ function tail(text, max = 2000) {
 
 const DETAIL_FIELDS = ['errorName', 'operator', 'actual', 'expected', 'generatedMessage', 'diff'];
 
-/** Podrobnosti selhaného testu z harnessu (kontrakt kap. 6.1), jen známá pole. */
 function pickDetails(message) {
   const details = {};
   for (const field of DETAIL_FIELDS) {
@@ -165,7 +132,6 @@ function pickDetails(message) {
   return details;
 }
 
-/** Spustí jeden test v novém procesu. → { pass, error?, details?, logs } */
 function runSingleTest({ dir, packages = false, test, files, timeoutMs, signal }) {
   return new Promise((resolve) => {
     const child = spawn(process.execPath, [HARNESS], {
@@ -176,8 +142,6 @@ function runSingleTest({ dir, packages = false, test, files, timeoutMs, signal }
     });
     if (child.pid) activeGroups.add(child.pid);
 
-    // Výstup harnessu (např. console.log z importovaného souboru) musíme číst,
-    // jinak by se zaplnila roura a proces by se zasekl. Konec se hodí do chybové hlášky.
     let stderr = '';
     child.stdout.resume();
     child.stderr.setEncoding('utf8');
@@ -225,7 +189,6 @@ function runSingleTest({ dir, packages = false, test, files, timeoutMs, signal }
     });
     child.on('error', (err) => settle({ pass: false, error: `Test nejde spustit: ${err.message}` }));
     child.on('exit', (code, signal) => {
-      // Výsledek mohl přijít těsně před koncem procesu — dáme IPC chvilku.
       setTimeout(() => {
         const detail = tail(stderr.trim());
         settle({
@@ -241,30 +204,17 @@ function runSingleTest({ dir, packages = false, test, files, timeoutMs, signal }
   });
 }
 
-/**
- * Spustí testy (nápovědy) nad soubory v runtime node.
- *
- * Nepovinný `signal` (AbortSignal) běh zruší: právě běžící test se zabije i se vším, co
- * spustil, a zbylé testy se přeskočí. Server ho předává, když klient spojení zavře
- * (uživatel odešel z obrazovky) — jinak by opuštěná kontrola dál zabírala místo ve frontě.
- * Bez `cwd` se nejdřív zkontroluje syntaxe JS souborů (kontrakt kap. 6.1): kód, který nejde
- * naparsovat, se nespouští a všechny požadavky jsou neověřené. Projekt (`cwd`) se předem
- * nekontroluje — může mít vlastní sestavení a soubory, které se nespouštějí.
- * @returns {Promise<{ ok: boolean, results: {index, pass, error?, skipped?}[], logs: {level,text}[], errors: string[], syntaxError }>}
- */
 export async function runNodeTests({ files = [], hints = [], timeoutMs = 10000, cwd = null, signal = null } = {}) {
   if (!Array.isArray(hints) || !hints.every((h) => h && typeof h.test === 'string')) {
     throw new InputError('Pole "hints" musí obsahovat objekty s textem testu v "test"');
   }
   if (!cwd) {
     checkFiles(files);
-    // Node HTML soubory nespouští, jejich inline skripty se proto nekontrolují.
     const syntaxError = findSyntaxError(files, { includeHtml: false });
     if (syntaxError) return syntaxErrorResult(hints, syntaxError);
   }
   const workspace = await prepareWorkspace(files, cwd);
   try {
-    // U projektu se soubory berou z disku, jinak z požadavku.
     const fileList = cwd ? readTextTree(workspace.dir) : files;
     const fileMap = Object.fromEntries(fileList.map((f) => [f.name, f.content]));
 
@@ -277,7 +227,6 @@ export async function runNodeTests({ files = [], hints = [], timeoutMs = 10000, 
       }
       const outcome = await runSingleTest({ dir: workspace.dir, packages: workspace.packages, test: hint.test, files: fileMap, timeoutMs, signal });
       results.push(outcome.pass ? { index, pass: true } : { index, pass: false, error: outcome.error, ...outcome.details });
-      // Logy bereme z prvního testu, který uživatelův kód opravdu spustil (jinak by se opakovaly).
       if (logs.length === 0 && outcome.logs.length > 0) logs = outcome.logs;
     }
     return { ok: results.every((r) => r.pass), results, logs, errors: [], syntaxError: null };
@@ -286,10 +235,6 @@ export async function runNodeTests({ files = [], hints = [], timeoutMs = 10000, 
   }
 }
 
-/**
- * Spustí `node <main>` nad soubory a vrátí jeho výstup.
- * @returns {Promise<{ code: number|null, stdout: string, stderr: string, timedOut: boolean }>}
- */
 export async function runNodeFile({ files = [], main, timeoutMs = 5000, cwd = null } = {}) {
   const workspace = await prepareWorkspace(files, cwd);
   try {
@@ -349,7 +294,6 @@ export async function runNodeFile({ files = [], main, timeoutMs = 5000, cwd = nu
         settle(null);
       });
       child.on('close', (code) => settle(code));
-      // Proces na pozadí může držet výstup otevřený — pak stačí konec hlavního procesu.
       child.on('exit', (code) => setTimeout(() => settle(code), 100));
     });
   } finally {

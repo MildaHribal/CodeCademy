@@ -1,7 +1,4 @@
 // Jiné přístupy k labu `# --approaches--` (kontrakt kap. 3.8). Ukážou se po splnění labu;
-// před splněním jen s potvrzením a zapíšou se jako nahlédnutí do řešení (solutionViewed).
-// Obsah přístupů je jen v odpovědi s řešeními (`?solution=1`); lab bez řešení nese jen
-// `approachesCount`, takže se řešení načte až po kliknutí.
 import { h, svg } from '../../dom.js';
 import { icons } from '../../icons.js';
 import { api, apiRequest } from '../../api.js';
@@ -13,7 +10,6 @@ export function setupApproaches(ws) {
   const section = h('section', { class: 'approaches', hidden: true, 'aria-label': 'Jiné přístupy' });
   ws.addToSlot('brief-after-hints', section, { order: 40 });
 
-  // Počet z odpovědi bez řešení; starší server ho neposílá — pak se přístupy načtou hned.
   const count = ws.item.approachesCount;
   let approaches = null;
   if (typeof count === 'number') {
@@ -39,7 +35,8 @@ export function setupApproaches(ws) {
   }
 
   function renderClosed() {
-    const button = h('button', { type: 'button', class: 'btn btn--small' }, svg(icons.eye), `Ukázat jiné přístupy (${approaches?.length ?? count})`);
+    const countText = approaches?.length ?? count;
+    const button = h('button', { type: 'button', class: 'btn btn--small', 'aria-label': `Show other approaches (${countText}) / Ukázat jiné přístupy (${countText})` }, svg(icons.eye), `Show other approaches (${countText})`);
     button.addEventListener('click', open);
     section.replaceChildren(
       h('h2', { class: 'brief__subtitle' }, 'Jiné přístupy'),

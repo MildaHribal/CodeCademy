@@ -1,5 +1,4 @@
 // Endpointy jádra (docs/kontrakt.md, kap. 7). Nástroje nepřidávají funkce sem, ale do
-// vlastního souboru přes apiRequest (api-request.js) — viz docs/platforma.md.
 import { apiRequest as request } from './api-request.js';
 
 export { ApiError, apiRequest } from './api-request.js';

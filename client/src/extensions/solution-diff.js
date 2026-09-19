@@ -1,8 +1,5 @@
 // Porovnání s řešením (B2, kontrakt kap. 3.3):
-// - po splnění kroku, labu nebo projektu tlačítko „Jak to napsal autor",
-// - na začátku kroku N+1 proužek „Pokračuješ autorovým řešením kroku N" s rozdílem oproti
 //   tvému kódu (seed kroku N+1 je autorovo řešení kroku N, kontrakt kap. 3.1).
-// Před splněním se řešení otevírá z nápověd jako poslední stupeň (hints.js).
 import './solution-diff/solution-diff.css';
 import { h } from '../dom.js';
 import { appEvents } from '../core/events.js';
@@ -14,7 +11,7 @@ import { differsFromAuthor, plainFiles } from './solution-diff/hunks.js';
 import { openProjectSolution, openWorkspaceSolution } from './solution-diff/open.js';
 
 function authorButton(onclick) {
-  return h('button', { type: 'button', class: 'btn btn--quiet solution-diff-button', hidden: true, onclick }, 'Jak to napsal autor');
+  return h('button', { type: 'button', class: 'btn btn--quiet solution-diff-button', 'aria-label': "Author's solution / Jak to napsal autor", hidden: true, onclick }, "Author's solution");
 }
 
 workspaceExtensions.register({
@@ -35,11 +32,6 @@ workspaceExtensions.register({
   },
 });
 
-/**
- * Proužek na začátku kroku: uživatel pokračuje autorovým řešením předchozího kroku,
- * a jeho vlastní kód z předchozího kroku se od něj liší. Rozdíl ukáže bez potvrzení —
- * seed tohoto kroku je vidět v editoru tak jako tak.
- */
 function addContinuationBanner(ws) {
   const previous = ws.steps[ws.stepIndex - 1];
   const saved = progress.savedFiles(previous.id);
@@ -49,7 +41,7 @@ function addContinuationBanner(ws) {
   const mine = plainFiles(saved).filter((file) => seedNames.has(file.name));
   if (mine.length === 0 || !differsFromAuthor(mine, seed)) return;
 
-  const number = ws.stepIndex; // krok N (1-based) = index předchozího kroku + 1
+  const number = ws.stepIndex;
   const showDiff = () => {
     const handle = openSolutionDiff({
       heading: `Tvůj krok ${number} × autorovo řešení`,
@@ -63,7 +55,7 @@ function addContinuationBanner(ws) {
     'p',
     { class: 'solution-diff-banner', role: 'note' },
     h('span', { class: 'solution-diff-banner__text' }, `Pokračuješ autorovým řešením kroku ${number}.`),
-    h('button', { type: 'button', class: 'btn btn--small solution-diff-banner__button', onclick: showDiff }, 'Rozdíl oproti tvému'),
+    h('button', { type: 'button', class: 'btn btn--small solution-diff-banner__button', 'aria-label': 'Difference from yours / Rozdíl oproti tvému', onclick: showDiff }, 'Difference from yours'),
   );
   ws.addToSlot('brief-head', banner, { order: 50 });
 }

@@ -1,28 +1,23 @@
-// Levý panel pracovní plochy: zadání, požadavky, výsledek kontroly a tlačítka.
 
 import { h, svg } from '../dom.js';
 import { icons } from '../icons.js';
 import { progress } from '../progress.js';
 import { renderMarkdown } from '../markdown.js';
 
-/**
- * @param {{ item, module, isWorkshop, hintList, slots, onCheck: () => void, onReset: () => void }} options
- * @returns {{ element, result, checkButton, resetButton, setChecking(boolean), setPassed(boolean) }}
- */
 export function createBriefPane({ item, module, isWorkshop, hintList, slots, onCheck, onReset }) {
   const result = h('div', { class: 'result', role: 'status', 'aria-live': 'polite' });
 
   const checkButton = h(
     'button',
-    { type: 'button', class: 'btn btn--primary', title: 'Zkontrolovat (Ctrl+Enter)', onclick: () => onCheck() },
-    h('span', { class: 'btn__label' }, 'Zkontrolovat'),
+    { type: 'button', class: 'btn btn--primary', 'aria-label': 'Check / Zkontrolovat', title: 'Check (Ctrl+Enter)', onclick: () => onCheck() },
+    h('span', { class: 'btn__label' }, 'Check'),
     h('kbd', { class: 'btn__kbd' }, 'Ctrl+Enter'),
   );
   const resetButton = h(
     'button',
-    { type: 'button', class: 'btn btn--quiet', onclick: onReset },
+    { type: 'button', class: 'btn btn--quiet', 'aria-label': isWorkshop ? 'Reset step / Obnovit krok' : 'Reset task / Obnovit zadání', onclick: onReset },
     svg(icons.reset),
-    isWorkshop ? 'Obnovit krok' : 'Obnovit zadání',
+    isWorkshop ? 'Reset step' : 'Reset task',
   );
 
   const alreadyDone = progress.isCompleted(item.id);
@@ -56,12 +51,8 @@ export function createBriefPane({ item, module, isWorkshop, hintList, slots, onC
     resetButton,
     setChecking(checking) {
       checkButton.disabled = checking;
-      checkButton.querySelector('.btn__label').textContent = checking ? 'Kontroluju…' : 'Zkontrolovat';
+      checkButton.querySelector('.btn__label').textContent = checking ? 'Checking…' : 'Check';
     },
-    /**
-     * Po splnění se Zkontrolovat schová — hlavní akcí je pak „Další krok" ve výsledku
-     * (Ctrl+Enter vede tam). Jakmile uživatel kód upraví, tlačítko se vrátí.
-     */
     setPassed(passed) {
       checkButton.hidden = passed;
     },

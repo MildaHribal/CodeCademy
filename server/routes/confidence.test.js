@@ -1,4 +1,3 @@
-// Jistota odpovědí (kontrakt kap. 12.4).
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
@@ -76,8 +75,8 @@ describe('/api/confidence', () => {
     await attempt('q:alfa/kviz#00000001', { ok: true, confidence: 'sure' });
     await attempt('q:alfa/kviz#00000002', { ok: false, confidence: 'sure' });
     await attempt('q:alfa/kviz#00000003', { ok: true, confidence: 'guess' });
-    await attempt('q:alfa/kviz#00000004', { ok: true }); // bez jistoty se nepočítá
-    await attempt('alfa/workshop/001', { ok: true, confidence: 'sure' }); // jen otázky
+    await attempt('q:alfa/kviz#00000004', { ok: true });
+    await attempt('alfa/workshop/001', { ok: true, confidence: 'sure' });
     await ctx.emit('reviews:answered', { id: 'card:beta#aaaa0001', ok: true, confidence: 'sure', sectionId: 'beta' });
     await ctx.emit('reviews:answered', { id: 'card:beta#aaaa0001', ok: true, confidence: null, sectionId: 'beta' });
 

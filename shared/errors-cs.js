@@ -1,21 +1,4 @@
-// České vysvětlení chybových hlášek (kontrakt kap. 6.9).
-//
-//   explainError("TypeError: Cannot read properties of undefined (reading 'name')")
-//   → { id: 'cannot-read-undefined', title: 'Čteš vlastnost „name“ z hodnoty undefined.',
-//       causes: [...], see: 'js-pole/co-je-pole#pole-je-ocislovany-seznam-hodnot', match: { name: 'name' } }
-//
-// Každý vzor má regulární výraz nad anglickou hláškou (Chrome, Firefox, Node, acorn).
-// Pojmenované skupiny `(?<jméno>…)` se dosadí do titulku místo `{jméno}` a vrátí se v `match`.
-// Vzory se zkoušejí v pořadí seznamu, proto konkrétní vzory stojí před obecnými.
-// `see` je reference na výklad (kontrakt kap. 2.9); verify ji ověřuje jako odkazy v obsahu.
-// Texty smí obsahovat inline kód v `zpětných apostrofech` (UI ho vykreslí jako <code>).
-
-/**
- * @typedef {{ id: string, pattern: RegExp, title: string, causes: string[], see: string | null }} ErrorPattern
- * @type {ErrorPattern[]}
- */
 export const ERROR_PATTERNS = [
-  // ——— Hodnoty undefined a null ———
   {
     id: 'cannot-read-undefined',
     pattern: /Cannot read propert(?:ies|y) (?:of undefined \(reading '(?<name>[^']*)'\)|'(?<name2>[^']*)' of undefined)|can't access property "(?<name3>[^"]*)", \S+ is undefined/,
@@ -69,7 +52,6 @@ export const ERROR_PATTERNS = [
     see: null,
   },
 
-  // ——— Funkce a jména ———
   {
     id: 'array-method-not-a-function',
     pattern: /\.(?<method>map|filter|forEach|reduce|find|findIndex|some|every|includes|indexOf|push|pop|join|sort|toSorted|slice|splice|at|flatMap) is not a function/,
@@ -224,7 +206,6 @@ export const ERROR_PATTERNS = [
     see: null,
   },
 
-  // ——— JSON a síť ———
   {
     id: 'json-got-html',
     pattern: /Unexpected token '?<'?,? .*(?:JSON|is not valid JSON)|Unexpected token < in JSON/,
@@ -287,7 +268,6 @@ export const ERROR_PATTERNS = [
     see: null,
   },
 
-  // ——— Syntaxe ———
   {
     id: 'import-outside-module',
     pattern: /Cannot use import statement outside a module|'import' and 'export' may (?:only )?appear only with 'sourceType: module'|Unexpected token 'export'/,
@@ -391,7 +371,6 @@ export const ERROR_PATTERNS = [
     see: null,
   },
 
-  // ——— Node ———
   {
     id: 'eaddrinuse',
     pattern: /EADDRINUSE/,
@@ -474,7 +453,6 @@ export const ERROR_PATTERNS = [
     see: null,
   },
 
-  // ——— Hlášky platformy ———
   {
     id: 'infinite-loop',
     pattern: /Smyčka běží příliš dlouho/,
@@ -499,10 +477,6 @@ export const ERROR_PATTERNS = [
   },
 ];
 
-/**
- * @param {string} text  hláška chyby, klidně s předponou (`TypeError: …`) a místem (`(script.js:3)`)
- * @returns {null | { id: string, title: string, causes: string[], see: string | null, match?: Record<string, string> }}
- */
 export function explainError(text) {
   const message = String(text ?? '');
   if (!message.trim()) return null;
@@ -522,7 +496,6 @@ export function explainError(text) {
   return null;
 }
 
-/** Skupiny `name`, `name2`, `name3` jsou alternativy téhož — sloučí se pod `name`. */
 function collectGroups(groups) {
   const out = {};
   for (const [key, value] of Object.entries(groups ?? {})) {
@@ -533,7 +506,6 @@ function collectGroups(groups) {
   return out;
 }
 
-/** Dosadí zachycené části hlášky; chybějící „{jméno}“ z věty vypustí i s uvozovkami. */
 function fillTitle(title, match) {
   return fillText(title.replace(/\s*„\{(\w+)\}“/g, (whole, key) => (match[key] ? ` „${match[key]}“` : '')), match);
 }
@@ -542,12 +514,6 @@ function fillText(text, match) {
   return text.replace(/\{(\w+)\}/g, (whole, key) => match[key] ?? whole);
 }
 
-/**
- * Nenapsané funkce: víc hlášek `ReferenceError: x is not defined` pro různá jména sloučí
- * do jednoho řádku (kontrakt kap. 6.9). Ostatní hlášky nechá, jak jsou.
- * @param {string[]} errors
- * @returns {Array<{ text: string, names?: string[] }>}
- */
 export function groupUndefinedNames(errors) {
   const out = [];
   const names = [];

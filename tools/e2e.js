@@ -125,7 +125,7 @@ const scenarios = [
   ['přehled osnovy a sekce', async ({ page, baseUrl, shot }) => {
     await page.goto(`${baseUrl}/#/`);
     await page.locator('.toc-part').first().waitFor();
-    assert.equal(await page.locator('.resume__action').textContent(), 'Začít', 'nový uživatel má tlačítko Začít');
+    assert.match(await page.locator('.resume__action').textContent(), /Start|Začít/, 'nový uživatel má tlačítko Začít');
     await shot('01-prehled');
 
     // Sekce může být v přehledu víckrát (po částech i v doporučené trase) — stačí první odkaz.
@@ -164,7 +164,7 @@ const scenarios = [
     await shot('03-lekce');
 
     // Tlačítko Obnovit vrátí původní kód.
-    await live.getByRole('button', { name: 'Obnovit' }).click();
+    await live.getByRole('button', { name: /Reset|Obnovit/ }).click();
     await waitUntil(async () => (await layout()).display === 'block', { message: 'Obnovit nevrátilo ukázku' });
 
     // Kontrolní otázky (kontrakt kap. 5.8): každá se zkontroluje zvlášť, pak „Mám přečteno".
@@ -175,15 +175,15 @@ const scenarios = [
     assert.equal(await checkElements.count(), checks.length);
     for (const [index, block] of checks.entries()) {
       await chooseAnswers(checkElements.nth(index).locator('.question'), block.question, 'correct');
-      await checkElements.nth(index).getByRole('button', { name: 'Zkontrolovat' }).click();
+      await checkElements.nth(index).getByRole('button', { name: /Check|Zkontrolovat/ }).click();
     }
     const questions = page.locator('.lesson__finish .question');
     assert.equal(await questions.count(), module.lesson.questions.length);
     for (const [index, question] of module.lesson.questions.entries()) {
       await chooseAnswers(questions.nth(index), question, 'correct');
-      await questions.nth(index).getByRole('button', { name: 'Zkontrolovat' }).click();
+      await questions.nth(index).getByRole('button', { name: /Check|Zkontrolovat/ }).click();
     }
-    await page.getByRole('button', { name: 'Mám přečteno' }).click();
+    await page.getByRole('button', { name: /Mark as read|Mám přečteno/ }).click();
     await page.locator('.lesson__finish', { hasText: 'Lekce je splněná.' }).waitFor();
     await page.locator('.lesson__finish').scrollIntoViewIfNeeded();
     await shot('03b-lekce-otazky');
@@ -197,7 +197,7 @@ const scenarios = [
     const result = brief.locator('.result');
     await editor.locator('.cm-content').waitFor();
 
-    const onSeed = await checkAndWait(page, result, () => brief.getByRole('button', { name: /Zkontrolovat/ }).click());
+    const onSeed = await checkAndWait(page, result, () => brief.getByRole('button', { name: /Check|Zkontrolovat/ }).click());
     assert.equal(onSeed, 'fail', 'výchozí kód nemá projít');
     assert.ok((await hintStatuses(brief)).includes('fail'), 'aspoň jeden požadavek je červený');
 
@@ -207,7 +207,7 @@ const scenarios = [
       const seed = step.seed.find((s) => s.name === file.name);
       if (seed?.content !== file.content) await replaceEditorFile(page, editor, file.name, file.content);
     }
-    const onSolution = await checkAndWait(page, result, () => brief.getByRole('button', { name: /Zkontrolovat/ }).click());
+    const onSolution = await checkAndWait(page, result, () => brief.getByRole('button', { name: /Check|Zkontrolovat/ }).click());
     assert.equal(onSolution, 'pass', `řešení má projít, požadavky: ${await hintStatuses(brief)}`);
     assert.ok((await hintStatuses(brief)).every((status) => status === 'pass'));
     await waitUntil(async () => (await api.progress()).completed[step.id], { message: 'krok se neuložil jako splněný' });
@@ -222,7 +222,7 @@ const scenarios = [
     );
     await shot('04-workshop-krok');
 
-    await result.getByRole('link', { name: /Další krok/ }).click();
+    await result.getByRole('link', { name: /Next step|Další krok/ }).click();
     await page.waitForURL(/\/002$/);
     await page.locator('.workspace__position', { hasText: 'Krok 2 z' }).waitFor();
     assert.equal(await page.locator('.stepper__item').first().getAttribute('data-done'), 'true');
@@ -261,7 +261,7 @@ const scenarios = [
     assert.notEqual(looping, solution);
     await replaceEditorFile(page, editor, 'script.js', looping);
     const started = Date.now();
-    await brief.getByRole('button', { name: /Zkontrolovat/ }).click();
+    await brief.getByRole('button', { name: /Check|Zkontrolovat/ }).click();
 
     // Během kontroly aplikace dál reaguje: vlákno stránky odpovídá a přepnout se dá jinam v UI.
     for (let i = 0; i < 5; i++) {
@@ -292,13 +292,13 @@ const scenarios = [
   ['kvíz: špatně → nesplněno s vysvětlením, chybné znovu → splněno', async ({ page, api, baseUrl, shot }) => {
     await page.goto(`${baseUrl}/#/modul/${QUIZ}`);
     await page.locator('.quiz .question').first().waitFor();
-    await page.locator('.segmented__option', { hasText: 'Všechny najednou' }).click();
+    await page.locator('.segmented__option', { hasText: /All at once|Všechny najednou/ }).click();
     const { quiz } = await api.module(QUIZ);
     const questions = page.locator('.quiz__body .question');
     await waitUntil(async () => (await questions.count()) === quiz.questions.length, { message: 'kvíz neukázal všechny otázky' });
 
     for (const [index, question] of quiz.questions.entries()) await chooseAnswers(questions.nth(index), question, 'wrong');
-    await page.getByRole('button', { name: 'Vyhodnotit' }).click();
+    await page.getByRole('button', { name: /Evaluate|Vyhodnotit/ }).click();
     await page.locator('.quiz-summary--fail').waitFor();
     assert.equal(await page.locator('.quiz-summary__score').textContent(), `0 z ${quiz.questions.length}`);
     const whyTexts = await page.locator('.answer__why').evaluateAll((items) => items.filter((item) => item.textContent.trim()).length);
@@ -307,10 +307,10 @@ const scenarios = [
     assert.equal((await api.progress()).completed[QUIZ], undefined);
 
     // Druhý průchod jen chybnými otázkami (B7): odpovědi se mohly zamíchat, vybíráme podle textu.
-    await page.getByRole('button', { name: /Projít jen chybné/ }).click();
+    await page.getByRole('button', { name: /Review mistakes only|Projít jen chybné/ }).click();
     await waitUntil(async () => (await questions.count()) === quiz.questions.length, { message: 'druhý průchod neukázal chybné otázky' });
     for (const [index, question] of quiz.questions.entries()) await chooseAnswers(questions.nth(index), question, 'correct');
-    await page.getByRole('button', { name: 'Vyhodnotit' }).click();
+    await page.getByRole('button', { name: /Evaluate|Vyhodnotit/ }).click();
     await page.locator('.quiz-summary--pass').waitFor();
     await waitUntil(async () => (await api.progress()).completed[QUIZ], { message: 'splněný kvíz se neuložil' });
     assert.equal((await api.progress()).scores[QUIZ], 1);
@@ -326,7 +326,7 @@ const scenarios = [
     const helpButton = page.locator('.hint-tips__button');
     await helpButton.waitFor();
     for (let i = 0; i < 2; i++) {
-      assert.equal(await checkAndWait(page, result, () => brief.getByRole('button', { name: /Zkontrolovat/ }).click()), 'fail');
+      assert.equal(await checkAndWait(page, result, () => brief.getByRole('button', { name: /Check|Zkontrolovat/ }).click()), 'fail');
     }
     await waitUntil(() => helpButton.evaluate((el) => el.classList.contains('hint-tips__button--highlight')), {
       message: 'tlačítko nápovědy se po 2 neúspěších nezvýraznilo',
@@ -340,11 +340,11 @@ const scenarios = [
     }
     await compare.click();
     const dialog = page.locator('dialog.solution-diff');
-    await dialog.getByRole('button', { name: 'Ukázat řešení' }).click();
+    await dialog.getByRole('button', { name: /Show solution|Ukázat řešení/ }).click();
     await dialog.locator('.solution-diff__file').first().waitFor();
     assert.ok((await dialog.locator('.solution-diff__line--add').count()) > 0, 'porovnání ukazuje řádky, které v kódu chybí');
     await shot('09-napoveda-porovnani');
-    await dialog.getByRole('button', { name: 'Zavřít' }).click();
+    await dialog.getByRole('button', { name: /Close|Zavřít/ }).click();
 
     const attempts = await api.get(`/api/attempts?prefix=${encodeURIComponent(HINT_STEP)}`);
     const record = attempts.items[HINT_STEP];
@@ -365,23 +365,23 @@ const scenarios = [
       const type = await item.getAttribute('data-type');
       if (type === 'step') {
         await item.locator('.cm-content').waitFor();
-        await item.getByRole('button', { name: 'Vzdávám' }).click();
+        await item.getByRole('button', { name: /Give up|Vzdávám/ }).click();
       } else if (type === 'question') {
         // Otázka s výběrem se nejdřív ukáže bez voleb („Odpověz v hlavě").
-        const showChoices = item.getByRole('button', { name: 'Ukaž volby' });
+        const showChoices = item.getByRole('button', { name: /Show choices|Ukaž volby/ });
         if (await showChoices.count()) await showChoices.click();
         const question = quiz.questions.find((q) => itemId.endsWith(`#${q.key}`));
         assert.ok(question, `otázka ${itemId} je v kvízu`);
         await chooseAnswers(item.locator('.question'), question, 'correct');
-        await item.getByRole('button', { name: 'Zkontrolovat' }).click();
+        await item.getByRole('button', { name: /Check|Zkontrolovat/ }).click();
       } else {
         // „Už to umím" položku odebere a samo přejde na další (tlačítko Další se neukáže).
-        await item.getByRole('button', { name: 'Už to umím, nezobrazovat' }).click();
+        await item.getByRole('button', { name: /Already know this, don't show|Už to umím, nezobrazovat/ }).click();
         await waitUntil(async () => !(await item.count()) || (await item.getAttribute('data-id')) !== itemId, { message: 'po „Už to umím" se neukázala další položka' });
         continue;
       }
       if (round === 0) await shot('10-opakovani');
-      const next = page.getByRole('button', { name: /Další položka|Dokončit/ });
+      const next = page.getByRole('button', { name: /Next item|Další položka|Finish|Dokončit/ });
       await next.waitFor();
       await next.click();
       await waitUntil(async () => !(await item.count()) || (await item.getAttribute('data-id')) !== itemId, { message: 'další položka opakování se neukázala' });
@@ -395,12 +395,12 @@ const scenarios = [
   ['poznámky: poznámka z lekce se zapíše do souboru sekce', async ({ page, api, baseUrl, shot }) => {
     await page.goto(`${baseUrl}/#/modul/${LESSON}`);
     await page.locator('.live').first().waitFor();
-    await page.getByRole('button', { name: 'Poznámka' }).first().click();
+    await page.getByRole('button', { name: /Note|Poznámka/ }).first().click();
     const drawer = page.locator('.notes-drawer').filter({ has: page.locator('#notes-drawer-text') });
     await drawer.waitFor();
     const text = 'Flex kontejner řídí jen přímé děti (e2e).';
     await drawer.locator('#notes-drawer-text').fill(text);
-    await drawer.getByRole('button', { name: /Uložit do poznámek/ }).click();
+    await drawer.getByRole('button', { name: /Save to notes|Uložit do poznámek/ }).click();
     const section = LESSON.split('/')[0];
     await waitUntil(async () => (await api.get(`/api/notes/${section}`)).content.includes(text), { message: 'poznámka se nezapsala' });
 
@@ -435,7 +435,7 @@ const scenarios = [
 
   ['projekt: začít, řešení do složky, kontrola projde', async ({ page, baseUrl, projectsDir, shot }) => {
     await page.goto(`${baseUrl}/#/modul/${PROJECT}`);
-    await page.getByRole('button', { name: 'Začít projekt' }).click();
+    await page.getByRole('button', { name: /Start project|Začít projekt/ }).click();
     await page.locator('.project__created').waitFor();
 
     const dir = path.join(projectsDir, PROJECT.replace('/', '--'));
@@ -445,7 +445,7 @@ const scenarios = [
     // Uživatel projekt dodělá ve VS Code — tady místo něj nakopírujeme referenční řešení.
     fs.cpSync(path.join(CONTENT_DIR, PROJECT, 'solution'), dir, { recursive: true, force: true });
     const stories = page.locator('.project__stories');
-    const outcome = await checkAndWait(page, stories.locator('.result'), () => stories.getByRole('button', { name: 'Zkontrolovat' }).click(), {
+    const outcome = await checkAndWait(page, stories.locator('.result'), () => stories.getByRole('button', { name: /Check|Zkontrolovat/ }).click(), {
       timeout: 180000,
     });
     assert.equal(outcome, 'pass', `projekt s řešením má projít, příběhy: ${await hintStatuses(stories)}`);
@@ -476,7 +476,7 @@ const scenarios = [
     const after = await api.progress();
     assert.deepEqual(after, before, 'postup po restartu je stejný');
     const resume = page.locator('.resume__action');
-    assert.equal(await resume.textContent(), 'Pokračovat');
+    assert.match(await resume.textContent(), /Continue|Pokračovat/);
     assert.equal(await resume.getAttribute('href'), `#/modul/${RESUME_STEP}`);
     await shot('08-prehled-po-restartu');
 

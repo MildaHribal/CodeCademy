@@ -1,4 +1,3 @@
-// SVG cesty ikon (viewBox 0 0 16 16). Kreslené tahem, barva přebírá currentColor.
 
 const stroke = (d, width = 1.8) =>
   `<path d="${d}" fill="none" stroke="currentColor" stroke-width="${width}" stroke-linecap="round" stroke-linejoin="round"/>`;

@@ -1,6 +1,3 @@
-// Projekt ve VS Code: zadání, založení složky, příkaz pro otevření a kontrola.
-// Soubory projektu leží na disku v moje-projekty/. Kontrola u runtime dom
-// načte soubory a spustí testy v prohlížeči, u node je spustí server.
 
 import { h, svg, append, replace } from '../dom.js';
 import { icons } from '../icons.js';
@@ -18,13 +15,6 @@ import { createExtensionPoint } from '../core/registry.js';
 import { createSlots } from '../core/slots.js';
 import { nextModuleLink } from './nav.js';
 
-/**
- * Rozšíření obrazovky projektu:
- *   projectExtensions.register({ id, order, setup(project) { project.addToSlot('after-stories', el); } })
- * API: module, id, runtime, signal, onCleanup, page, hintList, addToSlot(name, el, { order })
- * sloty: 'head' (pod nadpisem), 'after-stories' (pod příběhy a kontrolou), 'end' (konec stránky)
- * událost: appEvents 'project:check-result' ({ id, result, passed })
- */
 export const projectExtensions = createExtensionPoint('projektu');
 
 export function renderProject(ctx, { module, nav }) {
@@ -47,7 +37,6 @@ export function renderProject(ctx, { module, nav }) {
     progress.isCompleted(module.id) ? doneBadge() : null,
   );
 
-  // ——— Složka projektu ———
   const folderBox = h('div', { class: 'project__folder-body' });
   const folder = h(
     'section',
@@ -56,11 +45,10 @@ export function renderProject(ctx, { module, nav }) {
     folderBox,
   );
 
-  // ——— Uživatelské příběhy a kontrola ———
   const hintList = createHintList(project.hints, { ordered: true, item: project });
   const slots = createSlots(['head', 'after-stories', 'end']);
   const result = h('div', { class: 'result', role: 'status', 'aria-live': 'polite' });
-  const checkButton = h('button', { type: 'button', class: 'btn btn--primary', disabled: true, onclick: check }, 'Zkontrolovat');
+  const checkButton = h('button', { type: 'button', class: 'btn btn--primary', 'aria-label': 'Check / Zkontrolovat', disabled: true, onclick: check }, 'Check');
   const checkNote = h('p', { class: 'project__check-note' }, 'Kontrola čte soubory přímo z disku — nezapomeň je ve VS Code uložit.');
 
   const stories = h(
@@ -117,7 +105,7 @@ export function renderProject(ctx, { module, nav }) {
   }
 
   function showStart() {
-    const startButton = h('button', { type: 'button', class: 'btn btn--primary' }, 'Začít projekt');
+    const startButton = h('button', { type: 'button', class: 'btn btn--primary', 'aria-label': 'Start project / Začít projekt' }, 'Start project');
     startButton.addEventListener('click', async () => {
       startButton.disabled = true;
       try {
@@ -160,7 +148,6 @@ export function renderProject(ctx, { module, nav }) {
     result.replaceChildren(h('p', {}, isNode ? 'Spouštím testy projektu…' : 'Načítám soubory a spouštím testy…'));
 
     try {
-      // ctx.signal: při odchodu z obrazovky se běžící kontrola zruší (v prohlížeči i na serveru).
       const raw = isNode ? await api.checkProject(sectionId, moduleId, { signal: ctx.signal }) : await runInBrowser();
       if (ctx.signal.aborted) return;
       const run = transformRun(raw, { item: project, files: null, runtime });
@@ -179,7 +166,7 @@ export function renderProject(ctx, { module, nav }) {
     } finally {
       checking = false;
       checkButton.disabled = false;
-      checkButton.textContent = 'Zkontrolovat';
+      checkButton.textContent = 'Check';
     }
   }
 
@@ -228,7 +215,6 @@ export function renderProject(ctx, { module, nav }) {
     result.append(h('div', { class: 'actions' }, nextModuleLink(nav)));
   }
 
-  // ——— Náhled stránky (jen dom/vue) ———
   function previewSection() {
     const frameHost = h('div', { class: 'project__frame' });
     const consolePanel = createConsolePanel();

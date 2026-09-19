@@ -262,7 +262,7 @@ describe('orientace, tmavý režim a poznámky v prohlížeči', () => {
       // Kód mimo oblast --edit-- je sbalený do jednoho řádku.
       await page.locator('.cm-fold-previous').first().waitFor();
 
-      const check = page.locator('.pane--brief .btn--primary', { hasText: 'Zkontrolovat' });
+      const check = page.locator('.pane--brief .btn--primary', { hasText: /Check|Zkontrolovat/ });
       await page.locator('.pane--editor .cm-content').click();
       await page.keyboard.insertText('<h1>Nadpis</h1>');
       await page.keyboard.press('Control+Enter');

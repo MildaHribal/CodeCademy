@@ -140,7 +140,7 @@ describe('rozhraní aplikace', () => {
       await page.evaluate(() => {
         location.hash = '#/sekce/%E0%A4%A';
       });
-      await page.getByRole('heading', { name: 'Tahle stránka neexistuje' }).waitFor({ timeout: 5000 });
+      await page.getByRole('heading', { name: /Page not found|Tahle stránka neexistuje/ }).waitFor({ timeout: 5000 });
     } finally {
       await page.close();
     }

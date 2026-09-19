@@ -1,6 +1,3 @@
-// Načítání osnovy a modulů ze serveru s jednoduchou mezipamětí.
-// Obsah se během používání nemění, takže přechod mezi kroky workshopu nemusí
-// modul stahovat znovu. Osnova se obnoví při každém návratu na přehled.
 
 import { api } from './api.js';
 
@@ -10,7 +7,7 @@ const modulePromises = new Map();
 export function loadCurriculum({ fresh = false } = {}) {
   if (fresh || !curriculumPromise) {
     curriculumPromise = api.curriculum();
-    curriculumPromise.catch(() => (curriculumPromise = null)); // chybu si nepamatovat
+    curriculumPromise.catch(() => (curriculumPromise = null));
   }
   return curriculumPromise;
 }
@@ -25,7 +22,6 @@ export function loadModule(sectionId, moduleId) {
   return modulePromises.get(id);
 }
 
-/** Najde sekci podle id a vrátí ji i s částí, do které patří. */
 export function findSection(curriculum, sectionId) {
   for (const part of curriculum.parts) {
     const index = part.sections.findIndex((s) => s.id === sectionId);
@@ -34,7 +30,6 @@ export function findSection(curriculum, sectionId) {
   return null;
 }
 
-/** Všechny moduly osnovy v pořadí, každý s odkazem na svou sekci. */
 export function allModules(curriculum) {
   return curriculum.parts.flatMap((part) =>
     part.sections.flatMap((section) => section.modules.map((module) => ({ part, section, module }))),

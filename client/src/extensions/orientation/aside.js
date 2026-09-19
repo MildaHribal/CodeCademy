@@ -1,16 +1,9 @@
-// Postranní panel lekce (slot 'aside'): na širokém okně stojí vpravo vedle výkladu a jede s ním.
-//
-// Slot je v DOM na konci článku. Když je vedle textu dost místa, dostane třídu is-docked
-// a CSS proměnnou --lesson-right (pravý okraj textu nebo nejširšího bloku v px) — panel se
-// pak připne vedle textu a nikdy nepřekryje širší živou ukázku.
-// Používají ho obsah lekce i poznámky; první, kdo ho zavolá, ho zapne, další volání jen počítají.
 
-const MIN_SPACE_PX = 180; // nejužší rozumný sloupec vedle textu (bez mezery 40 px a okraje 24 px)
+const MIN_SPACE_PX = 180;
 const MIN_WINDOW_PX = 1200;
 
-const docked = new WeakMap(); // article → { users, cleanup }
+const docked = new WeakMap();
 
-/** Zapne připínání panelu lekce; vrací úklid. */
 export function dockAside(lesson) {
   const article = lesson.article;
   const existing = docked.get(article);
@@ -23,7 +16,6 @@ export function dockAside(lesson) {
   if (!slot) return () => {};
 
   function update() {
-    // Pravý okraj textu; bloky, které přesahují šířku textu (živé ukázky), posunou okraj dál.
     let right = article.getBoundingClientRect().right - parseFloat(getComputedStyle(article).paddingRight || '0');
     for (const child of article.children) {
       if (child === slot || child.hidden) continue;

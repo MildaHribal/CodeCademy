@@ -1,4 +1,3 @@
-// GET /api/section/:section a GET /api/terms nad dočasným obsahem (kontrakt kap. 2.7, 7).
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
@@ -101,7 +100,6 @@ describe('routy sekce a pojmů', () => {
   test('404 pro sekci mimo disk, 400 pro neplatný slug, 500 pro rozbitý soubor', async () => {
     assert.equal((await get('/api/section/planovana')).status, 404);
     assert.equal((await get('/api/section/Neplatna_sekce')).status, 400);
-    // Server chyby 500 vypisuje do konzole — v testu je schválně ztlumíme.
     const originalError = console.error;
     console.error = () => {};
     const broken = await get('/api/section/rozbita').finally(() => {

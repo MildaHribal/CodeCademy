@@ -30,7 +30,6 @@ async function waitFor(fn, timeoutMs = 5000) {
   }
 }
 
-// Server, který vypíše port a odpovídá podle cesty — jako kroky workshopu http-server.
 const SERVER = `
 import { createServer } from 'node:http';
 const port = Number(process.env.PORT);
@@ -112,8 +111,8 @@ describe('pomocné funkce', () => {
     assert.match(all.chunks[0].at, /^\d{4}-\d\d-\d\dT/);
 
     const bytes = createOutputBuffer({ maxChunks: 100, maxBytes: 10 });
-    bytes.push('stdout', 'čččč'); // 8 bajtů
-    bytes.push('stderr', 'xyz'); // 11 > 10 → první pryč
+    bytes.push('stdout', 'čččč');
+    bytes.push('stderr', 'xyz');
     assert.deepEqual(bytes.since(0).chunks.map((c) => c.text), ['xyz']);
     assert.equal(bytes.since(0).truncated, true);
 
@@ -338,7 +337,7 @@ setInterval(() => {}, 1000);
     const text = await waitFor(() => dev.output(0).chunks.map((c) => c.text).join('').match(/child (\d+)/));
     const childPid = Number(text[1]);
     const pid = dev.pid();
-    await sleep(100); // potomek si stihne nastavit obsluhu SIGTERM
+    await sleep(100);
     assert.equal(isAlive(pid), true);
     assert.equal(isAlive(childPid), true);
 
@@ -391,10 +390,10 @@ console.log('child ' + child.pid);
     const dev = manager({ idleMs: 500 });
     await dev.start({ files: [{ name: 'index.mjs', content: SERVER }] });
     await sleep(300);
-    await dev.request({ path: '/' }); // prodlouží
+    await dev.request({ path: '/' });
     await sleep(300);
     assert.equal(dev.process().status, 'running', 'request nečinnost prodloužil');
-    dev.output(0); // neprodlouží
+    dev.output(0);
     await waitFor(() => dev.process().status === 'exited', 2000);
     assert.ok(dev.output(0).chunks.some((c) => c.stream === 'system' && /^Zastaveno po 1 s nečinnosti\.$/.test(c.text)));
   });

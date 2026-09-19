@@ -1,13 +1,4 @@
 // Plocha kroku `kind: parsons` místo editoru kódu (kontrakt kap. 3.5).
-//
-// Vlevo nabídka řádků (i řádky navíc), vpravo řešení mezi kódem, který už v souboru je.
-// Ovládání:
-//   myš       — přetažení řádku, dvojklik přesune mezi nabídkou a řešením, tlačítka ‹ › mění odsazení
-//   klávesnice — Enter přesune řádek mezi nabídkou a řešením, ↑/↓ posune řádek,
-//               Shift+↑/↓ přejde na sousední řádek, Tab / Shift+Tab změní odsazení (v řešení)
-//
-// Kontrola i ukládání běží beze změny nad soubory z getFiles(): řádky se vloží do oblasti
-// --edit-- seedu (parsons-logic.js).
 import { h, svg } from '../../dom.js';
 import { appEvents } from '../../core/events.js';
 import { highlightLines } from '../../markdown.js';
@@ -36,7 +27,7 @@ export function createParsonsEditor(host, { files, onChange, item }) {
   const lang = target?.lang ?? 'js';
 
   let state = fresh();
-  let wrongIndent = new Set(); // označí se až po kontrole
+  let wrongIndent = new Set();
   restore(files);
 
   const poolList = h('ul', { class: 'parsons__list', 'aria-label': 'Nabídka řádků' });
@@ -122,7 +113,6 @@ export function createParsonsEditor(host, { files, onChange, item }) {
     onChange?.(getFiles());
   }
 
-  /** Přesune řádek do nabídky nebo řešení na daný index. */
   function moveTo(id, toSolution, index) {
     const from = state.placed.find((entry) => entry.id === id);
     const pool = state.pool.filter((poolId) => poolId !== id);
@@ -247,7 +237,6 @@ export function createParsonsEditor(host, { files, onChange, item }) {
       } else if (event.key === 'ArrowUp') shift(id, -1);
       else if (event.key === 'ArrowDown') shift(id, 1);
       else if (event.key === 'Tab' && inSolution) {
-        // Na krajních hodnotách Tab normálně přesune fokus dál, ať z řešení jde odejít.
         if (!indent(id, event.shiftKey ? -1 : 1)) return;
       } else return;
       event.preventDefault();
@@ -280,14 +269,12 @@ export function createParsonsEditor(host, { files, onChange, item }) {
   };
 }
 
-/** Kolik řádků okolního kódu je vidět hned; zbytek (typicky kód z předchozích kroků) se sbalí. */
 const CONTEXT_VISIBLE = 4;
 
 function contextCode(lines, where) {
   const pre = (shown) => h('pre', { class: 'parsons__context', 'aria-label': `Kód ${where} tvým řešením` }, h('code', {}, shown.join('\n')));
   if (lines.length <= CONTEXT_VISIBLE + 2) return pre(lines);
 
-  // Před řešením je vidět konec kódu, za ním začátek; zbytek jde rozbalit.
   const hiddenCount = lines.length - CONTEXT_VISIBLE;
   const visible = where === 'před' ? lines.slice(-CONTEXT_VISIBLE) : lines.slice(0, CONTEXT_VISIBLE);
   const wrapper = h('div', { class: 'parsons__context-wrap' });

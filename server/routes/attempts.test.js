@@ -10,8 +10,6 @@ import { applyAttempt, attemptTarget, buildStats, emptyAttempt, validateAttemptB
 
 const contentDir = path.join(import.meta.dirname, '..', 'test-fixtures', 'content');
 
-// Otázky potřebují klíče z parseru (kontrakt kap. 4.4). Test je nezávislý na parseru:
-// jednu otázku kvízu podstrčí přes ctx.resolveItem, ostatní id jdou na skutečný obsah.
 const QUESTION_ID = 'q:ukazka/kviz#1b4f0e98';
 const QUESTION = {
   id: QUESTION_ID,
@@ -50,7 +48,6 @@ describe('pokusy — HTTP API (kontrakt kap. 12.2)', () => {
   });
 
   after(async () => {
-    // Nejdřív dopsat rozpracované zápisy, ať po smazání adresáře nehlásí chybu.
     await server.akademie.ctx.createJsonStore('pokusy.json').flush();
     await server.akademie.ctx.progress.flush();
     await new Promise((resolve) => server.close(resolve));
@@ -102,12 +99,10 @@ describe('pokusy — HTTP API (kontrakt kap. 12.2)', () => {
     assert.equal(events[2].previous.failsSinceOk, 2);
     assert.deepEqual(events[2].attempt, attempt);
 
-    // Další ok už firstOk není a firstOkAt se nemění.
     const again = await post({ id, ok: true });
     assert.equal(again.data.attempt.firstOkAt, attempt.firstOkAt);
     assert.equal(events[3].firstOk, false);
 
-    // Neúspěch po úspěchu začne failsSinceOk znovu od 1.
     assert.equal((await post({ id, ok: false, failed: [0] })).data.attempt.failsSinceOk, 1);
   });
 
@@ -125,14 +120,12 @@ describe('pokusy — HTTP API (kontrakt kap. 12.2)', () => {
     assert.equal(ok.data.attempt.assisted, true, 'assisted zůstává');
     assert.equal(ok.data.attempt.solutionViewed, true, 'false nic nemaže');
 
-    // Řešení zobrazené až po splnění (Jak to napsal autor) assisted nenastaví.
     const lab = 'ukazka/lab';
     await post({ id: lab, ok: true });
     const afterPass = await post({ id: lab, solutionViewed: true });
     assert.equal(afterPass.data.attempt.solutionViewed, true);
     assert.equal(afterPass.data.attempt.assisted, false);
 
-    // V jednom požadavku: řešení i první ok = s pomocí.
     const project = 'ukazka/projekt-web';
     assert.equal((await post({ id: project, ok: true, solutionViewed: true })).data.attempt.assisted, true);
   });
@@ -208,7 +201,6 @@ describe('pokusy — HTTP API (kontrakt kap. 12.2)', () => {
     assert.deepEqual(Object.keys(quiz.data.items), [QUESTION_ID]);
     const section = await call('GET', '/api/attempts?prefix=ukazka');
     assert.equal(Object.keys(section.data.items).length, 3);
-    // „ukazka/lab" nesmí chytit „ukazka/lab-dalsi" ani naopak.
     assert.deepEqual(Object.keys((await call('GET', '/api/attempts?prefix=ukazka/la')).data.items), []);
     assert.equal((await call('GET', '/api/attempts?prefix=../x')).status, 400);
   });
@@ -241,12 +233,11 @@ describe('pokusy — HTTP API (kontrakt kap. 12.2)', () => {
     for (let i = 0; i < 3; i++) await post({ id: 'ukazka/workshop/001', ok: false, failed: [0], activeMs: 1000 });
     await post({ id: 'ukazka/workshop/002', ok: false, failed: [0] });
     await post({ id: 'ukazka/workshop/002', solutionViewed: true, activeMs: 500 });
-    await post({ id: 'ukazka/projekt-web', ok: false, failed: [0, 5] }); // požadavek 5 neexistuje
+    await post({ id: 'ukazka/projekt-web', ok: false, failed: [0, 5] });
     await post({ id: 'ukazka/lab', ok: true });
     await post({ id: 'ukazka/lab', solutionViewed: true });
     await post({ id: QUESTION_ID, ok: false, activeMs: 2000 });
     await post({ id: QUESTION_ID, ok: false });
-    // Položky, které v obsahu nejsou (smazaný krok), se ve statistikách vynechají.
     server.akademie.ctx.createJsonStore('pokusy.json').update((data) => {
       data.items['ukazka/workshop/077'] = { ...emptyAttempt(), fails: 9, failedHints: { 0: 9 }, activeMs: 99999, solutionViewed: true };
       data.items['q:ukazka/kviz#deadbeef'] = { ...emptyAttempt(), fails: 4 };

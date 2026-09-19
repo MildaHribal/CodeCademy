@@ -1,10 +1,3 @@
-// Klávesové zkratky aplikace (B12):
-//   Alt+← / Alt+→   předchozí / další krok workshopu, jinde předchozí / další modul osnovy
-//   ?               přehled zkratek
-//   N               poznámka k tomuhle místu (panel poznámek, extensions/notes)
-// Ctrl+Enter (Zkontrolovat / Další krok) obsluhuje pracovní plocha sama.
-//
-// Zkratky bez Alt nefungují při psaní (editor, pole formuláře) — tam písmena patří textu.
 import './shortcuts.css';
 import { h, svg } from '../dom.js';
 import { href } from '../router.js';
@@ -22,11 +15,9 @@ export const SHORTCUTS = [
   { keys: ['Esc'], text: 'Zavřít panel nebo přehled' },
 ];
 
-// ——— Kam vedou Alt+← a Alt+→ na aktuální obrazovce ———
-
 let targets = { prev: null, next: null };
 let routeToken = 0;
-let stepMode = false; // krok workshopu: šipky vedou mezi kroky, ne mezi moduly
+let stepMode = false;
 
 appEvents.on('route:change', ({ route }) => {
   const token = ++routeToken;
@@ -60,8 +51,6 @@ workspaceExtensions.register({
   },
 });
 
-// ——— Klávesnice ———
-
 function isTyping(target) {
   return target instanceof Element && Boolean(target.closest('input, textarea, select, [contenteditable=""], [contenteditable="true"], .cm-editor'));
 }
@@ -70,10 +59,9 @@ document.addEventListener('keydown', (event) => {
   if (event.defaultPrevented || event.isComposing) return;
 
   if (event.altKey && !event.ctrlKey && !event.metaKey && !event.shiftKey && (event.key === 'ArrowLeft' || event.key === 'ArrowRight')) {
-    // V editoru Alt+šipky patří kurzoru (CodeMirror je obslouží a událost dál nepustí).
     if (isTyping(event.target)) return;
     const target = event.key === 'ArrowLeft' ? targets.prev : targets.next;
-    if (!target) return; // bez cíle nechá prohlížeči jeho výchozí Zpět/Vpřed
+    if (!target) return;
     event.preventDefault();
     location.hash = target;
     return;
@@ -89,8 +77,6 @@ document.addEventListener('keydown', (event) => {
     appEvents.emit('notes:open', {});
   }
 });
-
-// ——— Přehled zkratek ———
 
 let dialog = null;
 
@@ -120,7 +106,6 @@ function createHelpDialog() {
     ),
     h('p', { class: 'shortcuts__note' }, 'Písmenové zkratky nefungují, když píšeš do editoru nebo do pole.'),
   );
-  // Klik na ztmavené pozadí dialog zavře.
   element.addEventListener('click', (event) => {
     if (event.target === element) element.close();
   });

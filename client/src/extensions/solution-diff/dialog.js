@@ -1,27 +1,13 @@
-// Okno „Porovnání s řešením": volitelné potvrzení, načtení souborů a řádkový diff
-// s přepínačem „Ignorovat bílé znaky". Řešení se stahuje až tady, po kliknutí.
-//
-//   openSolutionDiff({
-//     heading: 'Porovnání s řešením',
-//     intro: 'Jak to napsal autor — tvoje řešení je taky správné.',
-//     confirm: null | { title, text, accept, reject },   // bez confirm se řešení ukáže hned
-//     load: async () => ({ mine: [{ name, content }], author: [{ name, content }] }),
-//     onViewed: () => {},                                // řešení se opravdu zobrazilo
-//     labels: { mine: 'Tvůj kód', author: 'Autor' },
-//   });
 import { h, replace } from '../../dom.js';
 import { collapseUnchanged, compareFiles, plainFiles } from './hunks.js';
 
 let dialogCounter = 0;
 
-/**
- * @returns {{ element: HTMLDialogElement, close(): void }}
- */
 export function openSolutionDiff({ heading, intro = '', confirm = null, load, onViewed = () => {}, labels = {} }) {
   const names = { mine: labels.mine ?? 'Tvůj kód', author: labels.author ?? 'Autor' };
   const titleId = `solution-diff-title-${++dialogCounter}`;
   const body = h('div', { class: 'solution-diff__body' });
-  const closeButton = h('button', { type: 'button', class: 'btn btn--quiet btn--small', onclick: () => close() }, 'Zavřít');
+  const closeButton = h('button', { type: 'button', class: 'btn btn--quiet btn--small', 'aria-label': 'Close / Zavřít', onclick: () => close() }, 'Close');
   const dialog = h(
     'dialog',
     { class: 'solution-diff', 'aria-labelledby': titleId },
@@ -41,8 +27,8 @@ export function openSolutionDiff({ heading, intro = '', confirm = null, load, on
   else showSolution();
 
   function showConfirm() {
-    const reject = h('button', { type: 'button', class: 'btn btn--primary', onclick: () => close() }, confirm.reject ?? 'Ještě to zkusím');
-    const accept = h('button', { type: 'button', class: 'btn', onclick: () => showSolution() }, confirm.accept ?? 'Ukázat řešení');
+    const reject = h('button', { type: 'button', class: 'btn btn--primary', 'aria-label': (confirm.reject ?? 'Keep trying') + ' / Ještě to zkusím', onclick: () => close() }, confirm.reject ?? 'Keep trying');
+    const accept = h('button', { type: 'button', class: 'btn', 'aria-label': (confirm.accept ?? 'Show solution') + ' / Ukázat řešení', onclick: () => showSolution() }, confirm.accept ?? 'Show solution');
     replace(
       body,
       h(
@@ -69,7 +55,7 @@ export function openSolutionDiff({ heading, intro = '', confirm = null, load, on
         h('div', { class: 'notice notice--error', role: 'alert' },
           h('p', { class: 'notice__title' }, 'Řešení se nepodařilo načíst'),
           h('p', { class: 'notice__message' }, error.message ?? String(error)),
-          h('div', { class: 'notice__actions' }, h('button', { type: 'button', class: 'btn', onclick: () => showSolution() }, 'Zkusit znovu'))),
+          h('div', { class: 'notice__actions' }, h('button', { type: 'button', class: 'btn', 'aria-label': 'Try again / Zkusit znovu', onclick: () => showSolution() }, 'Try again'))),
       );
       return;
     }
@@ -107,7 +93,6 @@ export function openSolutionDiff({ heading, intro = '', confirm = null, load, on
   return { element: dialog, close };
 }
 
-/** Všechny soubory: změněné s diffem, stejné jen jménem. */
 function renderFiles(files, names) {
   const changed = files.filter((file) => file.status !== 'same');
   const same = files.filter((file) => file.status === 'same');

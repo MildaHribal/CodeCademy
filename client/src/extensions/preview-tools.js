@@ -1,11 +1,4 @@
-// Nástroje náhledu na pracovní ploše (B11): přepínač šířky a „Otevřít v nové kartě".
-//
 // Šířka náhledu (kontrakt kap. 6.7): „Jako testy" = stránka 1024 px zmenšená do panelu, tedy
-// přesně to, co vidí testy. Media dotazy reagují na šířku stránky v náhledu, ne na šířku okna,
-// takže responzivní rozvržení jde vyzkoušet bez dočasného max-width v kódu.
-// Volba se ukládá do nastavení (previewWidth) a platí pro všechny kroky.
-//
-// Nová karta otevře stejnou stránku mimo aplikaci — tam fungují skutečné DevTools a breakpointy.
 import './preview-tools.css';
 import { h } from '../dom.js';
 import { workspaceExtensions } from '../workspace/extensions.js';
@@ -34,14 +27,13 @@ workspaceExtensions.register({
     const preview = ws.preview;
     if (!preview) return;
 
-    // Runtime js nemá stránku, jen konzoli — šířka nedává smysl, nová karta ano (DevTools, breakpointy).
     if (ws.runtime !== 'js') ws.addToSlot('output-tools', widthSwitch(ws, preview), { order: 10 });
     ws.addToSlot('output-tools', newTabButton(preview), { order: 20 });
   },
 });
 
 function widthSwitch(ws, preview) {
-  const host = ws.elements.previewHost?.parentElement ?? null; // .output__preview
+  const host = ws.elements.previewHost?.parentElement ?? null;
   const canResize = typeof preview.setViewport === 'function';
 
   const buttons = PREVIEW_WIDTHS.map((width) =>

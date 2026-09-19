@@ -160,7 +160,6 @@ describe('createApp s routou nástroje', () => {
     assert.deepEqual(resets, ['ukazka/workshop']);
     assert.deepEqual(Object.keys((await call('GET', '/api/nastroj')).data.items), ['ukazka/kviz']);
 
-    // Neplatné id resettery nezavolá.
     assert.equal((await call('POST', '/api/progress/reset', { id: '../x' })).status, 400);
     assert.deepEqual(resets, ['ukazka/workshop']);
   });

@@ -1,18 +1,8 @@
-// Relace běžícího procesu v jedné obrazovce (pracovní plocha node, projekt).
-//
-// Hlídá „svůj" proces: spustí ho, průběžně stahuje výstup (GET …/output?since=),
-// pozná, kdy skončil, a při odchodu z obrazovky ho zastaví. Bez DOM, aby šla
-// otestovat v Node (tools/dev-process-unit.test.js) — UI se napojí přes on('change'/'output').
 import { createEmitter } from '../../core/registry.js';
 import { devProcessApi } from './api.js';
 
 const STREAM_LEVELS = { stdout: 'log', stderr: 'error', system: 'system' };
 
-/**
- * Záznamy výstupu → řádky konzole. Sousední záznamy stejného proudu se spojí
- * (jeden console.log může přijít rozdělený) a koncový nový řádek se odřízne.
- * @returns {{ level: 'log'|'error'|'system', text: string }[]}
- */
 export function chunksToEntries(chunks) {
   const entries = [];
   let last = null;
@@ -29,8 +19,6 @@ export function chunksToEntries(chunks) {
     .filter((entry) => entry.text !== '');
 }
 
-// Relace podle prvku panelu: output-node.js relaci vytvoří, rozšíření (HTTP klient)
-// ji najde přes ws.elements.output.
 const sessionsByElement = new WeakMap();
 
 export function attachSession(element, session) {
@@ -41,10 +29,6 @@ export function sessionFor(element) {
   return element ? sessionsByElement.get(element) ?? null : null;
 }
 
-/**
- * @param {{ api?, pollMs?: number, retryMs?: number, timers?: { set, clear } }} options
- *   api a timers jdou podstrčit v testech
- */
 export function createDevProcessSession({
   api = devProcessApi,
   pollMs = 300,
@@ -52,17 +36,17 @@ export function createDevProcessSession({
   timers = { set: (fn, ms) => setTimeout(fn, ms), clear: (id) => clearTimeout(id) },
 } = {}) {
   const events = createEmitter();
-  let process = null; // poslední známý DevProcess
-  let ownId = null; // id procesu, který spustila tahle relace
+  let process = null;
+  let ownId = null;
   let since = 0;
   let pollTimer = null;
   let polling = false;
   let starting = false;
   let stopping = false;
-  let stale = false; // kód se od spuštění změnil
-  let error = null; // poslední chyba spojení se serverem Akademie
+  let stale = false;
+  let error = null;
   let disposed = false;
-  let generation = 0; // zvýší se při každém startu — staré odpovědi výstupu se zahodí
+  let generation = 0;
 
   const state = () => ({
     process,
@@ -81,7 +65,6 @@ export function createDevProcessSession({
   }
 
   async function poll() {
-    // Poll zavolaný přímo (po startu, po stop) nahradí naplánovaný.
     timers.clear(pollTimer);
     pollTimer = null;
     if (disposed || polling || !ownId) return;
@@ -92,7 +75,6 @@ export function createDevProcessSession({
       if (disposed || pollGeneration !== generation) return;
       error = null;
       if (!data.process || data.process.id !== ownId) {
-        // Mezitím spustil proces někdo jiný (jiná karta) — výstup už není náš.
         process = data.process;
         ownId = null;
         events.emit('output', [{ level: 'system', text: 'Proces převzala jiná obrazovka nebo karta.' }]);
@@ -116,20 +98,15 @@ export function createDevProcessSession({
       schedulePoll(retryMs);
     } finally {
       polling = false;
-      // Mezitím začal nový běh a jeho první poll se kvůli tomuhle přeskočil — dohnat.
       if (pollGeneration !== generation && ownId && !disposed && !pollTimer) schedulePoll(0);
     }
   }
 
-  /**
-   * Spustí proces (běžící proces se na serveru nejdřív zastaví).
-   * @param {{ files?, project?, main?, env? }} body  tělo POST /api/dev-process/start
-   */
   async function start(body) {
     if (disposed) return null;
     starting = true;
     error = null;
-    ownId = null; // odpovědi výstupu starého běhu už nepatří nikomu
+    ownId = null;
     generation++;
     changed();
     try {
@@ -141,7 +118,7 @@ export function createDevProcessSession({
       stale = false;
       starting = false;
       changed();
-      await poll(); // výstup, který vznikl před odpovědí (a u skriptu celý)
+      await poll();
       return process;
     } catch (err) {
       starting = false;
@@ -150,14 +127,13 @@ export function createDevProcessSession({
     }
   }
 
-  /** Zastaví vlastní proces. Cizí proces (z jiné obrazovky) nechá být. */
   async function stop({ keepalive = false } = {}) {
     if (!state().running) return false;
     stopping = true;
     changed();
     try {
       const data = await api.stop({ keepalive });
-      if (!disposed) await poll(); // dočte „Proces zastaven." a nový stav
+      if (!disposed) await poll();
       return data.stopped;
     } finally {
       stopping = false;
@@ -165,7 +141,6 @@ export function createDevProcessSession({
     }
   }
 
-  /** Načte stav z serveru bez spouštění (např. po otevření obrazovky). */
   async function refresh() {
     const data = await api.get();
     if (disposed) return null;
@@ -179,17 +154,12 @@ export function createDevProcessSession({
     return api.request(body, options);
   }
 
-  /** Kód v editoru se změnil — běžící server má starou verzi. */
   function markChanged() {
     if (!state().running || stale) return;
     stale = true;
     changed();
   }
 
-  /**
-   * Odchod z obrazovky: přestane stahovat výstup a vlastní běžící proces zastaví
-   * (keepalive, aby požadavek doběhl i při zavírání stránky).
-   */
   function dispose() {
     if (disposed) return;
     const shouldStop = state().running || starting;

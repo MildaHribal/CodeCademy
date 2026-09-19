@@ -1,5 +1,3 @@
-// Prvky českého zobrazení výsledků testů: detail nesplněného požadavku a souhrn kontroly.
-// Texty z uživatelova kódu (hodnoty, hlášky) jdou vždy přes textContent, nikdy jako HTML.
 import { h } from '../../dom.js';
 import { refHref } from '../../../../shared/refs.js';
 import { explainError, groupUndefinedNames } from '../../../../shared/errors-cs.js';
@@ -7,16 +5,10 @@ import {
   comparesEquality, explainResult, firstFailedIndex, highlightDifference, inlineCodeSegments, locationInMessage, valueLabels,
 } from './format.js';
 
-/** Text s `inline kódem` jako prvky. */
 function inlineText(text) {
   return inlineCodeSegments(text).map((part) => (part.code ? h('code', {}, part.text) : part.text));
 }
 
-/**
- * České vysvětlení chyby: věta, nejčastější příčiny a odkaz na výklad, pod tím anglický originál.
- * @param {{ id, title, causes, see }} explanation  výsledek explainError
- * @param {string | null} original  anglická hláška (null = nezobrazovat)
- */
 export function renderExplanation(explanation, original = null) {
   const href = explanation.see ? refHref(explanation.see) : null;
   return h(
@@ -30,7 +22,6 @@ export function renderExplanation(explanation, original = null) {
   );
 }
 
-/** Hodnota se zvýrazněnou lišící se částí. */
 function renderValue(segments) {
   return h(
     'code',
@@ -39,7 +30,6 @@ function renderValue(segments) {
   );
 }
 
-/** Dva řádky „Očekávám / Tvůj kód vrátil"; u deepEqual jen klíče, které se liší. */
 function renderValues(result) {
   const labels = valueLabels(result.operator);
   if (Array.isArray(result.diff) && result.diff.length) {
@@ -72,10 +62,6 @@ function renderValues(result) {
   );
 }
 
-/**
- * Detail nesplněného požadavku (registerHintResultRenderer).
- * @param {{ result, run }} input
- */
 export function renderHintFailure({ result, run }) {
   if (!result || result.pass || result.skipped || !result.error) return null;
   const hasValues = result.actual !== undefined && result.expected !== undefined;
@@ -83,21 +69,14 @@ export function renderHintFailure({ result, run }) {
 
   return h(
     'details',
-    // První selhaný požadavek je rozbalený, ať student hned vidí, co nesedí.
     { class: 'hint__error test-failure', open: firstFailedIndex(run) === result.index },
     h('summary', {}, 'Proč to neprošlo'),
-    // Vygenerovaná zpráva jen opakuje hodnoty, které jsou vidět pod ní; vysvětlení má vlastní větu.
     (hasValues && result.generatedMessage) || explanation ? null : h('p', { class: 'test-failure__message' }, result.error),
     hasValues ? renderValues(result) : null,
     explanation ? renderExplanation(explanation, result.error) : null,
   );
 }
 
-/**
- * Souhrn nesplněné kontroly (registerRunSummaryRenderer): kód nejde spustit, nebo chyby kódu.
- * @param {{ run, total, passedCount, skipped, context }} input
- * @param {{ revealLine?: (file: string, line: number) => boolean } | null} editor  jen na pracovní ploše
- */
 export function renderRunSummary({ run, total, passedCount, skipped, context }, editor) {
   if (run.syntaxError) return renderSyntaxSummary(run.syntaxError, { total, context, editor });
   const errors = run.errors ?? [];
@@ -154,7 +133,6 @@ function renderSyntaxSummary(syntaxError, { total, context, editor }) {
   ];
 }
 
-/** „Skočit na řádek N" — jen když je po ruce editor se souborem. */
 function jumpButton(where, editor) {
   if (typeof editor?.revealLine !== 'function') return null;
   return h(

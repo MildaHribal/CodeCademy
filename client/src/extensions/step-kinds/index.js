@@ -1,10 +1,4 @@
 // Druhy kroků a doplňky labu a projektu (kontrakt kap. 3.4–3.9):
-//   - štítky `debug`, `parsons`, `recall`, `choose` (slot brief-head) a čtyři kroky ladění
-//     pod popisem (slot brief-after-description),
-//   - míra změny u `debug` po úspěšné kontrole,
-//   - plocha „Seřaď řádky" místo editoru (registerStepKind),
-//   - `# --explain--` po splnění kroku, `# --approaches--` a `# --review--` u labu,
-//   - „Než začneš" nad zadáním labu a projektu, rubrika `# --review--` u projektu.
 import './step-kinds.css';
 import { h, svg } from '../../dom.js';
 import { icons } from '../../icons.js';
@@ -24,7 +18,6 @@ import { createReviewPanel } from './review.js';
 
 registerStepKind({ kind: 'parsons', createEditor: createParsonsEditor });
 
-// ——— Štítek druhu kroku a čtyři kroky ladění ———
 workspaceExtensions.register({
   id: 'step-kinds-label',
   order: 5,
@@ -35,7 +28,6 @@ workspaceExtensions.register({
   },
 });
 
-// ——— Míra změny u opravy chyby ———
 workspaceExtensions.register({
   id: 'step-kinds-debug-change',
   order: 20,
@@ -43,7 +35,7 @@ workspaceExtensions.register({
     if (ws.kind !== 'debug') return;
     const notice = h('p', { class: 'debug-change', role: 'status' });
     let remove = null;
-    let solution; // undefined = ještě nenačteno, null = nejde načíst
+    let solution;
 
     const clear = () => {
       remove?.();
@@ -62,8 +54,6 @@ workspaceExtensions.register({
       return solution;
     }
 
-    // Krok bez oblasti --edit-- by editor otevřel na prvním souboru (často index.html). Chyba je
-    // ale v souboru, který oprava mění: když uživatel ještě nic neudělal, přepni na něj.
     if (!ws.item.seed.some((file) => file.region) && !ws.state().completed) {
       const startFile = ws.editor.activeFile?.();
       let touched = false;
@@ -72,7 +62,6 @@ workspaceExtensions.register({
         if (ws.signal.aborted || touched || !files || ws.editor.activeFile?.() !== startFile) return;
         const target = files.find((file) => file.content !== ws.item.seed.find((seed) => seed.name === file.name)?.content);
         if (!target) return;
-        // Otevři soubor a postav kurzor k prvnímu řádku, který oprava mění (ne na začátek souboru).
         const seedContent = ws.item.seed.find((seed) => seed.name === target.name)?.content ?? '';
         const firstChange = diffLines(seedContent, target.content).find((line) => line.type !== 'same');
         const line = firstChange?.beforeLine ?? firstChange?.afterLine ?? 1;
@@ -96,7 +85,6 @@ workspaceExtensions.register({
   },
 });
 
-// ——— Vysvětli vlastními slovy (# --explain--) ———
 workspaceExtensions.register({
   id: 'step-kinds-explain',
   order: 30,
@@ -133,7 +121,6 @@ workspaceExtensions.register({
   },
 });
 
-// ——— Lab: jiné přístupy, rubrika, Než začneš ———
 workspaceExtensions.register({ id: 'step-kinds-approaches', order: 40, setup: setupApproaches });
 
 workspaceExtensions.register({
@@ -153,13 +140,11 @@ workspaceExtensions.register({
   order: 15,
   setup(ws) {
     if (ws.isWorkshop || ws.module.type !== 'lab') return;
-    // Na ploše je zadání v úzkém sloupci — otevřený plán by ho odsunul pod okraj, proto je sbalený.
     const panel = createPlanPanel({ sectionId: ws.module.sectionId, itemId: ws.item.id, title: ws.item.title, open: false });
     ws.addToSlot('brief-head', panel.element, { order: 30 });
   },
 });
 
-// ——— Projekt: Než začneš a rubrika ———
 projectExtensions.register({
   id: 'step-kinds-project',
   order: 20,

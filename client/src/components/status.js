@@ -1,13 +1,8 @@
-// Drobné stavové prvky: ukazatel postupu po modulech, štítek stavu, zpráva o chybě.
 
 import { h, svg } from '../dom.js';
 import { icons } from '../icons.js';
 import { percent } from '../text.js';
 
-/**
- * Pruh složený z dílků — jeden dílek za modul, vyplněný podle splnění.
- * Na první pohled je vidět, kolik modulů sekce má a které jsou hotové.
- */
 export function segmentedProgress(fractions, { label }) {
   const average = fractions.length ? fractions.reduce((a, b) => a + b, 0) / fractions.length : 0;
   return h(
@@ -31,7 +26,6 @@ export function segmentedProgress(fractions, { label }) {
   );
 }
 
-/** Štítek stavu modulu: Splněno / Rozpracováno / Nezačato. */
 export function statusBadge(status, { detail = null } = {}) {
   if (status.done) {
     return h('span', { class: 'badge badge--done' }, svg(icons.check, { size: 14 }), 'Splněno');
@@ -42,7 +36,6 @@ export function statusBadge(status, { detail = null } = {}) {
   return h('span', { class: 'badge badge--idle' }, svg(icons.circle, { size: 14 }), 'Nezačato');
 }
 
-/** Blok s chybovou hláškou a volitelnými akcemi (Zkusit znovu, Zpět…). */
 export function errorNotice({ title, message, actions = [] }) {
   return h(
     'div',
@@ -53,7 +46,6 @@ export function errorNotice({ title, message, actions = [] }) {
   );
 }
 
-/** Načítací stav — ukáže se až po chvilce, ať rychlé načtení neblikne. */
 export function loadingNotice(text = 'Načítám…') {
   return h('p', { class: 'loading', role: 'status' }, text);
 }

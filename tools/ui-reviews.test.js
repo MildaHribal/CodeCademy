@@ -72,7 +72,7 @@ describe('kvíz a opakování v prohlížeči', () => {
   test('kvíz: první špatný pokus neprozradí odpověď, „Projít jen chybné" ji napodruhé ukáže', async () => {
     const { page, errors } = await openPage('#/modul/opak/kviz');
     try {
-      await page.getByRole('radio', { name: 'Všechny najednou' }).check();
+      await page.getByRole('radio', { name: /All at once|Všechny najednou/ }).check();
       const questions = page.locator('.quiz__body .question');
       await questions.nth(2).waitFor();
       assert.equal(await questions.count(), 3);
@@ -86,10 +86,10 @@ describe('kvíz a opakování v prohlížeči', () => {
       // Otázka 1 špatně (s jistotou), otázka 2 špatně, otázka 3 správně.
       const first = questions.nth(0);
       await first.locator('.answer', { hasText: '"string"' }).click();
-      await first.getByRole('radio', { name: 'Jsem si jistý' }).check();
+      await first.getByRole('radio', { name: /I am sure|Jsem si jistý/ }).check();
       await questions.nth(1).locator('.text-answer__input').fill('3');
       await questions.nth(2).locator('.text-answer__input').fill(' 0; ');
-      await page.getByRole('button', { name: 'Vyhodnotit' }).click();
+      await page.getByRole('button', { name: /Evaluate|Vyhodnotit/ }).click();
 
       const summary = page.locator('.quiz-summary');
       await summary.waitFor();
@@ -103,13 +103,13 @@ describe('kvíz a opakování v prohlížeči', () => {
       assert.match(await summary.innerText(), /Chybné otázky/);
       assert.equal(await summary.locator('a[href="#/modul/opak/kviz"]').count(), 1, 'odkaz see u chybné otázky');
 
-      await page.getByRole('button', { name: /Projít jen chybné \(2\)/ }).click();
-      await page.getByRole('button', { name: 'Vyhodnotit' }).waitFor();
+      await page.getByRole('button', { name: /Review mistakes only \(2\)|Projít jen chybné \(2\)/ }).click();
+      await page.getByRole('button', { name: /Evaluate|Vyhodnotit/ }).waitFor();
       const retry = page.locator('.quiz__body .question');
       assert.equal(await retry.count(), 2);
       await retry.nth(0).locator('.answer', { hasText: '"integer"' }).click();
       await retry.nth(1).locator('.text-answer__input').fill('4');
-      await page.getByRole('button', { name: 'Vyhodnotit' }).click();
+      await page.getByRole('button', { name: /Evaluate|Vyhodnotit/ }).click();
 
       await page.locator('.quiz-summary').waitFor();
       assert.equal(await page.locator('.question .answer[data-state="correct"]').count(), 1, 'napodruhé se správná volba ukáže');
@@ -135,22 +135,22 @@ describe('kvíz a opakování v prohlížeči', () => {
     try {
       const slot = page.locator('.quiz__slot');
       await slot.locator('.question').waitFor();
-      await page.getByRole('button', { name: 'Další otázka' }).click();
+      await page.getByRole('button', { name: /Next question|Další otázka/ }).click();
       assert.match(await page.locator('.quiz__status').innerText(), /Nejdřív odpověz/);
 
       await slot.locator('.answer', { hasText: '"number"' }).click();
-      await page.getByRole('button', { name: 'Další otázka' }).click();
+      await page.getByRole('button', { name: /Next question|Další otázka/ }).click();
       await slot.locator('.text-answer__input').fill('2');
-      await page.getByRole('button', { name: 'Další otázka' }).click();
+      await page.getByRole('button', { name: /Next question|Další otázka/ }).click();
       await slot.locator('.code-set').waitFor(); // otázka ze sady # --code-- má kód vedle sebe
       await slot.locator('.text-answer__input').fill('0');
-      await page.getByRole('button', { name: 'Vyhodnotit' }).click();
+      await page.getByRole('button', { name: /Evaluate|Vyhodnotit/ }).click();
 
       const summary = page.locator('.quiz-summary');
       await summary.waitFor();
       assert.match(await summary.innerText(), /3 z 3/);
       assert.match(await summary.innerText(), /Kvíz je splněný/);
-      assert.equal(await page.getByRole('button', { name: /Projít jen chybné/ }).count(), 0);
+      assert.equal(await page.getByRole('button', { name: /Review mistakes only|Projít jen chybné/ }).count(), 0);
       assert.deepEqual(errors, []);
     } finally {
       await page.close();
@@ -168,17 +168,17 @@ describe('kvíz a opakování v prohlížeči', () => {
         const type = await item.getAttribute('data-type');
         if (type === 'question') {
           assert.equal(await item.locator('.answers').isVisible(), false, 'volby jsou nejdřív schované');
-          await item.getByRole('button', { name: 'Ukaž volby' }).click();
+          await item.getByRole('button', { name: /Show choices|Ukaž volby/ }).click();
           await item.locator('.answer', { hasText: '"number"' }).click();
-          await item.getByRole('radio', { name: 'Jsem si jistý' }).check();
-          await item.getByRole('button', { name: 'Zkontrolovat' }).click();
+          await item.getByRole('radio', { name: /I am sure|Jsem si jistý/ }).check();
+          await item.getByRole('button', { name: /Check|Zkontrolovat/ }).click();
           await item.locator('.question[data-result="correct"]').waitFor();
         } else {
-          await item.getByRole('button', { name: 'Ukaž odpověď' }).click();
+          await item.getByRole('button', { name: /Show answer|Ukaž odpověď/ }).click();
           assert.match(await item.locator('.reviews-free__back').innerText(), /vrací nové pole/);
-          await item.getByRole('button', { name: 'Věděl jsem', exact: true }).click();
+          await item.getByRole('button', { name: /I knew this|Věděl jsem/ }).click();
         }
-        await page.getByRole('button', { name: i === 0 ? 'Další položka' : 'Dokončit' }).click();
+        await page.getByRole('button', { name: i === 0 ? /Next item|Další položka/ : /Finish|Dokončit/ }).click();
       }
 
       await page.locator('.reviews__done').waitFor();

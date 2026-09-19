@@ -1,15 +1,3 @@
-// Vstupní bod aplikace: styly, registr obrazovek, rozšíření a přepínání obrazovek.
-//
-// Každá obrazovka je funkce render(ctx, route). Kontext jí dává:
-//   ctx.root        — prvek <main>, kam kreslí
-//   ctx.signal      — AbortSignal; zruší se, když uživatel mezitím odejde jinam
-//   ctx.onCleanup   — registrace úklidu (zničit editor, náhled, posluchače…)
-//   ctx.setCrumbs   — drobečková navigace v horní liště
-//   ctx.setLayout   — 'page' (čtení, úzký sloupec) nebo 'workspace' (celá plocha)
-//   ctx.setTitle    — titulek karty prohlížeče
-//
-// Obrazovky nástrojů se neregistrují tady, ale v client/src/extensions/<nástroj>.js
-// (načítají se automaticky) — viz docs/platforma.md.
 
 import './styles/tokens.css';
 import './styles/base.css';
@@ -43,7 +31,7 @@ const crumbs = document.querySelector('.app-bar__crumbs');
 const saveStatus = document.querySelector('.app-bar__status');
 mountHeaderMenu(document.querySelector('.app-bar__menu'));
 
-let current = null; // { controller, cleanups }
+let current = null;
 
 async function show(route) {
   if (current) {
@@ -121,7 +109,6 @@ function renderCrumbs(items) {
   crumbs.replaceChildren(list);
 }
 
-// Stav ukládání rozpracovaného kódu v horní liště.
 let hideTimer;
 progress.onSaveState((state) => {
   clearTimeout(hideTimer);

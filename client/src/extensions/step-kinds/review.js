@@ -1,11 +1,9 @@
 // Rubrika `# --review--` u projektu a labu (kontrakt kap. 3.9): body, které testy nekontrolují,
-// a rozšíření bez testů. Vždy dostupná, po projití všech testů se zvýrazní. Zaškrtání se neukládá.
 import { h } from '../../dom.js';
 import { renderMarkdown } from '../../markdown.js';
 
 let reviewCounter = 0;
 
-/** @returns {{ element: HTMLElement, highlight(passed: boolean): void }} */
 export function createReviewPanel(review, { isProject = false } = {}) {
   const uid = `review-${++reviewCounter}`;
   const done = h('p', { class: 'review__passed', hidden: true }, 'Testy prošly. Teď projdi body, které testy nekontrolují.');

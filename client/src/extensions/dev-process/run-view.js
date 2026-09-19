@@ -1,11 +1,5 @@
-// Společné kousky UI běžícího procesu: řádek stavu a napojení výstupu na konzoli.
-// Používá je výstup kroku (workspace/output-node.js) i panel projektu (index.js).
 import { h } from '../../dom.js';
 
-/**
- * Řádek stavu: „Poslouchá na http://127.0.0.1:41234" s odkazem do nové karty,
- * „Program běží", „Skončil s kódem 1"… a upozornění, když se kód od spuštění změnil.
- */
 export function createRunStatus(session) {
   const dot = h('span', { class: 'dev-status__dot', 'aria-hidden': 'true' });
   const text = h('span', { class: 'dev-status__text' });
@@ -51,7 +45,6 @@ export function createRunStatus(session) {
   return { element, update, destroy: off };
 }
 
-/** Výstup procesu → konzole (stdout = log, stderr = chyba, zprávy platformy = info). */
 export function connectConsole(session, consolePanel) {
   return session.on('output', (entries) => consolePanel.receive(entries));
 }

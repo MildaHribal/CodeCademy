@@ -1,4 +1,3 @@
-// Spuštění serveru Akademie: `node server/index.js` (port z PORT, výchozí 4300).
 import path from 'node:path';
 import { createApp } from './app.js';
 
@@ -26,10 +25,6 @@ server.listen(port, host, () => {
   console.log(`Server Akademie poslouchá na http://${host}:${server.address().port}`);
 });
 
-// Při Ctrl+C, ukončení nebo zavření terminálu (SIGHUP) skončí proces přes process.exit,
-// aby node-runner stihl zabít testy, které zrovna běží (reaguje na událost 'exit').
-// Bez obsluhy by signál proces ukončil bez 'exit' a test se zaseknutou smyčkou by
-// dál běžel na pozadí — testy mají vlastní skupinu procesů, terminál je nezabije.
 for (const signal of ['SIGINT', 'SIGTERM', 'SIGHUP']) {
   process.on(signal, () => {
     server.close();

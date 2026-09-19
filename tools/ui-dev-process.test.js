@@ -92,17 +92,17 @@ describe('rozhraní nástroje dev-process', () => {
       await http.locator('.dev-http__idle').waitFor();
       assert.equal(await http.locator('.dev-http__send').isDisabled(), true, 'bez běžícího serveru nejde nic poslat');
 
-      await output.getByRole('button', { name: 'Spustit' }).click();
+      await output.getByRole('button', { name: /Run|Spustit/ }).click();
       await status.and(page.locator('[data-tone="running"]')).waitFor({ timeout: 10000 });
       assert.match(await status.textContent(), /Poslouchá na http:\/\/127\.0\.0\.1:\d+/);
       const url = await status.locator('a').getAttribute('href');
       assert.equal(url, (await currentProcess()).url);
       await output.locator('.console__entry', { hasText: 'Knihovna běží' }).waitFor();
-      await output.getByRole('button', { name: 'Spustit znovu' }).waitFor();
+      await output.getByRole('button', { name: /Run again|Spustit znovu/ }).waitFor();
 
       // GET
       await http.locator('.dev-http__path').fill('/books');
-      await http.getByRole('button', { name: 'Odeslat' }).click();
+      await http.getByRole('button', { name: /Send|Odeslat/ }).click();
       const result = http.locator('.dev-http__status');
       await result.and(page.locator('[data-tone="ok"]')).waitFor();
       assert.match(await result.textContent(), /200 OK/);
@@ -122,14 +122,14 @@ describe('rozhraní nástroje dev-process', () => {
 
       // 404 z neplatné cesty ve formuláři se ani neodešle
       await http.locator('.dev-http__path').fill('books');
-      await http.getByRole('button', { name: 'Odeslat' }).click();
+      await http.getByRole('button', { name: /Send|Odeslat/ }).click();
       await http.locator('.dev-http__problems', { hasText: 'lomítkem' }).waitFor();
 
       // Změna kódu připomene, že server běží se starou verzí.
       await typeFile(page, 'server.js', 'console.log("jiný kód")');
       await status.locator('.dev-status__note', { hasText: 'Kód se od spuštění změnil' }).waitFor();
 
-      await output.getByRole('button', { name: 'Zastavit' }).click();
+      await output.getByRole('button', { name: /Stop|Zastavit/ }).click();
       await status.filter({ hasText: 'Proces neběží' }).waitFor();
       await output.locator('.console__entry', { hasText: 'Proces zastaven.' }).waitFor();
       assert.equal((await currentProcess()).status, 'exited');
@@ -144,7 +144,7 @@ describe('rozhraní nástroje dev-process', () => {
     const page = await openPage('#/modul/dev/workshop-server/002');
     try {
       const output = page.locator('.output--node');
-      await output.getByRole('button', { name: 'Spustit' }).click();
+      await output.getByRole('button', { name: /Run|Spustit/ }).click();
       await output.locator('.dev-status[data-tone="running"]').waitFor({ timeout: 10000 });
       const running = await currentProcess();
       assert.equal(running.status, 'running');
@@ -154,7 +154,7 @@ describe('rozhraní nástroje dev-process', () => {
       const stopped = await waitForProcess((proc) => proc?.id === running.id && proc.status === 'exited');
       assert.equal(stopped.id, running.id);
 
-      await page.locator('.output--node').getByRole('button', { name: 'Spustit' }).click();
+      await page.locator('.output--node').getByRole('button', { name: /Run|Spustit/ }).click();
       const console = page.locator('.output--node .console');
       await console.locator('.console__entry', { hasText: 'Proces skončil s kódem 0.' }).waitFor({ timeout: 10000 });
       await console.locator('.console__entry--log', { hasText: 'Ahoj z kroku' }).waitFor();
@@ -169,7 +169,7 @@ describe('rozhraní nástroje dev-process', () => {
   test('opuštění stránky (pagehide) zastaví běžící server přes keepalive', async () => {
     const page = await openPage('#/modul/dev/workshop-server/002');
     try {
-      await page.locator('.output--node').getByRole('button', { name: 'Spustit' }).click();
+      await page.locator('.output--node').getByRole('button', { name: /Run|Spustit/ }).click();
       await page.locator('.output--node .dev-status[data-tone="running"]').waitFor({ timeout: 10000 });
       const running = await currentProcess();
       await page.goto('about:blank');
@@ -184,12 +184,12 @@ describe('rozhraní nástroje dev-process', () => {
     try {
       const panel = page.locator('.dev-project');
       await panel.waitFor();
-      await panel.getByRole('button', { name: 'Spustit server' }).click();
+      await panel.getByRole('button', { name: /Run server|Spustit server/ }).click();
       await panel.locator('.result__warning', { hasText: 'Nejdřív projekt založ' }).waitFor();
 
-      await page.getByRole('button', { name: 'Začít projekt' }).click();
+      await page.getByRole('button', { name: /Start project|Začít projekt/ }).click();
       await page.locator('.project__created').waitFor();
-      await panel.getByRole('button', { name: 'Spustit server' }).click();
+      await panel.getByRole('button', { name: /Run server|Spustit server/ }).click();
       await panel.locator('.dev-status[data-tone="running"]').waitFor({ timeout: 10000 });
       await panel.locator('.console__entry', { hasText: 'Projekt běží' }).waitFor();
       assert.equal(await panel.locator('.result__warning').isHidden(), true);
@@ -197,7 +197,7 @@ describe('rozhraní nástroje dev-process', () => {
       assert.equal(running.main, 'app.js', 'hlavní soubor podle scripts.start v package.json');
 
       const http = panel.locator('.dev-http');
-      await http.getByRole('button', { name: 'Odeslat' }).click();
+      await http.getByRole('button', { name: /Send|Odeslat/ }).click();
       await http.locator('.dev-http__status[data-tone="ok"]').waitFor();
       assert.equal(await http.locator('.dev-http__response').textContent(), 'Ahoj z projektu');
 

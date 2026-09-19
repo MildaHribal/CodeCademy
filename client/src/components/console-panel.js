@@ -1,4 +1,3 @@
-// Panel konzole: výpisy uživatelova kódu (console.log…), chyby a výstup procesů.
 
 import { h } from '../dom.js';
 
@@ -30,7 +29,6 @@ export function createConsolePanel({ emptyText = 'Konzole je prázdná. Co vypí
     empty.hidden = false;
   }
 
-  /** Přijme záznam z runneru: { level, text }, pole záznamů, nebo signál k vyčištění. */
   function receive(entry) {
     if (Array.isArray(entry)) return entry.forEach(receive);
     if (!entry) return;

@@ -1,13 +1,4 @@
 // Lekce: výklad v markdownu, interaktivní bloky a kontrolní otázky na konci (kontrakt kap. 5).
-//
-// Splněná je (kap. 5.8), když uživatel vyřeší všechny `:::check` bez pretestu a všechny
-// otázky z `# --questions--` a klikne „Mám přečteno". Vyřešená = zodpovězená správně,
-// nebo si odpověď nechal ukázat. Předpovědi, pretest, :::explain a :::memory splnění nepodmiňují.
-//
-// Bloky vykresluje registr (lesson/blocks.js), rozšíření obrazovky se připojují přes
-// lessonExtensions (lesson/extensions.js). Tento soubor by nástroje neměly potřebovat měnit.
-//
-// Adresa `#/modul/sekce/lekce?kotva=nadpis` po vykreslení odscrolluje na nadpis s touto kotvou
 // (kontrakt kap. 2.9).
 
 import { h, svg } from '../dom.js';
@@ -42,7 +33,6 @@ export function renderLesson(ctx, { module, nav }) {
     signal: ctx.signal,
     onCleanup: ctx.onCleanup,
     addToSlot: slots.addToSlot,
-    /** { id, label, isMet: () => boolean, element? } — element = kam skočit, když podmínka chybí */
     addRequirement(requirement) {
       requirements.push(requirement);
     },
@@ -71,7 +61,6 @@ export function renderLesson(ctx, { module, nav }) {
     slots.element('head'),
   );
 
-  // Výklad a bloky. Bloky, které potřebují být ve stránce (iframe náhledu), dostanou mount().
   const slugger = createSlugger();
   const counters = new Map();
   blocks.forEach((block, index) => {
@@ -87,7 +76,6 @@ export function renderLesson(ctx, { module, nav }) {
     try {
       rendered = renderer.render(block, { lesson, index, number, slugger });
     } catch (error) {
-      // Jeden rozbitý blok nesmí schovat zbytek výkladu.
       console.error(`Blok lekce „${block.kind}" se nepodařilo vykreslit`, error);
       article.append(h('p', { class: 'notice notice--warning' }, `Tenhle blok („${block.kind}“) se nepodařilo zobrazit: ${error.message}`));
       return;
@@ -111,13 +99,11 @@ export function renderLesson(ctx, { module, nav }) {
   scrollToAnchor(lesson, ctx);
 }
 
-/** Skok na nadpis z adresy `?kotva=` (router ji dává do route.query). */
 function scrollToAnchor(lesson, ctx) {
   const anchor = parseHash().query?.kotva;
   if (!anchor) return;
   const target = lesson.headings().find((heading) => heading.anchor === anchor)?.element;
   if (!target) return;
-  // Až po rozvržení stránky (main.js před vykreslením odscrolluje nahoru).
   requestAnimationFrame(() => {
     if (ctx.signal.aborted) return;
     target.scrollIntoView({ block: 'start' });
@@ -134,12 +120,11 @@ async function completeLesson({ ctx, module, lesson }) {
   if (!ctx.signal.aborted) appEvents.emit('lesson:complete', { lesson, id: module.id });
 }
 
-/** Otázky z `# --questions--` (každá s vlastním Zkontrolovat) a tlačítko Mám přečteno. */
 function renderFinish(container, env) {
   const { ctx, module, nav, lesson, questions } = env;
 
   if (questions.length) {
-    const evaluated = new Map(); // index → { correct }
+    const evaluated = new Map();
     const items = questions.map((question, index) => {
       const item = createStandaloneQuestion(question, {
         key: `${module.id}#${index}`,
@@ -177,7 +162,7 @@ function renderFinish(container, env) {
     return;
   }
 
-  const button = h('button', { type: 'button', class: 'btn btn--primary' }, svg(icons.check), 'Mám přečteno');
+  const button = h('button', { type: 'button', class: 'btn btn--primary', 'aria-label': 'Mark as read / Mám přečteno' }, svg(icons.check), 'Mark as read');
   const actions = h('div', { class: 'actions' }, button);
   container.append(actions);
 
@@ -201,7 +186,6 @@ function renderFinish(container, env) {
   });
 }
 
-/** Co ještě chybí, s tlačítky, která na chybějící otázku skočí. */
 function unmetMessage(unmet) {
   const jumps = unmet.map((requirement) =>
     requirement.element

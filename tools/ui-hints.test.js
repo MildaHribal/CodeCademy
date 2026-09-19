@@ -56,7 +56,7 @@ describe('nápovědy, porovnání s řešením a statistiky v UI', () => {
   /** Spustí kontrolu a počká na její výsledek. */
   async function check(kind) {
     const result = page.locator('.pane--brief .result');
-    await page.locator('.pane--brief button', { hasText: 'Zkontrolovat' }).click();
+    await page.locator('.pane--brief button', { hasText: /Check|Zkontrolovat/ }).click();
     await result.and(page.locator(`[data-kind="${kind}"]`)).waitFor({ timeout: 15000 });
   }
 
@@ -112,10 +112,10 @@ describe('nápovědy, porovnání s řešením a statistiky v UI', () => {
     const dialog = page.locator('dialog.solution-diff');
     await dialog.getByText('Chceš vidět autorovo řešení?').waitFor();
     assert.equal(await dialog.locator('.solution-diff__line').count(), 0, 'řešení se před potvrzením neukáže');
-    await dialog.getByRole('button', { name: 'Ukázat řešení' }).click();
+    await dialog.getByRole('button', { name: /Show solution|Ukázat řešení/ }).click();
     await dialog.locator('.solution-diff__line--add', { hasText: 'return a + b;' }).waitFor();
     assert.equal(await dialog.locator('.solution-diff__line--del', { hasText: 'return a - b; // pořád špatně' }).count(), 1);
-    await dialog.getByRole('button', { name: 'Zavřít' }).click();
+    await dialog.getByRole('button', { name: /Close|Zavřít/ }).click();
     await dialog.waitFor({ state: 'detached' });
 
     const attempt = await attemptWhere(STEP_1, (a) => a.solutionViewed);
@@ -141,7 +141,7 @@ describe('nápovědy, porovnání s řešením a statistiky v UI', () => {
     await authorButton.waitFor({ state: 'visible' });
     await authorButton.click();
     const dialog = page.locator('dialog.solution-diff');
-    await dialog.getByRole('heading', { name: 'Jak to napsal autor' }).waitFor();
+    await dialog.getByRole('heading', { name: /Author's solution|Jak to napsal autor/ }).waitFor();
     await dialog.locator('.solution-diff__line--add', { hasText: 'return a + b;' }).waitFor();
     // Přepínač bílých znaků přepočítá diff.
     await dialog.getByLabel('Ignorovat bílé znaky').check();
@@ -158,10 +158,10 @@ describe('nápovědy, porovnání s řešením a statistiky v UI', () => {
     await page.goto(`${baseUrl}/#/modul/napovedy/workshop/002`);
     const banner = page.locator('.solution-diff-banner');
     await banner.getByText('Pokračuješ autorovým řešením kroku 1.').waitFor();
-    await banner.getByRole('button', { name: 'Rozdíl oproti tvému' }).click();
+    await banner.getByRole('button', { name: /Difference from yours|Rozdíl oproti tvému/ }).click();
     const dialog = page.locator('dialog.solution-diff');
     await dialog.locator('.solution-diff__line--del', { hasText: 'return b + a;' }).waitFor();
-    await dialog.getByRole('button', { name: 'Zavřít' }).click();
+    await dialog.getByRole('button', { name: /Close|Zavřít/ }).click();
 
     const helpButton = page.locator('.hint-tips__button');
     assert.equal(await helpButton.textContent(), 'Potřebuju nápovědu');
@@ -171,7 +171,7 @@ describe('nápovědy, porovnání s řešením a statistiky v UI', () => {
     const seeLink = panel.locator('.hint-tips__see a');
     assert.equal(await seeLink.getAttribute('href'), '#/modul/napovedy/vyklad?kotva=scitani-cisel');
     await panel.locator('.hint-tips__see a', { hasText: 'Výklad › Sčítání čísel' }).waitFor();
-    await panel.getByRole('button', { name: 'Porovnat s řešením' }).click();
+    await panel.getByRole('button', { name: /Compare with solution|Porovnat s řešením/ }).click();
     await page.locator('dialog.solution-diff').getByText('Chceš vidět autorovo řešení?').waitFor();
     await page.keyboard.press('Escape');
     await page.locator('dialog.solution-diff').waitFor({ state: 'detached' });
@@ -180,9 +180,9 @@ describe('nápovědy, porovnání s řešením a statistiky v UI', () => {
   test('projekt: nápověda po 2 neúspěších, porovnání souborů z disku s řešením, po splnění „Jak to napsal autor"', async () => {
     const projectId = 'napovedy/projekt';
     await page.goto(`${baseUrl}/#/modul/${projectId}`);
-    await page.getByRole('button', { name: 'Začít projekt' }).click();
+    await page.getByRole('button', { name: /Start project|Začít projekt/ }).click();
     const stories = page.locator('.project__stories');
-    const checkButton = stories.getByRole('button', { name: 'Zkontrolovat' });
+    const checkButton = stories.getByRole('button', { name: /Check|Zkontrolovat/ });
     await page.locator('.project__folder .copy-field').first().waitFor();
 
     const block = page.locator('.hint-tips-project');
@@ -198,10 +198,10 @@ describe('nápovědy, porovnání s řešením a statistiky v UI', () => {
     await block.locator('.hint-tips__tip', { hasText: 'Nadpis první úrovně' }).waitFor();
     await helpButton.click(); // „Porovnat s řešením"
     const dialog = page.locator('dialog.solution-diff');
-    await dialog.getByRole('button', { name: 'Ukázat řešení' }).click();
+    await dialog.getByRole('button', { name: /Show solution|Ukázat řešení/ }).click();
     await dialog.locator('.solution-diff__line--add', { hasText: '<h1>Hotovo</h1>' }).waitFor();
     await dialog.locator('.solution-diff__line--del', { hasText: '<p>Začni tady.</p>' }).waitFor();
-    await dialog.getByRole('button', { name: 'Zavřít' }).click();
+    await dialog.getByRole('button', { name: /Close|Zavřít/ }).click();
 
     const authorBox = page.locator('.solution-diff-project');
     assert.equal(await authorBox.isHidden(), true);
@@ -209,9 +209,9 @@ describe('nápovědy, porovnání s řešením a statistiky v UI', () => {
     fs.writeFileSync(path.join(dir, 'index.html'), fs.readFileSync(path.join(CONTENT_DIR, 'napovedy', 'projekt', 'solution', 'index.html')));
     await checkButton.click();
     await stories.locator('.result[data-kind="pass"]').waitFor({ timeout: 15000 });
-    await authorBox.getByRole('button', { name: 'Jak to napsal autor' }).click();
+    await authorBox.getByRole('button', { name: /Author's solution|Jak to napsal autor/ }).click();
     await dialog.getByText('není žádný rozdíl').waitFor();
-    await dialog.getByRole('button', { name: 'Zavřít' }).click();
+    await dialog.getByRole('button', { name: /Close|Zavřít/ }).click();
 
     const attempt = await attemptWhere(projectId, (a) => a.firstOkAt !== null);
     assert.equal(attempt.checks, 3);

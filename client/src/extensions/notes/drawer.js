@@ -1,10 +1,3 @@
-// Panel poznámek: vysune se zprava nad lekcí nebo pracovní plochou, výklad zůstane vidět.
-//
-//   setNotesContext({ section, sectionTitle, itemId, title })   // obrazovka řekne, kde uživatel je
-//   openNotesDrawer({ kind: 'quote', quote: '…', anchor, heading })
-//
-// Poznámka se připíše do souboru poznámek sekce (POST /api/notes/:section/append).
-// Panel není modální: jde dál číst a psát, Escape ho zavře a fokus vrátí tam, odkud přišel.
 import { h, svg } from '../../dom.js';
 import { icons } from '../../icons.js';
 import { renderMarkdown } from '../../markdown.js';
@@ -15,9 +8,8 @@ import { cleanQuote, entrySource, entryTitle, withVisibleSources } from './forma
 const GENERAL = { section: 'obecne', sectionTitle: 'Obecné poznámky', itemId: null, title: '' };
 
 let context = GENERAL;
-let drawer = null; // { element, … } — vytvoří se při prvním otevření
+let drawer = null;
 
-/** Kde uživatel právě je. Volá rozšíření lekce / plochy; při změně obrazovky se vrátí na obecné. */
 export function setNotesContext(next) {
   context = { ...GENERAL, ...next };
 }
@@ -31,9 +23,6 @@ export function isNotesDrawerOpen() {
   return Boolean(drawer && !drawer.element.hidden);
 }
 
-/**
- * @param {{ kind?: 'note' | 'quote', quote?: string, anchor?: string | null, heading?: string | null }} options
- */
 export function openNotesDrawer(options = {}) {
   drawer ??= createDrawer();
   drawer.open({ kind: 'note', quote: '', anchor: null, heading: null, ...options });
@@ -42,7 +31,7 @@ export function openNotesDrawer(options = {}) {
 function createDrawer() {
   const titleId = 'notes-drawer-title';
   let returnFocus = null;
-  let current = null; // { kind, quote, anchor, heading, context }
+  let current = null;
   let loadController = null;
 
   const sectionLabel = h('p', { class: 'notes-drawer__section' });
@@ -65,8 +54,8 @@ function createDrawer() {
   const status = h('p', { class: 'notes-drawer__status', role: 'status' });
   const saveButton = h(
     'button',
-    { type: 'submit', class: 'btn btn--primary' },
-    h('span', { class: 'btn__label' }, 'Uložit do poznámek'),
+    { type: 'submit', class: 'btn btn--primary', 'aria-label': 'Save to notes / Uložit do poznámek' },
+    h('span', { class: 'btn__label' }, 'Save to notes'),
     h('kbd', { class: 'btn__kbd' }, 'Ctrl+Enter'),
   );
 
@@ -86,8 +75,6 @@ function createDrawer() {
     status,
   );
 
-  // Mimo lekci a krok není místo ve výkladu, na které by záznam odkázal — obecné poznámky
-  // se proto píšou rovnou do souboru na stránce Poznámky.
   const noPlace = h(
     'p',
     { class: 'notes-drawer__empty', hidden: true },
@@ -184,7 +171,6 @@ function createDrawer() {
     }
     const rendered = renderMarkdown(withVisibleSources(content), { className: 'prose notes-prose notes-prose--compact' });
     existing.replaceChildren(rendered);
-    // Nejnovější záznam je na konci souboru — ten je v panelu nejužitečnější.
     existing.scrollTop = existing.scrollHeight;
   }
 

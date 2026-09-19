@@ -14,7 +14,6 @@ http.createServer((req, res) => res.end('pong ' + req.url)).listen(process.env.P
 console.log('server běží');
 `;
 
-/** Vrátí true, když na portu něco přijímá spojení. */
 function isListening(port) {
   return new Promise((resolve) => {
     const socket = net.connect({ host: '127.0.0.1', port });
@@ -296,7 +295,6 @@ describe('runNodeTests', () => {
     await assert.rejects(runNodeTests({ files: [{ name: '../ven.js', content: '' }], hints: [] }), InputError);
     await assert.rejects(runNodeTests({ files: [{ name: '/etc/x.js', content: '' }], hints: [] }), InputError);
     await assert.rejects(runNodeTests({ files: [], hints: [{ text: 'bez testu' }] }), InputError);
-    // Kolize jmen (soubor i adresář stejného jména) je chyba vstupu (400), ne chyba serveru.
     await assert.rejects(
       runNodeTests({ files: [{ name: 'a', content: '' }, { name: 'a/b.js', content: '' }], hints: [] }),
       InputError,
@@ -330,9 +328,6 @@ describe('runNodeFile', () => {
   });
 });
 
-// Regrese: `npm run overit` staví runner Vitem a ten si v procesu nastaví NODE_ENV=production.
-// Kdyby se proměnná dědila do testů kroků, načetla by se produkční sestavení knihoven —
-// React bez `React.act`, a testy komponent (@testing-library/react) by padaly.
 describe('testy kroků běží v čistém prostředí', () => {
   const original = process.env.NODE_ENV;
 
@@ -397,7 +392,6 @@ describe('úklid, když server skončí uprostřed testu', () => {
     fs.rmSync(scratch, { recursive: true, force: true });
   });
 
-  /** Počká, až soubor existuje a má obsah; vrátí ho. */
   async function waitForFile(file, timeoutMs = 10000) {
     const deadline = Date.now() + timeoutMs;
     while (Date.now() < deadline) {
@@ -436,7 +430,7 @@ describe('úklid, když server skončí uprostřed testu', () => {
 
     const { harness, port, sleepPid } = JSON.parse(await waitForFile(infoFile));
     t.after(() => {
-      try { process.kill(-harness, 'SIGKILL'); } catch { /* skupina už neběží — tak to má být */ }
+      try { process.kill(-harness, 'SIGKILL'); } catch { }
     });
     parent.kill('SIGKILL');
 
@@ -471,7 +465,7 @@ describe('úklid, když server skončí uprostřed testu', () => {
         hints: [{ text: 'smyčka', test: `(await import('node:fs')).writeFileSync(${JSON.stringify(pidFile)}, String(process.pid)); while (true) {}` }],
         timeoutMs: 60000,
       }),
-    }).catch(() => {}); // odpověď nepřijde, server skončí
+    }).catch(() => {});
 
     const harness = Number(await waitForFile(pidFile));
     server.kill('SIGHUP');

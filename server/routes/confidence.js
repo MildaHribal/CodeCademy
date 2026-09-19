@@ -1,9 +1,3 @@
-// Jistota odpovědí (kontrakt kap. 12.4): /api/confidence, /api/confidence/:section.
-//
-// Přičítá se jen odpověď, u které uživatel zvolil „Jsem si jistý" nebo „Tipuju":
-// - z první i každé další odpovědi na otázku (událost attempts:recorded, id q:…),
-// - z odpovědi v opakování (událost reviews:answered).
-// Reset postupu jistotu nemaže.
 import { FILE_NAME, addAnswer, emptyConfidence, migrateConfidence, sectionConfidence, sectionOfItem } from './_confidence-store.js';
 
 export function register(router, ctx) {

@@ -1,11 +1,8 @@
-// Výsledek kontroly v patičce zadání: běží / chyba / nesplněno / splněno.
-// Souhrn nesplněné kontroly jde nahradit rendererem (components/test-result.js).
 
 import { h, svg, append } from '../dom.js';
 import { icons } from '../icons.js';
 import { renderRunSummary } from '../components/test-result.js';
 
-/** Výchozí souhrn nesplněné kontroly. */
 function defaultFailSummary({ run, total, passedCount, skipped }) {
   const out = [
     h('p', { class: 'result__title' }, `Splněno ${passedCount} z ${total}.`),
@@ -23,11 +20,6 @@ function defaultFailSummary({ run, total, passedCount, skipped }) {
   return out;
 }
 
-/**
- * @param {HTMLElement} result
- * @param {'running'|'error'|'fail'|'pass'} kind
- * @param {{ item, message?, run?, saveError?, nextAction?: Element, passText?: string }} details
- */
 export function showResult(result, kind, details = {}) {
   result.dataset.kind = kind;
   result.replaceChildren();
@@ -58,7 +50,6 @@ export function showResult(result, kind, details = {}) {
     return;
   }
 
-  // kind === 'pass'
   append(result, [
     h('p', { class: 'result__title' }, svg(icons.check, { size: 18 }), details.passText),
     details.saveError ? h('p', { class: 'result__warning' }, `Splnění se nepodařilo uložit: ${details.saveError.message}`) : null,

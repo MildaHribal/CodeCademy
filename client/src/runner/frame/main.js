@@ -1,19 +1,4 @@
-// Běhové prostředí uvnitř sandboxovaného iframu: zachytí konzoli a chyby,
-// hlídá smyčky, spustí test a výsledky pošle rodiči přes postMessage.
-//
-// POZOR: funkce se do iframu vkládá jako text (viz `frame-script.js`), nesmí používat
-// nic mimo své tělo. Všechno potřebné dostane v `config` a `parts`.
 
-/**
- * @param {{ channel: string, runId: string, mode: 'test'|'page'|'preview'|'inspect', runtime: string,
- *   libs?: string[], files: Record<string, string>, test: string|null, timeoutMs: number, loopLimitMs: number,
- *   sources: Array<{ name: string, lineOffset: number }>, moduleFiles: string[],
- *   filePrefix: string, guardGlobal: string, settleMs: number, cssVariables: Record<string, string>,
- *   inspect?: Array<{ id, property, selector }>,
- *   storage?: { localStorage?: Record<string, string>, sessionStorage?: Record<string, string> } }} config
- * @param {{ formatValue, createAssert, describeAssertion, stripComments, findCssRules, createHelpers,
- *   createLoopGuard, findInactiveDeclarations, importModule }} parts
- */
 export function frameMain(config, parts) {
   const parentWindow = window.parent;
   const setTimer = window.setTimeout.bind(window);
@@ -25,8 +10,6 @@ export function frameMain(config, parts) {
   function send(type, payload = {}) {
     parentWindow.postMessage(Object.assign({ channel: config.channel, runId: config.runId, type }, payload), '*');
   }
-
-  // --- Konzole a chyby -------------------------------------------------------
 
   const logs = [];
   const errors = [];
@@ -52,7 +35,6 @@ export function frameMain(config, parts) {
     send('console', entry);
   }
 
-  /** where = { file, line, column } nebo null — kvůli označení řádku v editoru. */
   function addError(text, where = null) {
     if (!hasRoom()) return;
     const limited = limitText(text);
@@ -60,7 +42,6 @@ export function frameMain(config, parts) {
     send('error', Object.assign({ text: limited }, where ?? {}));
   }
 
-  /** console.log('%s má %d let', 'Eva', 30) → "Eva má 30 let" */
   function formatArguments(args) {
     const list = [...args];
     let head = '';
@@ -97,11 +78,6 @@ export function frameMain(config, parts) {
 
   const SOURCE_URL_PREFIX = 'akademie/';
 
-  /**
-   * Kde chyba vznikla. Skripty mají `//# sourceURL=akademie/<soubor>`, takže prohlížeč hlásí
-   * přímo jméno souboru; data: URL s číslem zdroje je záloha.
-   * @returns {{ file: string, line?: number, column?: number } | null}
-   */
   function locate(filename, lineno, colno) {
     const name = String(filename ?? '');
     const position = (offset = 0) => Object.assign(
@@ -116,7 +92,6 @@ export function frameMain(config, parts) {
     return config.runtime === 'js' ? null : { file: 'index.html' };
   }
 
-  /** První místo v uživatelově souboru ze zásobníku volání (u chyb v Promise nic jiného nemáme). */
   function locateFromStack(error) {
     const stack = typeof error?.stack === 'string' ? error.stack : '';
     const match = /akademie\/([^\s:()]+):(\d+):(\d+)/.exec(stack);
@@ -154,12 +129,6 @@ export function frameMain(config, parts) {
     addError(`${describeError(event.reason)} (neošetřená chyba v Promise)`, locateFromStack(event.reason));
   });
 
-  // --- Úložiště v sandboxu (localStorage, sessionStorage) -------------------------
-  //
-  // Iframe bez allow-same-origin při čtení localStorage vyhodí SecurityError. Kód uživatele
-  // (seznam úkolů, nastavení) by pak spadl ještě před testem. Proto dostane náhradu v paměti,
-  // čerstvou pro každý běh a naplněnou z `config.storage` (RunRequest.storage).
-
   function createMemoryStorage(initial) {
     const data = new Map(Object.entries(initial ?? {}).map(([key, value]) => [String(key), String(value)]));
     const methods = {
@@ -173,7 +142,6 @@ export function frameMain(config, parts) {
       },
       clear: () => data.clear(),
     };
-    // Proxy, aby fungoval i zápis `localStorage.theme = 'dark'` a `Object.keys(localStorage)`.
     return new Proxy(methods, {
       get: (target, property) => {
         if (property === 'length') return data.size;
@@ -204,16 +172,13 @@ export function frameMain(config, parts) {
     } catch {
       available = false;
     }
-    if (available) continue; // stránka v nové kartě má skutečné úložiště
+    if (available) continue;
     const storage = createMemoryStorage(config.storage?.[name]);
     try {
       Object.defineProperty(window, name, { configurable: true, enumerable: true, get: () => storage });
     } catch {
-      // prohlížeč vlastnost přepsat nedovolí — kód uživatele dostane původní chybu
     }
   }
-
-  // --- Custom properties z ovládacích prvků (Preview.setCssVariables) ------------
 
   function applyCssVariables(vars) {
     const style = document.documentElement?.style;
@@ -226,8 +191,6 @@ export function frameMain(config, parts) {
   }
   applyCssVariables(config.cssVariables);
 
-  // --- Ochrana smyček ----------------------------------------------------------
-
   let loopError = null;
   let testStarted = false;
   const guard = parts.createLoopGuard({
@@ -235,15 +198,12 @@ export function frameMain(config, parts) {
     sticky: isTest,
     onTrip(message) {
       if (!loopError) loopError = message;
-      // Smyčka už při načítání stránky zasekne stejně i každý další test (runner je pak přeskočí).
       const phase = testStarted ? 'test' : 'load';
-      // Výsledek až v dalším úkolu, aby rodič stihl dostat i nezachycenou chybu smyčky do `errors`.
       if (isTest) setTimer(() => finishTest(false, message, phase), 0);
     },
   });
   Object.defineProperty(window, config.guardGlobal, { value: guard, enumerable: false, writable: false, configurable: false });
 
-  // V testu nesmí okno alert/confirm/prompt zastavit běh (iframe je neviditelný).
   if (config.mode !== 'preview') {
     window.alert = (message) => addLog('info', `alert: ${message ?? ''}`);
     window.confirm = (message) => {
@@ -255,8 +215,6 @@ export function frameMain(config, parts) {
       return null;
     };
   }
-
-  // --- Požadavky na rodiče (resize) --------------------------------------------
 
   const pendingRequests = new Map();
   let nextRequestId = 1;
@@ -272,7 +230,6 @@ export function frameMain(config, parts) {
       applyCssVariables(data.vars);
     }
   });
-  // Rodič teď může posílat zprávy (dřívější zprávy by šly ještě do prázdné stránky).
   if (config.mode === 'preview') send('ready');
 
   function requestResize(width, height) {
@@ -291,14 +248,8 @@ export function frameMain(config, parts) {
     return parts.importModule(config.filePrefix + clean);
   }
 
-  // --- Spuštění testu ------------------------------------------------------------
-
   let finished = false;
 
-  /**
-   * phase: 'load', když test selhal ještě před svým spuštěním (smyčka při načítání stránky).
-   * details: errorName a u asercí actual/expected/operator/generatedMessage/diff (describeAssertion).
-   */
   function finishTest(pass, error, phase = 'test', details = null) {
     if (finished) return;
     finished = true;
@@ -310,21 +261,12 @@ export function frameMain(config, parts) {
     const start = () => {
       if (started) return;
       started = true;
-      setTimer(callback, 0); // ať doběhnou i obsluhy `load` uživatele
+      setTimer(callback, 0);
     };
     window.addEventListener('load', start);
-    // Pojistka: obrázek z nedostupné adresy umí `load` zdržet donekonečna.
     document.addEventListener('DOMContentLoaded', () => setTimer(start, 3000));
   }
 
-  /**
-   * Šířka, se kterou prohlížeč opravdu počítá rozvržení stránky.
-   *
-   * Iframe v odděleném procesu se nejdřív rozvrhne s nulovou velikostí. Nová velikost
-   * se do `innerWidth` a `clientWidth` propíše hned, do samotného layoutu až o chvíli
-   * později. Do té doby mají všechny prvky nulovou šířku, i když `innerWidth` hlásí 1024.
-   * Pevně umístěný prvek přes celé okno ukáže, jakou šířku layout skutečně používá.
-   */
   function layoutViewportWidth() {
     const probe = document.createElement('div');
     probe.style.cssText = [
@@ -342,7 +284,6 @@ export function frameMain(config, parts) {
     return expected > 0 && Math.abs(layoutViewportWidth() - expected) <= 1;
   }
 
-  /** Počká, až má iframe velikost a layout ji opravdu používá (nejvýš `limitMs`). */
   async function waitForLayout(limitMs = 2000) {
     const deadline = Date.now() + limitMs;
     while (Date.now() < deadline) {
@@ -355,15 +296,12 @@ export function frameMain(config, parts) {
     await waitForLayout();
   }
 
-  // --- Knihovny a React: počkat, až stránka doběhne ------------------------------
-
   const usesTailwind = Array.isArray(config.libs) && config.libs.includes('tailwind');
 
   function macrotask() {
     return new Promise((resolve) => setTimer(resolve, 0));
   }
 
-  /** Úloha přes MessageChannel — tou plánuje práci React (scheduler). */
   function messageTask() {
     return new Promise((resolve) => {
       const channel = new MessageChannel();
@@ -375,11 +313,6 @@ export function frameMain(config, parts) {
     });
   }
 
-  /**
-   * Tailwind (browser) staví CSS asynchronně a každé sestavení značí v performance
-   * (`Build #N (full)` začátek jako mark, konec jako measure). Hotovo = aspoň jedno plné
-   * sestavení a žádné rozpracované.
-   */
   function tailwindIdle() {
     if (typeof performance?.getEntriesByType !== 'function') return true;
     const started = new Set();
@@ -400,13 +333,12 @@ export function frameMain(config, parts) {
     if (!usesTailwind) return;
     const deadline = Date.now() + limitMs;
     while (Date.now() < deadline) {
-      await macrotask(); // MutationObserver Tailwindu musí nejdřív uvidět změny
+      await macrotask();
       if (tailwindIdle()) return;
       await new Promise((resolve) => setTimer(resolve, 10));
     }
   }
 
-  /** helpers.flush(): doběhnou mikroúlohy, naplánované vykreslení Reactu (i efekty) a Tailwind. */
   async function flush() {
     for (let round = 0; round < 3; round++) {
       await messageTask();
@@ -425,7 +357,6 @@ export function frameMain(config, parts) {
       configurable: true,
     });
     const script = document.createElement('script');
-    // Klasický skript: test tak vidí top-level let/const/function uživatelova skriptu.
     script.textContent = `${registerName}(async function (assert, files, logs, errors, helpers) {\n${source}\n});`;
     definingTest = true;
     testDefinitionError = null;
@@ -439,12 +370,10 @@ export function frameMain(config, parts) {
 
   async function runTest() {
     await waitForViewport();
-    // Stránka s Reactem nebo Tailwindem je hotová, až doběhne první vykreslení a CSS.
     if (config.runtime === 'react' || usesTailwind) await flush();
     if (finished) return;
     testStarted = true;
     send('test-start');
-    // Pustíme zprávu ven dřív, než test případně zablokuje vlákno nekonečnou smyčkou.
     await new Promise((resolve) => setTimer(resolve, 0));
     if (loopError) return finishTest(false, loopError, 'load');
 
@@ -482,13 +411,11 @@ export function frameMain(config, parts) {
   if (isTest) {
     whenPageLoaded(runTest);
   } else if (config.mode === 'page') {
-    // Jen načíst stránku a posbírat výpisy (živé ukázky ve verify).
     whenPageLoaded(async () => {
       if (config.runtime === 'react' || usesTailwind) await flush();
       setTimer(() => send('done'), config.settleMs);
     });
   } else if (config.mode === 'inspect') {
-    // Lint: které CSS deklarace na vykreslené stránce nic nedělají.
     whenPageLoaded(async () => {
       await waitForLayout();
       if (config.runtime === 'react' || usesTailwind) await flush();

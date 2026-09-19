@@ -1,18 +1,8 @@
 // Seřaď řádky (kind: parsons, kontrakt kap. 3.5) — výpočty bez DOM.
-//
-// Stav skládačky:
-//   items     — všechny řádky: [{ id, text, indent, distractor }] (indent = správné odsazení)
-//   pool      — id řádků v nabídce (v pořadí, jak je uživatel vidí)
-//   placed    — řádky v řešení: [{ id, indent }]
-//   blanks    — doplněné mezery: { [id řádku]: { [N]: 'text' } }
-//
-// Soubor s oblastí --edit-- se poskládá z řádků řešení a spustí se nad ním stejné testy
-// jako u běžného kroku.
 import { shuffleBy } from '../../shuffle.js';
 
 const BLANK = /__(\d+)__/g;
 
-/** Řádky řešení a distraktory jako položky skládačky. */
 export function createItems(parsons) {
   return [
     ...parsons.lines.map((line, index) => ({ id: `line-${index}`, text: line.text, indent: line.indent, distractor: false })),
@@ -20,12 +10,10 @@ export function createItems(parsons) {
   ];
 }
 
-/** Počáteční nabídka: všechny řádky zamíchané podle klíče (stejný krok = stejné pořadí). */
 export function initialPool(items, key) {
   return shuffleBy(key, items.map((item) => item.id));
 }
 
-/** Rozdělí text řádku na úseky textu a mezer k doplnění: [{ text } | { blank: N }]. */
 export function lineSegments(text) {
   const parts = [];
   let last = 0;
@@ -38,21 +26,15 @@ export function lineSegments(text) {
   return parts;
 }
 
-/** Text řádku s doplněnými mezerami a odsazením (prázdná mezera = prázdný text). */
 export function renderLine(item, indent, indentUnit, values = {}) {
   const text = item.text.replace(BLANK, (_, number) => values[number] ?? '');
   return ' '.repeat(indent * indentUnit) + text;
 }
 
-/** Soubor seedu, do jehož oblasti --edit-- se řádky vkládají. */
 export function targetSeedFile(seed, parsons) {
   return seed.find((file) => file.name === parsons.file && file.region) ?? seed.find((file) => file.region) ?? null;
 }
 
-/**
- * Soubory kroku s řádky řešení vloženými do oblasti seedu. Ostatní soubory se nemění.
- * @param {{ seed: File[], parsons, items, placed, blanks }} state
- */
 export function assembleFiles({ seed, parsons, items, placed, blanks }) {
   const target = targetSeedFile(seed, parsons);
   if (!target) return seed.map(({ name, lang, content }) => ({ name, lang, content }));
@@ -71,7 +53,6 @@ function escapeRegExp(text) {
   return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-/** Regulární výraz, který pozná řádek položky i s doplněnými mezerami (bez odsazení). */
 function itemPattern(item) {
   const numbers = [];
   const source = lineSegments(item.text)
@@ -84,11 +65,6 @@ function itemPattern(item) {
   return { regex: new RegExp(`^${source}$`), numbers };
 }
 
-/**
- * Obnoví skládačku z uloženého souboru (rozpracovaný kód v postupu). Když se text kolem
- * oblasti změnil nebo soubor nejde přečíst, vrátí null a skládačka začne od nabídky.
- * @returns {{ placed: {id, indent}[], blanks: object, pool: string[] } | null}
- */
 export function restoreState({ seed, parsons, items, files, poolOrder }) {
   const target = targetSeedFile(seed, parsons);
   const saved = files?.find((file) => file.name === target?.name);
@@ -125,13 +101,11 @@ export function restoreState({ seed, parsons, items, files, poolOrder }) {
   return { placed, blanks, pool };
 }
 
-/** Id řádků řešení, které mají jiné odsazení než ve správném řešení (distraktory se nehodnotí). */
 export function indentMismatches(items, placed) {
   const byId = new Map(items.map((item) => [item.id, item]));
   return new Set(placed.filter(({ id, indent }) => !byId.get(id).distractor && byId.get(id).indent !== indent).map(({ id }) => id));
 }
 
-/** Přesune prvek pole z indexu `from` na `to` (vrací nové pole). */
 export function moveInList(list, from, to) {
   if (to < 0 || to >= list.length || from === to) return list;
   const next = [...list];

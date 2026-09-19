@@ -1,4 +1,3 @@
-// Obsah bubliny u podtrženého místa v editoru.
 import { h } from '../../dom.js';
 import { inlineCodeSegments } from '../errors-cs/format.js';
 
@@ -6,7 +5,6 @@ function inlineText(text) {
   return inlineCodeSegments(text).map((part) => (part.code ? h('code', {}, part.text) : part.text));
 }
 
-/** @param {{ message: string, hint?: string | null, causes?: string[], original?: string }} diagnostic */
 export function renderDiagnosticMessage(diagnostic) {
   return h(
     'div',

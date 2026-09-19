@@ -1,5 +1,3 @@
-// Jednoduchý panel konzole pro náhled runtime js.
-// Třídy `akademie-console*` si může aplikace nastylovat po svém.
 
 const COLORS = { log: 'inherit', info: '#2563eb', warn: '#b45309', error: '#dc2626' };
 

@@ -1,6 +1,3 @@
-// Obrazovka #/statistiky: kde ses zasekl, které otázky nešly, kde jsi otevřel řešení
-// a kolik času jsi strávil v sekcích. Bez grafů a bodů — slouží jako mapa míst,
-// ke kterým se vyplatí vrátit (a autorovi ukáže, co je špatně vysvětlené).
 import { h } from '../../dom.js';
 import { loadCurriculum, allModules } from '../../content.js';
 import { renderMarkdown } from '../../markdown.js';
@@ -29,7 +26,6 @@ export async function renderStats(ctx) {
   }
 
   const moduleTitles = new Map(curriculum ? allModules(curriculum).map(({ module }) => [module.id, module.title]) : []);
-  /** „Workshop X · krok 3" — kde položka v kurzu leží. */
   const whereText = (id) => {
     const moduleId = id.split('/').slice(0, 2).join('/');
     const parts = [moduleTitles.get(moduleId) ?? moduleId];

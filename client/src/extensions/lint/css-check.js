@@ -1,12 +1,7 @@
-// Neplatné CSS deklarace a návrh opravy („`gap: 24` — chybí jednotka?", „myslel jsi `center`?").
-// Platnost ověřuje prohlížeč (`CSS.supports`), sem se předává jako funkce `supports`,
-// takže logika jde testovat v Node s náhradní funkcí.
 import { scanCss } from './css-scan.js';
 
-// @pravidla, uvnitř kterých jsou jiné „vlastnosti" než v běžném pravidle (src, font-display…).
 const SPECIAL_AT_RULES = /^@(font-face|page|property|counter-style|font-feature-values|font-palette-values|view-transition|position-try)\b/i;
 
-// Časté vlastnosti, které CSS.supports neumí vyjmenovat (zkratky) — pro návrh při překlepu.
 export const COMMON_PROPERTIES = [
   'align-content', 'align-items', 'align-self', 'animation', 'aspect-ratio', 'background', 'background-color',
   'background-image', 'background-position', 'background-repeat', 'background-size', 'border', 'border-bottom',
@@ -24,7 +19,6 @@ export const COMMON_PROPERTIES = [
   'vertical-align', 'visibility', 'white-space', 'width', 'word-break', 'z-index',
 ];
 
-// Klíčová slova častých vlastností — kandidáti pro „myslel jsi…?".
 export const KEYWORDS = {
   display: ['block', 'inline', 'inline-block', 'flex', 'inline-flex', 'grid', 'inline-grid', 'none', 'contents', 'flow-root', 'table'],
   position: ['static', 'relative', 'absolute', 'fixed', 'sticky'],
@@ -57,12 +51,6 @@ export const KEYWORDS = {
 const NUMBER = /^-?(\d+|\d*\.\d+)$/;
 const NUMBER_WITH_UNIT = /^(-?(?:\d+|\d*\.\d+))\s*([a-z%]+)$/i;
 
-/**
- * @param {string} text  obsah CSS souboru
- * @param {{ supports: (property: string, value: string) => boolean, knownProperties?: string[] }} options
- * @returns {Array<{ from: number, to: number, severity: 'warning', message: string, hint: string | null }>}
- *   message = česká věta s `inline kódem`, hint = návrh opravy (nebo null)
- */
 export function findInvalidDeclarations(text, { supports, knownProperties = COMMON_PROPERTIES }) {
   const problems = [];
   for (const declaration of scanCss(text)) {
@@ -73,7 +61,6 @@ export function findInvalidDeclarations(text, { supports, knownProperties = COMM
   return problems;
 }
 
-/** @returns {null | { message: string, hint: string | null }} */
 export function checkDeclaration({ property, value }, { supports, knownProperties = COMMON_PROPERTIES }) {
   const name = property.toLowerCase();
   if (name.startsWith('--') || /^-(webkit|moz|ms|o)-/.test(name)) return null;
@@ -96,7 +83,6 @@ export function checkDeclaration({ property, value }, { supports, knownPropertie
 }
 
 function suggestFix(name, value, supports) {
-  // Chybějící středník: hodnota pokračuje na dalším řádku další deklarací.
   if (/[\n;]|:\s*\S/.test(value)) {
     const firstPart = value.split(/\n|;/)[0].trim();
     if (firstPart && safeSupports(supports, name, firstPart)) return 'Chybí středník `;` na konci řádku?';
@@ -134,7 +120,6 @@ function shorten(text, max = 40) {
   return flat.length > max ? `${flat.slice(0, max - 1)}…` : flat;
 }
 
-/** Nejbližší kandidát podle počtu úprav (nejvýš 2, u dlouhých slov 3), jinak null. */
 export function closest(word, candidates) {
   let best = null;
   let bestDistance = Infinity;
@@ -149,7 +134,6 @@ export function closest(word, candidates) {
   return bestDistance > 0 && bestDistance <= limit ? best : null;
 }
 
-/** Levenshteinova vzdálenost (vložení, smazání, záměna). */
 export function editDistance(a, b) {
   const previous = Array.from({ length: b.length + 1 }, (_, index) => index);
   for (let i = 1; i <= a.length; i++) {

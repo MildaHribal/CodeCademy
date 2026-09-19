@@ -1,30 +1,11 @@
-// Řádkový diff dvou textů přes nejdelší společnou podposloupnost (LCS).
-//
-// Používá ho porovnání s řešením (tvůj kód × autorův kód) a míra změny u kroku
-// `kind: debug` (kontrakt kap. 3.4). Běží v prohlížeči i v Node, na DOM nesahá.
-//
-//   diffLines('a\nb', 'a\nc')
-//   → [{ type: 'same', text: 'a', beforeLine: 1, afterLine: 1 },
-//      { type: 'del',  text: 'b', beforeLine: 2, afterLine: null },
-//      { type: 'add',  text: 'c', beforeLine: null, afterLine: 2 }]
-//
-// Jak LCS funguje: tabulka `lengths[i][j]` říká, kolik řádků mají společných konce
-// textů od řádku i (před) a od řádku j (po). Pak se jde od začátku: když se řádky
-// shodují, jsou „same"; jinak se vydáme tím směrem, kde zůstane víc společných řádků.
-// Kód v kurzu má desítky až stovky řádků, takže čas i paměť n × m stačí.
 import { normalizeWhitespace } from './answers.js';
 
-/** Text na řádky; \r\n a samotné \r se berou jako \n. Prázdný text = žádný řádek. */
 function splitLines(text) {
   const normalized = String(text ?? '').replace(/\r\n?/g, '\n');
   if (normalized === '') return [];
   return normalized.split('\n');
 }
 
-/**
- * Délky společných podposloupností pro všechny konce: lengths[i * (m + 1) + j]
- * = LCS(a[i…], b[j…]). Jedno ploché pole místo pole polí šetří paměť.
- */
 function lcsTable(a, b, same) {
   const n = a.length;
   const m = b.length;
@@ -40,16 +21,6 @@ function lcsTable(a, b, same) {
   return lengths;
 }
 
-/**
- * Řádkový diff.
- * @param {string} before  původní text (třeba kód uživatele)
- * @param {string} after   nový text (třeba autorovo řešení)
- * @param {{ ignoreWhitespace?: boolean }} [options]
- *   ignoreWhitespace — řádky se porovnávají po sloučení bílých znaků (`normalizeWhitespace`),
- *   takže jiné odsazení nebo mezery navíc rozdíl nedělají; prázdný řádek navíc ale ano
- * @returns {{ type: 'same' | 'add' | 'del', text: string, beforeLine: number | null, afterLine: number | null }[]}
- *   `text` u 'same' je řádek z `after` (tak, jak vypadá teď); čísla řádků jsou 1-based
- */
 export function diffLines(before, after, { ignoreWhitespace = false } = {}) {
   const a = splitLines(before);
   const b = splitLines(after);
@@ -57,7 +28,6 @@ export function diffLines(before, after, { ignoreWhitespace = false } = {}) {
   const aKeys = a.map(key);
   const bKeys = b.map(key);
 
-  // Společný začátek a konec se do tabulky nedávají — u skoro stejných souborů to je většina řádků.
   let start = 0;
   while (start < a.length && start < b.length && aKeys[start] === bKeys[start]) start++;
   let endA = a.length;
@@ -85,8 +55,6 @@ export function diffLines(before, after, { ignoreWhitespace = false } = {}) {
       j++;
       continue;
     }
-    // Kudy dál: odebrat řádek z `before`, nebo přidat řádek z `after`? Tam, kde zůstane víc
-    // společných řádků. Při shodě nejdřív odebrat — změněný řádek pak vypadá jako „− starý, + nový".
     const keepAfterDel = i < midA.length ? lengths[(i + 1) * width + j] : -1;
     const keepAfterAdd = j < midB.length ? lengths[i * width + j + 1] : -1;
     if (keepAfterDel >= keepAfterAdd) {
@@ -102,15 +70,6 @@ export function diffLines(before, after, { ignoreWhitespace = false } = {}) {
   return result;
 }
 
-/**
- * Míra změny (kontrakt kap. 3.4): jaký podíl posuzovaných řádků seedu v uživatelově verzi chybí.
- * Řádky se porovnávají po `trim`, prázdné se nepočítají. Pořadí řádků hraje roli (LCS),
- * takže přeházené řádky se počítají jako změněné.
- *
- * @param {string[]} seedLines  posuzované řádky seedu (oblast --edit--, nebo celé změněné soubory)
- * @param {string} userText     uživatelova verze týchž souborů jako jeden text
- * @returns {number} 0 (nic nezměnil) … 1 (z posuzovaných řádků nezůstal žádný)
- */
 export function changeRatio(seedLines, userText) {
   const seed = seedLines.map((line) => String(line).trim()).filter((line) => line !== '');
   if (seed.length === 0) return 0;

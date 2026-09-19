@@ -1,14 +1,3 @@
-// Parser obsahových souborů Akademie: kroky (workshop/lab/projekt), kvízy, lekce, karty a pojmy.
-// Formát je popsaný v docs/kontrakt.md (kap. 2–5). Parser nesahá na disk — dostane text, vrátí data.
-//
-// Stavba souboru:
-//   1. společné nástroje (frontmatter, řádky mimo/uvnitř bloků kódu, sekce `# --jméno--`)
-//   2. otázky (kap. 4) — jeden formát pro kvíz, lekci, :::check, karty i předpověď
-//   3. seznamy bodů (checklist `--explain--`, rubrika `--review--`)
-//   4. krok workshopu, lab a projekt (kap. 3)
-//   5. kvíz (kap. 4.3)
-//   6. lekce a její bloky (kap. 5)
-//   7. karty a pojmy sekce (kap. 2.5, 2.6)
 import { createKeyAllocator } from './answers.js';
 import { collectHeadings, extractHeadings, headingAnchor } from './anchors.js';
 import { parseRef } from './refs.js';
@@ -23,21 +12,11 @@ export class ParseError extends Error {
 }
 
 export const RUNTIMES = ['dom', 'js', 'vue', 'react', 'node'];
-/**
- * Knihovny prohlížečových runtime (frontmatter a module.json `libs`, `:::live … libs=`; kap. 6.10).
- * Stejný seznam jako LIB_NAMES v client/src/runner/vendor-libs.js (hlídá tools/runner-unit.test.js).
- */
 export const LIBS = ['tailwind', 'gsap', 'motion', 'lenis', 'three'];
-/** Runtime, ve kterých jde `libs` použít. */
 export const LIB_RUNTIMES = ['dom', 'vue', 'react'];
 
-/**
- * `libs` z frontmatteru (`tailwind, gsap`), z module.json (pole nebo text) nebo z `libs=` u :::live.
- * @returns {string[]} známá jména bez duplicit v pořadí zápisu; neznámé jméno = ParseError
- */
 export function parseLibs(value, { id, line, where = 'libs' } = {}) {
   if (value === undefined || value === null || value === '') return [];
-  // Frontmatter bere i zápis se závorkami: `libs: [tailwind, gsap]`.
   const items = Array.isArray(value) ? value : typeof value === 'string' ? value.replace(/^\s*\[(.*)\]\s*$/, '$1').split(',') : null;
   if (!items || !items.every((item) => typeof item === 'string')) {
     throw new ParseError(`${where} musí být jména knihoven oddělená čárkou (${LIBS.join(', ')})`, { id, line });
@@ -51,17 +30,11 @@ export function parseLibs(value, { id, line, where = 'libs' } = {}) {
   }
   return libs;
 }
-/** Druhy kroku (frontmatter `kind`, kap. 3.1). */
 export const STEP_KINDS = ['step', 'debug', 'parsons', 'recall', 'choose'];
 
 const FENCE_OPEN = /^ {0,3}(`{3,}|~{3,})\s*([^`\s]*)?.*$/;
 const EDIT_MARKER = '--edit--';
 
-// ===========================================================================
-// 1. Společné nástroje
-// ===========================================================================
-
-/** Rozdělí text na řádky a odloupne frontmatter (jednoduché `klíč: hodnota`). */
 function splitFrontmatter(src, id) {
   const lines = String(src ?? '').replace(/\r\n?/g, '\n').split('\n');
   const meta = {};
@@ -81,11 +54,6 @@ function splitFrontmatter(src, id) {
   return { meta, lines: lines.slice(end + 1), offset: end + 1 };
 }
 
-/**
- * Projde řádky a vrátí je obohacené o informaci, jestli leží uvnitř bloku kódu:
- * kind = 'text' | 'fence-open' (s `lang`) | 'code' | 'fence-close'.
- * Nadpisy a značky se hledají jen v řádcích 'text'.
- */
 function annotate(lines, offset) {
   const out = [];
   let fence = null;
@@ -113,7 +81,6 @@ function annotate(lines, offset) {
   return out;
 }
 
-/** Řádky souboru bez frontmatteru, anotované; neuzavřený blok kódu = ParseError. */
 function readRows(src, id) {
   const { meta, lines, offset } = splitFrontmatter(src, id);
   const rows = annotate(lines, offset);
@@ -121,7 +88,6 @@ function readRows(src, id) {
   return { meta, rows };
 }
 
-/** Rozseká anotované řádky podle nadpisů `#… --jmeno-- [argument]` dané úrovně. */
 function splitSections(rows, level) {
   const re = new RegExp(`^#{${level}} --([a-z-]+)--(?:\\s+(.+?))?\\s*$`);
   const preamble = [];
@@ -138,12 +104,10 @@ function joinText(rows) {
   return rows.map((r) => r.text).join('\n').trim();
 }
 
-/** Řádek prvního neprázdného řádku (pro čísla řádků v chybách). */
 function firstTextLine(rows) {
   return rows.find((r) => r.text.trim())?.line;
 }
 
-/** Vytáhne všechny bloky kódu z řádků: [{ lang, content, line }]. */
 function fences(rows) {
   const out = [];
   let cur = null;
@@ -158,12 +122,10 @@ function fences(rows) {
   return out;
 }
 
-/** Řádky 'text' mimo bloky kódu, které nejsou prázdné. */
 function proseRows(rows) {
   return rows.filter((r) => r.kind === 'text' && r.text.trim());
 }
 
-/** Každá sekce nejvýš jednou a jen z povolených jmen → { jméno: sekce }. */
 function indexSections(sections, allowed, id, where) {
   const byName = {};
   for (const s of sections) {
@@ -179,7 +141,6 @@ export function langOf(name) {
   return { mjs: 'js', cjs: 'js', htm: 'html', yml: 'yaml' }[ext] ?? ext;
 }
 
-/** Odstraní značky --edit-- a vrátí obsah + editovatelnou oblast (řádky 1-based, včetně). */
 export function extractRegion(content, { id, name } = {}) {
   const lines = content.split('\n');
   const marks = [];
@@ -190,16 +151,11 @@ export function extractRegion(content, { id, name } = {}) {
   }
   const [a, b] = marks;
   const kept = lines.filter((_, i) => i !== a && i !== b);
-  // Po odstranění první značky začíná oblast na řádku a (0-based) → a + 1 (1-based).
   const start = a + 1;
   const end = start + (b - a - 1) - 1;
   return { content: kept.join('\n'), region: { start, end } };
 }
 
-/**
- * Soubory `#… --file-- jméno` (každý s jedním blokem kódu) v sekci.
- * @param {number} level  úroveň nadpisů souborů (2 v `--seed--`, 3 v `--approach--`)
- */
 function parseFiles(rows, { id, level, where, line, allowRegion }) {
   const { preamble, sections } = splitSections(rows, level);
   if (joinText(preamble)) {
@@ -213,7 +169,6 @@ function parseFiles(rows, { id, level, where, line, allowRegion }) {
   });
 }
 
-/** Jedna sekce `--file-- jméno` s právě jedním blokem kódu → { name, lang, content[, region] }. */
 function parseFileSection(section, { id, allowRegion }) {
   if (!section.arg) throw new ParseError('--file-- potřebuje jméno souboru', { id, line: section.line });
   const blocks = fences(section.rows);
@@ -227,14 +182,12 @@ function parseFileSection(section, { id, allowRegion }) {
   return { ...base, content, region };
 }
 
-/** Sloučí seed a řešení: řešení přepisuje soubory se stejným jménem, zbytek zůstává ze seedu. */
 export function mergeFiles(seed, solution) {
   const byName = new Map(seed.map((f) => [f.name, { name: f.name, lang: f.lang, content: f.content }]));
   for (const f of solution) byName.set(f.name, { name: f.name, lang: f.lang, content: f.content });
   return [...byName.values()];
 }
 
-/** Seznam referencí (kap. 2.9); neplatná reference = ParseError. */
 function parseRefList(values, { id, line, where }) {
   return values
     .map((value) => value.trim())
@@ -245,13 +198,6 @@ function parseRefList(values, { id, line, where }) {
     });
 }
 
-// ===========================================================================
-// 2. Otázky (kap. 4)
-// ===========================================================================
-
-/**
- * Obsah `--expected--` (a `--output--`): přesně jeden blok kódu, nebo prostý text.
- */
 function expectedContent(rows, { id, line, where }) {
   const blocks = fences(rows);
   const prose = proseRows(rows);
@@ -262,7 +208,6 @@ function expectedContent(rows, { id, line, where }) {
   return value;
 }
 
-/** Obsah `--accept--`: bloky kódu (každý jeden tvar), nebo řádky (každý neprázdný řádek jeden tvar). */
 function acceptContent(rows, { id, line, where }) {
   const blocks = fences(rows);
   if (blocks.length) {
@@ -278,10 +223,6 @@ function parseIgnoreCase(arg, { id, line }) {
   throw new ParseError(`neznámý argument "--expected-- ${arg}" (povolený je jen ignore-case)`, { id, line });
 }
 
-/**
- * Jedna otázka ze sekcí úrovně 3 (kap. 4.1, 4.2). `rows` = obsah otázky bez řádku `## --question--`.
- * Vrací otázku bez `key` — klíč přidělí volající přes přidělovač celého souboru.
- */
 function parseQuestionRows(rows, { id, line }) {
   const { preamble, sections } = splitSections(rows, 3);
   const text = joinText(preamble);
@@ -331,12 +272,10 @@ function parseQuestionRows(rows, { id, line }) {
   };
 }
 
-/** Otázka s klíčem na začátku objektu (tvar z kontraktu kap. 4.4). */
 function withKey(question, nextKey) {
   return { key: nextKey(question.text), ...question };
 }
 
-/** Řada `## --question--` (kvíz, `# --questions--` lekce). */
 function parseQuestionList(rows, { id, nextKey }) {
   const { preamble, sections } = splitSections(rows, 2);
   if (joinText(preamble)) throw new ParseError('text mimo "## --question--"', { id, line: firstTextLine(preamble) });
@@ -346,16 +285,8 @@ function parseQuestionList(rows, { id, nextKey }) {
   });
 }
 
-// ===========================================================================
-// 3. Seznamy bodů (checklist, rubrika)
-// ===========================================================================
-
 const LIST_ITEM = /^ {0,3}(?:[-*]|\d+[.)])\s+(.*)$/;
 
-/**
- * Markdown seznam, každá položka = jeden bod. Víceřádková položka pokračuje odsazenými řádky.
- * Text mimo položky = ParseError.
- */
 function parseListItems(rows, { id, line, where, nextKey }) {
   const items = [];
   for (const row of rows) {
@@ -372,7 +303,6 @@ function parseListItems(rows, { id, line, where, nextKey }) {
       }
       throw new ParseError(`v ${where} je text mimo položky seznamu: "${row.text.trim()}"`, { id, line: row.line });
     }
-    // Blok kódu smí být jen součástí položky (odsazený pod ní).
     if (!items.length) throw new ParseError(`v ${where} je blok kódu mimo položky seznamu`, { id, line: row.line });
     items.at(-1).push(row.text.replace(/^ {1,4}/, ''));
   }
@@ -383,10 +313,6 @@ function parseListItems(rows, { id, line, where, nextKey }) {
   });
 }
 
-/**
- * Vysvětli vlastními slovy (kap. 3.7, 5.5): zadání, `## --model--`, `## --checklist--`.
- * @returns {{ prompt, model, checklist: { key, text }[] }}
- */
 function parseExplainRows(rows, { id, line, nextKey }) {
   const { preamble, sections } = splitSections(rows, 2);
   const byName = indexSections(sections, ['model', 'checklist'], id, 'bloku vysvětlení');
@@ -400,15 +326,9 @@ function parseExplainRows(rows, { id, line, nextKey }) {
   return { prompt, model, checklist };
 }
 
-// ===========================================================================
-// 4. Krok workshopu, lab a projekt (kap. 3)
-// ===========================================================================
-
-/** Povolené sekce podle typu souboru (tabulka kap. 3.1). */
 const STEP_SECTIONS = {
   step: ['description', 'hints', 'help', 'seed', 'solution', 'explain', 'parsons'],
   lab: ['description', 'hints', 'help', 'seed', 'solution', 'explain', 'approaches', 'review'],
-  // Projekt bere výchozí soubory ze starter/ a řešení ze solution/ — sekce seed a solution nemá.
   project: ['description', 'hints', 'help', 'review'],
 };
 const ALL_STEP_SECTIONS = [...new Set(Object.values(STEP_SECTIONS).flat())];
@@ -444,7 +364,6 @@ function parseHints(section, id) {
   return hints;
 }
 
-/** Odstupňované nápovědy `# --help--` (kap. 3.3). */
 function parseHelp(section, { id, hintCount }) {
   const { preamble, sections } = splitSections(section.rows, 2);
   if (joinText(preamble)) throw new ParseError('v # --help-- je text mimo "## --tip--"', { id, line: firstTextLine(preamble) });
@@ -465,7 +384,6 @@ function parseHelp(section, { id, hintCount }) {
   });
 }
 
-/** Seřaď řádky `# --parsons--` (kap. 3.5) bez souboru a řešení — ty doplní parseStep. */
 function parseParsonsSection(section, { id }) {
   const { preamble, sections } = splitSections(section.rows, 2);
   const byName = indexSections(sections, ['distractors', 'blanks'], id, '# --parsons--');
@@ -539,17 +457,10 @@ function parseParsonsSection(section, { id }) {
   };
 }
 
-/** Text řádku parsons s doplněnými mezerami (`forms` = { číslo: tvar }, jinak kanonická odpověď). */
 export function fillParsonsLine(text, blanks, forms = {}) {
   return text.replace(/__(\d+)__/g, (marker, n) => forms[n] ?? blanks.find((b) => b.number === Number(n))?.accept[0] ?? marker);
 }
 
-/**
- * Soubor seedu s řádky parsons vloženými do (prázdné) oblasti `--edit--`.
- * Stejně skládá řešení parser, verify (přijatelné tvary mezer) i UI (uživatelovo pořadí).
- * @param {{ content, region }} seedFile
- * @param {{ text, indent }[]} lines
- */
 export function assembleParsons(seedFile, lines, { indentUnit, blanks = [], forms = {} }) {
   const contentLines = seedFile.content.split('\n');
   const inserted = lines.map((l) => ' '.repeat(l.indent * indentUnit) + fillParsonsLine(l.text, blanks, forms));
@@ -557,7 +468,6 @@ export function assembleParsons(seedFile, lines, { indentUnit, blanks = [], form
   return [...contentLines.slice(0, at), ...inserted, ...contentLines.slice(at)].join('\n');
 }
 
-/** Jiné přístupy `# --approaches--` (kap. 3.8). */
 function parseApproaches(section, { id, seed }) {
   const { preamble, sections } = splitSections(section.rows, 2);
   if (joinText(preamble)) throw new ParseError('v # --approaches-- je text mimo "## --approach-- název"', { id, line: firstTextLine(preamble) });
@@ -573,7 +483,6 @@ function parseApproaches(section, { id, seed }) {
   });
 }
 
-/** Rubrika `# --review--` (kap. 3.9). */
 function parseReview(section, { id, nextKey }) {
   const { preamble, sections } = splitSections(section.rows, 2);
   const byName = indexSections(sections, ['rubric', 'extensions'], id, '# --review--');
@@ -585,7 +494,6 @@ function parseReview(section, { id, nextKey }) {
   };
 }
 
-/** Popis `kind: debug` musí mít `## Hlášení` a `## Úkol` (mimo bloky kódu) v tomto pořadí. */
 function checkDebugDescription(rows, id) {
   const headings = rows.filter((r) => r.kind === 'text').map((r) => r.text.trim());
   const report = headings.indexOf('## Hlášení');
@@ -595,13 +503,6 @@ function checkDebugDescription(rows, id) {
   }
 }
 
-/**
- * Krok workshopu, lab nebo projekt.
- * @param {{ id, defaultRuntime?, defaultTitle?, defaultLibs?: string[], requireSeed?, fileKind?: 'step'|'lab'|'project' }} options
- *   requireSeed: seed a řešení jsou povinné (výchozí jen u kroku workshopu)
- *   defaultLibs: `libs` z module.json — sečtou se s `libs` z frontmatteru (kap. 6.10)
- * @returns tvar z kontraktu kap. 3.2
- */
 export function parseStep(src, { id, defaultRuntime = 'dom', defaultTitle = '', defaultLibs = [], fileKind = 'step', requireSeed = fileKind === 'step' } = {}) {
   if (!STEP_SECTIONS[fileKind]) throw new ParseError(`neznámý typ souboru "${fileKind}"`, { id });
   const { meta, rows } = readRows(src, id);
@@ -642,7 +543,6 @@ export function parseStep(src, { id, defaultRuntime = 'dom', defaultTitle = '', 
   if (ownLibs.length && !LIB_RUNTIMES.includes(runtime)) {
     throw new ParseError(`libs umí jen runtime ${LIB_RUNTIMES.join(', ')}, ne ${runtime}`, { id, line: 1 });
   }
-  // Knihovny modulu platí jen pro kroky, jejichž runtime je umí (krok js v modulu dom je nedostane).
   const moduleLibs = LIB_RUNTIMES.includes(runtime) ? parseLibs(defaultLibs, { id, where: 'module.json libs' }) : [];
   const libs = [...new Set([...moduleLibs, ...ownLibs])];
 
@@ -699,17 +599,11 @@ export function parseStep(src, { id, defaultRuntime = 'dom', defaultTitle = '', 
     approaches,
     review,
     see,
-    // Jen když krok nějaké knihovny má — výstup kroků bez knihoven se nemění.
     ...(libs.length ? { libs } : {}),
     meta,
   };
 }
 
-// ===========================================================================
-// 5. Kvíz (kap. 4.3)
-// ===========================================================================
-
-/** @returns {{ id, pass: number, questions: (Question & { code: number|null })[], codeSets: { title, files }[] }} */
 export function parseQuiz(src, { id } = {}) {
   const { meta, rows } = readRows(src, id);
   const nextKey = createKeyAllocator();
@@ -718,7 +612,6 @@ export function parseQuiz(src, { id } = {}) {
   const codeSets = [];
 
   if (sections.length === 0) {
-    // Starý formát: celý soubor je řada otázek.
     for (const q of parseQuestionList(rows, { id, nextKey })) questions.push({ ...q, code: null });
   } else {
     if (joinText(preamble)) throw new ParseError('text před první sekcí "# --questions--" nebo "# --code--"', { id, line: firstTextLine(preamble) });
@@ -760,16 +653,10 @@ export function parseQuiz(src, { id } = {}) {
   return { id, pass, questions, codeSets };
 }
 
-// ===========================================================================
-// 6. Lekce (kap. 5)
-// ===========================================================================
-
 const LIVE_NAMES = { html: 'index.html', css: 'styles.css', js: 'script.js', javascript: 'script.js' };
-/** :::live react: komponenta s výchozím exportem se vykreslí do #root sama (kap. 6.11). */
 const REACT_LIVE_NAMES = { jsx: 'App.jsx', tsx: 'App.tsx', css: 'styles.css' };
 const LESSON_BLOCKS = ['live', 'check', 'explain', 'memory', 'compare'];
 
-/** Bloky kódu html/css/js (u react jsx/tsx/css) jako soubory (každý jazyk nejvýš jednou). */
 function liveFiles(blocks, { id, line, where, runtime = 'dom' }) {
   const files = [];
   const names = runtime === 'react' ? REACT_LIVE_NAMES : LIVE_NAMES;
@@ -785,7 +672,6 @@ function liveFiles(blocks, { id, line, where, runtime = 'dom' }) {
   return files;
 }
 
-/** Hodnoty v závorkách ovládacího prvku: holé nebo v uvozovkách, oddělené čárkou. */
 function splitControlValues(text, fail) {
   const values = [];
   let rest = text.trim();
@@ -803,12 +689,10 @@ function splitControlValues(text, fail) {
   return values;
 }
 
-/** Jeden řádek bloku ```controls (kap. 5.2). */
 function parseControlLine(raw, fail) {
   const head = raw.match(/^(--[a-z][a-z0-9-]*)\s*:\s*(select|range|toggle)\s*\(/);
   if (!head) fail(`řádek "${raw}" nemá tvar "--jméno: select(…)|range(…)|toggle(…)"`);
   const [, name, type] = head;
-  // Najdi zavírací závorku mimo uvozovky.
   let i = head[0].length;
   let quoted = false;
   for (; i < raw.length; i++) {
@@ -861,15 +745,10 @@ function parseControls(content, { id, line }) {
   return controls;
 }
 
-/** Hodnota ovládacího prvku jako text do CSS: range → `${n}${unit}`, jinak zvolená možnost. */
 export function controlValue(control, value = control.default) {
   return control.type === 'range' ? `${value}${control.unit ?? ''}` : String(value);
 }
 
-/**
- * Soubory ukázky s výchozími hodnotami ovládacích prvků: na začátek `styles.css` se předřadí
- * `:root { --jméno: výchozí; … }` (soubor vznikne, když chybí). Pro verify a první vykreslení.
- */
 export function applyControlDefaults(files, controls) {
   if (!controls?.length) return files;
   const root = `:root { ${controls.map((c) => `${c.name}: ${controlValue(c)};`).join(' ')} }`;
@@ -878,7 +757,6 @@ export function applyControlDefaults(files, controls) {
   return files.map((f) => (f === css ? { ...f, content: `${root}\n${f.content}` } : f));
 }
 
-/** Značky předpovědi `--x-- obsah` (kap. 5.3): řádky před první značkou jsou bloky souborů. */
 function splitPredictMarkers(rows) {
   const markers = [];
   const fileRows = [];
@@ -906,7 +784,6 @@ function parsePredict(markers, { id, line, runtime, nextKey }) {
     }
     if (single[m.name]) throw new ParseError(`značka --${m.name}-- je v předpovědi dvakrát`, { id, line: m.line });
     single[m.name] = m;
-    // Blok souboru (html/css/js/controls) za první značkou nepatří do obsahu hodnot.
     if (['expected', 'accept', 'output', 'see'].includes(m.name)) {
       const fileBlock = fences(m.rows).find((b) => LIVE_NAMES[b.lang] || REACT_LIVE_NAMES[b.lang] || b.lang === 'controls');
       if (fileBlock) throw new ParseError(`blok souboru (${fileBlock.lang}) za první značkou předpovědi — soubory patří před --question--`, { id, line: fileBlock.line });
@@ -931,7 +808,6 @@ function parsePredict(markers, { id, line, runtime, nextKey }) {
     if (single.expected || single.accept) throw new ParseError('předpověď kombinuje --option-- a --expected--', { id, line });
     if (options.length < 2) throw new ParseError('předpověď s výběrem potřebuje aspoň 2 --option--', { id, line });
     if (!options.some((o) => o.correct)) throw new ParseError('předpověď nemá správnou možnost (--option*--)', { id, line });
-    // `why` předpovědi s výběrem vysvětluje celou otázku, ne jednu možnost.
     question = { type: 'choice', text, multiple: options.filter((o) => o.correct).length > 1, answers: options, why, see };
   } else {
     if (runtime === 'dom' || runtime === 'vue' || runtime === 'react') {
@@ -992,7 +868,6 @@ function parseLiveBlock(block, { id, nextKey }) {
     files = liveFiles(fileBlocks, { id, line: block.line, where: ':::live', runtime });
   }
   if (files.length === 0) throw new ParseError(':::live bez kódu', { id, line: block.line });
-  // Jen když ukázka nějaké knihovny má — výstup ostatních ukázek se nemění.
   const withLibs = libs.length ? { libs } : {};
 
   if (!predict) return { kind: 'live', runtime, files, controls, predict: null, output: null, ...withLibs };
@@ -1085,11 +960,8 @@ function parseCompareBlock(block, { id }) {
   return { kind: 'compare', runtime: 'dom', variants };
 }
 
-/** @returns tvar z kontraktu kap. 5.9 */
 export function parseLesson(src, { id } = {}) {
   const { rows } = readRows(src, id);
-  // Klíče otázek (:::check a # --questions--) jsou jedna řada, body checklistu druhá
-  // (id `explain:` je jiný jmenný prostor než `q:`), předpovědi třetí (nejdou do opakování).
   const keys = { question: createKeyAllocator(), explain: createKeyAllocator(), predict: createKeyAllocator() };
 
   const qIndex = rows.findIndex((r) => r.kind === 'text' && /^# --questions--\s*$/.test(r.text));
@@ -1163,10 +1035,6 @@ function parseLessonBlock(block, { id, keys }) {
   throw new ParseError(`neznámý blok :::${block.name}`, { id, line: block.line });
 }
 
-// ===========================================================================
-// 7. Karty a pojmy sekce (kap. 2.5, 2.6)
-// ===========================================================================
-
 const CARD_SECTIONS = {
   output: { required: ['expected'], optional: ['accept', 'why', 'see'] },
   code: { required: ['seed', 'test', 'solution'], optional: ['why', 'see'] },
@@ -1182,7 +1050,6 @@ function singleJsBlock(section, { id, where }) {
   return blocks[0].content;
 }
 
-/** @returns {{ id, cards: Card[] }} tvar z kontraktu kap. 2.5 */
 export function parseCards(src, { id } = {}) {
   const { rows } = readRows(src, id);
   const nextKey = createKeyAllocator();
@@ -1238,7 +1105,6 @@ export function parseCards(src, { id } = {}) {
 
 const TERM_KEYS = ['en', 'aliases', 'mdn', 'lekce'];
 
-/** @returns {{ id, terms: Term[] }} tvar z kontraktu kap. 2.6 */
 export function parseTerms(src, { id } = {}) {
   const { rows } = readRows(src, id);
   const { preamble, sections } = splitSections(rows, 2);

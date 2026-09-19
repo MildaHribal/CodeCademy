@@ -1,15 +1,8 @@
-// Sloupce se změnitelnou šířkou. Mezi každými dvěma panely je táhlo (separator),
-// které jde tahat myší i posouvat šipkami z klávesnice. Poměry se pamatují v localStorage.
 
 import { h } from '../dom.js';
 
 const KEY_STEP = 0.02;
 
-/**
- * @param {{ element: HTMLElement, min: number, share: number, label: string }[]} panes
- *   min = nejmenší šířka v px, share = výchozí podíl (součty se normalizují)
- * @param {string} storageKey
- */
 export function createColumns(panes, storageKey) {
   const total = panes.reduce((sum, p) => sum + p.share, 0);
   let shares = readStored(storageKey, panes.length) ?? panes.map((p) => p.share / total);
@@ -51,12 +44,10 @@ export function createColumns(panes, storageKey) {
       try {
         localStorage.setItem(storageKey, JSON.stringify(shares));
       } catch {
-        // Úložiště nemusí být dostupné (anonymní okno) — šířky se pak jen nezapamatují.
       }
     }
   }
 
-  /** Posune hranici mezi panelem i a i+1 tak, aby panel i měl šířku leftWidth (px). */
   function resizePair(i, leftWidth) {
     const left = panes[i].element.getBoundingClientRect().width;
     const right = panes[i + 1].element.getBoundingClientRect().width;
@@ -107,7 +98,6 @@ function readStored(key, count) {
       return value;
     }
   } catch {
-    // Neplatná nebo nedostupná hodnota — použijeme výchozí poměry.
   }
   return null;
 }

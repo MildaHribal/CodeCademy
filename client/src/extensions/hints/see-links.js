@@ -1,14 +1,8 @@
 // Odkazy `see` (reference na výklad, kontrakt kap. 2.9) jako seznam odkazů s názvy.
-// Nejdřív se ukáže reference, pak se doplní titulek modulu a text nadpisu lekce.
 import { h } from '../../dom.js';
 import { loadCurriculum, loadModule } from '../../content.js';
 import { parseRef, refHref } from '../../../../shared/refs.js';
 
-/**
- * @param {string[]} refs
- * @param {{ signal?: AbortSignal }} [options]
- * @returns {HTMLElement | null}  null, když žádná reference není platná
- */
 export function renderSeeLinks(refs, { signal } = {}) {
   const links = (refs ?? [])
     .map((ref) => ({ ref, parsed: parseRef(ref) }))
@@ -19,13 +13,12 @@ export function renderSeeLinks(refs, { signal } = {}) {
         .then((label) => {
           if (!signal?.aborted && label) anchor.textContent = label;
         })
-        .catch(() => {}); // bez názvu zůstane vidět reference, odkaz funguje dál
+        .catch(() => {});
       return h('li', {}, anchor);
     });
   return links.length ? h('ul', { class: 'hint-tips__see' }, links) : null;
 }
 
-/** „Titulek modulu › nadpis" nebo „Titulek modulu › krok 3". */
 async function describeRef(parsed) {
   const curriculum = await loadCurriculum();
   const module = curriculum.parts

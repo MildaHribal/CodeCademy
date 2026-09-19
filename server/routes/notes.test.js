@@ -59,10 +59,8 @@ describe('poznámky — HTTP API', () => {
       dataDir: path.join(root, 'data'),
       projectsDir: path.join(root, 'moje-projekty'),
       distDir: path.join(root, 'dist'),
-      // Jen jádro a poznámky: test nezávisí na rozpracovaných routách jiných nástrojů.
       routes: routeModules.filter((m) => ['curriculum.js', 'progress.js', 'notes.js'].includes(m.name)),
     });
-    // Porty balíku poznámek a nastavení: 4500–4519 (docs/platforma.md, kap. 7.1).
     baseUrl = `http://127.0.0.1:${await listenInRange(server, { from: 4500, to: 4519 })}`;
   });
 
@@ -144,17 +142,14 @@ describe('poznámky — HTTP API', () => {
     assert.match(saved.data.updated, ISO);
     assert.equal(fs.readFileSync(notesFile('ukazka'), 'utf8'), '# Moje poznámky\n\nUpraveno ručně.\n');
 
-    // Soubor se mezitím změnil (jiné okno): klient posílá původní baseUpdated.
     await new Promise((resolve) => setTimeout(resolve, 15));
     const conflict = await call('PUT', '/api/notes/ukazka', { content: 'přepsáno', baseUpdated: before.updated });
     assert.equal(conflict.status, 409);
     assert.match(conflict.data.error, /změnily/);
     assert.equal(fs.readFileSync(notesFile('ukazka'), 'utf8'), '# Moje poznámky\n\nUpraveno ručně.\n');
 
-    // baseUpdated null = „soubor ještě neexistuje" — u existujícího je to konflikt.
     assert.equal((await call('PUT', '/api/notes/ukazka', { content: 'x', baseUpdated: null })).status, 409);
     assert.equal((await call('PUT', '/api/notes/obecne', { content: 'Nový soubor', baseUpdated: null })).status, 200);
-    // Bez baseUpdated se přepisuje bez kontroly.
     assert.equal((await call('PUT', '/api/notes/obecne', { content: 'Znovu' })).status, 200);
     assert.equal((await call('PUT', '/api/notes/obecne', { content: 5 })).status, 400);
   });

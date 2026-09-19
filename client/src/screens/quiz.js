@@ -1,12 +1,4 @@
-// Kvíz: otázky po jedné nebo všechny najednou, vyhodnocení a souhrn.
-// Splněný je, když podíl správných odpovědí dosáhne hranice `pass`.
-//
 // Otázky neprozradí odpověď (kontrakt kap. 4.5): po prvním vyhodnocení špatná otázka ukáže
-// jen ✗ a vysvětlení zvolené odpovědi. Souhrn nabídne „Projít jen chybné" — při druhém
-// neúspěchu už otázka ukáže správnou odpověď. Každá otázka jde odhalit i tlačítkem.
-//
-// Otázky sady `# --code--` jdou za sebou a vedle nich je kód jen ke čtení.
-// Skóre každého průchodu se posílá do pokusů (první průchod si server pamatuje zvlášť).
 
 import { h, svg } from '../dom.js';
 import { icons } from '../icons.js';
@@ -22,14 +14,6 @@ import { createSlots } from '../core/slots.js';
 import { nextModuleLink, backLink } from './nav.js';
 import { groupByCodeSet, isPassing, quizScore, refModuleId, seeHref } from './quiz-helpers.js';
 
-/**
- * Rozšíření obrazovky kvízu:
- *   quizExtensions.register({ id, order, setup(quiz) { quiz.addToSlot('end', el); } })
- * API: module, id, quiz (data kvízu), signal, onCleanup, page, addToSlot(name, el, { order })
- * sloty: 'head' (pod hlavičkou), 'end' (konec stránky)
- * událost: appEvents 'quiz:evaluated' ({ id, score, passed, results: [{ index, correct, question }] })
- *   results obsahují všechny otázky kvízu s posledním vyhodnocením (i po „Projít jen chybné").
- */
 export const quizExtensions = createExtensionPoint('kvízu');
 
 const MODE_KEY = 'akademie.quizMode';
@@ -70,7 +54,6 @@ export function renderQuiz(ctx, { module, nav }) {
     slots.element('head'),
     modeSwitch(mode, {
       onChange: (mode) => start(mode),
-      // Potvrzení chceme jen tehdy, když by přepnutí zahodilo rozpracované odpovědi.
       shouldConfirm: () => Boolean(session?.hasUnsavedAnswers()),
     }),
     body,
@@ -80,7 +63,6 @@ export function renderQuiz(ctx, { module, nav }) {
     quizExtensions.mount({ module, id: module.id, quiz, signal: ctx.signal, onCleanup: ctx.onCleanup, page, addToSlot: slots.addToSlot }),
   );
 
-  /** Nový kvíz od začátku (i po přepnutí zobrazení): nové otázky, první průchod. */
   function start(newMode) {
     mode = newMode;
     saveMode(mode);
@@ -88,7 +70,6 @@ export function renderQuiz(ctx, { module, nav }) {
     showRound(session.entries);
   }
 
-  /** Jeden průchod nad vybranými otázkami (všechny, nebo jen chybné). */
   function showRound(entries) {
     body.replaceChildren();
     session.beginRound(entries);
@@ -140,10 +121,10 @@ export function renderQuiz(ctx, { module, nav }) {
       'div',
       { class: 'actions' },
       wrong.length
-        ? h('button', { type: 'button', class: 'btn btn--primary', onclick: () => retry(wrong) }, svg(icons.reset), `Projít jen chybné (${wrong.length})`)
+        ? h('button', { type: 'button', class: 'btn btn--primary', 'aria-label': `Review mistakes only (${wrong.length}) / Projít jen chybné (${wrong.length})`, onclick: () => retry(wrong) }, svg(icons.reset), `Review mistakes only (${wrong.length})`)
         : null,
       passed ? nextModuleLink(nav, { primary: wrong.length === 0 }) : null,
-      h('button', { type: 'button', class: 'btn', onclick: () => retry(session.entries) }, 'Zkusit celý kvíz znovu'),
+      h('button', { type: 'button', class: 'btn', 'aria-label': 'Try entire quiz again / Zkusit celý kvíz znovu', onclick: () => retry(session.entries) }, 'Try entire quiz again'),
       passed ? null : backLink(nav),
     );
     summary.append(actions);
@@ -169,10 +150,6 @@ export function renderQuiz(ctx, { module, nav }) {
   start(mode);
 }
 
-/**
- * Stav kvízu: otázky (instance se drží po celou dobu, aby si pamatovaly pokusy)
- * a poslední výsledek každé otázky.
- */
 function createSession(quiz, quizId) {
   const total = quiz.questions.length;
   const entries = quiz.questions.map((question, index) => ({
@@ -209,7 +186,6 @@ function createSession(quiz, quizId) {
   };
 }
 
-/** Otázky pod sebou; otázky jedné sady # --code-- ve skupině s panelem kódu. */
 function questionList(entries, codeSets) {
   return h(
     'div',
@@ -223,7 +199,6 @@ function questionList(entries, codeSets) {
   );
 }
 
-/** Seznam chybných otázek s odkazy „kde si to zopakovat" (--see--). */
 function wrongList(wrong) {
   const list = h('ul', { class: 'quiz-wrong' });
   const titles = new Map();
@@ -242,7 +217,6 @@ function wrongList(wrong) {
   });
   list.append(...items);
 
-  // Názvy modulů (u kotvy i text nadpisu lekce) místo holých referencí, když se osnova načte.
   loadCurriculum()
     .then(async (curriculum) => {
       for (const { module } of allModules(curriculum)) titles.set(module.id, module.title);
@@ -267,7 +241,7 @@ function wrongList(wrong) {
 
 function showAll(container, entries, codeSets, onDone) {
   const status = h('p', { class: 'quiz__status', role: 'status' });
-  const submit = h('button', { type: 'button', class: 'btn btn--primary' }, 'Vyhodnotit');
+  const submit = h('button', { type: 'button', class: 'btn btn--primary', 'aria-label': 'Evaluate / Vyhodnotit' }, 'Evaluate');
   submit.addEventListener('click', () => {
     const missing = entries.filter((entry) => !entry.item.isAnswered());
     if (missing.length) {
@@ -284,10 +258,10 @@ function showOneByOne(container, entries, codeSets, onDone) {
   let position = 0;
   const slot = h('div', { class: 'quiz__slot' });
   const status = h('p', { class: 'quiz__status', role: 'status' });
-  const prev = h('button', { type: 'button', class: 'btn' }, svg(icons.arrowLeft), 'Předchozí');
+  const prev = h('button', { type: 'button', class: 'btn', 'aria-label': 'Previous / Předchozí' }, svg(icons.arrowLeft), 'Previous');
   const next = h('button', { type: 'button', class: 'btn btn--primary' });
   const meter = h('div', { class: 'quiz__meter', 'aria-hidden': 'true' }, entries.map(() => h('span', {})));
-  const panels = new Map(); // index sady kódu → panel (ať se při přepínání otázek nepřekresluje)
+  const panels = new Map();
 
   prev.addEventListener('click', () => show(position - 1));
   next.addEventListener('click', () => {
@@ -314,7 +288,8 @@ function showOneByOne(container, entries, codeSets, onDone) {
     }
     prev.disabled = position === 0;
     const last = position === entries.length - 1;
-    next.replaceChildren(last ? 'Vyhodnotit' : 'Další otázka', last ? '' : svg(icons.arrowRight));
+    next.setAttribute('aria-label', last ? 'Evaluate / Vyhodnotit' : 'Next question / Další otázka');
+    next.replaceChildren(last ? 'Evaluate' : 'Next question', last ? '' : svg(icons.arrowRight));
     [...meter.children].forEach((dot, i) => {
       dot.dataset.state = i === position ? 'current' : entries[i].item.isAnswered() ? 'answered' : 'open';
     });
@@ -339,7 +314,6 @@ function modeSwitch(initial, { onChange, shouldConfirm }) {
         onchange: (event) => {
           if (!event.target.checked) return;
           if (shouldConfirm() && !window.confirm('Přepnutím začneš kvíz znovu a odpovědi se smažou. Pokračovat?')) {
-            // Uživatel si to rozmyslel — vrátíme původní volbu.
             event.target.closest('fieldset').querySelector(`input[value="${current}"]`).checked = true;
             return;
           }
@@ -370,6 +344,5 @@ function saveMode(mode) {
   try {
     localStorage.setItem(MODE_KEY, mode);
   } catch {
-    // Bez úložiště se volba jen nezapamatuje.
   }
 }

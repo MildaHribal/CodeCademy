@@ -1,9 +1,4 @@
 // Vysvětli vlastními slovy: blok `:::explain` v lekci (kontrakt kap. 5.5) a stejný panel
-// pro `# --explain--` kroku a labu (kap. 3.7, používá extensions/step-kinds).
-//
-// Tok: napíšeš vysvětlení → porovnáš se vzorem → zaškrtneš body, které tvůj text obsahuje →
-// Uložit: text jde do poznámek sekce (kind 'explain'), nezaškrtnuté body do opakování
-// jako explain:<id>#<klíč>. Nic z toho nepodmiňuje splnění.
 import { h, svg } from '../../dom.js';
 import { icons } from '../../icons.js';
 import { apiRequest } from '../../api-request.js';
@@ -11,24 +6,16 @@ import { renderMarkdown } from '../../markdown.js';
 
 let panelCounter = 0;
 
-/** „1 bod", „3 body", „5 bodů". */
 function pointsText(count) {
   if (count === 1) return 'Jeden bod';
   return `${count} ${count >= 2 && count <= 4 ? 'body' : 'bodů'}`;
 }
 
-/** První řádek markdownu jako prostý text (titulek poznámky). */
 function plainFirstLine(markdown) {
   const line = String(markdown ?? '').split('\n').find((l) => l.trim()) ?? '';
   return line.replace(/`([^`]*)`/g, '$1').replace(/\*\*?|__?/g, '').replace(/\[\[([^\]|]*)\|?([^\]]*)\]\]/g, (_, a, b) => b || a).trim();
 }
 
-/**
- * @param {{ prompt: string, model: string, checklist: { key: string, text: string }[] }} explain
- * @param {{ sectionId: string, itemId: string, title: string }} options
- *   itemId = id kroku nebo modulu (zdroj poznámky i základ id položek opakování)
- * @returns {{ element: HTMLElement }}
- */
 export function createExplainPanel(explain, { sectionId, itemId, title }) {
   const uid = `explain-${++panelCounter}`;
   const textarea = h('textarea', {
@@ -38,7 +25,7 @@ export function createExplainPanel(explain, { sectionId, itemId, title }) {
     placeholder: 'Napiš to tak, jak bys to vysvětlil kamarádovi nebo na pohovoru.',
   });
   const status = h('p', { class: 'explain__status', role: 'status' });
-  const compareButton = h('button', { type: 'button', class: 'btn btn--primary btn--small' }, 'Porovnat se vzorem');
+  const compareButton = h('button', { type: 'button', class: 'btn btn--primary btn--small', 'aria-label': 'Compare with model / Porovnat se vzorem' }, 'Compare with model');
   const skipButton = h('button', { type: 'button', class: 'btn btn--quiet btn--small', hidden: true }, svg(icons.eye), 'Ukázat vzor bez psaní');
   const review = h('div', { class: 'explain__review', hidden: true });
 
@@ -74,9 +61,9 @@ export function createExplainPanel(explain, { sectionId, itemId, title }) {
       const input = h('input', { type: 'checkbox', class: 'explain__check' });
       return { point, input, row: h('li', {}, h('label', { class: 'explain__point' }, input, renderMarkdown(point.text, { tag: 'span', className: 'prose', inline: true }))) };
     });
-    const saveButton = h('button', { type: 'button', class: 'btn btn--primary btn--small' }, 'Uložit');
+    const saveButton = h('button', { type: 'button', class: 'btn btn--primary btn--small', 'aria-label': 'Save / Uložit' }, 'Save');
     const saveStatus = h('p', { class: 'explain__status', role: 'status' });
-    let noteSaved = false; // po chybě opakování se poznámka při dalším pokusu nepřipíše dvakrát
+    let noteSaved = false;
 
     review.append(
       h('h4', { class: 'explain__subtitle' }, 'Vzorové vysvětlení'),

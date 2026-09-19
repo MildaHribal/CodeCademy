@@ -1,5 +1,3 @@
-// Parser obsahu: každý formát z kontraktu (příklad → přesný výstup) a každá věta
-// „= ParseError" z kontraktu (docs/kontrakt.md, kap. 2–5).
 import { describe, test } from 'node:test';
 import assert from 'node:assert/strict';
 import { hashKey } from './answers.js';
@@ -8,10 +6,8 @@ import {
 } from './parse.js';
 
 const FENCE = '```';
-/** Blok kódu jako text (aby se v šablonách nemusely escapovat backticky). */
 const code = (lang, body) => `${FENCE}${lang}\n${body}\n${FENCE}`;
 
-/** Očekává ParseError, jehož zpráva odpovídá `pattern`. */
 function throwsParse(fn, pattern) {
   assert.throws(fn, (error) => {
     assert.ok(error instanceof ParseError, `čekám ParseError, přišlo ${error?.name}: ${error?.message}`);
@@ -19,10 +15,6 @@ function throwsParse(fn, pattern) {
     return true;
   });
 }
-
-// ---------------------------------------------------------------------------
-// Krok workshopu (kap. 3.1–3.3)
-// ---------------------------------------------------------------------------
 
 const STEP = `---
 title: Flex kontejner
@@ -71,7 +63,6 @@ ${code('css', 'body { margin: 0; }\n--edit--\n\n--edit--')}
 ${code('css', 'body { margin: 0; }\nnav { display: flex; }')}
 `;
 
-/** Minimální krok s volitelnými sekcemi navíc a frontmatterem. */
 function step({ front = '', description = 'Popis.', extra = '', seed = code('js', '--edit--\n--edit--'), solution = code('js', 'const a = 1;'), hints } = {}) {
   const parts = [];
   if (front) parts.push(`---\n${front}\n---\n`);
@@ -374,10 +365,6 @@ Rozšíření bez testů.
   });
 });
 
-// ---------------------------------------------------------------------------
-// Otázky a kvíz (kap. 4)
-// ---------------------------------------------------------------------------
-
 describe('parseQuiz: otázky s výběrem a psané (kap. 4.1–4.4)', () => {
   const CHOICE = `## --question--
 
@@ -502,10 +489,6 @@ describe('parseQuiz: sady # --code-- (kap. 4.3)', () => {
     throwsParse(() => parseQuiz(`---\npass: 2\n---\n\n${question('A?')}`, { id: 'q' }), /pass musí být číslo/);
   });
 });
-
-// ---------------------------------------------------------------------------
-// Lekce (kap. 5)
-// ---------------------------------------------------------------------------
 
 describe('parseLesson: stavba, titulek, nadpisy, klíče (kap. 5.1, 5.9)', () => {
   const LESSON = `# Flexbox: hlavní a vedlejší osa
@@ -767,10 +750,6 @@ describe('parseLesson: :::check, :::explain, :::memory, :::compare (kap. 5.4–5
     throwsParse(() => block(`:::compare\nText\n--variant-- A\n${css}\n--variant-- B\n${css}\n:::`), /text mimo bloky kódu/);
   });
 });
-
-// ---------------------------------------------------------------------------
-// Karty a pojmy (kap. 2.5, 2.6)
-// ---------------------------------------------------------------------------
 
 describe('parseCards (kap. 2.5)', () => {
   const CARDS = `## --card-- output

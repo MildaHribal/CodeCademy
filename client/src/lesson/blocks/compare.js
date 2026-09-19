@@ -1,6 +1,4 @@
 // Blok `compare`: dvě varianty stejné stránky vedle sebe (kontrakt kap. 5.7).
-// Společný kód je v jednom editoru a jeho úprava se promítne do obou náhledů;
-// kód, kterým se varianty liší, je u každého náhledu jen ke čtení.
 import { h, svg } from '../../dom.js';
 import { icons } from '../../icons.js';
 import { mountPreview } from '../../run.js';
@@ -18,7 +16,7 @@ export const compareBlock = {
     let editor = null;
 
     const resetButton = common.length
-      ? h('button', { type: 'button', class: 'btn btn--quiet btn--small', onclick: reset }, svg(icons.reset), 'Obnovit')
+      ? h('button', { type: 'button', class: 'btn btn--quiet btn--small', 'aria-label': 'Reset / Obnovit', onclick: reset }, svg(icons.reset), 'Reset')
       : null;
 
     const variantElements = variants.map((variant, index) => {

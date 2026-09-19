@@ -1,10 +1,4 @@
-// Obsah lekce (B12): seznam nadpisů ## a ### s odkazy.
-//
-// Na širokém okně (od 1200 px, když je vedle textu místo) je obsah lepivý panel vpravo od výkladu
-// a zvýrazňuje část, kterou právě čteš. Na užším okně je rozbalovací „Obsah lekce" pod hlavičkou.
-//
 // Odkaz nadpisu je adresa #/modul/…?kotva=<kotva> (kontrakt kap. 2.9), takže jde zkopírovat.
-// Kliknutí ale stránku znovu nevykresluje: jen odscrolluje a přepíše adresu (replaceState).
 import './lesson-toc.css';
 import { h } from '../dom.js';
 import { lessonExtensions } from '../lesson/extensions.js';
@@ -38,15 +32,12 @@ lessonExtensions.register({
     lesson.addToSlot('head', inline, { order: 10 });
     lesson.onCleanup(dockAside(lesson));
 
-    // Zvýraznění části, kterou právě čteš: poslední nadpis, který už přejel horní třetinu okna.
     const observer = new IntersectionObserver(() => highlight(), { rootMargin: '0px 0px -66% 0px' });
     headings.forEach((heading) => observer.observe(heading.element));
-    // Posun na konec stránky průsečík nadpisu nezmění, proto i obyčejný posluchač posunu.
     const onScroll = () => highlight();
     window.addEventListener('scroll', onScroll, { passive: true });
     lesson.onCleanup(() => window.removeEventListener('scroll', onScroll));
     function highlight() {
-      // Na konci stránky se poslední nadpisy nahoru nedostanou — pak platí poslední viditelný.
       const atBottom = window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 2;
       const limit = atBottom ? window.innerHeight : window.innerHeight / 3;
       let active = headings[0];
@@ -71,7 +62,7 @@ function tocList(lesson, headings) {
         class: 'lesson-toc__link',
         href: `#/modul/${lesson.id}?kotva=${heading.anchor}`,
         onclick: (event) => {
-          if (event.ctrlKey || event.metaKey || event.shiftKey || event.button !== 0) return; // nová karta
+          if (event.ctrlKey || event.metaKey || event.shiftKey || event.button !== 0) return;
           event.preventDefault();
           heading.element.scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth', block: 'start' });
           history.replaceState(null, '', link.getAttribute('href'));

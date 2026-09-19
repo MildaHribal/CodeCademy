@@ -1,14 +1,9 @@
-// Odstranění komentářů z CSS, JS a HTML (helpers.stripComments).
-// Komentáře uvnitř řetězců, šablon a regulárních výrazů zůstanou.
-//
-// POZOR: funkce se do iframu vkládá jako text, nesmí používat nic mimo své tělo.
 
 export function stripComments(source, lang = 'js') {
   const text = String(source ?? '');
   const kind = String(lang).toLowerCase();
   const isWordChar = (ch) => ch !== undefined && /[\w$]/.test(ch);
 
-  /** Komentář nahradíme ničím, jen mezi dvěma slovy necháme mezeru (`a/**\/b` → `a b`). */
   function joiner(output, next) {
     return isWordChar(output[output.length - 1]) && isWordChar(next) ? ' ' : '';
   }
@@ -47,13 +42,12 @@ export function stripComments(source, lang = 'js') {
     const REGEX_AFTER_WORD = new Set(['return', 'typeof', 'instanceof', 'in', 'of', 'new', 'delete', 'void', 'throw', 'case', 'do', 'else', 'yield', 'await']);
     let output = '';
     let i = 0;
-    let lastSignificant = ''; // poslední znak kódu, který není bílý
+    let lastSignificant = '';
     let lastWord = '';
     let braceDepth = 0;
-    const templateStack = []; // hloubky závorek, kde začalo `${…}` uvnitř šablony
+    const templateStack = [];
 
     function readTemplate(start) {
-      // start ukazuje za úvodní ` nebo za } ukončující ${…}
       let j = start;
       while (j < text.length) {
         if (text[j] === '\\') j += 2;

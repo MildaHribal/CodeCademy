@@ -1,12 +1,8 @@
-// Panel HTTP klienta: metoda, cesta, hlavičky a tělo → požadavek na běžící proces →
-// stav, hlavičky, tělo a čas odpovědi. Posílá přes POST /api/dev-process/request, takže
-// funguje stejně na portu Vite (5300) i serveru (4300) a nevadí mu CORS.
 import { h } from '../../dom.js';
 import {
   METHODS, METHODS_WITHOUT_BODY, bodyBytes, buildRequest, describeBody, formatBytes, headerEntries, statusGroup,
 } from './http-format.js';
 
-// Rozepsaný formulář a poslední cesty podle kroku — přežijí přechod mezi kroky, ne reload.
 const drafts = new Map();
 const OPEN_KEY = 'akademie.devProcess.httpOpen';
 
@@ -24,16 +20,9 @@ function saveOpen(open) {
   try {
     localStorage.setItem(OPEN_KEY, open ? '1' : '0');
   } catch {
-    // bez localStorage si panel stav nepamatuje
   }
 }
 
-/**
- * @param {{ session, draftKey: string, defaultPath?: string }} options
- *   session  relace z session.js (stav procesu a request)
- *   draftKey id kroku nebo projektu, pod kterým se pamatuje formulář
- * @returns {{ element: HTMLElement, destroy(): void }}
- */
 export function createHttpClient({ session, draftKey, defaultPath = '/' }) {
   const id = `dev-http-${++uid}`;
   const draft = drafts.get(draftKey) ?? { method: 'GET', path: defaultPath, headersText: '', bodyText: '', recent: [] };
@@ -58,7 +47,7 @@ export function createHttpClient({ session, draftKey, defaultPath = '/' }) {
     'aria-label': 'Cesta a dotaz',
     placeholder: '/api/books?limit=5',
   });
-  const sendButton = h('button', { type: 'submit', class: 'btn btn--primary btn--small dev-http__send' }, 'Odeslat');
+  const sendButton = h('button', { type: 'submit', class: 'btn btn--primary btn--small dev-http__send', 'aria-label': 'Send / Odeslat' }, 'Send');
 
   const headersInput = h('textarea', {
     class: 'dev-http__textarea',
@@ -106,14 +95,11 @@ export function createHttpClient({ session, draftKey, defaultPath = '/' }) {
     h('div', { class: 'dev-http__body' }, idleHint, form, result),
   );
 
-  // ——— Chování ———
-
   element.addEventListener('toggle', () => saveOpen(element.open));
   form.addEventListener('submit', (event) => {
     event.preventDefault();
     send();
   });
-  // Ctrl+Enter v HTTP klientovi pošle požadavek (a nespustí kontrolu kroku).
   form.addEventListener('keydown', (event) => {
     if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
       event.preventDefault();

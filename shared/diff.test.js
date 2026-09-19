@@ -2,7 +2,6 @@ import assert from 'node:assert/strict';
 import { describe, test } from 'node:test';
 import { changeRatio, diffLines } from './diff.js';
 
-/** Zkrácený zápis výsledku: ' a', '-b', '+c'. */
 const compact = (diff) => diff.map((d) => `${{ same: ' ', add: '+', del: '-' }[d.type]}${d.text}`);
 
 describe('diffLines', () => {
@@ -63,7 +62,6 @@ describe('diffLines', () => {
     const ignored = diffLines('if (x) {\nreturn  1;\n}', 'if (x) {\n  return 1;\n}', { ignoreWhitespace: true });
     assert.deepEqual(compact(ignored), [' if (x) {', '   return 1;', ' }']);
     assert.deepEqual(ignored[1], { type: 'same', text: '  return 1;', beforeLine: 2, afterLine: 2 });
-    // Prázdný řádek navíc je pořád rozdíl.
     assert.deepEqual(compact(diffLines('a\nb', 'a\n\nb', { ignoreWhitespace: true })), [' a', '+', ' b']);
   });
 
@@ -98,7 +96,6 @@ describe('changeRatio', () => {
   test('beze změny 0, malá oprava malý podíl', () => {
     assert.equal(changeRatio(seed, seed.join('\n')), 0);
     const fixed = ['function markAllBought(items) {', '  return items.map((item) => {', '    return { ...item, bought: true };', '  });', '}'].join('\n');
-    // Chybí 2 ze 6 řádků seedu (item.bought = true; a return item;).
     assert.equal(changeRatio(seed, fixed), 2 / 6);
   });
 

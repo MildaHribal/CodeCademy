@@ -1,16 +1,7 @@
-// Hledání CSS pravidel uživatele podle selektoru (helpers.cssRules / helpers.cssRule).
-//
-// POZOR: funkce se do iframu vkládá jako text, nesmí používat nic mimo své tělo.
 
-/**
- * Vrátí pole CSSStyleRule, jejichž selektor odpovídá `selector`. Prochází i @media,
- * @supports, @layer, @container, @import a vnořená pravidla (CSS nesting).
- * Každé pravidlo dostane `.conditions` — texty podmínek, pod kterými platí.
- */
 export function findCssRules(doc, selector) {
   const view = doc.defaultView;
 
-  /** Rozdělí seznam selektorů podle čárek, které nejsou uvnitř závorek nebo řetězců. */
   function splitList(text) {
     const parts = [];
     let depth = 0;
@@ -36,7 +27,6 @@ export function findCssRules(doc, selector) {
     return parts;
   }
 
-  /** Nechá prohlížeč selektor přečíst a zapsat po svém (`nav>a` → `nav > a`, `[x=y]` → `[x="y"]`). */
   function canonical(text) {
     try {
       const sheet = new view.CSSStyleSheet();
@@ -47,7 +37,6 @@ export function findCssRules(doc, selector) {
     }
   }
 
-  /** Bílé znaky pryč (i kolem kombinátorů a čárek); pořadí selektorů se nemění. */
   function normalize(text) {
     return String(text)
       .replace(/\s+/g, ' ')
@@ -60,7 +49,6 @@ export function findCssRules(doc, selector) {
   const key = (text) => normalize(canonical(text));
   const wanted = key(selector);
 
-  /** Selektor vnořeného pravidla rozepsaný na plný tvar (`& > a` uvnitř `nav` → `nav > a`). */
   function resolveNested(selectorText, parentSelector) {
     if (!parentSelector) return selectorText;
     const parent = splitList(parentSelector).length > 1 ? `:is(${parentSelector})` : parentSelector;
@@ -70,10 +58,10 @@ export function findCssRules(doc, selector) {
   }
 
   function conditionOf(rule) {
-    if (view.CSSLayerBlockRule && rule instanceof view.CSSLayerBlockRule) return null; // vrstva nic nepodmiňuje
-    if (typeof rule.conditionText === 'string') return rule.conditionText; // @media, @supports, @container
+    if (view.CSSLayerBlockRule && rule instanceof view.CSSLayerBlockRule) return null;
+    if (typeof rule.conditionText === 'string') return rule.conditionText;
     const header = String(rule.cssText ?? '').split('{')[0].trim();
-    return header || null; // např. @scope, @starting-style
+    return header || null;
   }
 
   const found = [];
@@ -109,7 +97,7 @@ export function findCssRules(doc, selector) {
     try {
       rules = sheet.cssRules;
     } catch {
-      continue; // cizí styl bez CORS nejde číst
+      continue;
     }
     visit(rules, [], null);
   }

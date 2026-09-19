@@ -46,7 +46,6 @@ describe('HTTP API', () => {
     return { status: res.status, data, headers: res.headers };
   }
 
-  /** Požadavek přes http.request — kvůli syrové cestě a vlastním hlavičkám Host/Origin. */
   function rawRequest({ method = 'GET', path: requestPath, headers = {} }) {
     return new Promise((resolve, reject) => {
       const req = http.request(`${baseUrl}${requestPath}`, { method, headers }, (res) => {
@@ -109,7 +108,6 @@ describe('HTTP API', () => {
       assert.equal(res.status, 400, bad);
       assert.ok(JSON.parse(res.text).error);
     }
-    // %2e%2e je pro URL totéž co „..", takže se cesta zkrátí a nenajde se žádná routa.
     assert.equal((await rawRequest({ path: '/api/module/%2e%2e/ukazka' })).status, 404);
   });
 
@@ -151,7 +149,6 @@ describe('HTTP API', () => {
     const huge = await api('PUT', '/api/progress/code', {
       id: 'a/b', files: [{ name: 'big.js', content: 'x'.repeat(6 * 1024 * 1024) }],
     }).catch((err) => ({ status: 'spojení zavřeno', err }));
-    // Server odpoví 413 a zavře spojení; podle načasování to klient vidí jako 413 nebo jako zavřené spojení.
     assert.ok(huge.status === 413 || huge.status === 'spojení zavřeno', String(huge.status));
     assert.equal((await api('GET', '/api/progress')).data.code['a/b'], undefined);
   });
@@ -239,7 +236,6 @@ describe('HTTP API', () => {
     assert.deepEqual(files.data.files.map((f) => [f.name, f.lang]), [['server.js', 'js']]);
     assert.match(files.data.files[0].content, /TODO/);
 
-    // Uživatelovy změny druhý start nepřepíše.
     fs.writeFileSync(path.join(dir, 'poznamky.md'), 'moje');
     const again = await api('POST', '/api/project/ukazka/projekt/start');
     assert.deepEqual(again.data, { dir, created: false });
@@ -294,7 +290,6 @@ describe('HTTP API', () => {
   });
 
   test('nečitelný statický soubor vrátí chybu a server běží dál', { skip: process.getuid?.() === 0 && 'root přečte i soubor bez práv' }, async () => {
-    // Dřív chyba čtení vyletěla z fs.createReadStream jako nezachycená a shodila celý server.
     const locked = path.join(root, 'dist', 'assets', 'zamceny.js');
     fs.writeFileSync(locked, 'tajné');
     fs.chmodSync(locked, 0o000);
@@ -325,11 +320,10 @@ describe('HTTP API', () => {
     const rebinding = await rawRequest({ path: '/api/progress', headers: { Host: 'zla-stranka.example' } });
     assert.equal(rebinding.status, 403);
 
-    // Kód uživatele v sandboxovaném iframu (neprůhledný origin posílá `Origin: null`) nesmí spouštět node.
     const sandboxed = await rawRequest({ method: 'POST', path: '/api/run-node', headers: { Origin: 'null' } });
     assert.equal(sandboxed.status, 403);
 
     const local = await rawRequest({ method: 'POST', path: '/api/progress/reset', headers: { Origin: 'http://localhost:5300' } });
-    assert.equal(local.status, 400); // prošlo ochranou, jen chybí id
+    assert.equal(local.status, 400);
   });
 });

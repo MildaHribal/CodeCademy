@@ -438,26 +438,26 @@ describe('rozhraní bloků lekce a druhů kroků', () => {
     try {
       const pretest = page.locator('.lesson-check--pretest');
       await pretest.locator('.answer', { hasText: 'Změní jen' }).click();
-      await pretest.getByRole('button', { name: 'Zkontrolovat' }).click();
+      await pretest.getByRole('button', { name: /Check|Zkontrolovat/ }).click();
       await pretest.locator('.question__verdict', { hasText: 'Uvidíme za chvíli' }).waitFor();
 
       // Mám přečteno bez vyřešených otázek řekne, co chybí.
-      await page.getByRole('button', { name: 'Mám přečteno' }).click();
+      await page.getByRole('button', { name: /Mark as read|Mám přečteno/ }).click();
       const unmet = page.locator('.lesson__unmet');
       await unmet.waitFor();
       assert.match(await unmet.innerText(), /kontrolní otázka 1[\s\S]*otázka 1 na konci/);
 
       const check = page.locator('.lesson-check:not(.lesson-check--pretest)');
       await check.locator('.answer', { hasText: '[...a]' }).click();
-      await check.getByRole('button', { name: 'Zkontrolovat' }).click();
+      await check.getByRole('button', { name: /Check|Zkontrolovat/ }).click();
       await check.locator('.question__verdict', { hasText: 'Správně' }).waitFor();
 
       const last = page.locator('.lesson__finish .question');
       await last.locator('input, textarea').first().fill('3');
-      await last.getByRole('button', { name: 'Zkontrolovat' }).click();
+      await last.getByRole('button', { name: /Check|Zkontrolovat/ }).click();
       await last.locator('.question__verdict', { hasText: 'Správně' }).waitFor();
 
-      await page.getByRole('button', { name: 'Mám přečteno' }).click();
+      await page.getByRole('button', { name: /Mark as read|Mám přečteno/ }).click();
       await page.locator('.lesson__status[data-kind="pass"]', { hasText: 'Lekce je splněná' }).waitFor();
 
       const attemptIds = sent.filter((r) => r.path === '/api/attempts').map((r) => r.body.id);
@@ -478,7 +478,7 @@ describe('rozhraní bloků lekce a druhů kroků', () => {
       assert.equal(await predict.locator('.live__placeholder').isVisible(), true);
 
       await predict.locator('.live__question input, .live__question textarea').first().fill('4');
-      await predict.getByRole('button', { name: 'Zkontrolovat' }).click();
+      await predict.getByRole('button', { name: /Check|Zkontrolovat/ }).click();
       await predict.locator('.live__tip-text', { hasText: '4' }).waitFor();
       await predict.locator('.live__console .console__entry', { hasText: '4' }).waitFor({ timeout: 10000 });
       assert.equal(await predict.getAttribute('data-revealed'), 'true');
@@ -527,10 +527,10 @@ describe('rozhraní bloků lekce a druhů kroků', () => {
 
       const explain = page.locator('.lesson-explain');
       await explain.locator('textarea').fill('const hlídá jen proměnnou.');
-      await explain.getByRole('button', { name: 'Porovnat se vzorem' }).click();
+      await explain.getByRole('button', { name: /Compare with model|Porovnat se vzorem/ }).click();
       await explain.locator('.explain__model').waitFor();
       await explain.locator('.explain__point', { hasText: 'nové přiřazení' }).locator('input').check();
-      await explain.getByRole('button', { name: 'Uložit' }).click();
+      await explain.getByRole('button', { name: /Save|Uložit/ }).click();
       await explain.locator('.explain__status', { hasText: 'Jeden bod se ti vrátí' }).waitFor();
 
       const note = sent.find((r) => r.path === '/api/notes/bloky/append');
@@ -555,13 +555,13 @@ describe('rozhraní bloků lekce a druhů kroků', () => {
       const solution = page.locator('.parsons__list--solution .parsons__line');
       assert.equal(await solution.count(), 3);
       await solution.nth(1).locator('.parsons__blank').fill('0');
-      await page.locator('.pane--brief').getByRole('button', { name: /Zkontrolovat/ }).click();
+      await page.locator('.pane--brief').getByRole('button', { name: /Check|Zkontrolovat/ }).click();
       await page.locator('.pane--brief .result[data-kind="pass"]').waitFor({ timeout: 15000 });
 
       // Posun řádku šipkou a špatné odsazení se jen označí.
       await solution.nth(2).focus();
       await page.keyboard.press('Tab');
-      await page.locator('.pane--brief').getByRole('button', { name: /Zkontrolovat/ }).click();
+      await page.locator('.pane--brief').getByRole('button', { name: /Check|Zkontrolovat/ }).click();
       await page.locator('.parsons__line.is-indent-wrong').waitFor({ timeout: 15000 });
 
       // Rozpracované pořadí se uloží a po znovuotevření kroku se obnoví.
@@ -600,14 +600,14 @@ describe('rozhraní bloků lekce a druhů kroků', () => {
       await plan.waitFor();
       await plan.locator('.plan__summary').click();
       await plan.getByLabel('Zadání vlastními slovy').fill('Spočítat průměr.');
-      await plan.getByRole('button', { name: 'Uložit plán do poznámek' }).click();
+      await plan.getByRole('button', { name: /Save plan to notes|Uložit plán do poznámek/ }).click();
       await plan.locator('.plan__status', { hasText: 'Plán je v poznámkách' }).waitFor();
       const planNote = sent.find((r) => r.path === '/api/notes/bloky/append');
       assert.equal(planNote.body.kind, 'plan');
       assert.equal(planNote.body.source, 'bloky/lab');
 
       assert.equal(await page.locator('.review .review__point').count(), 1);
-      const open = page.getByRole('button', { name: 'Ukázat jiné přístupy (2)' });
+      const open = page.getByRole('button', { name: /Show other approaches \(2\)|Ukázat jiné přístupy \(2\)/ });
       await open.waitFor();
       const dialogs = [];
       page.once('dialog', (dialog) => {
@@ -661,7 +661,7 @@ describe('rozhraní bloků lekce a druhů kroků', () => {
         await shot(page, `porovnani-${colorScheme}`, page.locator('.compare'));
         const predict = page.locator('.live--predict');
         await predict.locator('.live__question input').fill('3');
-        await predict.getByRole('button', { name: 'Zkontrolovat' }).click();
+        await predict.getByRole('button', { name: /Check|Zkontrolovat/ }).click();
         await predict.locator('.live__console .console__entry').first().waitFor();
         await shot(page, `predpoved-${colorScheme}`, predict);
         await page.locator('.lesson-check--pretest').scrollIntoViewIfNeeded();
