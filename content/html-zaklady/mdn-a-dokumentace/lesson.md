@@ -238,6 +238,24 @@ Použiju novější, protože nové je vždycky lepší.
 Datum samo nestačí, i nová odpověď může být špatně. Obě si ověř ve spolehlivém zdroji.
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč „funguje mi to" není důkaz, že je řešení správné.
+
+## --model--
+Že kód funguje, jsi ověřil v jednom prohlížeči, na jednom zařízení, s jedněmi daty
+a dnes. Dokumentace říká něco jiného: jestli je prvek nebo vlastnost **aktuální**
+(nebo už zastaralá), **kde všude je podporovaná** a **jak se chová v okrajových
+případech**, na které jsi nenarazil. Proto se vyplatí ověřovat i to, co funguje —
+hlavně u věcí okopírovaných z odpovědí na fórech, kde bývá řešení staré deset let
+a dnes na něj existuje jednořádková náhrada.
+
+## --checklist--
+- Vlastní zkouška pokryje jen jedno prostředí a jedna data.
+- Dokumentace říká, co je aktuální a co zastaralé.
+- Tabulka podpory ukáže, kde to fungovat nebude.
+- Okrajové chování se z vlastní zkoušky nepozná.
+:::
+
 ## Typické chyby a pasti
 
 > [!PITFALL]

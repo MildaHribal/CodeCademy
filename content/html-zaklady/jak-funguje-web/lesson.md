@@ -321,6 +321,24 @@ Otevři v prohlížeči libovolný web, třeba úvodní stránku Wikipedie, pak 
 První řádek je samotné HTML stránky. Když ho server poslal celé, je tam `200`. Kód `304` uvidíš, když prohlížeč jen ověřil, že jeho uložená kopie platí — to je taky v pořádku.
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč se na stránce může zobrazit text, ale chybět obrázek.
+
+## --model--
+Načtení stránky není jeden přenos, ale série samostatných požadavků. Prohlížeč si
+nejdřív vyžádá HTML, přečte ho, a teprve z něj zjistí, co dalšího potřebuje: obrázky,
+stylopisy, skripty. Na každý z nich pošle vlastní dotaz a na každý dostane vlastní
+odpověď s vlastním stavovým kódem. Když jeden z těch dotazů skončí chybou nebo se
+adresa obrázku překlepne, nic to neudělá se zbytkem — HTML už je dávno vykreslené.
+Proto „nenačetl se obrázek" a „nenačetla se stránka" jsou dvě různé poruchy.
+
+## --checklist--
+- Stránka se skládá z mnoha samostatných požadavků.
+- Prohlížeč se o dalších souborech dozví až z HTML.
+- Každý požadavek má vlastní odpověď a vlastní stavový kód.
+- Neúspěch jednoho souboru zbytek stránky nezastaví.
+:::
+
 ## Typické chyby a pasti
 
 > [!PITFALL]

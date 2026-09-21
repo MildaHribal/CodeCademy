@@ -513,6 +513,24 @@ Pevný text se píše přímo do zpětných uvozovek, hodnota proměnné do `${�
 js-zaklady/promenne-a-typy#sablonovy-retezec
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč jde do pole deklarovaného přes `const` přidat položku,
+ale proč do téže proměnné nejde přiřadit jiné pole.
+
+## --model--
+`const` hlídá **vazbu jména na hodnotu**, ne obsah té hodnoty. U pole je hodnotou odkaz
+na pole, které leží jinde v paměti. Přiřazením `pole = [...]` bys změnil, kam jméno
+ukazuje — a to `const` zakazuje. Zavoláním `pole.push(x)` se ale odkaz nemění, jen se
+mění pole, na které ukazuje. Proto `const` u polí a objektů neznamená „nezměnitelný
+obsah", ale „tohle jméno už bude ukazovat pořád na totéž".
+
+## --checklist--
+- `const` zakazuje nové přiřazení do proměnné.
+- Hodnotou proměnné je u pole a objektu odkaz, ne celý obsah.
+- Změna obsahu odkaz nemění, takže projde.
+- „Neměnný obsah" `const` nezaručuje.
+:::
+
 ## Typické chyby a pasti
 
 ### Spojení místo sčítání

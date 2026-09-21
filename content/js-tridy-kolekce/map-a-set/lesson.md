@@ -367,6 +367,25 @@ Nic se neuloží. `WeakMap` klíč, který není objekt, odmítne rovnou.
 js-tridy-kolekce/map-a-set#weakmap-data-k-objektu-dokud-objekt-zije
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč se dva objekty se stejným obsahem chovají v `Set` jako
+dvě různé hodnoty.
+
+## --model--
+`Set` i `Map` porovnávají hodnoty podle **totožnosti**, ne podle obsahu. U čísel a
+řetězců je totožnost a obsah totéž, takže se dvakrát vložená pětka započítá jednou.
+U objektu je ale hodnotou odkaz na konkrétní objekt v paměti — a dva objekty se
+stejnými vlastnostmi jsou dva různé objekty na dvou různých místech. Proto
+`new Set([{ id: 1 }, { id: 1 }])` má dva prvky. Když chci deduplikovat podle obsahu,
+musím si zvolit klíč (třeba `id`) a udělat množinu z něj, ne z celých objektů.
+
+## --checklist--
+- Porovnává se totožnost hodnoty, ne její obsah.
+- U primitivních hodnot totožnost a obsah splývají.
+- Dva objekty se stejnými vlastnostmi jsou různé hodnoty.
+- Deduplikace podle obsahu potřebuje vlastní klíč.
+:::
+
 ## Typické chyby a pasti
 
 ### Hranaté závorky místo `set`

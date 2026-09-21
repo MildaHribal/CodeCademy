@@ -484,6 +484,25 @@ Obalit volání `querySelector` do `try`/`catch`.
 js-dom/strom-dom#kdy-skript-bezi
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč se po změně stránky v konzoli nic nezmění v HTML souboru
+na disku.
+
+## --model--
+HTML soubor je jen **předloha**. Prohlížeč ho jednou přečte a postaví z něj strom
+objektů v paměti — a od té chvíle se obrazovka řídí tím stromem, ne souborem.
+JavaScript mění právě ten strom, takže se změna okamžitě projeví na obrazovce, ale
+nikam se neukládá. Po obnovení stránky prohlížeč postaví strom znovu z nezměněné
+předlohy a všechno je zpátky. Kdo chce změnu udržet, musí ji uložit sám — do
+`localStorage`, do adresy, nebo na server.
+
+## --checklist--
+- HTML soubor slouží jen jako předloha pro stavbu stromu.
+- Obrazovka odpovídá stromu v paměti, ne souboru.
+- Změny přes JavaScript se nikam neukládají.
+- Po obnovení se strom postaví znovu z původního souboru.
+:::
+
 ## Typické chyby a pasti
 
 ### `null` místo prvku

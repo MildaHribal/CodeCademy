@@ -510,6 +510,25 @@ První podmínka `1500 <= 0` neplatí, druhá `1500 >= 1500` ano, takže `return
 js-zaklady/porovnani-a-logika#rozhodnuti-zabalene-do-funkce
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč je `if (pocet)` nebezpečná podmínka, když `pocet` může
+být nula.
+
+## --model--
+Podmínka se neptá, jestli hodnota existuje, ale jestli je **pravdivá**. Nula mezi
+nepravdivé hodnoty patří — stejně jako prázdný řetězec, `null`, `undefined` a `NaN`.
+Takže `if (pocet)` u nuly neproběhne, i když je nula naprosto platná hodnota: nula
+položek v košíku, nula chyb, nulová sleva. Když se chci zeptat na existenci, musím
+to napsat: `if (pocet !== undefined)` nebo `if (pocet > 0)`, podle toho, co skutečně
+potřebuju vědět.
+
+## --checklist--
+- Podmínka se ptá na pravdivost, ne na existenci.
+- Nula, prázdný řetězec a `NaN` jsou nepravdivé, ale platné hodnoty.
+- Platná hodnota tak může tiše propadnout do větve `else`.
+- Na existenci se ptá výslovné porovnání.
+:::
+
 ## Typické chyby a pasti
 
 ### `=` místo `===` v podmínce

@@ -288,6 +288,25 @@ git checkout -b oprava-mapy
 Nová větev vznikne na commitu, kde stojíš, takže oba commity budou mít štítek a `HEAD` přestane být odpojený.
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč je přepnutí větve v Gitu tak rychlé, i když má projekt
+tisíce souborů.
+
+## --model--
+Větev není kopie projektu — je to **štítek s adresou jednoho commitu**. Commity samy
+jsou snímky celého projektu a každý z nich odkazuje na svého rodiče, takže historie
+tvoří řetěz. Přepnutí větve proto neznamená nic kopírovat: Git jen přesune `HEAD` na
+jiný štítek a doplní do pracovního adresáře rozdíl mezi tím, co tam je, a tím, co
+patří k novému commitu. Proto se větev vytvoří okamžitě a proto jich může existovat
+libovolně mnoho, aniž by to stálo místo.
+
+## --checklist--
+- Větev je jen štítek s adresou jednoho commitu.
+- Commity tvoří řetěz přes odkazy na rodiče.
+- Přepnutí přesune `HEAD` a dorovná jen rozdíl souborů.
+- Nová větev proto nic nekopíruje a nic nestojí.
+:::
+
 ## Typické chyby a pasti
 
 > [!PITFALL]

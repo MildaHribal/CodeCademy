@@ -412,6 +412,25 @@ S `>=` by se podmínka splnila ještě snáz. Proč se hodnota `copies` vůbec n
 js-zaklady/cykly#nekonecna-smycka
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč se cyklus `for` skládá ze tří částí a co se stane, když
+jedna z nich chybí nebo nedělá, co má.
+
+## --model--
+Tři části odpovídají třem otázkám: **odkud začít**, **dokud kdy pokračovat** a **jak se
+posunout dál**. Počáteční hodnota se vyhodnotí jednou před prvním průchodem, podmínka
+před každým průchodem a posun po každém průchodu. Když vynechám posun nebo napíšu
+podmínku, která nikdy nepřestane platit, cyklus se nemá čím přiblížit ke konci — a
+program se zasekne v nekonečné smyčce. Proto se při psaní cyklu vyplatí ptát se jako
+poslední na to, **co se musí změnit, aby podmínka jednou přestala platit**.
+
+## --checklist--
+- Počáteční hodnota se vyhodnotí jednou před cyklem.
+- Podmínka se kontroluje před každým průchodem.
+- Posun proběhne po každém průchodu.
+- Bez posunu k ukončení podmínka nikdy nepřestane platit.
+:::
+
 ## Typické chyby a pasti
 
 ### Průchod navíc

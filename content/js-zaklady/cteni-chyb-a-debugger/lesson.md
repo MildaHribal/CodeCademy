@@ -292,6 +292,25 @@ Ve workshopech a labech Akademie má panel s výstupem tlačítko **Nová karta*
 > [!PITFALL]
 > **Když se v Akademii zastavíš uvnitř cyklu déle než sekundu, po pokračování se ohlásí `Smyčka běží příliš dlouho — nekonečná smyčka?`.** Ochrana proti nekonečným smyčkám měří čas a pauzu v debuggeru nerozezná. Hodnoty, které jsi při zastavení viděl, platí. Oprava: `debugger;` dej před cyklus nebo za něj, nebo krokuj cyklus v kódu vloženém do konzole DevTools.
 
+:::explain
+Vysvětli vlastními slovy, proč řádek uvedený v chybové hlášce často není místo, kde je
+chyba.
+
+## --model--
+Hláška říká, kde program **narazil**, ne kde vznikla příčina. Když funkce dostane
+`undefined` místo objektu, spadne až na řádku, kde se z něj čte vlastnost — jenže
+`undefined` tam přišlo odjinud: z překlepu v klíči, z funkce bez `return`, z indexu,
+který v poli neexistuje. Řádek z hlášky je proto začátek pátrání, ne jeho konec.
+Odtud se jde po stopě zásobníku směrem nahoru — kdo funkci volal a s čím — nebo se
+program zastaví o kus dřív a zkontroluje se, jestli proměnné obsahují to, co si myslíš.
+
+## --checklist--
+- Hláška ukazuje místo selhání, ne místo příčiny.
+- Špatná hodnota mohla vzniknout o několik volání dřív.
+- Stopa zásobníku ukáže, kdo funkci volal a s čím.
+- Zastavení programu dřív ukáže skutečný obsah proměnných.
+:::
+
 ## Typické chyby a pasti
 
 ### Hláška ukazuje následek, ne příčinu

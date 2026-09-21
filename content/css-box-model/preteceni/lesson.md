@@ -459,6 +459,24 @@ display: flow-root
 Plovoucí prvek se do výšky obyčejného bloku nepočítá. Blokový formátovací kontext ho obalí, a `flow-root` ho založí bez vedlejších efektů. `overflow: hidden` by fungovalo taky, ale ořízlo by stíny a obrysy.
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč obsah z boxu přeteče do šířky, ale do výšky obvykle ne.
+
+## --model--
+Rozdíl je v tom, kdo rozměr určuje. Šířku bloku obvykle určuje rodič — blok ji vyplní
+a drží se jí, i když se do ní obsah nevejde. Výšku naopak ve výchozím stavu určuje
+obsah (`height: auto`), takže box prostě povyroste a přetékat nemá co. Jakmile ale
+výšku omezím pevnou hodnotou nebo `max-height`, chová se stejně jako šířka a obsah
+z ní vyteče. Přetečení tedy není chyba prohlížeče — je to důsledek toho, že jsem
+rozměr určil já, a prohlížeč se ho drží.
+
+## --checklist--
+- Šířku bloku obvykle určuje rodič, ne obsah.
+- Výška je ve výchozím stavu určená obsahem, takže roste.
+- Po omezení výšky se chová stejně jako šířka.
+- Přetečení je důsledek pevného rozměru, ne chyba.
+:::
+
 ## Typické chyby a pasti
 
 > [!PITFALL] `overflow-x: hidden` na `body` jako oprava

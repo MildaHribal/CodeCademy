@@ -373,6 +373,24 @@ Nadpis musí mít atribut `defer`.
 js-zaklady/prvni-program#script-ve-strance
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč se po chybě v programu už další řádky neprovedou —
+a proč je to vlastně dobře.
+
+## --model--
+Program běží shora dolů a každý příkaz staví na tom, co udělaly předchozí. Když jeden
+z nich selže, engine nemá jak poznat, co měla jeho neúspěšná práce připravit pro ty
+další — takže by pokračoval s nekompletním stavem a napáchal větší škodu než samotná
+chyba. Proto běh zastaví a ohlásí, kde a proč. Je to stejné jako s receptem: když se
+připálí základ, nemá smysl do něj sypat zbytek surovin.
+
+## --checklist--
+- Příkazy se provádějí v pořadí, ve kterém jsou napsané.
+- Další příkazy počítají s výsledkem těch předchozích.
+- Po selhání by program pokračoval s nekompletním stavem.
+- Zastavení je ochrana, ne naschvál.
+:::
+
 ## Typické chyby a pasti
 
 ### Text bez uvozovek

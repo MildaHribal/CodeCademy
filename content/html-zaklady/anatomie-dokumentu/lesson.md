@@ -296,6 +296,27 @@ Protože selektor `p .phone` je v CSS neplatný.
 Selektor potomka je platný. Selže, protože ve skutečném stromu vztah „uvnitř odstavce" neexistuje.
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč je pro tebe horší, že prohlížeč chybné HTML nikdy
+neodmítne, než kdyby ho odmítl.
+
+## --model--
+Překladač, který chybu odmítne, ti ji ukáže — a ty víš, co opravit. Prohlížeč místo
+toho chybu **tiše zalepí po svém**: doplní chybějící koncovou značku tam, kde by ji
+sám čekal, přesune prvek na místo, kde je povolený, obal vytvoří i tam, kde jsi ho
+nenapsal. Stránka se zobrazí a na první pohled vypadá v pořádku, jenže strom, který
+z ní vznikl, je jiný než ten, který jsi měl v hlavě. To se pak projeví až o dvě lekce
+dál — ve stylech, které se chytají jiného prvku, nebo ve skriptu, který nenajde to, co
+hledá. Proto se HTML kontroluje validátorem a v panelu Elements, ne pohledem na
+výsledek.
+
+## --checklist--
+- Prohlížeč chybné HTML nikdy neodmítne.
+- Chybějící a špatně zanořené prvky opraví po svém.
+- Vzniklý strom se pak liší od toho, co jsi zamýšlel.
+- Následky se projeví až ve stylech a ve skriptech.
+:::
+
 ## Typické chyby a pasti
 
 > [!PITFALL]
