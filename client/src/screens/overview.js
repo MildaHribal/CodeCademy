@@ -93,7 +93,8 @@ function colophon(curriculum) {
   const sections = curriculum.parts.flatMap((part) => part.sections);
   const entries = allModules(curriculum);
   const hours = Math.round(entries.reduce((sum, entry) => sum + (entry.module.minutes ?? 0), 0) / 60);
-  return `${sections.length} sekcí · ${entries.length} modulů · zhruba ${hours} hodin`;
+  const stat = (value, label) => h('span', { class: 'overview__stat' }, h('strong', {}, String(value)), label);
+  return [stat(sections.length, 'sekcí'), stat(entries.length, 'modulů'), stat(`~${hours}`, 'hodin obsahu')];
 }
 
 function findResumeTarget(curriculum) {

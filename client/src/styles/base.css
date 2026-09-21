@@ -1,16 +1,18 @@
-/* Základ: barvy, písma, tlačítka, štítky a přístupnost.
-   Koncept "učebnice": nadpisy ve školní antikvě (Century Schoolbook),
-   text v systémovém bezpatkovém písmu, kód v tmavém editoru.
+/* Základ: písma, tlačítka, štítky a přístupnost.
+   Vzhled: moderní produkt. Nadpisy sází Bricolage Grotesque (charakterní grotesk
+   s optickou velikostí), text a rozhraní Geist, kód Geist Mono. Písma jsou přibalená
+   z node_modules (@fontsource-variable), takže fungují i offline.
    Barvy jsou jen v tokens.css — tady a v ostatních stylech se používají přes var(--…). */
 
 :root {
-  --font-serif: 'Century Schoolbook', 'C059', 'TeX Gyre Schola', 'New Century Schoolbook', Georgia, serif;
-  --font-sans: system-ui, 'Segoe UI', 'Noto Sans', 'Adwaita Sans', sans-serif;
-  --font-mono: 'JetBrains Mono', 'JetBrainsMono Nerd Font', 'Cascadia Code', 'DejaVu Sans Mono', ui-monospace, monospace;
-  /* Papír má ostré rohy: zaoblení je jen náznak, ať bloky na listu nepůsobí jako kartičky. */
-  --radius: 4px;
-  --radius-large: 5px;
-  --bar-height: 52px;
+  --font-display: 'Bricolage Grotesque Variable', 'Geist Variable', system-ui, sans-serif;
+  /* Historické jméno: dřív antikva, dnes ukazuje na nadpisové písmo. */
+  --font-serif: var(--font-display);
+  --font-sans: 'Geist Variable', system-ui, 'Segoe UI', sans-serif;
+  --font-mono: 'Geist Mono Variable', 'JetBrains Mono', 'JetBrainsMono Nerd Font', ui-monospace, monospace;
+  --radius: 9px;
+  --radius-large: 14px;
+  --bar-height: 56px;
 }
 
 *,
@@ -34,21 +36,30 @@ html {
 body {
   margin: 0;
   min-height: 100dvh;
-  background: var(--paper);
+  /* Jediný „efekt" plochy: měkká zlatá záře shora, jako světlo nad stolem. */
+  background:
+    radial-gradient(ellipse 70% 420px at 50% -120px, var(--glow), transparent 70%) no-repeat,
+    var(--paper);
   color: var(--ink);
   font-family: var(--font-sans);
   font-size: 15px;
-  line-height: 1.5;
+  line-height: 1.55;
+  letter-spacing: -0.003em;
   text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: 'ss01', 'cv11';
 }
 
 h1,
 h2,
 h3 {
-  font-family: var(--font-serif);
-  font-weight: 700;
-  line-height: 1.2;
+  font-family: var(--font-display);
+  font-weight: 650;
+  font-variation-settings: 'opsz' 48;
+  letter-spacing: -0.025em;
+  line-height: 1.12;
   margin: 0;
+  text-wrap: balance;
 }
 
 p {
@@ -91,8 +102,8 @@ svg {
 /* Výběr textu má barvu zvýrazňovače, ne systémovou modř — ať to i při čtení
    vypadá jako podtržené v učebnici. */
 ::selection {
-  background: var(--mark-bg);
-  color: var(--mark-fg);
+  background: var(--accent);
+  color: var(--on-accent);
 }
 
 /* Posuvníky v barvě papíru, ať nerozbíjejí klid stránky. */
@@ -163,19 +174,22 @@ svg {
 /* ——— Tlačítka ——— */
 
 .btn {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  min-height: 36px;
-  padding: 0 14px;
+  min-height: 38px;
+  padding: 0 15px;
   border: 1px solid var(--rule-strong);
   border-radius: var(--radius);
   background: var(--surface);
+  box-shadow: inset 0 1px 0 var(--panel-highlight);
   color: var(--ink);
   font: inherit;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 550;
+  letter-spacing: -0.005em;
   text-decoration: none;
   white-space: nowrap;
   cursor: pointer;
@@ -194,48 +208,57 @@ svg {
 
 .btn:disabled {
   cursor: not-allowed;
-  opacity: 0.6;
+  opacity: 0.55;
 }
 
+/* Hlavní tlačítko: v tmavém režimu zlaté, ve světlém inkoustově černé. Jemný vnitřní
+   odlesk nahoře a prstenec při najetí — detail, který dělá tlačítko „vyrobeným". */
 .btn--primary {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: var(--on-accent);
+  border-color: transparent;
+  background: var(--cta-bg);
+  box-shadow: inset 0 1px 0 var(--panel-highlight), 0 1px 2px var(--backdrop);
+  color: var(--cta-fg);
+  font-weight: 600;
 }
 
 .btn--primary:hover {
-  background: var(--accent-hover);
-  border-color: var(--accent-hover);
-  color: var(--on-accent);
+  border-color: transparent;
+  background: var(--cta-bg-hover);
+  box-shadow: inset 0 1px 0 var(--panel-highlight), 0 0 0 4px var(--cta-ring);
+  color: var(--cta-fg);
 }
 
 .btn--quiet {
   border-color: transparent;
   background: transparent;
+  box-shadow: none;
   color: var(--ink-soft);
 }
 
 .btn--quiet:hover {
   background: var(--hover-tint);
   border-color: transparent;
+  color: var(--ink);
 }
 
 .btn--small {
   min-height: 30px;
-  padding: 0 10px;
+  padding: 0 11px;
   font-size: 13px;
   gap: 6px;
+  border-radius: 7px;
 }
 
 .btn--large {
-  min-height: 46px;
-  padding: 0 22px;
-  font-size: 16px;
+  min-height: 48px;
+  padding: 0 24px;
+  font-size: 15.5px;
+  border-radius: 12px;
 }
 
 .btn__kbd {
   padding: 1px 6px;
-  border-radius: 4px;
+  border-radius: 5px;
   background: var(--kbd-on-accent);
   font-size: 11.5px;
   font-weight: 500;

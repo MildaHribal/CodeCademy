@@ -89,9 +89,9 @@ describe('orientace, tmavý režim a poznámky v prohlížeči', () => {
         await waitUntil(reloaded, 'motiv tmavý', () => document.documentElement.dataset.theme === 'dark');
         // Při omezeném pohybu má každá změna barvy nepatrný přechod (0.01 ms), takže se barva
         // čte až ve chvíli, kdy doběhl — ne ve stejném okamžiku, kdy se nastavil motiv.
-        await waitUntil(reloaded, 'tmavá plocha těla', () => getComputedStyle(document.body).backgroundColor === 'rgb(16, 20, 26)');
+        await waitUntil(reloaded, 'tmavá plocha těla', () => getComputedStyle(document.body).backgroundColor === 'rgb(9, 11, 16)');
         const background = await reloaded.evaluate(() => getComputedStyle(document.body).backgroundColor);
-        assert.equal(background, 'rgb(16, 20, 26)', 'tělo stránky má tmavý token --paper');
+        assert.equal(background, 'rgb(9, 11, 16)', 'tělo stránky má tmavý token --paper');
       } finally {
         await reloaded.close();
       }
@@ -103,8 +103,8 @@ describe('orientace, tmavý režim a poznámky v prohlížeči', () => {
   test('tmavý režim: žádný prvek aplikace nezůstane se světlou barvou (natvrdo zapsanou)', async () => {
     await api('PUT', '/api/settings', { theme: 'dark' });
     // Světlé barvy, které by v tmavém režimu znamenaly zapomenutou barvu mimo tokeny.
-    const LIGHT_BACKGROUNDS = ['rgb(255, 255, 255)', 'rgb(253, 252, 248)', 'rgb(236, 234, 223)', 'rgb(230, 227, 215)', 'rgb(246, 244, 236)'];
-    const LIGHT_TEXT = ['rgb(24, 33, 46)', 'rgb(74, 85, 102)', 'rgb(95, 104, 118)', 'rgb(0, 0, 0)'];
+    const LIGHT_BACKGROUNDS = ['rgb(255, 255, 255)', 'rgb(243, 243, 239)', 'rgb(236, 236, 230)', 'rgb(248, 248, 245)'];
+    const LIGHT_TEXT = ['rgb(18, 20, 26)', 'rgb(74, 81, 96)', 'rgb(102, 110, 126)', 'rgb(0, 0, 0)'];
     for (const hash of ['#/', '#/sekce/zaklady', '#/modul/zaklady/lekce', '#/modul/zaklady/workshop/001', '#/poznamky']) {
       const page = await openPage(hash);
       try {

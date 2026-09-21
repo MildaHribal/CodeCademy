@@ -1,110 +1,117 @@
-/* Přehled osnovy jako obsah učebnice + detail sekce. */
+/* Přehled kurzu a detail sekce. Vzhled: moderní produkt — velký titul, karta
+   „pokračovat" se září, části jako panely se seznamem sekcí. */
 
-/* Titulní strana: název, podtitul, tiráž — a pod tím dvojitá linka, jakou má
-   titulní strana v sazbě (silná a pod ní vlasová). */
+/* ——— Hlava přehledu ——— */
+
 .overview__head {
-  position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1.35fr) minmax(280px, 1fr);
+  grid-template-columns: minmax(0, 1.3fr) minmax(300px, 1fr);
   gap: 56px;
-  align-items: end;
-  padding-bottom: 34px;
-  border-bottom: 3px solid var(--rule-heavy);
-}
-
-.overview__head::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -6px;
-  border-bottom: 1px solid var(--rule-heavy);
-}
-
-/* Za dvojitou linkou musí být vzduch. Na slot za hlavičkou margin nezabírá
-   (`display: contents`), takže odsazení drží sama hlavička. */
-.overview__head {
-  margin-bottom: 36px;
+  align-items: center;
+  margin-bottom: 56px;
+  padding-block: 24px 8px;
 }
 
 .overview__title {
-  font-size: clamp(38px, 5.4vw, 60px);
-  letter-spacing: -0.02em;
-  line-height: 1.04;
+  font-size: clamp(44px, 6.4vw, 80px);
+  font-weight: 750;
+  font-variation-settings: 'opsz' 96;
+  letter-spacing: -0.045em;
+  line-height: 0.98;
   text-wrap: balance;
 }
 
 .overview__lead {
-  margin-top: 18px;
-  max-width: 40ch;
+  margin-top: 22px;
+  max-width: 44ch;
   color: var(--ink-soft);
-  font-family: var(--font-serif);
-  font-size: 19px;
-  line-height: 1.5;
+  font-size: 18.5px;
+  line-height: 1.55;
 }
 
-/* Tiráž: rozsah kurzu v číslech, tiše, jako údaj o vydání. */
+/* Rozsah kurzu jako řada štítků s čísly. */
 .overview__colophon {
-  margin-top: 18px;
-  color: var(--ink-faint);
-  font-family: var(--font-serif);
-  font-size: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 26px;
+  color: var(--ink-soft);
+  font-size: 13.5px;
   font-variant-numeric: tabular-nums;
-  letter-spacing: 0.01em;
 }
 
-/* Záložka "Pokračovat" — jediná ozdoba přehledu: lístek vložený do knihy, ze kterého
-   kouká stužka. Ostré rohy a hrana listu, ať to nevypadá jako kartička z dashboardu. */
+.overview__stat {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 5px 12px;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: inset 0 1px 0 var(--panel-highlight);
+}
+
+.overview__stat strong {
+  color: var(--ink);
+  font-weight: 650;
+}
+
+/* ——— Karta „Pokračovat" ——— */
+
 .resume {
   position: relative;
   display: grid;
-  gap: 4px;
-  padding: 24px 26px 26px;
-  border: 1px solid var(--page-edge);
-  border-radius: 2px;
-  background: var(--surface-sunken);
-  box-shadow: var(--shadow-page);
+  gap: 6px;
+  padding: 28px 28px 30px;
+  border: 1px solid var(--rule-strong);
+  border-radius: 22px;
+  background:
+    radial-gradient(ellipse 120% 90% at 100% 0%, var(--glow), transparent 60%),
+    var(--surface);
+  box-shadow: inset 0 1px 0 var(--panel-highlight), var(--shadow-page);
+  overflow: hidden;
 }
 
-/* Vlasová linka uvnitř lístku — sazečský detail, který dělá z obdélníku lístek.
-   Kreslí se jako ::before, aby ji stužka (::after) přebila. */
+/* Tenká zlatá linka po horní hraně karty. */
 .resume::before {
   content: '';
   position: absolute;
-  inset: 5px;
-  border: 1px solid var(--rule);
-  border-radius: 1px;
-  pointer-events: none;
+  inset: 0 0 auto 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--brand-a), var(--brand-b), transparent);
+  opacity: 0.9;
 }
 
-.resume::after {
-  content: '';
-  position: absolute;
-  top: -12px;
-  right: 28px;
-  width: 16px;
-  height: 46px;
-  background: var(--accent);
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 80%, 0 100%);
-}
-
-.resume--done::after {
-  background: var(--done);
+.resume--done::before {
+  background: linear-gradient(90deg, transparent, var(--done), transparent);
 }
 
 .resume__label {
-  color: var(--ink-soft);
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: 15px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+/* Živá tečka: dává najevo, že tady na tebe něco čeká. */
+.resume__label::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-soft);
 }
 
 .resume__title {
-  padding-right: 36px;
-  font-family: var(--font-serif);
-  font-size: 24px;
-  font-weight: 700;
-  line-height: 1.25;
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 650;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
 }
 
 .resume__meta {
@@ -114,41 +121,40 @@
 
 .resume__action {
   justify-self: start;
-  margin-top: 16px;
+  margin-top: 18px;
 }
-
-
 
 /* ——— Obsah ——— */
 
 .toc-wrap {
-  margin-top: 36px;
-}
-
-.toc-wrap > .toc {
   margin-top: 28px;
 }
 
-/* Přepínač pohledu: po částech / doporučená trasa */
+.toc-wrap > .toc {
+  margin-top: 24px;
+}
+
+/* Přepínač pohledu */
 .toc-view {
   display: inline-flex;
-  padding: 3px;
+  padding: 4px;
   border: 1px solid var(--rule);
-  border-radius: var(--radius-large);
-  background: var(--surface);
+  border-radius: 999px;
+  background: var(--surface-sunken);
 }
 
 .toc-view__option {
   min-height: 32px;
-  padding: 0 14px;
+  padding: 0 16px;
   border: 0;
-  border-radius: var(--radius);
+  border-radius: 999px;
   background: transparent;
   color: var(--ink-soft);
   font: inherit;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 13.5px;
+  font-weight: 550;
   cursor: pointer;
+  transition: color 120ms ease, background-color 120ms ease;
 }
 
 .toc-view__option:hover {
@@ -156,15 +162,15 @@
 }
 
 .toc-view__option[aria-pressed='true'] {
-  background: var(--accent-soft);
-  color: var(--accent);
+  background: var(--surface);
+  box-shadow: inset 0 1px 0 var(--panel-highlight), 0 1px 3px var(--backdrop);
+  color: var(--ink);
 }
 
 .toc-part__head.toc-part__head--route {
   grid-template-columns: minmax(0, 1fr);
 }
 
-/* Štítky u sekce: rozšíření a (v pohledu trasy) část osnovy */
 .toc-row__tags {
   display: inline-flex;
   flex-wrap: wrap;
@@ -175,11 +181,11 @@
 
 .toc-row__tag {
   display: inline-block;
-  padding: 0 7px;
+  padding: 0 8px;
   border: 1px solid var(--rule-strong);
   border-radius: 999px;
   color: var(--ink-soft);
-  font-size: 12px;
+  font-size: 11.5px;
   font-weight: 600;
   line-height: 18px;
   white-space: nowrap;
@@ -187,14 +193,7 @@
 
 .toc-row__tag--extension {
   border-color: var(--accent-muted);
-  border-style: dashed;
   color: var(--accent);
-}
-
-/* Rozšíření mají tečkovanou vodicí linku slabší — nepovinná odbočka. */
-.toc-row[data-uroven='rozsireni'] .toc-row__title::after {
-  border-bottom-style: dashed;
-  border-bottom-width: 1px;
 }
 
 .section-page__level {
@@ -209,71 +208,92 @@
 
 .toc {
   display: grid;
-  gap: 44px;
-  margin-top: 44px;
+  gap: 28px;
+  margin-top: 28px;
+}
+
+/* Část kurzu = panel. */
+.toc-part {
+  position: relative;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-panel);
+  background: var(--surface);
+  box-shadow: inset 0 1px 0 var(--panel-highlight);
+  overflow: hidden;
 }
 
 .toc-part__head {
-  position: relative;
   display: grid;
-  grid-template-columns: 3.5rem minmax(0, 1fr) auto;
-  align-items: baseline;
-  column-gap: 0;
-  padding-bottom: 12px;
-  margin-bottom: 5px;
-  border-bottom: 2px solid var(--rule-heavy);
-}
-
-/* Stejná dvojitá linka jako na titulní straně — opakovaný motiv drží stránku pohromadě. */
-.toc-part__head::after {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -5px;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  column-gap: 18px;
+  padding: 22px 24px;
   border-bottom: 1px solid var(--rule);
 }
 
+/* Číslo části v zaobleném čtverci se zlatým přechodem. */
 .toc-part__number {
-  font-family: var(--font-serif);
-  font-size: 40px;
-  font-weight: 700;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 13px;
+  background: linear-gradient(135deg, var(--brand-a), var(--brand-b));
+  box-shadow: inset 0 1px 0 var(--panel-highlight), 0 6px 18px -6px var(--glow);
+  color: var(--cta-fg);
+  font-family: var(--font-display);
+  font-size: 21px;
+  font-weight: 750;
   line-height: 1;
-  color: var(--accent);
   font-variant-numeric: lining-nums;
 }
 
+:root:not([data-theme='dark']) .toc-part__number {
+  color: var(--ink);
+}
+
 .toc-part__title {
-  font-size: 28px;
+  font-size: 24px;
+  letter-spacing: -0.03em;
 }
 
 .toc-part__summary {
-  margin-top: 2px;
+  margin-top: 3px;
   color: var(--ink-soft);
+  font-size: 14.5px;
 }
 
 .toc-part__percent {
+  padding: 4px 11px;
+  border-radius: 999px;
+  background: var(--surface-sunken);
   color: var(--ink-soft);
-  font-size: 14px;
+  font-size: 13px;
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
 
 .toc-sections {
   margin: 0;
-  padding: 0;
+  padding: 6px;
   list-style: none;
 }
 
 .toc-row {
   display: grid;
-  grid-template-columns: 3.5rem minmax(0, 1fr) minmax(170px, 250px);
+  grid-template-columns: 3rem minmax(0, 1fr) minmax(170px, 260px);
   grid-template-areas:
     'num title progress'
     'num summary progress';
   column-gap: 0;
   align-items: baseline;
-  padding-block: 14px;
-  border-bottom: 1px solid var(--rule);
+  padding: 13px 18px;
+  border-radius: 11px;
+  transition: background-color 120ms ease;
+}
+
+.toc-row:hover {
+  background: var(--hover-tint);
 }
 
 .toc-row__main {
@@ -282,72 +302,47 @@
 
 .toc-row__number {
   grid-area: num;
-  font-family: var(--font-serif);
-  font-size: 17px;
   color: var(--ink-faint);
+  font-size: 13px;
+  font-weight: 550;
   font-variant-numeric: tabular-nums;
 }
 
-/* Tečkovaná vodicí linka od názvu k postupu, jako v obsahu knihy. */
 .toc-row__title {
   grid-area: title;
-  display: flex;
-  align-items: baseline;
-  font-family: var(--font-serif);
-  font-size: 20px;
-  font-weight: 700;
   color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
   text-decoration: none;
-}
-
-.toc-row__title::after {
-  content: '';
-  flex: 1;
-  min-width: 24px;
-  margin-inline: 14px;
-  border-bottom: 2px dotted var(--rule-strong);
-  transform: translateY(-4px);
 }
 
 a.toc-row__title:hover {
   color: var(--accent);
 }
 
-/* Při najetí se vodicí linka „naplní inkoustem" a číslo sekce ji následuje. */
-a.toc-row__title:hover::after {
-  border-bottom-color: var(--accent);
-}
-
-.toc-row:hover .toc-row__number {
-  color: var(--accent);
-}
-
-.toc-row__number,
-.toc-row__title::after {
-  transition: color 120ms ease, border-color 120ms ease;
-}
-
 .toc-row__summary {
   grid-area: summary;
-  margin-top: 2px;
-  color: var(--ink-soft);
-  font-size: 14px;
+  margin-top: 1px;
+  color: var(--ink-faint);
+  font-size: 13.5px;
 }
 
 .toc-row__progress {
   grid-area: progress;
   align-self: center;
   display: grid;
-  grid-template-columns: 1fr 4.5rem;
+  grid-template-columns: 1fr 3.5rem;
   align-items: center;
   gap: 12px;
 }
 
 .toc-row__percent {
-  font-size: 14px;
-  text-align: right;
-  color: var(--ink-soft);
+  color: var(--ink-faint);
+  font-size: 13px;
   font-variant-numeric: tabular-nums;
+  text-align: right;
 }
 
 .toc-row--done .toc-row__percent {
@@ -357,11 +352,7 @@ a.toc-row__title:hover::after {
 
 .toc-row--planned .toc-row__title {
   color: var(--ink-faint);
-  font-weight: 400;
-}
-
-.toc-row--planned .toc-row__title::after {
-  border-bottom-color: var(--rule);
+  font-weight: 450;
 }
 
 .toc-row__planned {
@@ -369,26 +360,27 @@ a.toc-row__title:hover::after {
   align-self: center;
   justify-self: end;
   color: var(--ink-faint);
-  font-size: 14px;
-  font-style: italic;
+  font-size: 13px;
 }
 
 @media (max-width: 760px) {
   .overview__head {
     grid-template-columns: 1fr;
-    gap: 28px;
+    gap: 32px;
+    margin-bottom: 36px;
   }
 
   .toc-part__head {
-    grid-template-columns: 2.5rem minmax(0, 1fr) auto;
+    padding: 18px;
   }
 
   .toc-row {
-    grid-template-columns: 2.5rem minmax(0, 1fr);
+    grid-template-columns: 2.4rem minmax(0, 1fr);
     grid-template-areas:
       'num title'
       'num summary'
       'num progress';
+    padding-inline: 12px;
   }
 
   .toc-row__progress,
@@ -405,14 +397,27 @@ a.toc-row__title:hover::after {
 /* ——— Detail sekce ——— */
 
 .section-page__title {
-  font-size: clamp(32px, 4.5vw, 44px);
-  letter-spacing: -0.01em;
+  font-size: clamp(36px, 5vw, 56px);
+  font-weight: 720;
+  letter-spacing: -0.04em;
+  line-height: 1.02;
 }
 
+/* Číslo sekce jako štítek nad titulem. */
 .section-page__number {
+  display: block;
+  width: fit-content;
+  margin-bottom: 14px;
+  padding: 3px 11px;
+  border: 1px solid var(--accent-muted);
+  border-radius: 999px;
+  background: var(--accent-soft);
   color: var(--accent);
-  margin-right: 0.2em;
-  font-variant-numeric: lining-nums;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 650;
+  letter-spacing: 0;
+  font-variant-numeric: lining-nums tabular-nums;
 }
 
 .section-page__lead {
@@ -422,36 +427,52 @@ a.toc-row__title:hover::after {
 }
 
 .section-page__intro {
-  margin-top: 18px;
+  margin-top: 20px;
 }
 
 .section-page__progress {
   display: grid;
   gap: 8px;
   margin-block: 32px 8px;
-  max-width: 420px;
+  max-width: 440px;
   color: var(--ink-soft);
-  font-size: 14px;
+  font-size: 13.5px;
 }
 
+/* Moduly: seznam v panelu, typ modulu jako barevná dlaždice s ikonou. */
 .module-list {
-  margin: 24px 0 0;
-  padding: 0;
+  margin: 28px 0 0;
+  padding: 6px;
   list-style: none;
-  border-top: 2px solid var(--rule-heavy);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-panel);
+  background: var(--surface);
+  box-shadow: inset 0 1px 0 var(--panel-highlight);
 }
 
 .module-row {
   position: relative;
   display: grid;
-  grid-template-columns: 32px minmax(0, 1fr) auto;
-  gap: 4px 16px;
-  padding-block: 20px;
-  border-bottom: 1px solid var(--rule);
+  grid-template-columns: 28px minmax(0, 1fr) auto;
+  gap: 2px 14px;
+  padding: 16px 16px 16px 18px;
+  border-radius: 11px;
+  transition: background-color 120ms ease;
+}
+
+.module-row:hover {
+  background: var(--hover-tint);
+}
+
+.module-row + .module-row::after {
+  content: '';
+  position: absolute;
+  inset: 0 16px auto 60px;
+  border-top: 1px solid var(--rule);
 }
 
 .module-row__icon {
-  padding-top: 26px;
+  padding-top: 22px;
   color: var(--ink-faint);
 }
 
@@ -461,13 +482,17 @@ a.toc-row__title:hover::after {
 
 .module-row__type {
   color: var(--ink-soft);
-  font-size: 14px;
+  font-size: 12.5px;
   font-weight: 600;
 }
 
 .module-row__title {
   margin-top: 2px;
-  font-size: 22px;
+  font-family: var(--font-sans);
+  font-size: 17px;
+  font-weight: 620;
+  letter-spacing: -0.015em;
+  line-height: 1.3;
 }
 
 .module-row__title a {
@@ -480,35 +505,35 @@ a.toc-row__title:hover::after {
   content: '';
   position: absolute;
   inset: 0;
+  z-index: 1;
 }
 
 .module-row:hover .module-row__title a {
   color: var(--accent);
-  text-decoration: underline;
 }
 
 .module-row__summary {
-  margin-top: 4px;
+  margin-top: 3px;
   color: var(--ink-soft);
+  font-size: 14px;
 }
 
 .module-row__side {
   display: grid;
   justify-items: end;
-  align-content: start;
-  gap: 6px;
-  padding-top: 24px;
+  align-content: center;
+  gap: 4px;
 }
 
 .module-row__meta {
   color: var(--ink-faint);
-  font-size: 13.5px;
+  font-size: 13px;
   white-space: nowrap;
 }
 
 @media (max-width: 640px) {
   .module-row {
-    grid-template-columns: 28px minmax(0, 1fr);
+    grid-template-columns: 26px minmax(0, 1fr);
   }
 
   .module-row__side {

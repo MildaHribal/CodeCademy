@@ -1,4 +1,7 @@
 
+import '@fontsource-variable/geist';
+import '@fontsource-variable/geist-mono';
+import '@fontsource-variable/bricolage-grotesque';
 import './styles/tokens.css';
 import './styles/base.css';
 import './styles/layout.css';

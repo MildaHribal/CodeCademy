@@ -1251,17 +1251,21 @@ natvrdo). Tokeny výkladu z kontraktu 5.11: `--callout-{remember,pitfall,tip,not
 `--rule-heavy`, `--shadow-pop`, `--backdrop`, `--preview-stage`, `--code-fold-bg`,
 `--shadow-page` a `--page-edge` (hrana a stín listu, viz níž).
 
-**Vzhled: stránka je list papíru.** Světlá paleta stojí na teplém papíru (`--paper`), ne na
-studené šedi; tmavá je „učebnice večer" s deskou tmavší než list. Čtecí obrazovky (`.page`)
-mají vlastní plochu `--surface`, hranu `--page-edge` a nízký stín `--shadow-page`, takže leží
-na desce stolu; pracoviště naopak zabírá celé okno, protože se v něm pracuje, ne čte. Na úzkém
-okně list hranu i stín ztrácí a vyplní obrazovku.
+**Vzhled: moderní produkt** (přepracováno; dřívější „učebnice" s antikvou a listem papíru je pryč).
+Tmavá varianta je výchozí charakter: hluboká modročerná plocha, **medově zlatý akcent** (`--accent`,
+`--brand-a/b`), měkká zlatá záře shora (`--glow`) a skleněná lišta (`--glass-bg` + `backdrop-filter`).
+Světlá varianta je čistá, téměř monochromní — hlavní tlačítko je v ní inkoustově černé, v tmavé zlaté
+(tokeny `--cta-bg`, `--cta-bg-hover`, `--cta-fg`, `--cta-ring`). Hloubku dělají panely (`--radius-panel`,
+vnitřní odlesk `--panel-highlight`), ne rám kolem stránky; `.page` je čistý sloupec.
 
-Opakované sazečské motivy: **dvojitá linka** (silná + vlasová) pod titulem přehledu i pod hlavou
-části, **tečkovaná vodicí linka** v obsahu, **čísla kroků jako paginace** (antikva, tabulkové
-číslice, bez rámečků; splněný krok podtržený, aktuální v plném inkoustu), **štítek typu modulu
-jako marginálie** (antikva kurzívou v barvě typu) a **záložka „Pokračovat"** jako vložený lístek
-se stužkou. Výběr textu má barvu zvýrazňovače (`--mark-bg`).
+Písma jsou přibalená z `node_modules` (`@fontsource-variable/*`, fungují offline): nadpisy
+**Bricolage Grotesque**, text a rozhraní **Geist**, kód **Geist Mono**. Proměnná `--font-serif` zůstala
+kvůli starším stylům a ukazuje na nadpisové písmo (`--font-display`).
+
+Přehled: velký titul, rozsah kurzu jako štítky s čísly, karta „Pokračovat" se zlatou linkou a září,
+části kurzu jako panely se zlatou dlaždicí čísla a seznamem sekcí. Sekce: číslo jako štítek nad
+titulem, moduly v panelu s barevným štítkem typu. Čísla kroků ve workshopu zůstávají bez rámečků,
+aktuální krok je zlatý.
 
 **Pohyb** (`client/src/motion.js` nad knihovnou `motion`, styly v `styles/motion.css`). Komponenty
 knihovnu neimportují přímo, volají pomocníky `popIn`, `settleIn`, `riseIn`, `riseInEach`, `growIn`,

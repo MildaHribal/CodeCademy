@@ -17,34 +17,47 @@
   color-scheme: light;
 
   /* Plochy a text */
-  --paper: #eceadf;
-  --surface: #fdfcf8;
-  --surface-sunken: #e6e3d7;
-  --footer-bg: #f6f4ec;
-  --ink: #18212e;
-  --ink-soft: #4a5566;
-  --ink-faint: #5f6876;
+  --paper: #f3f3ef;
+  --surface: #ffffff;
+  --surface-sunken: #ecece6;
+  --footer-bg: #f8f8f5;
+  --ink: #12141a;
+  --ink-soft: #4a5160;
+  --ink-faint: #666e7e;
   --on-ink: #fff;
-  --rule: #dad5c6;
-  --rule-strong: #b5ae9b;
-  --rule-heavy: #18212e; /* silná linka pod nadpisem části (jako v obsahu knihy) */
-  --hover-tint: rgba(24, 33, 46, 0.06);
-  --segment-empty: #ddd9cb;
-  --shadow-pop: 0 6px 24px rgba(24, 33, 46, 0.14), 0 1px 3px rgba(24, 33, 46, 0.12);
-  --backdrop: rgba(24, 33, 46, 0.35);
+  --rule: #e3e3dc;
+  --rule-strong: #c6c6bc;
+  --rule-heavy: #12141a; /* silná linka pod nadpisem části (jako v obsahu knihy) */
+  --hover-tint: rgba(18, 20, 26, 0.05);
+  --segment-empty: #e2e2da;
+  --shadow-pop: 0 12px 40px -8px rgba(18, 20, 26, 0.22), 0 2px 6px rgba(18, 20, 26, 0.08);
+  --backdrop: rgba(18, 20, 26, 0.4);
 
   /* List papíru: stránka na čtení leží na ploše stolu (--paper) jako sheet.
      Stín je měkký a nízký, ať to vypadá položené, ne vznášející se. */
-  --shadow-page: 0 1px 2px rgba(60, 50, 30, 0.06), 0 12px 32px -18px rgba(60, 50, 30, 0.3);
-  --page-edge: #ccc5b2;
+  --shadow-page: 0 1px 2px rgba(18, 20, 26, 0.05), 0 18px 40px -24px rgba(18, 20, 26, 0.25);
+  --page-edge: #e0e0d8;
 
-  /* Akcent (školní modrý inkoust) */
-  --accent: #2b50a8;
-  --accent-hover: #203f8a;
-  --accent-soft: #e7edf9;
-  --accent-muted: #9db0dd;
+  /* Prémiový vzhled: hlavní tlačítko (CTA), sklo lišty, záře a výplň značky. */
+  --cta-bg: linear-gradient(180deg, #23262f, #12141a);
+  --cta-bg-hover: linear-gradient(180deg, #2f333f, #1a1d25);
+  --cta-fg: #ffffff;
+  --cta-ring: rgba(18, 20, 26, 0.18);
+  --glass-bg: rgba(255, 255, 255, 0.72);
+  --glass-border: rgba(18, 20, 26, 0.08);
+  --panel-highlight: rgba(255, 255, 255, 0.9);
+  --glow: rgba(242, 184, 75, 0.35);
+  --brand-a: #f2b84b;
+  --brand-b: #e8853a;
+  --radius-panel: 16px;
+
+  /* Akcent: medové zlato (ve světlé variantě ztmavené kvůli kontrastu) */
+  --accent: #965700;
+  --accent-hover: #7a4600;
+  --accent-soft: #fbf0d9;
+  --accent-muted: #dcb877;
   --on-accent: #fff;
-  --kbd-on-accent: rgba(255, 255, 255, 0.18);
+  --kbd-on-accent: rgba(255, 255, 255, 0.2);
 
   /* Stavy */
   --done: #1f7a4d;
@@ -65,12 +78,12 @@
   --inline-code-ink: #1d2a44;
 
   /* Zvýraznění ve výkladu (kontrakt kap. 5.11): tučné, inline kód, pojmy, ==mark== */
-  --text-strong-accent: #1f3c85;
-  --code-inline-bg: #ecebf5;
-  --code-inline-fg: #3b2f73;
-  --term-fg: #0f6466;
-  --mark-bg: #fbe7a1;
-  --mark-fg: #18212e;
+  --text-strong-accent: #12141a;
+  --code-inline-bg: #eeeef3;
+  --code-inline-fg: #43338a;
+  --term-fg: #0b6b63;
+  --mark-bg: #ffe6a3;
+  --mark-fg: #12141a;
 
   /* Rámečky > [!REMEMBER] / [!PITFALL] / [!TIP] / [!NOTE]
      bg = plocha, border = proužek a rámeček, fg = text uvnitř, icon = ikona a nadpis */
@@ -86,35 +99,35 @@
   --callout-tip-border: #86c39f;
   --callout-tip-fg: #173a27;
   --callout-tip-icon: #1f7a4d;
-  --callout-note-bg: #efece2;
-  --callout-note-border: #bdb7a6;
+  --callout-note-bg: #f1f1ec;
+  --callout-note-border: #c6c6bc;
   --callout-note-fg: #2a3340;
   --callout-note-icon: #4a5566;
 
   /* Typy modulů (kontrakt kap. 2.3). Používají se jen jako tenká značka na okraji řádku
      a jako barva ikony — nikdy jako výplň plochy, ať obsah zůstane klidný jako v učebnici.
      Odstíny jsou vybrané z už existující palety, aby paleta nerostla. */
-  --type-lesson: #2b50a8;
-  --type-workshop: #a4520e;
-  --type-lab: #0f6466;
-  --type-quiz: #6b3fa0;
-  --type-project: #18212e;
+  --type-lesson: #2563c9;
+  --type-workshop: #c2570c;
+  --type-lab: #0b7a70;
+  --type-quiz: #6d3fc0;
+  --type-project: #12141a;
 
   /* Náhled uživatelovy stránky — stránka má vlastní barvy, podklad zůstává bílý i v tmavém režimu */
   --preview-bg: #fff;
-  --preview-stage: #ddd8c9; /* plocha kolem zmenšeného náhledu (přepínač šířky) */
+  --preview-stage: #e4e4dc; /* plocha kolem zmenšeného náhledu (přepínač šířky) */
 
   /* Editor a bloky kódu (One Dark) */
   --code-bg: #282c34;
   --code-bg-deep: #21252b;
   --code-ink: #d7dae0;
-  --focus-on-dark: #9bb8ff;
+  --focus-on-dark: #ffd27a;
   --code-tab-ink: #9da5b4;
   --code-tab-ink-hover: #e6e9ef;
   --code-tab-ink-active: #fff;
-  --code-accent: #7aa2ff;
-  --code-region-bg: rgba(122, 162, 255, 0.1);
-  --code-focus-ring: rgba(155, 184, 255, 0.35);
+  --code-accent: #f2b84b;
+  --code-region-bg: rgba(242, 184, 75, 0.07);
+  --code-focus-ring: rgba(242, 184, 75, 0.3);
   --code-fold-bg: rgba(255, 255, 255, 0.06);
   --tok-keyword: #c678dd;
   --tok-string: #98c379;
@@ -146,33 +159,46 @@
   color-scheme: dark;
 
   /* Plochy a text */
-  --paper: #10141a;
-  --surface: #1c2129;
-  --surface-sunken: #171c23;
-  --footer-bg: #191d24;
-  --ink: #e2e0d9;
-  --ink-soft: #b3b7bf;
-  --ink-faint: #9097a2;
-  --on-ink: #161a21;
-  --rule: #2b313b;
-  --rule-strong: #434b57;
-  --rule-heavy: #5b6371;
-  --hover-tint: rgba(226, 224, 217, 0.07);
-  --segment-empty: #2c323c;
-  --shadow-pop: 0 8px 28px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(0, 0, 0, 0.4);
-  --backdrop: rgba(5, 7, 10, 0.55);
+  --paper: #090b10;
+  --surface: #11141b;
+  --surface-sunken: #0c0e14;
+  --footer-bg: #0d1016;
+  --ink: #f2f0ea;
+  --ink-soft: #a9aebb;
+  --ink-faint: #808798;
+  --on-ink: #090b10;
+  --rule: #1e232e;
+  --rule-strong: #2d3443;
+  --rule-heavy: #3c4456;
+  --hover-tint: rgba(255, 255, 255, 0.05);
+  --segment-empty: #232937;
+  --shadow-pop: 0 20px 60px -10px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  --backdrop: rgba(3, 4, 7, 0.65);
 
   /* List papíru večer: stín je hlubší a okraj listu světlejší než plocha kolem. */
-  --shadow-page: 0 1px 2px rgba(0, 0, 0, 0.35), 0 16px 40px -20px rgba(0, 0, 0, 0.75);
-  --page-edge: #333a46;
+  --shadow-page: 0 0 0 1px rgba(255, 255, 255, 0.03), 0 24px 60px -30px rgba(0, 0, 0, 0.8);
+  --page-edge: #1e232e;
 
-  /* Akcent */
-  --accent: #8fabf2;
-  --accent-hover: #b1c5f7;
-  --accent-soft: #232d42;
-  --accent-muted: #4d5f8c;
-  --on-accent: #0f1522;
-  --kbd-on-accent: rgba(15, 21, 34, 0.14);
+  /* Prémiový vzhled: hlavní tlačítko (CTA), sklo lišty, záře a výplň značky. */
+  --cta-bg: linear-gradient(180deg, #ffd27a, #f2b84b);
+  --cta-bg-hover: linear-gradient(180deg, #ffdf9e, #f7c565);
+  --cta-fg: #1a1204;
+  --cta-ring: rgba(242, 184, 75, 0.35);
+  --glass-bg: rgba(12, 14, 20, 0.72);
+  --glass-border: rgba(255, 255, 255, 0.07);
+  --panel-highlight: rgba(255, 255, 255, 0.045);
+  --glow: rgba(242, 184, 75, 0.16);
+  --brand-a: #ffd27a;
+  --brand-b: #f08a3c;
+  --radius-panel: 16px;
+
+  /* Akcent: medové zlato */
+  --accent: #f2b84b;
+  --accent-hover: #ffd27a;
+  --accent-soft: #2a2110;
+  --accent-muted: #7d5f23;
+  --on-accent: #1a1204;
+  --kbd-on-accent: rgba(26, 18, 4, 0.16);
 
   /* Stavy */
   --done: #6cc795;
@@ -193,53 +219,53 @@
   --inline-code-ink: #dfe6f5;
 
   /* Zvýraznění ve výkladu */
-  --text-strong-accent: #b7c9f5;
-  --code-inline-bg: #262838;
-  --code-inline-fg: #cfc6f5;
-  --term-fg: #7fd0cf;
-  --mark-bg: #4f4222;
-  --mark-fg: #f1ece0;
+  --text-strong-accent: #ffffff;
+  --code-inline-bg: #1b1f2b;
+  --code-inline-fg: #cfc8f7;
+  --term-fg: #6fd6c8;
+  --mark-bg: #4d3c12;
+  --mark-fg: #fff3d1;
 
   /* Rámečky */
-  --callout-remember-bg: #1c2538;
-  --callout-remember-border: #4c6aa8;
-  --callout-remember-fg: #dfe6f7;
-  --callout-remember-icon: #9db6f5;
-  --callout-pitfall-bg: #2c2118;
-  --callout-pitfall-border: #9a6232;
+  --callout-remember-bg: #111a2c;
+  --callout-remember-border: #36558f;
+  --callout-remember-fg: #dfe7fa;
+  --callout-remember-icon: #8fb0ff;
+  --callout-pitfall-bg: #251a10;
+  --callout-pitfall-border: #8f5a2c;
   --callout-pitfall-fg: #f3e2d2;
   --callout-pitfall-icon: #f0a868;
-  --callout-tip-bg: #17291f;
-  --callout-tip-border: #3c7a56;
+  --callout-tip-bg: #0f221a;
+  --callout-tip-border: #2f6a4a;
   --callout-tip-fg: #d9efe2;
   --callout-tip-icon: #7fd3a3;
-  --callout-note-bg: #20252d;
-  --callout-note-border: #4a525e;
+  --callout-note-bg: #151922;
+  --callout-note-border: #343b4a;
   --callout-note-fg: #dde1e7;
   --callout-note-icon: #aab2bd;
 
   /* Typy modulů — na tmavé ploše musí odstíny svítit, jinak splynou s linkami */
-  --type-lesson: #8fabf2;
-  --type-workshop: #e0a36a;
-  --type-lab: #6fc8c7;
+  --type-lesson: #7fb2ff;
+  --type-workshop: #ff9f5a;
+  --type-lab: #4fd1c5;
   --type-quiz: #b79cf0;
-  --type-project: #cfd4dd;
+  --type-project: #d5d9e2;
 
   /* Náhled: stránka uživatele zůstává na bílém podkladu */
   --preview-bg: #fff;
-  --preview-stage: #101318;
+  --preview-stage: #07080c;
 
   /* Editor a bloky kódu: stejné One Dark jako ve světlé variantě */
-  --code-bg: #282c34;
-  --code-bg-deep: #21252b;
+  --code-bg: #0f1219;
+  --code-bg-deep: #0b0d13;
   --code-ink: #d7dae0;
-  --focus-on-dark: #9bb8ff;
+  --focus-on-dark: #ffd27a;
   --code-tab-ink: #9da5b4;
   --code-tab-ink-hover: #e6e9ef;
   --code-tab-ink-active: #fff;
-  --code-accent: #7aa2ff;
-  --code-region-bg: rgba(122, 162, 255, 0.1);
-  --code-focus-ring: rgba(155, 184, 255, 0.35);
+  --code-accent: #f2b84b;
+  --code-region-bg: rgba(242, 184, 75, 0.07);
+  --code-focus-ring: rgba(242, 184, 75, 0.3);
   --code-fold-bg: rgba(255, 255, 255, 0.06);
   --tok-keyword: #c678dd;
   --tok-string: #98c379;
@@ -253,7 +279,7 @@
   --tok-invalid: #ff7b72;
 
   /* Konzole: o stupeň tmavší než panely */
-  --console-bg: #121519;
+  --console-bg: #08090d;
   --console-muted: #8b929e;
   --console-rule: rgba(255, 255, 255, 0.05);
   --console-info: #9bc7ff;
