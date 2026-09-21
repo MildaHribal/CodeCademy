@@ -86,6 +86,15 @@
   --callout-note-fg: #2a3340;
   --callout-note-icon: #4a5566;
 
+  /* Typy modulů (kontrakt kap. 2.3). Používají se jen jako tenká značka na okraji řádku
+     a jako barva ikony — nikdy jako výplň plochy, ať obsah zůstane klidný jako v učebnici.
+     Odstíny jsou vybrané z už existující palety, aby paleta nerostla. */
+  --type-lesson: #2b50a8;
+  --type-workshop: #a4520e;
+  --type-lab: #0f6466;
+  --type-quiz: #6b3fa0;
+  --type-project: #18212e;
+
   /* Náhled uživatelovy stránky — stránka má vlastní barvy, podklad zůstává bílý i v tmavém režimu */
   --preview-bg: #fff;
   --preview-stage: #dfe4ea; /* plocha kolem zmenšeného náhledu (přepínač šířky) */
@@ -199,6 +208,13 @@
   --callout-note-border: #4a525e;
   --callout-note-fg: #dde1e7;
   --callout-note-icon: #aab2bd;
+
+  /* Typy modulů — na tmavé ploše musí odstíny svítit, jinak splynou s linkami */
+  --type-lesson: #8fabf2;
+  --type-workshop: #e0a36a;
+  --type-lab: #6fc8c7;
+  --type-quiz: #b79cf0;
+  --type-project: #cfd4dd;
 
   /* Náhled: stránka uživatele zůstává na bílém podkladu */
   --preview-bg: #fff;

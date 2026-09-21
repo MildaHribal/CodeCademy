@@ -1,7 +1,7 @@
 
 import { h, svg, append } from '../dom.js';
 import { href } from '../router.js';
-import { icons } from '../icons.js';
+import { icons, moduleTypeIcons } from '../icons.js';
 import { progress, moduleStatus, sectionStatus } from '../progress.js';
 import { loadCurriculum, findSection } from '../content.js';
 import { renderMarkdown } from '../markdown.js';
@@ -89,7 +89,7 @@ export async function renderSection(ctx, { sectionId }) {
     h(
       'div',
       { class: 'section-page__progress' },
-      segmentedProgress(section.modules.map((m) => moduleStatus(m).fraction), { label: `Postup v sekci ${section.title}` }),
+      segmentedProgress(section.modules.map((m) => ({ fraction: moduleStatus(m).fraction, type: m.type })), { label: `Postup v sekci ${section.title}` }),
       h(
         'p',
         {},
@@ -126,7 +126,12 @@ function moduleRow(module) {
     h(
       'div',
       { class: 'module-row__main' },
-      h('p', { class: 'module-row__type' }, MODULE_TYPE_LABELS[module.type]),
+      h(
+        'p',
+        { class: 'module-row__type' },
+        svg(moduleTypeIcons[module.type], { size: 16 }),
+        MODULE_TYPE_LABELS[module.type],
+      ),
       h('h2', { class: 'module-row__title' }, h('a', { href: href.module(module.id) }, module.title)),
       module.summary ? h('p', { class: 'module-row__summary' }, module.summary) : null,
     ),

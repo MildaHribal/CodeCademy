@@ -8,6 +8,7 @@ import './styles/workspace.css';
 import './styles/lesson.css';
 import './styles/quiz.css';
 import './styles/project.css';
+import './styles/motion.css';
 
 import { startRouter } from './router.js';
 import { progress } from './progress.js';
@@ -32,8 +33,39 @@ const saveStatus = document.querySelector('.app-bar__status');
 mountHeaderMenu(document.querySelector('.app-bar__menu'));
 
 let current = null;
+let currentRoute = null;
+
+/**
+ * Posun mezi kroky téhož workshopu překresluje celé pracoviště. Obsah má v té chvíli
+ * načtený, takže se překreslení vejde do view transition a číslo aktivního kroku
+ * přejede na nové místo místo přeskočení. Jinde se přechod nespouští — na obrazovce,
+ * která si teprve tahá data, by uživatel koukal na zamrzlý snímek.
+ */
+function isStepMove(from, to) {
+  return (
+    from?.name === 'module' &&
+    to?.name === 'module' &&
+    from.sectionId === to.sectionId &&
+    from.moduleId === to.moduleId &&
+    from.stepKey !== to.stepKey
+  );
+}
 
 async function show(route) {
+  const previous = currentRoute;
+  currentRoute = route;
+  if (
+    isStepMove(previous, route) &&
+    typeof document.startViewTransition === 'function' &&
+    matchMedia('(prefers-reduced-motion: no-preference)').matches
+  ) {
+    await document.startViewTransition(() => renderRoute(route)).updateCallbackDone;
+    return;
+  }
+  await renderRoute(route);
+}
+
+async function renderRoute(route) {
   if (current) {
     current.controller.abort();
     for (const cleanup of current.cleanups.reverse()) {

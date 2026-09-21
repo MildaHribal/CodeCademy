@@ -60,9 +60,28 @@ export async function renderOverview(ctx, route = {}) {
     );
   ctx.root.append(page);
 
+  fillPartRails(page);
+
   const partHeading = route.query?.cast ? document.getElementById(`part-${route.query.cast}`) : null;
   partHeading?.closest('.toc-part')?.scrollIntoView({ block: 'start' });
   ctx.onCleanup(overviewExtensions.mount({ curriculum, signal: ctx.signal, onCleanup: ctx.onCleanup, page, addToSlot: slots.addToSlot }));
+}
+
+/**
+ * Jediný pohyb, který se spustí sám: lišty částí se při otevření přehledu naplní
+ * inkoustem podle postupu. Hodnota je v `--fill` už ve značce, takže bez skriptu
+ * (i při vypnutých animacích) je stránka rovnou správně — tohle ji jen přehraje od nuly.
+ */
+function fillPartRails(page) {
+  if (!matchMedia('(prefers-reduced-motion: no-preference)').matches) return;
+  const rails = [...page.querySelectorAll('.toc-part__rail')].map((el) => [el, el.style.getPropertyValue('--fill')]);
+  if (!rails.length) return;
+  for (const [el] of rails) el.style.setProperty('--fill', '0%');
+  requestAnimationFrame(() =>
+    requestAnimationFrame(() => {
+      for (const [el, target] of rails) el.style.setProperty('--fill', target);
+    }),
+  );
 }
 
 function findResumeTarget(curriculum) {
@@ -216,6 +235,14 @@ function partBlock(part, number) {
   return h(
     'section',
     { class: 'toc-part', 'aria-labelledby': `part-${part.id}` },
+    available.length
+      ? h('span', {
+          class: 'toc-part__rail',
+          'aria-hidden': 'true',
+          dataset: { done: String(partFraction >= 1) },
+          style: { '--fill': `${Math.round(partFraction * 100)}%` },
+        })
+      : null,
     h(
       'header',
       { class: 'toc-part__head' },
@@ -266,7 +293,11 @@ function sectionRow(section, number, { partTitle = null } = {}) {
   return h(
     'li',
     { class: `toc-row${status.done ? ' toc-row--done' : ''}`, dataset: { uroven: section.uroven ?? 'jadro' } },
-    h('span', { class: 'toc-row__number' }, number),
+    h(
+      'span',
+      { class: 'toc-row__number', dataset: { done: String(status.done) } },
+      number,
+    ),
     h(
       'div',
       { class: 'toc-row__main' },
@@ -281,7 +312,7 @@ function sectionRow(section, number, { partTitle = null } = {}) {
     h(
       'div',
       { class: 'toc-row__progress' },
-      segmentedProgress(section.modules.map((m) => moduleStatus(m).fraction), { label: `Postup v sekci ${section.title}` }),
+      segmentedProgress(section.modules.map((m) => ({ fraction: moduleStatus(m).fraction, type: m.type })), { label: `Postup v sekci ${section.title}` }),
       h('span', { class: 'toc-row__percent' }, status.done ? 'Splněno' : percent(status.fraction)),
     ),
   );

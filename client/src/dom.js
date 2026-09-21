@@ -8,7 +8,11 @@ export function h(tag, attrs = {}, ...children) {
     } else if (key === 'class') {
       el.className = value;
     } else if (key === 'style' && typeof value === 'object') {
-      Object.assign(el.style, value);
+      // Vlastní vlastnosti (--neco) umí nastavit jen setProperty, Object.assign je zahodí.
+      for (const [name, item] of Object.entries(value)) {
+        if (name.startsWith('--')) el.style.setProperty(name, item);
+        else el.style[name] = item;
+      }
     } else if (key === 'dataset') {
       Object.assign(el.dataset, value);
     } else if (key in el && typeof value !== 'string') {

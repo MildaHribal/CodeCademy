@@ -1,0 +1,207 @@
+/* Identita typů modulů a pohyb.
+
+   Dvě pravidla, která drží zbytek souboru:
+
+   1. Typ modulu se ukazuje jen jako TENKÁ ZNAČKA — obarvená ikona, dílek pruhu,
+      proužek na okraji řádku. Nikdy jako výplň plochy ani barevný štítek. Stránka
+      má zůstat klidná jako učebnice; barva jen říká, co u modulu budeš dělat.
+
+   2. Pohyb odpovídá na akci uživatele (otevřel, zkontroloval, přepnul krok) a ukazuje,
+      CO se změnilo. Jediná výjimka je naplnění čísel částí při otevření přehledu —
+      jeden pohyb při načtení, ne deset. Při `prefers-reduced-motion: reduce` se
+      všechno vypíná už globálně v base.css; tady se navíc nespouští ani skript. */
+
+/* ——— Dílky pruhu postupu podle typu modulu ——— */
+
+/* Prázdný dílek je jen lehce zabarvený, splněný plnou barvou typu. Díky tomu pruh
+   mluví i u nezačaté sekce: řekne, kolik je v ní čtení, kolik stavění a kolik
+   samostatné práce, ne jen „nula procent". */
+.segments__item[data-type='lesson'] {
+  --segment-type: var(--type-lesson);
+}
+
+.segments__item[data-type='workshop'] {
+  --segment-type: var(--type-workshop);
+}
+
+.segments__item[data-type='lab'] {
+  --segment-type: var(--type-lab);
+}
+
+.segments__item[data-type='quiz'] {
+  --segment-type: var(--type-quiz);
+}
+
+.segments__item[data-type='project'] {
+  --segment-type: var(--type-project);
+}
+
+.segments__item[data-type] {
+  background: color-mix(in oklab, var(--segment-type) 26%, var(--segment-empty));
+}
+
+.segments__item[data-type] .segments__fill {
+  background: var(--segment-type);
+}
+
+/* Splněný modul přebíjí barvu typu zelenou — hotovo je hotovo (pravidlo je v layout.css
+   dřív v pořadí, tak ho tady zopakuj se stejnou specificitou plus typem). */
+.segments__item[data-done='true'][data-type] .segments__fill {
+  background: var(--done);
+}
+
+/* Naplnění dílku doprovodí změnu postupu (po splnění kroku se pruh dopočítá). */
+.segments__fill {
+  transition: width 420ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* ——— Řádek modulu na stránce sekce ——— */
+
+/* Proužek na okraji: na první pohled je vidět rytmus sekce
+   (čtení → stavění → vlastní práce → ověření). */
+.module-row::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 14px;
+  bottom: 14px;
+  width: 3px;
+  border-radius: 999px;
+  background: var(--row-type-color, var(--rule-strong));
+}
+
+.module-row[data-type='lesson'] {
+  --row-type-color: var(--type-lesson);
+}
+
+.module-row[data-type='workshop'] {
+  --row-type-color: var(--type-workshop);
+}
+
+.module-row[data-type='lab'] {
+  --row-type-color: var(--type-lab);
+}
+
+.module-row[data-type='quiz'] {
+  --row-type-color: var(--type-quiz);
+}
+
+.module-row[data-type='project'] {
+  --row-type-color: var(--type-project);
+}
+
+.module-row__icon {
+  padding-left: 11px;
+}
+
+.module-row__type {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--row-type-color, var(--ink-soft));
+}
+
+.module-row__type .icon {
+  flex: none;
+}
+
+/* Splněný modul ztlumí barvu typu — pozornost patří tomu, co ještě čeká. */
+.module-row[data-done='true'] {
+  --row-type-color: var(--done-border-strong);
+}
+
+.module-row[data-done='true'] .module-row__type {
+  color: var(--ink-faint);
+}
+
+/* ——— Inkoustový index na okraji části ——— */
+
+/* Jako palcový index na ořízce knihy: u každé části stojí na okraji lišta, která je
+   naplněná tak, jak daleko v části jsi. Procento vedle nadpisu říká totéž číslem,
+   lišta to říká na dálku a přes celou výšku části — z toho je vidět, kolik knihy zbývá. */
+
+@property --fill {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+.toc-part {
+  position: relative;
+}
+
+.toc-part__rail {
+  position: absolute;
+  left: -18px;
+  top: 4px;
+  bottom: 10px;
+  width: 4px;
+  border-radius: 999px;
+  background: linear-gradient(
+    to bottom,
+    var(--rail-ink, var(--accent)) var(--fill, 0%),
+    var(--segment-empty) var(--fill, 0%)
+  );
+  transition: --fill 900ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.toc-part__rail[data-done='true'] {
+  --rail-ink: var(--done);
+}
+
+.toc-row__number[data-done='true'] {
+  color: var(--done);
+}
+
+/* Na úzkém displeji na lištu v okraji není místo. */
+@media (max-width: 900px) {
+  .toc-part__rail {
+    display: none;
+  }
+}
+
+/* ——— Razítko po úspěšné kontrole ——— */
+
+/* Nejdůležitější okamžik celé aplikace: testy prošly. Fajfka se do hlášky orazítkuje,
+   ať je úspěch vidět i koutkem oka, když se člověk zrovna dívá do editoru.
+   Jen u `pass` — u neúspěchu se nic nehýbe, to by bylo posměšné. */
+@media (prefers-reduced-motion: no-preference) {
+  .result[data-kind='pass'] .result__title .icon,
+  .lesson__status[data-kind='pass'] .result__title .icon {
+    animation: stamp 320ms cubic-bezier(0.34, 1.4, 0.64, 1) 1;
+  }
+}
+
+@keyframes stamp {
+  0% {
+    transform: scale(1.9) rotate(-12deg);
+    opacity: 0;
+  }
+  55% {
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) rotate(0);
+    opacity: 1;
+  }
+}
+
+/* ——— Přechod mezi kroky workshopu ——— */
+
+/* Krok je vlastní adresa, takže se celé pracoviště překreslí. View Transitions pak
+   nechají číslo aktivního kroku přejet na nové místo a zadání se prolne — je vidět,
+   že jsi popošel o krok, ne že se stránka vyměnila. Zapíná se v main.js jen pro
+   posun mezi kroky téhož workshopu. */
+::view-transition-group(step-mark) {
+  animation-duration: 240ms;
+}
+
+.stepper__item[aria-current='step'] {
+  view-transition-name: step-mark;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stepper__item[aria-current='step'] {
+    view-transition-name: none;
+  }
+}

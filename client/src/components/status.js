@@ -3,8 +3,15 @@ import { h, svg } from '../dom.js';
 import { icons } from '../icons.js';
 import { percent } from '../text.js';
 
-export function segmentedProgress(fractions, { label }) {
-  const average = fractions.length ? fractions.reduce((a, b) => a + b, 0) / fractions.length : 0;
+/**
+ * Pruh složený z dílků — jeden dílek za modul, vyplněný podle splnění.
+ * Položka je buď číslo (0–1), nebo `{ fraction, type }`; podle typu se dílek obarví,
+ * takže z pruhu je vidět nejen kolik je hotovo, ale i z čeho sekce je
+ * (kolik čtení, kolik workshopů, kolik samostatné práce).
+ */
+export function segmentedProgress(items, { label }) {
+  const parts = items.map((item) => (typeof item === 'number' ? { fraction: item, type: null } : item));
+  const average = parts.length ? parts.reduce((sum, p) => sum + p.fraction, 0) / parts.length : 0;
   return h(
     'div',
     {
@@ -16,10 +23,10 @@ export function segmentedProgress(fractions, { label }) {
       'aria-valuenow': String(Math.round(average * 100)),
       'aria-valuetext': percent(average),
     },
-    fractions.map((fraction) =>
+    parts.map(({ fraction, type }) =>
       h(
         'span',
-        { class: 'segments__item', dataset: { done: String(fraction >= 1) } },
+        { class: 'segments__item', dataset: { done: String(fraction >= 1), type: type ?? '' } },
         h('span', { class: 'segments__fill', style: { width: `${Math.round(fraction * 100)}%` } }),
       ),
     ),
