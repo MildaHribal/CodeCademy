@@ -559,3 +559,96 @@ kurzy Joshe Comeaua, výzvy Frontend Mentoru a projekty The Odin Project.
   neviditelný rozdíl (rozložené `č`, pevná mezera, mezera na konci) a řešení je přitom správné.
   Použij normalizaci: `const sameLine = (a) => a.normalize('NFC').replace(/ /g, ' ').replace(/\s+/g, ' ').trim();`
   a porovnávej `sameLine(line.text) === sameLine('…')`.
+
+---
+
+## 19. Čtyři věci, které učení nejvíc zrychlí (povinné)
+
+Kapitoly 2, 17 a 18 už pokrývají vybavování z paměti, předpovědi, ubírání pomoci
+a opakování s odstupem. Tahle kapitola doplňuje čtyři věci, které v nich chyběly a
+které mají v didaktice programování nejsilnější podklad. Platí pro nové sekce
+**i pro přepisy těch hotových**.
+
+### 19.1 Kroky mají jméno podle účelu, ne podle kódu
+
+Novic si z ukázky odnese jednotlivé řádky, ne postup. Postup si odnese tehdy, když má
+každá část ukázky **jméno říkající, k čemu je** („Najdi prvek", „Zapiš posluchače",
+„Uklid po sobě"). Pojmenované podcíle patří mezi nejsilnější doložené zásahy do výuky
+programování (Margulieux, Catrambone a Guzdial; přehled na `cs1subgoals.org`).
+
+- **Delší ukázka v lekci se dělí na 2–4 pojmenované části.** Jméno je sloveso + předmět
+  a drží i mimo tenhle příklad. Piš ho jako komentář nad blok (`// 1. Připrav data`) nebo
+  jako nadpis `###`. Ne „Řádky 4–7", ne „Krok 2".
+- **Popis kroku workshopu začíná účelem.** První věta `# --description--` říká, **co** se
+  tímhle krokem v aplikaci změní a proč, až pak přijde, jak. Titulek kroku je taky účel
+  („Zavři dialog klávesou Esc"), ne technika („`keydown`").
+- **Ve druhé polovině sekce si jména vymýšlí student.** Nejpozději u druhého výskytu
+  stejného vzoru použij `# --explain--` / `:::explain`, kde má student **sám pojmenovat
+  kroky** postupu, který právě napsal. Výzkum je v tomhle jednoznačný: hotová jména
+  pomůžou při blízkém přenosu, ale vlastnoručně vymyšlená pomůžou víc, když má student
+  vzor použít jinde. Proto nejdřív dostane jména hotová a pak si je vyrábí sám.
+- **Nedávej obojí naráz.** Krok, kde student jména vymýšlí, nemá zároveň tip s hotovými
+  jmény; hotová jména patří až do modelové odpovědi.
+
+Kontrola: přečti si jen jména podcílů modulu za sebou. Vznikne z nich srozumitelný
+postup, který by student dokázal použít na jiné zadání? Když ne, jména jsou o kódu.
+
+### 19.2 Jeden vzor, tři setkání: ukázka → doplňování → od nuly
+
+Nový vzor (posluchač událostí, `reduce` do objektu, `fetch` s ošetřením chyby) se
+neučí jedním krokem. V sekci ho student potká **třikrát a pokaždé s menší oporou**:
+
+1. **hotová ukázka** — vidí vzor celý, s pojmenovanými podcíli (19.1); jen ho přečte
+   a předpoví, co udělá,
+2. **doplňování** — `kind: parsons` s `--blanks--`: řádky seřadí a vypíše do nich
+   chybějící kusy. Tohle je nejlepší poměr naučeného k času: doplňování vede k psaní
+   kódu stejně dobře jako psaní od nuly, ale zabere méně času a méně frustruje,
+3. **od nuly** — běžný krok, `kind: recall` nebo požadavek labu, bez vzoru na očích.
+
+Pravidla:
+
+- **Žádný vzor nejde z ukázky rovnou do psaní od nuly.** Když na tři setkání není místo,
+  vynech ukázku, ne doplňování.
+- **Třetí setkání je v jiné doméně než první.** Stejný vzor, jiná data a jiný web —
+  jinak si student zapamatuje úlohu, ne vzor.
+- **Doplňování má rozptylovače** (`--distractors--`), které odpovídají skutečné chybě,
+  ne náhodné hlouposti.
+
+Kontrola: u každého vzoru, který sekce učí, jdou vyjmenovat tři moduly nebo kroky,
+kde se objevil, a pomoc v nich jde dolů.
+
+### 19.3 Kvíz a lab mají v sobě starší látku
+
+Když se celý kvíz ptá jen na právě probranou sekci, student odpovídá podle kontextu
+(„jsme v sekci o `reduce`, takže `reduce`"), ne podle rozpoznání úlohy. Promíchaná
+látka je při procvičování těžší, ale drží déle a hlavně učí **vybrat správný nástroj**.
+
+- **Aspoň 2 otázky kvízu jsou z dřívějších sekcí** a míří tam, kde se to plete s právě
+  probraným (`map` × `forEach`, `position: sticky` × `fixed`, `==` × `===`).
+- **Aspoň jedna otázka nutí vybrat mezi novým a starým nástrojem** a zeptá se **proč**.
+- **Lab má aspoň jeden požadavek, který stojí na starší sekci** — v zadání se to
+  nepřipomíná odkazem, ať si to student vybaví sám. Odkaz patří až do `--why--`.
+- **Karty tohle nenahrazují.** Karty vracejí jednotlivé fakty; kvíz s promíchanou
+  látkou trénuje rozhodování mezi nimi.
+
+Kontrola: u každé otázky kvízu se zeptej — dal by se odpovědět správně jen z toho, že
+vím, v jaké jsem sekci? Když ano, otázka nic neměří.
+
+### 19.4 Vysvětlení vlastními slovy je volné, ne doplňovačka
+
+`:::explain` a `# --explain--` fungují jen tehdy, když student **skutečně formuluje**.
+Volné vysvětlení zlepšuje porozumění kódu měřitelně víc než výběr z možností nebo
+doplnění slova do věty.
+
+- **Zadání je otevřená otázka**, ne věta s dírou: „Proč se změna projeví i tam, kde jsi
+  nic neměnil?" místo „Doplň: pole se předává ___".
+- **Modelová odpověď se ukáže až po odeslání** a student se s ní porovná sám přes
+  `## --checklist--`. Body checklistu jsou myšlenky, ne slova — „zmínil jsem, že obě
+  proměnné ukazují na stejné pole" projde i při jiné formulaci.
+- **Checklist má 2–4 body.** Víc bodů vede k odškrtávání bez čtení.
+- **Kde to umístit:** hned za nejtěžší částí lekce (ne na konci) a po druhém výskytu
+  vzoru ve workshopu, kdy už má student co vysvětlovat.
+- **Na co se ptát:** proč to funguje, kdy to selže a čím se to liší od sousedního
+  nástroje. Ne „co dělá `map`" — to je karta, ne vysvětlení.
+
+Kontrola: šla by tvoje otázka zodpovědět jedním slovem? Pak to není vysvětlení.
