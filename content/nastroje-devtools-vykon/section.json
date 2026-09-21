@@ -12,19 +12,27 @@
   "outcomes": [
     {
       "text": "Najdeš příčinu problému přes Elements, Console, Sources, Network, Performance, Memory a Application.",
-      "links": ["devtools-mapa#devtools-do-hloubky"]
+      "links": [
+        "nastroje-devtools-vykon/devtools-mapa#mapa-panelu-ktery-na-co"
+      ]
     },
     {
       "text": "Změříš Core Web Vitals (LCP, INP, CLS) a vysvětlíš, co je ovlivňuje.",
-      "links": ["core-web-vitals#core-web-vitals"]
+      "links": [
+        "nastroje-devtools-vykon/core-web-vitals#tri-otazky-uzivatele-nacetlo-se-reaguje-drzi-na-miste"
+      ]
     },
     {
       "text": "Zrychlíš načtení stránky (obrázky, písma, blokující skripty, cache).",
-      "links": ["nacitani-stranky#rychle-nacteni"]
+      "links": [
+        "nastroje-devtools-vykon/nacitani-stranky#kriticka-cesta-vykreslovani"
+      ]
     },
     {
       "text": "Rozdělíš dlouhou úlohu a najdeš únik paměti.",
-      "links": ["devtools-mapa#uniky-pameti"]
+      "links": [
+        "nastroje-devtools-vykon/devtools-mapa#uniky-pameti-posluchaci-casovace-a-odpojene-uzly"
+      ]
     }
   ]
 }
