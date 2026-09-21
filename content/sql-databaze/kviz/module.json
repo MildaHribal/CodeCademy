@@ -1,0 +1,6 @@
+{
+  "type": "quiz",
+  "title": "Kvíz: databáze a SQL",
+  "summary": "Ověříš si klíče a omezení, NULL, spojování a agregace, transakce, indexy, okenní funkce i rozdíly mezi SQLite a PostgreSQL — a přečteš cizí schéma.",
+  "minutes": 30
+}

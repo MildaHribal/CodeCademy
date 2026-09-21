@@ -1,0 +1,1 @@
+{ "type": "lab", "title": "Lab: dotazy pro e-shop", "summary": "Sám dopíšeš schéma objednávek s klíči a omezeními a nad ním deset dotazů pro administraci e-shopu — od výpisu zboží po žebříček zákazníků a objednávku v transakci.", "minutes": 90, "runtime": "node" }

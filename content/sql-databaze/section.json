@@ -1,1 +1,16 @@
-{"title":"SQL a databáze","intro":"Naučíš se pracovat s relačními databázemi, psát dotazy a navrhovat strukturu tabulek.","modules":["relacni-databaze","navrh-schematu","workshop-prvni-dotazy","workshop-join-agregace"]}
+{
+  "title": "SQL a databáze",
+  "intro": "Naučíš se pracovat s relačními databázemi, psát dotazy a navrhovat strukturu tabulek.",
+  "modules": [
+    "relacni-databaze",
+    "workshop-prvni-dotazy",
+    "navrh-schematu",
+    "workshop-join-agregace",
+    "transakce-a-indexy",
+    "okenni-funkce",
+    "orm-drizzle",
+    "postgres-v-dockeru",
+    "lab-eshop-dotazy",
+    "kviz"
+  ]
+}

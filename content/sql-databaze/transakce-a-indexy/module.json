@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "Transakce, indexy a N+1", "summary": "Zabalíš několik změn do jedné transakce, přečteš plán dotazu, přidáš index tam, kde opravdu pomůže, a poznáš dotaz, který se zbytečně ptá v cyklu.", "minutes": 45 }

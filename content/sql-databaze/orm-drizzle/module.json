@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "ORM: Drizzle", "summary": "Popíšeš schéma jako kód, napíšeš nad ním dotazy s našeptáváním, podíváš se na SQL, které z nich vznikne, a poznáš, kdy se vrátit k ručnímu SQL.", "minutes": 45 }

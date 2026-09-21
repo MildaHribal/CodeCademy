@@ -1,0 +1,1 @@
+{ "type": "lesson", "title": "PostgreSQL v Dockeru", "summary": "Spustíš PostgreSQL jedním souborem compose, připojíš se k němu přes DATABASE_URL a převedeš schéma i dotazy ze SQLite.", "minutes": 40 }
