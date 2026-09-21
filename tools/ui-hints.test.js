@@ -34,7 +34,7 @@ describe('nápovědy, porovnání s řešením a statistiky v UI', () => {
     });
     baseUrl = `http://127.0.0.1:${await listenInRange(server, PORTS)}`;
     browser = await chromium.launch({ args: BROWSER_ARGS });
-    page = await browser.newPage({ viewport: { width: 1400, height: 900 } });
+    page = await browser.newPage({ viewport: { width: 1400, height: 900 }, reducedMotion: 'reduce' });
   });
 
   after(async () => {

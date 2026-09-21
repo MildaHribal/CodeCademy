@@ -46,7 +46,7 @@ describe('orientace, tmavý režim a poznámky v prohlížeči', () => {
   });
 
   async function openPage(hash, { width = 1400, height = 900 } = {}) {
-    const page = await browser.newPage({ viewport: { width, height } });
+    const page = await browser.newPage({ viewport: { width, height }, reducedMotion: 'reduce' });
     const errors = [];
     page.on('pageerror', (error) => errors.push(error.message));
     page.errors = errors;

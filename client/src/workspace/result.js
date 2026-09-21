@@ -2,6 +2,7 @@
 import { h, svg, append } from '../dom.js';
 import { icons } from '../icons.js';
 import { renderRunSummary } from '../components/test-result.js';
+import { riseIn, springIn } from '../motion.js';
 
 function defaultFailSummary({ run, total, passedCount, skipped }) {
   const out = [
@@ -47,6 +48,7 @@ export function showResult(result, kind, details = {}) {
       context: 'workspace',
     };
     append(result, renderRunSummary(input, defaultFailSummary));
+    riseIn(result, { distance: 10 });
     return;
   }
 
@@ -55,6 +57,7 @@ export function showResult(result, kind, details = {}) {
     details.saveError ? h('p', { class: 'result__warning' }, `Splnění se nepodařilo uložit: ${details.saveError.message}`) : null,
     h('div', { class: 'result__actions' }, details.nextAction),
   ]);
+  springIn(result);
 }
 
 export function clearResult(result) {

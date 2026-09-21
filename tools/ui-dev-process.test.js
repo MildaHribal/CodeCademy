@@ -52,7 +52,7 @@ describe('rozhraní nástroje dev-process', () => {
   });
 
   async function openPage(hash) {
-    const page = await browser.newPage({ viewport: { width: 1500, height: 950 } });
+    const page = await browser.newPage({ viewport: { width: 1500, height: 950 }, reducedMotion: 'reduce' });
     const errors = [];
     page.on('pageerror', (error) => errors.push(error.message));
     page.errors = errors;

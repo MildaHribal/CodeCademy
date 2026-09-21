@@ -276,7 +276,6 @@ body[data-layout='workspace'] #main {
 .lesson__status[data-kind='pass'] {
   padding: 12px 14px;
   border-radius: var(--radius);
-  animation: result-in 180ms ease-out;
 }
 
 .result[data-kind='pass'],

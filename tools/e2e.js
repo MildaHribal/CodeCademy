@@ -575,7 +575,7 @@ async function main() {
     };
 
     browser = await chromium.launch({ args: BROWSER_ARGS, headless: !options.headed });
-    const context = await browser.newContext({ viewport: VIEWPORT, locale: 'cs-CZ' });
+    const context = await browser.newContext({ viewport: VIEWPORT, locale: 'cs-CZ', reducedMotion: 'reduce' });
     const page = await context.newPage();
 
     // Chyby aplikace. Chyby uživatelova kódu z náhledů a testů se nepočítají — ty běží

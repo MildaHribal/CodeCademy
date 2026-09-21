@@ -41,7 +41,7 @@ describe('výsledky česky a lint v editoru', () => {
   });
 
   async function openPage(hash) {
-    const page = await browser.newPage({ viewport: { width: 1500, height: 950 } });
+    const page = await browser.newPage({ viewport: { width: 1500, height: 950 }, reducedMotion: 'reduce' });
     // Chyby aplikace (ne uživatelova kódu v iframu náhledu, ten má vlastní adresu).
     const problems = [];
     page.on('console', (message) => {

@@ -332,7 +332,7 @@ describe('rozhraní bloků lekce a druhů kroků', () => {
 
   /** Otevře stránku s podvrženými daty modulů; `sent` sbírá těla požadavků na cizí nástroje. */
   async function openPage(hash, { colorScheme = 'light', viewport = { width: 1400, height: 900 } } = {}) {
-    const page = await browser.newPage({ viewport, colorScheme });
+    const page = await browser.newPage({ viewport, colorScheme, reducedMotion: 'reduce' });
     const sent = [];
     const json = (route, body) => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(body) });
     await page.route(/\/api\/module\/bloky\/(lekce|workshop|lab)(\?.*)?$/, (route) => {

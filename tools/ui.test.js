@@ -42,7 +42,7 @@ describe('rozhraní aplikace', () => {
   });
 
   async function openPage(hash) {
-    const page = await browser.newPage({ viewport: { width: 1400, height: 900 } });
+    const page = await browser.newPage({ viewport: { width: 1400, height: 900 }, reducedMotion: 'reduce' });
     await page.goto(`${baseUrl}/${hash}`);
     return page;
   }

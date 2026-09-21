@@ -60,7 +60,7 @@ describe('kvíz a opakování v prohlížeči', () => {
   });
 
   async function openPage(hash) {
-    const page = await browser.newPage({ viewport: { width: 1400, height: 900 } });
+    const page = await browser.newPage({ viewport: { width: 1400, height: 900 }, reducedMotion: 'reduce' });
     const errors = [];
     page.on('pageerror', (error) => errors.push(error.message));
     await page.goto(`${baseUrl}/${hash}`);

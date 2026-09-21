@@ -174,13 +174,13 @@
 @media (prefers-reduced-motion: no-preference) {
   .result[data-kind='pass'] .result__title .icon,
   .lesson__status[data-kind='pass'] .result__title .icon {
-    animation: stamp 320ms cubic-bezier(0.34, 1.4, 0.64, 1) 1;
+    animation: stamp 520ms cubic-bezier(0.34, 1.4, 0.64, 1) 1;
   }
 }
 
 @keyframes stamp {
   0% {
-    transform: scale(1.9) rotate(-12deg);
+    transform: scale(2.8) rotate(-18deg);
     opacity: 0;
   }
   55% {
@@ -261,8 +261,49 @@
     transition: transform 140ms cubic-bezier(0.22, 0.61, 0.36, 1), box-shadow 140ms ease;
   }
 
+  .module-row:hover {
+    transform: translateX(6px);
+  }
+
   .module-row:active {
-    transform: scale(0.995);
+    transform: translateX(6px) scale(0.99);
+  }
+
+  /* Řádek obsahu se při najetí posune stejně jako řádek modulu. */
+  .toc-row {
+    transition: transform 160ms cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+
+  .toc-row:hover {
+    transform: translateX(6px);
+  }
+
+  /* Hlavní tlačítko se při najetí zvedne ze stránky. */
+  .btn {
+    transition:
+      transform 140ms cubic-bezier(0.34, 1.4, 0.64, 1),
+      box-shadow 140ms ease,
+      background-color 120ms ease,
+      border-color 120ms ease;
+  }
+
+  .btn--primary:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-page);
+  }
+
+  .btn:active:not(:disabled) {
+    transform: translateY(1px) scale(0.97);
+    box-shadow: none;
+  }
+
+  /* Číslo kroku při najetí povyskočí. */
+  .stepper__item {
+    transition: transform 160ms cubic-bezier(0.34, 1.4, 0.64, 1), background-color 120ms ease, color 120ms ease;
+  }
+
+  .stepper__item:hover {
+    transform: translateY(-3px);
   }
 
   .next-on-route__link:hover {
