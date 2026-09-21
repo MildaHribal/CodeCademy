@@ -1,6 +1,6 @@
 {
   "title": "HTML a jak funguje web",
-  "intro": "V této sekci se naučíš, jak funguje web od napsání adresy až po vykreslení stránky, a jak vytvořit sémanticky správný HTML dokument.",
+  "intro": "Web začíná tím, že napíšeš adresu — a končí stránkou, kterou přečte prohlížeč, vyhledávač i čtečka obrazovky. V téhle sekci projdeš celou tu cestu a naučíš se psát HTML, které **něco znamená**, ne jen vypadá.\n\nPostup: lekce o tom, co se děje mezi adresou a pixely, workshop, ve kterém z holého textu postavíš stránku receptu, lekce o stavbě dokumentu a o čtení MDN, druhý workshop se stránkou blogu a responzivními fotkami, samostatný lab s vlastní vizitkou a kvíz nad cizím kódem.\n\n**Předpoklady:** žádné. Tohle je začátek.",
   "modules": [
     "jak-funguje-web",
     "anatomie-dokumentu",
@@ -13,35 +13,80 @@
   ],
   "outcomes": [
     {
-      "text": "vysvětlit, co se stane mezi napsáním adresy a vykreslením stránky (URL, DNS, HTTP, DOM)",
+      "text": "Popíšeš, co se stane mezi napsáním adresy a vykreslenou stránkou — DNS, požadavek, odpověď, strom dokumentu.",
       "links": [
-        "html-zaklady/jak-funguje-web"
+        "html-zaklady/jak-funguje-web#dns-jak-se-z-domeny-stane-server",
+        "html-zaklady/jak-funguje-web#http-pozadavek-a-odpoved",
+        "html-zaklady/jak-funguje-web#co-prohlizec-udela-s-html"
       ]
     },
     {
-      "text": "napsat validní HTML dokument se sémantickou strukturou a landmarky",
+      "text": "Z holého textu napíšeš validní dokument s hlavičkou, ve které nechybí kódování, viewport ani titulek.",
       "links": [
-        "html-zaklady/anatomie-dokumentu",
-        "html-zaklady/semanticka-struktura"
+        "html-zaklady/anatomie-dokumentu#kostra-dokumentu",
+        "html-zaklady/anatomie-dokumentu#hlavicka-kodovani-viewport-a-titulek",
+        "html-zaklady/workshop-recept/001"
       ]
     },
     {
-      "text": "správně použít nadpisy, odkazy, obrázky, seznamy a tabulky",
+      "text": "Rozvrhneš stránku do orientačních oblastí a u každé části řekneš, proč tam patří `article`, `section`, nebo jen `div`.",
       "links": [
-        "html-zaklady/workshop-recept",
-        "html-zaklady/workshop-blog"
+        "html-zaklady/semanticka-struktura#orientacni-oblasti-header-nav-main-aside-footer",
+        "html-zaklady/semanticka-struktura#article-a-section",
+        "html-zaklady/workshop-blog/002"
       ]
     },
     {
-      "text": "najít odpověď na MDN a přečíst tabulku podpory",
+      "text": "Sestavíš osnovu nadpisů, která nepřeskakuje úroveň, a vysvětlíš, komu na tom záleží.",
       "links": [
-        "html-zaklady/mdn-a-dokumentace"
+        "html-zaklady/semanticka-struktura#osnova-nadpisu",
+        "html-zaklady/workshop-recept/012"
       ]
     },
     {
-      "text": "prohlédnout si stránku v DevTools (Elements, Network)",
+      "text": "Napíšeš seznamy, tabulku se záhlavím a přílohu s obrázkem a popiskem, aniž bys je musel hledat.",
       "links": [
-        "html-zaklady/jak-funguje-web"
+        "html-zaklady/workshop-recept/015",
+        "html-zaklady/workshop-recept/016",
+        "html-zaklady/workshop-blog/010"
+      ]
+    },
+    {
+      "text": "Vybereš mezi celou adresou, relativní adresou, odkazem na místo ve stránce a `mailto:` podle toho, kam odkaz vede.",
+      "links": [
+        "html-zaklady/jak-funguje-web#relativni-a-absolutni-adresa",
+        "html-zaklady/jak-funguje-web#url-z-ceho-se-adresa-sklada",
+        "html-zaklady/workshop-blog/019"
+      ]
+    },
+    {
+      "text": "Napíšeš `alt`, který obrázek zastoupí, a poznáš, kdy má být prázdný.",
+      "links": [
+        "html-zaklady/semanticka-struktura#obsah-s-vyznamem-time-address-blockquote-a-cite",
+        "html-zaklady/workshop-recept/008"
+      ]
+    },
+    {
+      "text": "Necháš prohlížeč vybrat velikost i formát obrázku podle displeje pomocí `srcset`, `sizes` a `picture`.",
+      "links": [
+        "html-zaklady/workshop-blog/011",
+        "html-zaklady/workshop-blog/012",
+        "html-zaklady/workshop-blog/013"
+      ]
+    },
+    {
+      "text": "V cizím HTML najdeš špatné vnoření podle toho, čím se strom v DevTools liší od souboru.",
+      "links": [
+        "html-zaklady/anatomie-dokumentu#prohlizec-chyby-tise-opravuje",
+        "html-zaklady/workshop-recept/021",
+        "html-zaklady/workshop-blog/020"
+      ]
+    },
+    {
+      "text": "Najdeš odpověď na MDN a z Baseline a tabulky kompatibility poznáš, jestli se na věc dá spolehnout.",
+      "links": [
+        "html-zaklady/mdn-a-dokumentace#jak-hledat",
+        "html-zaklady/mdn-a-dokumentace#baseline-a-tabulka-kompatibility"
       ]
     }
   ]

@@ -1,7 +1,7 @@
 {
   "type": "workshop",
   "title": "Článek na blogu",
-  "summary": "Pokročilejší stránka s tabulkou a obrázky.",
-  "minutes": 45,
+  "summary": "Postavíš stránku článku s hlavičkou, navigací, bočním panelem a patičkou a s fotkami, ze kterých si prohlížeč vybere velikost podle displeje.",
+  "minutes": 70,
   "runtime": "dom"
 }
