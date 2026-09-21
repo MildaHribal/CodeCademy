@@ -1,7 +1,7 @@
 {
   "type": "quiz",
   "title": "Kvíz: Vue a Nuxt",
-  "summary": "Kvíz",
+  "summary": "Ověříš si převod z Reactu, reaktivitu, SFC s Pinií a Nuxt — i na cizím kódu.",
   "minutes": 25,
   "runtime": "js"
 }

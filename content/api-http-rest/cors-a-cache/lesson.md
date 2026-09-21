@@ -260,6 +260,25 @@ Prohlížeč pošle `If-None-Match` se stejným ETag, jaký server právě spoč
 `304 Not Modified` bez těla říká „tvoje uložená kopie platí". Prohlížeč ji podstrčí `fetch` jako normální odpověď `200`.
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč `curl` na API projde i tehdy, když stejný požadavek
+z prohlížeče skončí chybou CORS.
+
+## --model--
+CORS není ochrana serveru — je to pravidlo, které vynucuje **prohlížeč**, aby ochránil
+uživatele. Cizí stránka ti může poslat požadavek jménem přihlášeného člověka, ale
+prohlížeč jí nedovolí odpověď přečíst, dokud server hlavičkou neřekne, že smí. `curl`
+žádného uživatele nechrání a žádné takové pravidlo nezná, takže ho nic nezastaví.
+Proto chyba CORS **neznamená**, že server požadavek odmítl — obvykle ho zpracoval
+a odpověděl, jen prohlížeč odpověď nepustil dál do skriptu.
+
+## --checklist--
+- CORS vynucuje prohlížeč, ne server.
+- Chrání uživatele před cizí stránkou, ne API před kýmkoli.
+- Nástroje mimo prohlížeč se jím neřídí.
+- Zablokovaný požadavek často na serveru proběhl.
+:::
+
 ## Typické chyby a pasti
 
 > [!PITFALL]

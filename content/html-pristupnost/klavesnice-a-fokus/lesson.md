@@ -364,6 +364,26 @@ Protože čtečka obrazovky čte jen prvky s obrysem.
 Čtečka obrys nepotřebuje, fokus sleduje přes strom přístupnosti. Obrys chybí lidem, kteří na obrazovku vidí.
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč `<div onclick="...">` vypadá jako tlačítko, ale pro
+ovládání klávesnicí jím není.
+
+## --model--
+`<div>` je obecný obal bez významu. Prohlížeč o něm neví, že se s ním dá něco dělat,
+takže ho nezařadí do pořadí fokusu, nereaguje na Enter ani na mezerník a čtečka
+obrazovky ho neohlásí jako ovládací prvek. Kliknutí myší funguje jen proto, že se na
+něm poslouchá událost. Nativní `<button>` naproti tomu dostane fokus, reaguje na
+klávesy, ohlásí svou roli i stav a přijde se správným stylem viditelného fokusu.
+Napodobit to ručně jde (`tabindex`, `role`, obsluha kláves), ale je to několik řádků
+navíc, na které se snadno zapomene — proto se začíná správnou značkou.
+
+## --checklist--
+- Obecný obal není pro prohlížeč ovládací prvek.
+- Nedostane fokus a nereaguje na klávesy.
+- Čtečka obrazovky mu neohlásí roli.
+- Nativní prvek tohle všechno umí sám.
+:::
+
 ## Typické chyby a pasti
 
 > [!PITFALL] Pořadí na obrazovce a v HTML se rozchází

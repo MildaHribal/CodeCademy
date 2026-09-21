@@ -1,7 +1,7 @@
 {
   "type": "lesson",
   "title": "Nuxt v kostce",
-  "summary": "Nuxt",
+  "summary": "Zorientuješ se v Nuxtu: routy ze souborů, automatické importy, načítání dat a vlastní API.",
   "minutes": 40,
-  "runtime": "js"
+  "runtime": "vue"
 }

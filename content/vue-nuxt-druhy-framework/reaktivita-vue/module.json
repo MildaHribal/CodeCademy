@@ -1,7 +1,7 @@
 {
   "type": "lesson",
   "title": "Reaktivita ve Vue",
-  "summary": "Reaktivita",
+  "summary": "Pochopíš, jak Vue pozná, co má překreslit, a proč se v něm nepíšou seznamy závislostí.",
   "minutes": 40,
-  "runtime": "js"
+  "runtime": "vue"
 }

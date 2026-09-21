@@ -12,15 +12,31 @@
   ],
   "outcomes": [
     {
-      "text": "převést komponentu z Reactu do Vue podle převodní tabulky",
+      "text": "Převedeš komponentu z Reactu do Vue podle převodní tabulky — šablona, stav, odvozená hodnota, props i události.",
       "links": [
-        "vue-nuxt-druhy-framework/prevodni-tabulka#anchor"
+        "vue-nuxt-druhy-framework/prevodni-tabulka#prevodni-tabulka-do-kapsy",
+        "vue-nuxt-druhy-framework/workshop-prepis-do-vue/002"
       ]
     },
     {
-      "text": "vysvětlit reaktivitu Vue",
+      "text": "Vysvětlíš, proč Vue překresluje jen to, co se doopravdy změnilo, a kdy reaktivita naopak zmizí.",
       "links": [
-        "vue-nuxt-druhy-framework/reaktivita-vue#anchor"
+        "vue-nuxt-druhy-framework/reaktivita-vue#proxy-a-sledovani-zavislosti",
+        "vue-nuxt-druhy-framework/reaktivita-vue#reactive-a-proc-ztraci-reaktivitu"
+      ]
+    },
+    {
+      "text": "Rozdělíš aplikaci na jednosouborové komponenty a sdílený store místo jednoho velkého souboru.",
+      "links": [
+        "vue-nuxt-druhy-framework/sfc-a-pinia#jednosouborova-komponenta",
+        "vue-nuxt-druhy-framework/sfc-a-pinia#pinia-store-misto-kontextu"
+      ]
+    },
+    {
+      "text": "Poznáš, co za tebe dělá Nuxt, a najdeš v projektu místo, kam patří routa, data i serverové API.",
+      "links": [
+        "vue-nuxt-druhy-framework/nuxt-v-kostce#routy-ze-souboru-pages",
+        "vue-nuxt-druhy-framework/nuxt-v-kostce#server-uvnitr-nuxtu-server-api"
       ]
     }
   ]

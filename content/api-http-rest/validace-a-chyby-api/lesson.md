@@ -299,6 +299,25 @@ Jaký stavový kód vrátíš, když tělo požadavku překročí limit?
 `413 Content Too Large` (dřív *Payload Too Large*) říká, že problém není v obsahu, ale ve velikosti. Klient může poslat menší kus.
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč validace na klientovi nenahradí validaci na serveru,
+i když je obojí napsané podle stejných pravidel.
+
+## --model--
+Validace v prohlížeči je **služba uživateli** — okamžitá zpětná vazba, ať nemusí čekat
+na odpověď. Nic ale nebrání poslat požadavek mimo prohlížeč: z konzole, z `curl`,
+z vlastního skriptu. Klient je pod kontrolou toho, kdo ho používá, ne pod tvojí.
+Server je proto jediné místo, kde se validace dá vynutit. Platí to i pro data, která
+si server sám vyžádá jinde: všechno, co přijde po síti, je neověřený vstup, dokud
+neprojde schématem.
+
+## --checklist--
+- Klientskou validaci lze obejít úplným vynecháním klienta.
+- Klient slouží k pohodlí, ne k vynucení pravidel.
+- Server je jediné místo, které má kontrolu nad daty.
+- Neověřený vstup je všechno, co přišlo po síti.
+:::
+
 ## Typické chyby a pasti
 
 > [!PITFALL]

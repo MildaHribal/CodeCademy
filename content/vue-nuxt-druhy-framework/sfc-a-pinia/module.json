@@ -1,7 +1,7 @@
 {
   "type": "lesson",
   "title": "SFC, Pinia a Vue Router",
-  "summary": "SFC",
+  "summary": "Přečteš a napíšeš soubor .vue, sdílíš stav přes Pinii a rozdělíš aplikaci na routy.",
   "minutes": 40,
-  "runtime": "js"
+  "runtime": "vue"
 }

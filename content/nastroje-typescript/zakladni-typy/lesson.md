@@ -369,6 +369,26 @@ ti TypeScript nedovolí s výsledkem pracovat, dokud případ „nenašlo se" ne
 což je přesně ta chyba, která v JavaScriptu končí `Cannot read properties of undefined`.
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč objekt napsaný rukou projde jako hodnota typu, který jsi
+definoval pro data z API.
+
+## --model--
+TypeScript porovnává **tvar**, ne původ. Typ je popis toho, jaké klíče a jakých typů
+hodnota má; když je objekt má, do typu patří, bez ohledu na to, jestli vznikl z
+`JSON.parse`, z `new`, nebo je napsaný v testu. Tomu se říká strukturální typování
+a je to praktické: testovací data se dají napsat rukou a nemusí se nic dědit ani
+implementovat. Má to ale i druhou stranu — typ ti nezaručí, že data **opravdu**
+přišla ověřená ze serveru. Shoda tvaru se kontroluje jen při překladu; za běhu
+TypeScript neexistuje a nikdo nic nekontroluje.
+
+## --checklist--
+- Typ popisuje tvar hodnoty, ne její původ.
+- Cokoli má správné klíče, do typu patří.
+- Testovací data se proto dají napsat rukou.
+- Za běhu se shoda nekontroluje, na to je validace.
+:::
+
 ## Typické chyby a pasti
 
 > [!PITFALL] Klíč navíc projde, když objekt nepíšeš přímo do proměnné

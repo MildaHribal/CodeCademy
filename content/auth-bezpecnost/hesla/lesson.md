@@ -332,6 +332,26 @@ Ne, je dlouhé a není mezi běžnými hesly.
 Dlouhá fráze je silná a dobře se pamatuje. Server kontroluje délku a seznam úniků, ne druhy znaků.
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč se heslo hashuje **pomalu** — vždyť pomalost je jinak
+u programů problém.
+
+## --model--
+U hesla je pomalost obrana. Útočník, který získá databázi, zkouší hesla hrubou silou:
+vezme seznam nejčastějších hesel, spočítá jejich hash a porovná. Rychlá funkce mu dovolí
+zkusit miliardy pokusů za vteřinu. Když jeden výpočet trvá desetinu vteřiny, stejný
+útok se protáhne o mnoho řádů a přestane se vyplácet. Pro přihlášení je to přitom
+neznatelné — legitimní uživatel spočítá jeden hash, útočník miliony. Sůl k tomu přidá
+druhou věc: každé heslo má vlastní, takže předpočítané tabulky nefungují a každý účet
+se musí lámat zvlášť.
+
+## --checklist--
+- Pomalý hash prodraží útok hrubou silou.
+- Legitimní přihlášení počítá jen jeden hash.
+- Sůl znemožní předpočítané tabulky.
+- Se solí se každý účet musí lámat samostatně.
+:::
+
 ## Typické chyby a pasti
 
 > [!PITFALL] Heslo v logu

@@ -1,7 +1,7 @@
 {
   "type": "lab",
   "title": "Košík ve Vue",
-  "summary": "Lab",
-  "minutes": 60,
+  "summary": "Postavíš košík e-shopu: počty kusů, mezisoučty, dopravu zdarma od limitu a slevový kód.",
+  "minutes": 75,
   "runtime": "vue"
 }

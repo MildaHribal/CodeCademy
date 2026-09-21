@@ -1,7 +1,7 @@
 {
   "type": "workshop",
   "title": "Počítadlo kalorií ve Vue",
-  "summary": "Přepis do Vue",
-  "minutes": 60,
+  "summary": "Postavíš denní počítadlo kalorií: seznam jídel, formulář, limit, vlastní komponenty a sdílený store — celé ve Vue.",
+  "minutes": 85,
   "runtime": "vue"
 }

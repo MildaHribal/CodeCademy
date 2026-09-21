@@ -222,6 +222,25 @@ na form, vypne prohlížečové bubliny a blokování odeslání
 na značku form
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč se vyplatí psát validační atributy do HTML, i když
+stejné kontroly musíš znovu napsat na serveru.
+
+## --model--
+Obojí dělá jinou práci. Atributy v HTML dávají uživateli **okamžitou** zpětnou vazbu:
+pole se označí dřív, než cokoli odešle, a nemusí čekat na odpověď serveru. Navíc si
+prohlížeč sám poradí s klávesnicí na mobilu i s hlášením pro čtečku obrazovky, což
+bych ručně psal dlouho. Serverová kontrola naproti tomu nic nevysvětluje — jen
+odmítne, co je neplatné, a je jediná, kterou nejde obejít. Duplicita tedy není plýtvání:
+jedna vrstva zlepšuje použitelnost, druhá zaručuje správnost dat.
+
+## --checklist--
+- Validace v prohlížeči je okamžitá zpětná vazba pro uživatele.
+- Prohlížeč k ní přidá klávesnici i hlášení pro čtečku.
+- Serverová kontrola je jediná, kterou nejde obejít.
+- Každá vrstva řeší jiný problém, takže se nevylučují.
+:::
+
 ## Proč to nestačí
 
 Všechno, co jsi v téhle lekci viděl, běží **na počítači uživatele**. Což znamená, že to

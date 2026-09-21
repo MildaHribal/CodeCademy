@@ -1,7 +1,7 @@
 {
   "type": "lesson",
   "title": "Z Reactu do Vue",
-  "summary": "Převod",
-  "minutes": 40,
-  "runtime": "js"
+  "summary": "Přečteš komponentu Vue a přepíšeš ji do Reactu i zpátky, protože víš, co čemu odpovídá.",
+  "minutes": 35,
+  "runtime": "vue"
 }

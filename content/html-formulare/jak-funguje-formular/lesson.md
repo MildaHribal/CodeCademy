@@ -438,6 +438,23 @@ Obě metody posílají všechno jako text, i čísla. Rozdíl je jinde.
 html-formulare/jak-funguje-formular#get-nebo-post
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč se hodnota pole neodešle, když pole nemá atribut `name`.
+
+## --model--
+Formulář se odesílá jako sada dvojic **jméno = hodnota**. Jméno té dvojice je právě
+`name` — bez něj prohlížeč nemá, jak hodnotu pojmenovat, takže ji do požadavku vůbec
+nezařadí. Není to chyba ani varování, pole prostě zmizí. Proto je `name` to jediné, co
+o poli opravdu rozhoduje: `id` slouží k propojení s popiskem, `placeholder` a třídy jsou
+pro člověka a pro vzhled, ale pro server existuje jen to, co má jméno.
+
+## --checklist--
+- Odesílají se dvojice jméno a hodnota.
+- Jméno dvojice určuje atribut `name`.
+- Bez `name` se pole do požadavku nedostane.
+- `id`, `placeholder` ani třídy odeslání neovlivní.
+:::
+
 ## Typické chyby a pasti
 
 > [!PITFALL]

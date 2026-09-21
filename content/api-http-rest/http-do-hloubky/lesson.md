@@ -277,6 +277,25 @@ Nestačí, protože testy API musí běžet v prohlížeči.
 Test API je obyčejný program, který posílá HTTP požadavky. Běží v Node stejně dobře jako curl.
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč je podstatné, jestli je metoda idempotentní — když klient
+požadavek pošle dvakrát.
+
+## --model--
+Po síti se ztrácejí odpovědi, ne jen požadavky. Klient, který nedostal odpověď, neví,
+jestli server nic neudělal, nebo udělal všechno a odpověď se ztratila cestou. Jediná
+bezpečná reakce je požadavek zopakovat — a právě tady rozhoduje idempotence. U `GET`,
+`PUT` a `DELETE` má druhé odeslání stejný výsledek jako první, takže opakování nic
+nepokazí. `POST` takový slib nedává: dvakrát odeslaná objednávka může být dvě
+objednávky. Proto se u něj zavádí klíč požadavku, podle kterého server pozná opakování.
+
+## --checklist--
+- Při výpadku se může ztratit i odpověď, nejen požadavek.
+- Klient pak neví, jestli se akce provedla.
+- U idempotentní metody opakování nic nezmění.
+- `POST` opakovat bez pojistky nejde.
+:::
+
 ## Typické chyby a pasti
 
 > [!PITFALL]
