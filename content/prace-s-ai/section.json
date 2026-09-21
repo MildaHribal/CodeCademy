@@ -1,6 +1,6 @@
 {
   "title": "Práce s AI při vývoji",
-  "intro": "V této sekci se naučíš, jak z jazykového modelu (LLM) udělat svého tutora a pomocníka, a ne generátor chyb. Předpokladem je orientace v cizím kódu (sekce `nastroje-cizi-kod`).",
+  "intro": "Jazykový model ti napíše kód za pár vteřin. Zbytek práce — poznat, co je v tom kódu špatně, a nepřestat přitom umět programovat — zůstává na tobě. V téhle sekci se naučíš zadávat tak, aby výsledek stál za to, číst vygenerovaný diff jako cizí pull request a poznat, kdy je rychlejší nástroj vypnout. Předpokladem je orientace v cizím kódu (sekce `nastroje-cizi-kod`).",
   "modules": [
     "jak-llm-selhava",
     "ai-jako-tutor",
@@ -11,24 +11,53 @@
   ],
   "outcomes": [
     {
-      "text": "Vysvětlíš, jak jazykový model generuje kód a proč selhává.",
-      "links": ["prace-s-ai/jak-llm-selhava#selhani-llm"]
+      "text": "Vysvětlíš, proč model vymýšlí metody a balíčky, a poznáš to na konkrétním kódu.",
+      "links": [
+        "prace-s-ai/jak-llm-selhava#1-co-model-vlastne-dela",
+        "prace-s-ai/jak-llm-selhava#2-vymyslene-api-a-vymyslene-balicky"
+      ]
     },
     {
-      "text": "Použiješ AI jako tutora pro vysvětlení bez hotového kódu.",
-      "links": ["prace-s-ai/ai-jako-tutor#sokratovsky-tutor"]
+      "text": "Najdeš ve vygenerovaném kódu chybějící okrajový případ dřív, než se projeví u zákazníka.",
+      "links": [
+        "prace-s-ai/jak-llm-selhava#4-stastna-cesta-bez-osetrenych-stavu",
+        "prace-s-ai/workshop-oprav-skryte-chyby"
+      ]
     },
     {
-      "text": "Zadáš úkol agentovi s kontextem, omezeními a testy.",
-      "links": ["prace-s-ai/zadavani-agentovi#dobre-zadani"]
+      "text": "Necháš si vysvětlit koncept bez hotového kódu a ověříš si, že sis ho zapamatoval.",
+      "links": [
+        "prace-s-ai/ai-jako-tutor#2-sokratovsky-tutor",
+        "prace-s-ai/ai-jako-tutor#3-nech-se-vyzkouset"
+      ]
     },
     {
-      "text": "Zreviduješ vygenerovaný kód, jako by to byl cizí pull request.",
-      "links": ["prace-s-ai/review-kodu-z-ai#checklist-pro-review"]
+      "text": "Napíšeš zadání pro agenta se záměrem, kontextem, omezeními a kritérii přijetí.",
+      "links": [
+        "prace-s-ai/zadavani-agentovi#2-dobre-zadani-ma-ctyri-casti",
+        "prace-s-ai/zadavani-agentovi#3-kriteria-prijeti-pis-jako-testy"
+      ]
     },
     {
-      "text": "Rozpoznáš bezpečnostní a licenční rizika AI nástrojů.",
-      "links": ["prace-s-ai/review-kodu-z-ai#bezpecnost"]
+      "text": "Zreviduješ vygenerovaný diff podle checklistu, jako by to byl cizí pull request.",
+      "links": [
+        "prace-s-ai/review-kodu-z-ai#2-checklist-pro-review",
+        "prace-s-ai/review-kodu-z-ai#3-tri-otazky-ktere-najdou-nejvic"
+      ]
+    },
+    {
+      "text": "Poznáš v kódu z modelu bezpečnostní díru a nedůvěryhodnou závislost.",
+      "links": [
+        "prace-s-ai/review-kodu-z-ai#5-bezpecnost",
+        "prace-s-ai/review-kodu-z-ai#6-zavislosti-a-licence"
+      ]
+    },
+    {
+      "text": "Řekneš, kdy se agent nevyplatí a kdy je rychlejší napsat to sám.",
+      "links": [
+        "prace-s-ai/zadavani-agentovi#6-kdy-se-agent-nevyplati",
+        "prace-s-ai/ai-jako-tutor#5-kdy-nastroj-vypnout"
+      ]
     }
   ]
 }
