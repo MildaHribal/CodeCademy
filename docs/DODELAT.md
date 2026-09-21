@@ -1,7 +1,7 @@
 # Co v obsahu chybí
 
-Stav k 21. 9. 2026. Zdroj: `node tools/verify.js --json` (369 modulů, 132 chyb) a
-ruční průchod modulů, které projdou ověřením, ale mají místo obsahu zástupný text.
+Stav k 21. 9. 2026. Zdroj: `node tools/verify.js --json` a ruční průchod modulů, které
+ověřením projdou, ale mají místo obsahu zástupný text.
 
 Ověření hlídá formát a spustitelnost, **ne hloubku**. Proto jsou níž dvě různé věci:
 *rozbité* (ověření je najde) a *prázdné* (ověření projde, obsah tam ale není).
@@ -14,22 +14,26 @@ grep -rl '</--description-->' content/    # zástupné kroky
 node tools/verify.js content/<sekce>      # jedna sekce
 ```
 
-## Sekce, které stojí za to dokončit nejdřív
+## Hotovo (projde ověřením bez chyb i varování)
 
-Jsou skoro hotové — chybí v nich jen uzávěr, takže je rychle zavřeš.
+`html-zaklady`, `start-nastroje`, `html-formulare`, `auth-bezpecnost`, `nasazeni-provoz`
+— plus sekce, které byly hotové už dřív (CSS, JavaScript, React, Node, API, SQL).
+
+U `auth-bezpecnost` a `nasazeni-provoz` platí, že jsou hotové **v rozsahu, který na disku
+je** — podle osnovy jim pořád chybí moduly (viz níž).
+
+## Sekce, kde chybí jen dokončení
 
 | sekce | co chybí |
 |---|---|
-| `html-zaklady` | kvíz, `cards.md`, `tahak.md`, kroky 001–020 `workshop-recept`, kroky 001–022 `workshop-blog`, `# --approaches--` v `lab-profil` |
-| `start-nastroje` | `github-a-pages`, kvíz, `projekt-profil-na-githubu`, `cards.md`, `tahak.md`, kroky 001–012 `workshop-prvni-repozitar` |
-| `html-formulare` | `section.json`, kvíz, `lab-kontaktni-formular`, `validace-v-prohlizeci` (615 slov) |
-| `api-http-rest` | `lab-api-ukolu` (rozbitý frontmatter), kvíz, `tahak.md` |
-| `nastroje-devtools-vykon` | `lab-audit-vykonu`, kvíz, `cards.md`, pojmy, 4 kroky `workshop-zrychleni` |
-| `nastroje-testovani` | `workshop-refaktoring` (1 krok), `lab-testy-validatoru`, kvíz |
-| `css-pozicovani` | kroky 016–018 `workshop-lepici-lista` (jinak hotová sekce) |
-| `css-efekty-animace` | `vykon-a-pristupnost-animaci`, `lab-scroll-pribeh`, kvíz, `cards.md` |
+| `api-http-rest` | `lab-api-ukolu` (rozbitý frontmatter), kvíz je tenký (491 slov), `tahak.md` |
+| `nastroje-devtools-vykon` | pojmy sekce, `cards.md`, `lab-audit-vykonu`, kvíz, kroky 001–004 `workshop-zrychleni` |
+| `nastroje-testovani` | `workshop-refaktoring` (1 krok na 45 minut, navíc `foo`-styl názvy), `lab-testy-validatoru` (403 slov), kvíz (350 slov) |
+| `css-efekty-animace` | `vykon-a-pristupnost-animaci`, `lab-scroll-pribeh`, kvíz, `cards.md`, `tahak.md` |
 | `css-tailwind` | `theme-a-tokeny`, `responzivita-a-stavy`, `komponenty-bez-duplicit`, `lab-prestavba-podle-navrhu`, kvíz + krok 006 `workshop-motiv-znacky` (řešení neprojde testem) |
-| `nasazeni-provoz` | `section.json`, `lab-kontrolni-bod-5` (prázdný) |
+| `nasazeni-provoz` | `lab-kontrolni-bod-5` (adresář bez `lab.md`, zatím mimo `section.json`) |
+| `auth-bezpecnost` | `workshop-oprav-zranitelnosti`, `auth-v-praxi` (OAuth, passkeys), `lab-role-a-opravneni`, kvíz, `tahak.md` |
+| `sql-databaze` | `transakce-a-indexy`, `okenni-funkce`, `orm-drizzle`, `postgres-v-dockeru`, `lab-eshop-dotazy`, kvíz, `projekt-api-receptu`, `tahak.md` |
 
 ## Sekce, kde chybí skoro všechno
 
@@ -40,10 +44,16 @@ Jsou skoro hotové — chybí v nich jen uzávěr, takže je rychle zavřeš.
 | `prace-s-ai` | 6 modulů, všechny tenké (360–880 slov) |
 | `vue-nuxt-druhy-framework` | 7 modulů, všechny zástupné |
 | `api-soubory-realtime` | 7 modulů, všechny zástupné |
-| `prohlizec-navic` | `web-components` zástupný, zbytek sekce neexistuje |
-| `nastroje-cizi-kod` | 7 modulů: obsah leží ve špatném tvaru (`<modul>.md` vedle sebe místo `<modul>/lesson.md`), chybí `module.json` |
-| `sql-databaze` | hotové 4 moduly, podle osnovy chybí 7 (`transakce-a-indexy`, `okenni-funkce`, `orm-drizzle`, `postgres-v-dockeru`, `lab-eshop-dotazy`, kvíz, `projekt-api-receptu`) + `tahak.md` |
-| `auth-bezpecnost` | hotové 4 moduly, chybí `section.json`, `cards.md`, `pojmy.md`, `tahak.md`, `module.json` u `owasp-zranitelnosti` a 4 moduly (`workshop-oprav-zranitelnosti`, `auth-v-praxi`, `lab-role-a-opravneni`, kvíz) |
+| `prohlizec-navic` | `web-components` zástupný, zbytek sekce na disku není |
+| `nastroje-cizi-kod` | 7 modulů: obsah leží ve špatném tvaru (`<modul>.md` vedle sebe místo `<modul>/lesson.md`), chybí `module.json`; `workshop-feature-v-cizim-projektu` má 11 hotových kroků a 4 zástupné (012–015) |
+
+## Vada v pořadí kurzu
+
+`html-formulare` je na doporučené trase pátá, ale `workshop-objednavka` v ní používá
+`addEventListener`, `FormData`, `checkValidity()` a `setCustomValidity()` — tedy DOM,
+který se učí až v `js-dom` (21. na trase). Buď ten workshop přesunout, nebo ho přepsat
+bez JavaScriptu a DOM verzi zařadit do `js-dom`. Ostatní moduly sekce JavaScript
+nepotřebují.
 
 ## Osiřelé adresáře
 
@@ -64,21 +74,21 @@ prohlizec-navic/* (7 adresářů)
 vue-nuxt-druhy-framework/workshop-prehravac-podcastu
 ```
 
-Navíc v `content/` leží dva generátory, které tam nepatří: `css-kaskada/generate_all.js`
-a `prace-s-ai/gen.js`.
-
 ## Opakované vady formátu
 
 Projdou v jedné sekci a pak se stejně opakují ve všech zástupných modulech:
 
 - **karta `free` má `### --expected--`** místo `### --back--` (kontrakt kap. 2.5) —
-  `html-zaklady`, `start-nastroje`, `css-efekty-animace`, `js-algoritmy`,
-  `kariera-pohovor`, `nastroje-cizi-kod`, `nastroje-devtools-vykon`, `prace-s-ai`
-- **kvíz začíná textem** před prvním `## --question--` (kontrakt kap. 4.3)
+  `css-efekty-animace`, `js-algoritmy`, `kariera-pohovor`, `nastroje-cizi-kod`,
+  `nastroje-devtools-vykon`, `prace-s-ai`
+- **kvíz začíná textem** před prvním `## --question--` (kontrakt kap. 4.3). Kdo bude
+  převádět kvíz ze zápisu `[x]`/`[ ]`/`--why--`, najde hotový převodník v historii
+  commitu, který opravoval `nasazeni-provoz/kviz`.
 - **`:::live` vnořený v `:::check`** — bloky se nevnořují (kontrakt kap. 5.1) —
   `api-soubory-realtime`, `vue-nuxt-druhy-framework`, `prohlizec-navic`
 - **pojem „pojem"** ze šablony kolidují tři sekce navzájem
 - **`# --approaches--` s textem mimo `## --approach--`** (kontrakt kap. 3.8)
+- **pojmy sekce jako obyčejný markdownový seznam** místo bloků `## --term--`
 
 ## Psaní nového obsahu
 
@@ -86,5 +96,18 @@ Závazné je `docs/kontrakt.md` (formát) a `docs/styl-obsahu.md` (jak psát). K
 na které se nejčastěji zapomíná: **17** (poučení z pilotů), **18** (aby to bavilo),
 **19** (pojmenované podcíle, ukázka → doplňování → od nuly, promíchaná látka v kvízu,
 volné vysvětlení).
+
+Pár věcí, které se osvědčily při dopisování workshopů:
+
+- **Kroky vysázet generátorem.** Stránka roste po kouscích a každý kousek má číslo
+  kroku, od kterého je hotový; seed kroku N je pak automaticky řešení kroku N−1.
+  Ušetří to opisování celého HTML do dvaceti souborů.
+- **Tip nesmí obsahovat řádek řešení.** Pravidlo T1 porovnává tipy s řádky řešení,
+  takže `` `<figure>` `` v tipu je chyba, i když je to jen zmínka. Piš `figure` bez
+  lomených závorek.
+- **`:user-invalid` a podobné stavy se v testech nedají vyvolat skriptem** — kontroluj
+  zdroj stylopisu přes `files['styles.css']`.
+- **Runner vkládá stylopis do stránky sám**, takže `<link rel="stylesheet">` v DOM
+  nenajdeš. Na to je taky `files['index.html']`.
 
 Po dopsání sekce: `node tools/verify.js content/<sekce>` musí projít bez chyb.
