@@ -40,15 +40,14 @@ body.has-lesson-aside .lesson-toc--inline {
   border-left: 1px solid var(--rule);
 }
 
-/* Obsah lekce leží na desce vedle listu jako poznámky na okraji: antikva, tiše. */
+/* Obsah lekce vedle textu: tichý seznam, aktivní část zlatě. */
 .lesson-toc__link {
   display: block;
   margin-left: -1px;
   padding: 4px 0 4px 14px;
   border-left: 2px solid transparent;
   color: var(--ink-soft);
-  font-family: var(--font-serif);
-  font-size: 14.5px;
+  font-size: 13.5px;
   line-height: 1.35;
   text-decoration: none;
   transition: color 120ms ease, border-color 120ms ease, padding-left 160ms cubic-bezier(0.22, 0.61, 0.36, 1);
