@@ -2,17 +2,19 @@
 
 Stav k 21. 9. 2026. Ověřeno `node tools/verify.js` nad celým `content/`.
 
-**Kurz je kompletní: 48 sekcí, všech 403 modulů projde ověřením bez chyby.**
+**Kurz je kompletní: 48 sekcí, všech 407 modulů projde ověřením bez chyby.**
 Osnova (`docs/osnova.md`, `content/osnova.json`) a obsah na disku spolu souhlasí.
 
 | | |
 |---|---|
 | sekce | 48 (44 jádro, 4 rozšíření) |
-| moduly | 192 lekcí · 89 workshopů · 64 labů · 47 kvízů · 11 projektů |
-| kroky workshopů | 1 607 |
-| odhad času | ~409 hodin |
+| moduly | 193 lekcí · 90 workshopů · 65 labů · 48 kvízů · 11 projektů |
+| kroky workshopů | 1 619 |
+| karty na opakování | 1 138 |
+| pojmy | 842 |
+| odhad času | ~414 hodin |
 | chyby ověření | **0** |
-| varování | 13 (samé `[K3]`, všechna záměrná — viz níž) |
+| varování | 12 (samé `[K3]`, všechna záměrná — viz níž) |
 
 Jak si to ověřit:
 
@@ -40,7 +42,7 @@ Typy kroků ve workshopech: 180× `recall`, 152× `debug`, 77× `parsons`, 77× 
 ## Záměrná varování `[K3]`
 
 Pravidlo K3 hlídá, že seed kroku N odpovídá řešení kroku N−1 — tedy že se studentovi
-mezi kroky neztratí rozepsaná práce. Třináct zbylých varování je po kontrole v pořádku:
+mezi kroky neztratí rozepsaná práce. Dvanáct zbylých varování je po kontrole v pořádku:
 
 - **`js-dom/workshop-objednavka`** (5×) — krok si do HTML doplňuje připravenou značku
   (`disabled` u tlačítka) nebo přidává prvek, na kterém bude student pracovat. Nic se
@@ -64,7 +66,7 @@ Nic z toho ověření nehlásí — jsou to věci nad rámec osnovy:
 - **`prohlizec-navic/projekt-offline-poznamky`** — plánovaný projekt (poznámky
   v IndexedDB, service worker, manifest, synchronizace po připojení). Sekci teď uzavírá
   `lab-cache-strategie`; projekt zůstává jako námět.
-- **Doporučení z ověření** (`npm run overit -- --doporuceni`, aktuálně 174). Nejčastější:
+- **Doporučení z ověření** (`npm run overit -- --doporuceni`, aktuálně 158). Nejčastější:
   část lekce bez `:::check`, kvíz bez poloviny psaných otázek, málo odkazů `--see--` do
   dřívějších sekcí. Nic z toho nebrání použití, jen by to obsah dál zlepšilo.
 
