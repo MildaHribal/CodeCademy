@@ -11,6 +11,7 @@
     "orm-drizzle",
     "postgres-v-dockeru",
     "lab-eshop-dotazy",
-    "kviz"
+    "kviz",
+    "projekt-api-receptu"
   ]
 }

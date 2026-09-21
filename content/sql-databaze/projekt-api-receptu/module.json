@@ -1,0 +1,1 @@
+{ "type": "project", "title": "API receptů", "summary": "Samostatně postavíš JSON API pro sdílení receptů nad SQLite: schéma s vazbou M:N a omezeními, výpis s filtry a stránkováním, zakládání receptu v transakci, hodnocení a žebříčky s okenní funkcí.", "minutes": 210, "runtime": "node" }
