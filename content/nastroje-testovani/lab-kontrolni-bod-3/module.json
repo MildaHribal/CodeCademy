@@ -1,7 +1,7 @@
 {
   "type": "lab",
-  "title": "Kontrolní bod 3",
-  "summary": "Lab.",
-  "minutes": 30,
+  "title": "Kontrolní bod: nahlášená chyba",
+  "summary": "Bez návodu spojíš celou část o nástrojích: podle hlášení z ISSUE.md napíšeš test, který chybu zopakuje, opravíš ji, dopíšeš chybějící souhrn dne a necháš projít testy i kontrolu typů.",
+  "minutes": 120,
   "runtime": "node"
 }

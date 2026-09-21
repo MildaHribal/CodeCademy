@@ -445,7 +445,7 @@ prvek a hláška by mluvila o čekání na něj.
 - [MDN: ARIA roles](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles) —
   jaké role prvky mají, podle nich hledá `getByRole`.
 
-Jeden e2e test napíšeš v projektu [Rozpočet ve Vite a TypeScriptu].
+Jeden e2e test napíšeš jako rozšíření projektu [Rozpočet ve Vite a TypeScriptu](see:nastroje-testovani/projekt-rozpoctovac).
 
 # --questions--
 

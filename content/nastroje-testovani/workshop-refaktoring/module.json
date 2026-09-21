@@ -1,7 +1,7 @@
 {
   "type": "workshop",
-  "title": "Refaktoring starého kódu",
-  "summary": "Pokryješ existující kód testy a pak ho refaktoruješ, aniž rozbijete chování.",
-  "minutes": 45,
+  "title": "Refaktoring pod testy",
+  "summary": "Obalíš přerostlou funkci na knihovní upomínky charakterizačními testy a pak ji bezpečně rozdělíš na kousky, které jdou použít i na webu.",
+  "minutes": 50,
   "runtime": "node"
 }

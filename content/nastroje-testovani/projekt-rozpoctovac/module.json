@@ -1,7 +1,7 @@
 {
   "type": "project",
   "title": "Rozpočet ve Vite a TypeScriptu",
-  "summary": "Projekt.",
-  "minutes": 60,
+  "summary": "Postavíš ve VS Code aplikaci na domácí rozpočet: příjmy, výdaje, kategorie a měsíční přehled, pokryté testy ve Vitestu, kontrolou typů a produkčním sestavením.",
+  "minutes": 360,
   "runtime": "node"
 }

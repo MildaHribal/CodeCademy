@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="cs">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rozpočet</title>
+  </head>
+  <body>
+    <div class="obal">
+      <header class="hlavicka">
+        <h1>Rozpočet</h1>
+        <label class="mesic">
+          Měsíc
+          <select id="mesic"></select>
+        </label>
+      </header>
+
+      <section class="prehled" aria-labelledby="prehled-nadpis">
+        <h2 id="prehled-nadpis" class="skryte">Přehled měsíce</h2>
+        <dl class="karty">
+          <div class="karta karta--prijem">
+            <dt>Příjmy</dt>
+            <dd id="prijmy">0 Kč</dd>
+          </div>
+          <div class="karta karta--vydaj">
+            <dt>Výdaje</dt>
+            <dd id="vydaje">0 Kč</dd>
+          </div>
+          <div class="karta karta--zustatek">
+            <dt>Zůstatek</dt>
+            <dd id="zustatek">0 Kč</dd>
+          </div>
+        </dl>
+      </section>
+
+      <form class="formular" id="formular">
+        <h2>Nová položka</h2>
+        <div class="pole">
+          <label for="popis">Popis</label>
+          <input id="popis" name="popis" required maxlength="60" placeholder="Nákup v Lidlu" />
+        </div>
+        <div class="pole">
+          <label for="castka">Částka v Kč</label>
+          <input id="castka" name="castka" type="number" min="1" step="1" required />
+        </div>
+        <div class="pole">
+          <label for="typ">Typ</label>
+          <select id="typ" name="typ">
+            <option value="vydaj">Výdaj</option>
+            <option value="prijem">Příjem</option>
+          </select>
+        </div>
+        <div class="pole">
+          <label for="kategorie">Kategorie</label>
+          <input
+            id="kategorie"
+            name="kategorie"
+            list="kategorie-napovedy"
+            required
+            value="Potraviny"
+          />
+          <datalist id="kategorie-napovedy">
+            <option value="Potraviny"></option>
+            <option value="Bydlení"></option>
+            <option value="Doprava"></option>
+            <option value="Zábava"></option>
+            <option value="Mzda"></option>
+          </datalist>
+        </div>
+        <div class="pole">
+          <label for="datum">Datum</label>
+          <input id="datum" name="datum" type="date" required />
+        </div>
+        <button type="submit">Přidat položku</button>
+      </form>
+
+      <section class="seznam" aria-labelledby="seznam-nadpis">
+        <h2 id="seznam-nadpis">Položky měsíce</h2>
+        <p id="prazdno" class="prazdno" hidden>V tomhle měsíci zatím nic není.</p>
+        <ul id="polozky"></ul>
+      </section>
+
+      <section class="kategorie" aria-labelledby="kategorie-nadpis">
+        <h2 id="kategorie-nadpis">Výdaje podle kategorií</h2>
+        <ul id="souhrn"></ul>
+      </section>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

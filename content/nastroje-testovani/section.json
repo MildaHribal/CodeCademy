@@ -1,6 +1,6 @@
 {
   "title": "Testování",
-  "intro": "V této sekci se naučíš psát spolehlivé testy, odhalovat chyby v cizím kódu a bezpečně refaktorovat.",
+  "intro": "V téhle sekci se naučíš rozhodnout, co a na jaké úrovni testovat, napsat unit testy v `node:test` i ve Vitestu, zmocknout čas a síť, projít aplikaci e2e testem v Playwrightu a bezpečně zrefaktorovat cizí kód pod ochranou testů.",
   "modules": [
     "proc-testovat",
     "workshop-unit-testy",
@@ -8,13 +8,62 @@
     "workshop-refaktoring",
     "playwright",
     "lab-testy-validatoru",
-    "kviz"
+    "kviz",
+    "lab-kontrolni-bod-3",
+    "projekt-rozpoctovac"
   ],
   "outcomes": [
-    {"text": "Rozhodneš, co a na jaké úrovni testovat, a poznáš křehký test.", "links": ["nastroje-testovani/proc-testovat"]},
-    {"text": "Napíšeš unit testy včetně okrajových případů a chyb.", "links": ["nastroje-testovani/workshop-unit-testy"]},
-    {"text": "Zmockuješ čas a síť.", "links": ["nastroje-testovani/mocky-cas-sit"]},
-    {"text": "Napíšeš E2E test v Playwrightu.", "links": ["nastroje-testovani/playwright"]},
-    {"text": "Bezpečně zrefaktoruješ kód pod ochranou testů.", "links": ["nastroje-testovani/workshop-refaktoring"]}
+    {
+      "text": "Rozhodneš, co a na jaké úrovni testovat, a poznáš křehký test.",
+      "links": [
+        "nastroje-testovani/proc-testovat#pyramida-a-trofej",
+        "nastroje-testovani/proc-testovat#testuj-chovani-ne-implementaci"
+      ]
+    },
+    {
+      "text": "Napíšeš unit testy včetně okrajových případů a očekávaných chyb.",
+      "links": [
+        "nastroje-testovani/workshop-unit-testy",
+        "nastroje-testovani/proc-testovat#okrajove-pripady"
+      ]
+    },
+    {
+      "text": "Zmockuješ čas i síť a poznáš, kdy mock škodí.",
+      "links": [
+        "nastroje-testovani/mocky-cas-sit#falesne-casovace",
+        "nastroje-testovani/mocky-cas-sit#kdy-mock-skodi"
+      ]
+    },
+    {
+      "text": "Napíšeš e2e test v Playwrightu s lokátory podle role a bez pevného čekání.",
+      "links": [
+        "nastroje-testovani/playwright#lokatory-podle-role-a-popisku",
+        "nastroje-testovani/playwright#proc-ne-waitfortimeout"
+      ]
+    },
+    {
+      "text": "Zamkneš dnešní chování charakterizačním testem a bezpečně zrefaktoruješ přerostlou funkci.",
+      "links": [
+        "nastroje-testovani/workshop-refaktoring"
+      ]
+    },
+    {
+      "text": "Napíšeš sadu testů, která odhalí chyby v cizím kódu, a poznáš, kde má sada díru.",
+      "links": [
+        "nastroje-testovani/lab-testy-validatoru"
+      ]
+    },
+    {
+      "text": "Podle nahlášené chyby napíšeš test, který ji zopakuje, opravíš ji a necháš si to potvrdit testy i kontrolou typů.",
+      "links": [
+        "nastroje-testovani/lab-kontrolni-bod-3"
+      ]
+    },
+    {
+      "text": "Postavíš aplikaci ve Vite a TypeScriptu tak, že jde logika testovat bez prohlížeče.",
+      "links": [
+        "nastroje-testovani/projekt-rozpoctovac"
+      ]
+    }
   ]
 }

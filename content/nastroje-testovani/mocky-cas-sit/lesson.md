@@ -302,7 +302,7 @@ test('při výpadku API vrátí prázdné menu a chybu', async () => {
 
 > [!NOTE]
 > MSW se instaluje do projektu (`npm install -D msw`), v editoru Akademie ho nespustíš.
-> Vyzkoušíš ho v projektu Rozpočtovač na konci sekce nebo ve vlastním projektu.
+> Vyzkoušíš ho ve vlastním projektu — třeba až [Rozpočet ve Vite a TypeScriptu](see:nastroje-testovani/projekt-rozpoctovac) na konci sekce rozšíříš o skutečné API.
 
 :::check
 Proč je zachycení požadavku přes MSW odolnější vůči refaktoringu než přepsání `globalThis.fetch`?
@@ -382,6 +382,31 @@ a ověřit, co s ní kód udělá.
 - Mock rozhoduje, jakou odpověď kód v testu dostane.
 - Mock s vždy úspěšnou odpovědí nikdy nespustí chybovou větev.
 - Chybová cesta potřebuje vlastní test s mockem, který vrátí chybu.
+:::
+
+:::check
+Kterou z těchhle závislostí v testu nahradit mockem?
+
+### --answer--
+Funkci `celkovaCena(polozky)`, která sčítá položky košíku.
+
+#### --why--
+Myslíš si, že izolace od vlastního výpočtu test zpřesní? Je to čistá funkce bez času
+a bez sítě — nahrazením si test odřízneš přesně od toho, co měl hlídat.
+
+### --correct--
+Platební bránu, která při zaplacení volá cizí API.
+
+#### --why--
+Je to hranice aplikace: cizí služba, kterou test neovládá a která by za každý pokus
+účtovala. Přesně sem mock patří.
+
+### --answer--
+Funkci `tvarDnu(pocet)`, která vrací „1 den" nebo „3 dny".
+
+#### --why--
+Myslíš si, že každou pomocnou funkci je lepší nahradit? Tahle nic nestahuje a nic
+neměří — mock by jen zopakoval to, co už umí.
 :::
 
 ## Testing Library: testuj jako uživatel
