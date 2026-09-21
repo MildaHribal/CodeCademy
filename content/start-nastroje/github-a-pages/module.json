@@ -1,6 +1,7 @@
 {
   "type": "lesson",
   "title": "GitHub a GitHub Pages",
-  "summary": "Sdílení kódu a zveřejnění statického webu.",
-  "minutes": 20
+  "summary": "Nasadíš statický web na vlastní adresu přes GitHub Pages a poznáš, proč se cesty od kořene rozbijí až tam.",
+  "minutes": 40,
+  "runtime": "dom"
 }

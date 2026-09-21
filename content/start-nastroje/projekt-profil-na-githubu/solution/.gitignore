@@ -1,0 +1,4 @@
+# Co Git nemá sledovat. Jeden vzor na řádek.
+.DS_Store
+Thumbs.db
+obrazky-originaly/

@@ -1,7 +1,7 @@
 {
   "type": "project",
   "title": "Profil na GitHubu",
-  "summary": "Tvůj profil z minulé sekce nasazený na GitHub Pages.",
-  "minutes": 45,
-  "runtime": "node"
+  "summary": "Ve VS Code postavíš osobní stránku, povedeš ji v Gitu po malých commitech a nasadíš ji na veřejnou adresu přes GitHub Pages.",
+  "minutes": 120,
+  "runtime": "dom"
 }

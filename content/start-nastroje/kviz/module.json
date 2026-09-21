@@ -1,6 +1,7 @@
 {
   "type": "quiz",
-  "title": "Kvíz: nástroje a učení",
-  "summary": "Ověř své znalosti nástrojů.",
-  "minutes": 15
+  "title": "Kvíz: nástroje a jak se učit",
+  "summary": "Ověříš si stav repozitáře po sérii příkazů, pohyb v terminálu, GitHub Pages a zásady učení — a zopakuješ si HTML z minulé sekce.",
+  "minutes": 25,
+  "runtime": "dom"
 }

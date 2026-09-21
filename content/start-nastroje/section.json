@@ -1,6 +1,6 @@
 {
   "title": "Start: nástroje a jak se učit",
-  "intro": "V této sekci se naučíš, jak efektivně procházet Akademií a ovládat základní nástroje vývojáře: VS Code, Terminál, Git a GitHub.",
+  "intro": "Než začneš psát kód pořádně, vyplatí se srovnat si dvě věci: **jak se učit**, aby ti látka zůstala, a **čím pracovat**, aby ses nezdržoval. Obojí je v téhle sekci.\n\nPostup: lekce o tom, co v Akademii dělají předpovědi, nápovědy a opakování, lekce o učení s AI bez zkratek, VS Code a minimum terminálu, workshop, ve kterém na webu kempu projdeš celý cyklus Gitu od `git init` po push, lekce o GitHub Pages, kvíz a nakonec vlastní profil nasazený na veřejné adrese.\n\n**Předpoklady:** HTML ze sekce 1.1. Terminál ani Git znát nemusíš.",
   "modules": [
     "jak-se-ucit-v-akademii",
     "uceni-s-ai",
@@ -13,28 +13,74 @@
   ],
   "outcomes": [
     {
-      "text": "Učit se v Akademii účinně: předpovídat před spuštěním, brát nápovědy po stupních, opakovat s odstupem.",
-      "links": []
+      "text": "Vysvětlíš, proč předpověď před spuštěním a vybavování z paměti učí víc než druhé přečtení výkladu.",
+      "links": [
+        "start-nastroje/jak-se-ucit-v-akademii#vybavovani-z-pameti-a-opakovani-s-odstupem",
+        "start-nastroje/jak-se-ucit-v-akademii#predpoved-pred-spustenim"
+      ]
     },
     {
-      "text": "Používat AI k učení tak, aby vysvětlovala, a ne psala řešení za tebe.",
-      "links": []
+      "text": "Poznáš, kdy ti AI učení pomáhá a kdy ho krade, a zadáš jí úkol tak, aby vysvětlovala místo psala.",
+      "links": [
+        "start-nastroje/uceni-s-ai#ai-jako-tutor-ne-jako-autor-reseni",
+        "start-nastroje/uceni-s-ai#sokratovske-zadani"
+      ]
     },
     {
-      "text": "Pracovat s projektem ve VS Code.",
-      "links": []
+      "text": "Napíšeš otázku, na kterou se dá odpovědět: co jsi čekal, co se stalo a minimální příklad.",
+      "links": [
+        "start-nastroje/jak-se-ucit-v-akademii#jak-se-ptat-kdyz-nevis"
+      ]
     },
     {
-      "text": "V terminálu se pohybovat po složkách a spustit program.",
-      "links": []
+      "text": "V terminálu se dostaneš do libovolné složky relativní i absolutní cestou a vypíšeš i skryté soubory.",
+      "links": [
+        "start-nastroje/terminal-minimum#ls-a-cd-co-tu-je-a-jak-jinam",
+        "start-nastroje/terminal-minimum#relativni-a-absolutni-cesty"
+      ]
     },
     {
-      "text": "Založit Git repozitář, commitovat po malých krocích a pushnout na GitHub.",
-      "links": []
+      "text": "Otevřeš projekt ve VS Code a zvládneš v něm terminál, hledání napříč soubory a formátování při uložení.",
+      "links": [
+        "start-nastroje/vs-code#slozka-projektu",
+        "start-nastroje/vs-code#formatovani-pri-ulozeni"
+      ]
     },
     {
-      "text": "Zveřejnit statický web přes GitHub Pages.",
-      "links": []
+      "text": "Založíš repozitář a projdeš celý cyklus: status, add, diff, commit, log — bez hledání příkazů.",
+      "links": [
+        "start-nastroje/workshop-prvni-repozitar/005",
+        "start-nastroje/workshop-prvni-repozitar/006",
+        "start-nastroje/workshop-prvni-repozitar/009"
+      ]
+    },
+    {
+      "text": "Řekneš, co je ve staging area a proč se v commitu objeví starší verze souboru, když ho po `git add` ještě změníš.",
+      "links": [
+        "start-nastroje/workshop-prvni-repozitar/005",
+        "start-nastroje/workshop-prvni-repozitar/013"
+      ]
+    },
+    {
+      "text": "Napíšeš `.gitignore` a vysvětlíš, proč se commituje a proč nezabere na už sledovaný soubor.",
+      "links": [
+        "start-nastroje/workshop-prvni-repozitar/010",
+        "start-nastroje/workshop-prvni-repozitar/011"
+      ]
+    },
+    {
+      "text": "Pushneš práci na vzdálený repozitář a nasadíš statický web na veřejnou adresu přes GitHub Pages.",
+      "links": [
+        "start-nastroje/workshop-prvni-repozitar/014",
+        "start-nastroje/github-a-pages#co-jsou-github-pages"
+      ]
+    },
+    {
+      "text": "Poznáš podle chování, že se web rozbil kvůli cestě od kořene nebo velkému písmenu v názvu souboru.",
+      "links": [
+        "start-nastroje/github-a-pages#relativni-cesty-a-podslozka",
+        "start-nastroje/github-a-pages#typicke-chyby-a-pasti"
+      ]
     }
   ]
 }
