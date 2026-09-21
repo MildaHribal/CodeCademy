@@ -23,11 +23,11 @@ V ukázkách je malý skript, který do každé položky vypisuje její skutečn
 
 ## Tři čísla: basis, grow, shrink
 
-Každá [[flex položka]] má tři vlastnosti, které se píšou zkratkou `flex: <grow> <shrink> <basis>`:
+Každá [[flex položka]] má tři vlastnosti, které se píšou [[zkratka flex|zkratkou]] `flex: <grow> <shrink> <basis>`:
 
-- `flex-basis` — **výchozí velikost** na hlavní ose. Z ní se vychází. Hodnota `auto` znamená „vezmi `width` (v řádku), a když není nastavená, velikost obsahu".
-- `flex-grow` — jakým dílem si položka vezme [[volné místo]], když nějaké zbývá. Výchozí `0`.
-- `flex-shrink` — jakým dílem se položka podílí na **zmenšování**, když místo chybí. Výchozí `1`.
+- [[flex-basis]] — **výchozí velikost** na hlavní ose. Z ní se vychází. Hodnota `auto` znamená „vezmi `width` (v řádku), a když není nastavená, velikost obsahu".
+- [[flex-grow]] — jakým dílem si položka vezme [[volné místo]], když nějaké zbývá. Výchozí `0`.
+- [[flex-shrink]] — jakým dílem se položka podílí na **zmenšování**, když místo chybí. Výchozí `1`.
 
 Prohlížeč postupuje takhle:
 
@@ -244,7 +244,7 @@ Kolik komu ubrat? Kontejner je široký **300 px**. Položky:
 
 1. Součet basis: 300 + 200 = 500 px.
 2. Chybí: 500 − 300 = 200 px.
-3. Tady je rozdíl oproti růstu: ubírání se nedělí podle samotného `flex-shrink`, ale podle **`flex-shrink` × basis**. Váhy: A = 1 × 300 = 300, B = 1 × 200 = 200, celkem 500.
+3. Tady je rozdíl oproti růstu: ubírání se nedělí podle samotného `flex-shrink`, ale podle **`flex-shrink` × basis**. [[váha zmenšování|Váhy]]: A = 1 × 300 = 300, B = 1 × 200 = 200, celkem 500.
 4. A ztratí 200 × 300/500 = 120 → **180 px**. B ztratí 200 × 200/500 = 80 → **120 px**.
 
 Obě položky se zmenšily na 60 % své výchozí velikosti. Kdyby se ubíralo rovným dílem (po 100 px), malé položky by mizely mnohem rychleji než velké.
@@ -447,7 +447,7 @@ body { font-family: system-ui, sans-serif; margin: 1rem; }
 S `auto` vyčuhuje tlačítko „Stáhnout" z rámečku, přestože název má `overflow: hidden` a `text-overflow: ellipsis`. Flex položkou tu totiž není název, nýbrž `.file__info` — a její minimum je šířka celého nezalomitelného názvu. Přepni na `0`: položka se smí zmenšit, název se ořízne třemi tečkami a tlačítko se vrátí dovnitř.
 
 > [!NOTE]
-> Když má **přímo flex položka** `overflow: hidden` (nebo `auto`, `scroll`), automatické minimum je nula a položka se zmenší i bez `min-width: 0`. Nespoléhej na to — `overflow: hidden` bývá uvnitř, na nadpisu nebo odstavci, a někdy ořezávat nechceš vůbec.
+> Když má **přímo flex položka** `overflow: hidden` (nebo `auto`, `scroll`), [[automatické minimum]] je nula a položka se zmenší i bez `min-width: 0`. Nespoléhej na to — `overflow: hidden` bývá uvnitř, na nadpisu nebo odstavci, a někdy ořezávat nechceš vůbec.
 
 > [!REMEMBER]
 > **Když se má flex položka zmenšit pod svůj obsah, napiš jí `min-width: 0`** (ve sloupci `min-height: 0`). Patří na flex položku, ne na prvek uvnitř ní.
@@ -480,7 +480,7 @@ Nejmenší šířka obsahu `<pre>` je nejdelší řádek kódu a výchozí `min-
 
 ## Flexbox, nebo grid?
 
-Flexbox rozvrhuje **v jedné ose**. Položky se řadí za sebou a každý řádek (při `flex-wrap`) si počítá místo sám, nezávisle na ostatních řádcích. Grid rozvrhuje **ve dvou osách najednou** — řádky i sloupce tvoří mřížku a položky v různých řádcích se srovnají pod sebe.
+Flexbox rozvrhuje [[jednorozměrné rozvržení|v jedné ose]]. Položky se řadí za sebou a každý řádek (při `flex-wrap`) si počítá místo sám, nezávisle na ostatních řádcích. Grid rozvrhuje **ve dvou osách najednou** — řádky i sloupce tvoří mřížku a položky v různých řádcích se srovnají pod sebe.
 
 | situace | vhodnější | proč |
 |---|---|---|

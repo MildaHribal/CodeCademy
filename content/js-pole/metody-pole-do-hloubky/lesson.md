@@ -151,11 +151,11 @@ víš, co s výsledkem můžeš dělat dál.
 | `toSorted` | záporné číslo / 0 / kladné číslo | nové seřazené pole |
 | `forEach` | nic | **`undefined`** |
 
-`forEach` je jediná, která nic nevrací. Je to „cyklus zapsaný jako metoda" — hodí
+[[forEach]] je jediná, která nic nevrací. Je to „cyklus zapsaný jako metoda" — hodí
 se, když s každou položkou chceš něco ==udělat== (vypsat, poslat), ne něco
 ==vyrobit==.
 
-Callback u `filter`, `find`, `some` a `every` nemusí vracet přesně `true` nebo
+Callback u [[filter]], [[find]], `some` a `every` nemusí vracet přesně `true` nebo
 `false`. Stačí pravdivá nebo nepravdivá hodnota: `filter((item) => item.note)`
 propustí položky s neprázdnou poznámkou.
 
@@ -185,7 +185,7 @@ js-pole/metody-pole-do-hloubky#co-ktera-metoda-vraci
 
 ## Jak pracuje `reduce`
 
-`reduce` je nejobecnější z metod — `map`, `filter` i `some` jde napsat přes něj.
+[[reduce]] je nejobecnější z metod — `map`, `filter` i `some` jde napsat přes něj.
 Proto je taky nejhůř čitelný. Callback dostává [[akumulátor]] (průběžný
 výsledek) a položku a vrací **novou hodnotu akumulátoru**. Když si nevíš rady,
 vypiš si akumulátor v každém kroku:
@@ -308,8 +308,8 @@ Počáteční hodnota je akumulátor pro první volání callbacku a určuje, ja
 
 ## Řazení a porovnávací funkce
 
-Pole má dvě metody na řazení. `sort` řadí **na místě** (mutuje) a vrací totéž
-pole. `toSorted` vrátí seřazenou kopii. Obě dostávají [[porovnávací funkce|porovnávací funkci]]
+Pole má dvě metody na řazení. [[sort]] řadí **na místě** (mutuje) a vrací totéž
+pole. [[toSorted]] vrátí seřazenou kopii. Obě dostávají [[porovnávací funkce|porovnávací funkci]]
 (*compare function*): dostane dvě položky `a` a `b` a vrátí
 
 - **záporné** číslo, když `a` patří před `b`,
@@ -439,7 +439,7 @@ js-pole/metody-pole-do-hloubky#retezeni
 
 ## Kdy metody a kdy `for…of`
 
-Metody nejsou vždycky lepší. Obyčejný `for…of` vyhraje, když:
+Metody nejsou vždycky lepší. Obyčejný [[for…of]] vyhraje, když:
 
 - **potřebuješ skončit dřív** podle složitější podmínky — `for…of` umí `break`
   a `continue`, `forEach` ani `map` ne,
@@ -532,8 +532,8 @@ console.log(total);
 > [!PITFALL]
 > **`reduce` bez počáteční hodnoty bere jako akumulátor první položku.** Příznak:
 > u pole objektů vyjde `[object Object]250`, u prázdného pole kód spadne s hláškou
-> `TypeError: Reduce of empty array with no initial value`. Oprava: počáteční
-> hodnotu piš vždycky, i u čísel: `reduce((sum, item) => sum + item.price, 0)`.
+> `TypeError: Reduce of empty array with no initial value`. Oprava:
+> [[počáteční hodnota reduce|počáteční hodnotu]] piš vždycky, i u čísel: `reduce((sum, item) => sum + item.price, 0)`.
 
 ### `sort` bez porovnávací funkce
 

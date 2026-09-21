@@ -221,7 +221,7 @@ Výchozí nastavení tedy znamená: data se ukazují okamžitě z cache, ale př
 novém připojení komponenty se na pozadí ověří. Proto po návratu na stránku
 seznam nebliká — jen se potichu dorovná.
 
-`staleTime` zvyš u dat, která se mění zřídka (číselník typů kol, profil
+[[staleTime]] zvyš u dat, která se mění zřídka (číselník typů kol, profil
 uživatele). Nech nulu u dat, kde záleží na aktuálnosti (volné termíny, stav
 objednávky).
 
@@ -311,7 +311,7 @@ react-aplikace/tanstack-query#stara-data-cerstva-data-staletime-a-gctime
 
 ## Změna dat: useMutation a invalidace
 
-Načítání je polovina práce. Když data **měníš**, používáš `useMutation` — a po
+Načítání je polovina práce. Když data **měníš**, používáš [[useMutation]] — a po
 úspěchu řekneš cache, které dotazy jsou od teď neplatné.
 
 :::live react
@@ -396,7 +396,7 @@ seznam se nezmění, dokud stránku neobnovíš. To je přesně ten okamžik, kd
 člověk uvědomí, k čemu cache je.
 
 > [!REMEMBER]
-> **Po úspěšné změně zneplatni dotazy, kterých se změna týká.** Ne že bys je
+> **Po úspěšné změně [[zneplatnění dotazu|zneplatni dotazy]], kterých se změna týká.** Ne že bys je
 > ručně přepisoval — jen řekneš, že jsou staré, a knihovna si je načte znovu.
 
 :::check
@@ -537,7 +537,7 @@ staleTime delší než doba, po kterou byl pryč.
 
 ### --why--
 
-Dokud je dotaz čerstvý, knihovna ho po návratu neobnovuje. `gcTime` s tím
+Dokud je dotaz čerstvý, knihovna ho po návratu neobnovuje. [[gcTime]] s tím
 nesouvisí — ten říká, kdy se data zahodí z paměti úplně.
 
 ### --see--

@@ -110,7 +110,7 @@ react-aplikace/druhy-stavu#problem-jedna-pravda-na-dvou-mistech
 
 ## UI stav: nejmenší možný
 
-UI stav je to, co zmizí, když uživatel zavře kartu, a nikomu to nechybí. Patří
+[[UI stav]] je to, co zmizí, když uživatel zavře kartu, a nikomu to nechybí. Patří
 do komponenty, která ho používá, a **níž, než bys čekal**.
 
 :::live react
@@ -211,7 +211,7 @@ stránku, opakování po chybě ani zrušení dotazu, který mezitím zastaral. 
 tohle dělá knihovna na serverová data, které se věnuje celá příští lekce.
 
 > [!REMEMBER]
-> **Serverová data nejsou stav, ale cache.** Nezajímá tě jen hodnota, ale i to,
+> **[[serverová data|Serverová data]] nejsou stav, ale cache.** Nezajímá tě jen hodnota, ale i to,
 > jak je stará, jestli se zrovna načítá a jestli poslední pokus selhal.
 
 :::check

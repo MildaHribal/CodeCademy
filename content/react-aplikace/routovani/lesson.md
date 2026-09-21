@@ -83,7 +83,7 @@ Funguje to do chvíle, kdy někdo chce výsledek použít. Co všechno nejde:
 | mít otevřené dvě karty s jiným filtrem | nejde | jde |
 
 > [!REMEMBER]
-> **Trasa je funkce z adresy na kus stránky.** A [[stav v URL|adresa]] je stav,
+> **[[trasa|Trasa]] je funkce z adresy na kus stránky.** A [[stav v URL|adresa]] je stav,
 > který přežije obnovení stránky, jde poslat odkazem a umí tlačítko Zpět. Nic
 > z toho `useState` nedokáže.
 
@@ -199,7 +199,7 @@ react-aplikace/routovani#trasy-deklarativne-routes-a-route
 ## Odkazy: Link a NavLink
 
 `Link` vykreslí obyčejné `<a href>` — kliknutí ale zachytí a místo načtení
-stránky jen přepne trasu. `NavLink` navíc ví, jestli je jeho cíl právě otevřený:
+stránky jen přepne trasu. [[NavLink]] navíc ví, jestli je jeho cíl právě otevřený:
 
 :::live react
 ```jsx
@@ -264,7 +264,7 @@ Zkus smazat `end` u prvního `NavLink` a klikat po nabídce: „Přehled" zůsta
 zvýrazněný pořád, protože `/` je předpona každé adresy. `end` znamená „zvýrazni
 mě jen při přesné shodě".
 
-`useNavigate` je totéž bez odkazu — pro navigaci **po akci** (odeslaný formulář,
+[[useNavigate]] je totéž bez odkazu — pro navigaci **po akci** (odeslaný formulář,
 úspěšné přihlášení). Pro věci, na které se kliká, vždycky `Link`: dostaneš
 prostřední klik, otevření v nové kartě i čtečku obrazovky zdarma.
 
@@ -409,8 +409,8 @@ react-aplikace/routovani#parametr-trasy-kola-id
 ## Vnořený layout a Outlet
 
 Většina aplikací má kus stránky, který se nemění: hlavičku, nabídku, patičku.
-Vnořené trasy to řeší tak, že **rodičovská trasa vykreslí layout** a na místo
-`Outlet` přijde ta vnořená:
+[[vnořená trasa|Vnořené trasy]] to řeší tak, že **rodičovská trasa vykreslí layout** a na místo
+[[Outlet]] přijde ta vnořená:
 
 :::live react
 ```jsx
@@ -495,7 +495,7 @@ react-aplikace/routovani#vnoreny-layout-a-outlet
 ## Stav v URL: useSearchParams
 
 Filtr, řazení, stránka výpisu a otevřená záložka nepatří do cesty, ale do
-parametrů za `?`. `useSearchParams` s nimi pracuje jako `useState` — jen bydlí
+parametrů za `?`. [[useSearchParams]] s nimi pracuje jako `useState` — jen bydlí
 v adrese:
 
 :::live react
@@ -605,7 +605,7 @@ react-aplikace/routovani#stav-v-url-usesearchparams
 
 Deklarativní zápis (`<Routes>`) je v pořádku pro malou aplikaci. Jak roste,
 přesune se seznam tras do datové struktury — a tím se odemknou věci, které
-`<Routes>` neumí: chybová hranice na trasu, líné načítání a `loader`.
+`<Routes>` neumí: chybová hranice na trasu, [[líná trasa|líné načítání]] a `loader`.
 
 ```jsx
 // src/main.jsx
@@ -636,7 +636,7 @@ z `react-router`, `RouterProvider` z **`react-router/dom`**.
 
 > [!NOTE]
 > React Router má tři režimy: **deklarativní** (`<Routes>`), **datový**
-> (`createBrowserRouter`, tahle část) a **frameworkový** (vlastní build,
+> ([[datový režim|`createBrowserRouter`]], tahle část) a **frameworkový** (vlastní build,
 > serverové vykreslování, generované typy tras). V téhle sekci zůstáváme u prvních
 > dvou; frameworkový režim a jeho konkurence (TanStack Router se skvělými typy,
 > nebo Next.js s vlastním routováním v části o fullstacku) dělají navíc věci,
@@ -701,7 +701,7 @@ zda se právě načítá.
 > „propadává" na 404, tohle je první, co zkontroluješ.
 
 > [!PITFALL]
-> **Parametry z adresy jsou text a mohou být cokoli.** `/kola/abc` je platná
+> **[[parametr trasy|Parametry]] z adresy jsou text a mohou být cokoli.** `/kola/abc` je platná
 > adresa, `Number('abc')` je `NaN` a `kola.find(...)` vrátí `undefined`. Bez
 > podmínky „nenašlo se" spadne detail na
 > `TypeError: Cannot read properties of undefined (reading 'nazev')`.

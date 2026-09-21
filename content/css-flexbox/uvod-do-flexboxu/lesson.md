@@ -89,7 +89,7 @@ div.actions
 
 ## Flex kontejner a flex položky
 
-Flexbox má dvě role:
+[[flexbox|Flexbox]] má dvě role:
 
 - [[flex kontejner]] (*flex container*) — prvek, kterému dáš `display: flex`,
 - [[flex položka|flex položky]] (*flex items*) — jeho **přímí potomci**.
@@ -155,7 +155,7 @@ Flexbox neuvažuje ve „vodorovně" a „svisle", ale ve dvou osách:
 - [[hlavní osa]] (*main axis*) — směr, ve kterém se položky řadí za sebou,
 - [[vedlejší osa]] (*cross axis*) — kolmo na hlavní osu.
 
-Směr hlavní osy určuje vlastnost `flex-direction` na kontejneru:
+Směr hlavní osy určuje vlastnost [[flex-direction]] na kontejneru:
 
 | `flex-direction` | hlavní osa vede | vedlejší osa vede |
 |---|---|---|
@@ -223,7 +223,7 @@ Flex kontejner má vždycky obě osy. Mění se jen to, kterým směrem vedou.
 
 ## `justify-content`: volné místo na hlavní ose
 
-Když položky nevyplní celou hlavní osu, zbude [[volné místo]] (*free space*). Kam ho dát, určuje `justify-content` na kontejneru:
+Když položky nevyplní celou hlavní osu, zbude [[volné místo]] (*free space*). Kam ho dát, určuje [[justify-content]] na kontejneru:
 
 - `flex-start` (výchozí) — položky na začátku, volné místo za nimi,
 - `flex-end` — položky na konci,
@@ -280,7 +280,7 @@ Volné místo je 600 − 300 = 300 px. `space-between` ho dá jen **mezi** polo�
 
 ## `align-items`: zarovnání na vedlejší ose
 
-`align-items` zarovnává položky na vedlejší ose, v řádku tedy svisle:
+[[align-items]] zarovnává položky na vedlejší ose, v řádku tedy svisle:
 
 - `stretch` (výchozí) — roztáhne položky přes celou vedlejší osu,
 - `flex-start`, `center`, `flex-end` — začátek, střed, konec,
@@ -326,7 +326,7 @@ body { font-family: system-ui, sans-serif; margin: 1rem; }
 ```
 :::
 
-Přepni na `flex-start`, `center` a `baseline`. U `baseline` sleduj, jak se srovnají spodní hrany písmen u malého i velkého textu. Jedna položka může zarovnání přepsat vlastností `align-self` — dopiš do kódu `.box--tall { align-self: flex-end; }` a zbytek řádku zůstane, jak je.
+Přepni na `flex-start`, `center` a `baseline`. U `baseline` sleduj, jak se srovnají spodní hrany písmen u malého i velkého textu. Jedna položka může zarovnání přepsat vlastností [[align-self]] — dopiš do kódu `.box--tall { align-self: flex-end; }` a zbytek řádku zůstane, jak je.
 
 :::check
 Kontejner v řádku je vysoký 100 px a má `align-items: center`. Položka v něm je vysoká 40 px. Kolik pixelů bude od horního okraje kontejneru k horní hraně položky?
@@ -344,11 +344,11 @@ Volné místo na vedlejší ose je 100 − 40 = 60 px a `center` ho rozdělí na
 
 ## Zalamování: `flex-wrap`, `gap` a `align-content`
 
-Flex kontejner ve výchozím stavu drží všechny položky **na jednom řádku** (`flex-wrap: nowrap`). Když se nevejdou, zmenší je, a když to nestačí, položky přetečou. `flex-wrap: wrap` dovolí položce, která se nevejde, přejít na další řádek.
+Flex kontejner ve výchozím stavu drží všechny položky **na jednom řádku** (`flex-wrap: nowrap`). Když se nevejdou, zmenší je, a když to nestačí, položky přetečou. [[flex-wrap]] s hodnotou `wrap` dovolí položce, která se nevejde, přejít na další řádek.
 
-`gap` vloží mezeru **jen mezi** položky, ne na kraje — i mezi řádky. Dvě hodnoty znamenají nejdřív mezeru mezi řádky, pak mezi sloupci: `gap: 0.5rem 1rem`. Proč ne `margin`? Margin má každá položka i na kraji, takže se pak musí poslední položce zase odebírat. S `gap` je mezera nastavená na jednom místě.
+[[gap]] vloží mezeru **jen mezi** položky, ne na kraje — i mezi řádky. Dvě hodnoty znamenají nejdřív mezeru mezi řádky, pak mezi sloupci: `gap: 0.5rem 1rem`. Proč ne `margin`? Margin má každá položka i na kraji, takže se pak musí poslední položce zase odebírat. S `gap` je mezera nastavená na jednom místě.
 
-Když je řádků víc a kontejner je vyšší než ony, rozhoduje o volném místě **mezi řádky** `align-content` — funguje jako `justify-content`, jen na vedlejší ose a pro celé řádky. U jediného řádku nedělá nic.
+Když je [[řádek flexboxu|řádků]] víc a kontejner je vyšší než ony, rozhoduje o volném místě **mezi řádky** [[align-content]] — funguje jako `justify-content`, jen na vedlejší ose a pro celé řádky. U jediného řádku nedělá nic.
 
 :::live
 ```html
@@ -527,7 +527,7 @@ img {
 > [!PITFALL] `order` mění jen to, co je vidět
 > *Příznak:* na mobilu přesuneš tlačítko vlastností `order` nahoru, ale klávesa Tab a čtečka obrazovky na něj narazí až na konci a fokus skáče po stránce.
 >
-> *Oprava:* `order` jen na drobné přeskupení, u kterého pořadí nemění smysl. Když se má pořadí změnit doopravdy, přesuň prvek v HTML.
+> *Oprava:* [[order]] jen na drobné přeskupení, u kterého pořadí nemění smysl. Když se má pořadí změnit doopravdy, přesuň prvek v HTML.
 
 :::check
 Kontejner má `display: flex; flex-direction: column; height: 300px;`. Napiš deklaraci, která jeho položky vycentruje **vodorovně**.

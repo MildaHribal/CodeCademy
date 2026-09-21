@@ -61,7 +61,7 @@ const item3 = 'jablka';
 Dokud jsou položky tři, jde to. Ale jak zjistíš, kolik jich je? Jak je vypíšeš
 všechny najednou? A co když uživatel přidá čtvrtou — založíš za běhu proměnnou
 `item4`? Nejde to. Potřebuješ **jednu** hodnotu, ve které je celý seznam, ať je
-dlouhý jakkoli. To je pole (*array*).
+dlouhý jakkoli. To je [[pole]] (*array*).
 
 > [!REMEMBER]
 > **Pole je jedna hodnota s očíslovaným seznamem položek — a proměnná na ni jen ukazuje.**
@@ -71,7 +71,7 @@ dlouhý jakkoli. To je pole (*array*).
 
 Pole zapíšeš do hranatých závorek, položky oddělíš čárkou. Každá položka má
 pořadové číslo — [[index]] — a počítá se **od nuly**. Počet položek je ve
-vlastnosti `length`.
+vlastnosti [[length]].
 
 :::live js
 ```js
@@ -289,7 +289,7 @@ výpisem. Stejně jako spread funguje i `original.slice()`.
 
 ### Mělká kopie
 
-`[...a]` je mělká kopie (*shallow copy*). Nové je jen pole — co s objekty uvnitř?
+`[...a]` je [[mělká kopie pole|mělká kopie]] (*shallow copy*). Nové je jen pole — co s objekty uvnitř?
 
 :::live js predict
 ```js
@@ -433,7 +433,7 @@ js-pole/co-je-pole#proc-jde-menit-pole-v-const
 
 Pole má desítky metod. Než se je začneš učit jednotlivě, rozděl si je do dvou
 skupin, protože na tom záleží víc než na jejich jménech. Metodě z levého sloupce
-říkáme [[mutující metoda]]:
+říkáme [[mutující metoda]], metodě z pravého [[nemutující metoda]]:
 
 | mění původní pole (*mutují*) | vracejí nové pole nebo hodnotu, původní nechají být |
 |---|---|
@@ -466,7 +466,7 @@ console.log(preview.length, served.length, queue.length);
 --why-- Obě volání vrátila nové pole se dvěma jmény, takže `preview.length` i `served.length` jsou `2`. Rozdíl je v tom, co zbylo: `slice` jen vykopíroval výřez, `splice` dvě jména z `queue` **vyřízl**, a fronta se zkrátila na dvě položky.
 :::
 
-Zkus prohodit pořadí řádků se `slice` a `splice` a sleduj, co pak obsahuje
+Zkus prohodit pořadí řádků se [[slice]] a [[splice]] a sleduj, co pak obsahuje
 `preview`. Nemutující dvojče `splice` je `toSpliced` — bere stejné argumenty, ale
 vrátí upravenou kopii.
 
@@ -526,7 +526,7 @@ js-pole/co-je-pole#metody-ktere-pole-meni-a-metody-ktere-vraceji-nove
 
 ### `indexOf` v podmínce
 
-`indexOf` vrací index nalezené hodnoty, nebo `-1`, když ji nenajde. Co s tím
+[[indexOf]] vrací index nalezené hodnoty, nebo `-1`, když ji nenajde. Co s tím
 udělá podmínka?
 
 :::live js predict
@@ -577,7 +577,7 @@ js-pole/co-je-pole#indexof-v-podmince
 
 > [!PITFALL]
 > **`typeof []` vrátí `'object'`, ne `'array'`.** Pole je zvláštní druh objektu.
-> Podmínka `typeof value === 'array'` proto neplatí nikdy. Oprava:
+> Podmínka `typeof value === 'array'` proto neplatí nikdy. Oprava je [[Array.isArray]]:
 > `Array.isArray(value)`.
 
 ### `includes` v poli objektů

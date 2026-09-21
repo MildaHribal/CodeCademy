@@ -107,7 +107,7 @@ react-aplikace/formulare-a-validace#problem-usestate-na-kazde-pole
 
 React 19 přidal formulářům vlastní cestu. `<form action={…}>` dostane funkci,
 která při odeslání dostane `FormData` — a hook `useActionState` si pamatuje, co
-ta funkce vrátila.
+ta [[akce formuláře|funkce]] vrátila.
 
 :::live react
 ```jsx
@@ -188,7 +188,7 @@ a používáš jako `defaultValue`) a tlačítko se během odesílání samo zab
 
 Tři věci, které tenhle zápis dělá zadarmo:
 
-- pole nejsou řízená, takže psaní nepřekresluje celý formulář,
+- pole jsou [[neřízené pole|neřízená]], takže psaní nepřekresluje celý formulář,
 - `useFormStatus` uvnitř tlačítka ví o probíhajícím odeslání, aniž by mu to někdo
   posílal propsou,
 - `noValidate` vypne prohlížečové bubliny, protože hlášky si píšeš sám.
@@ -337,7 +337,7 @@ Pro každé pole, jestli z něj uživatel už odešel.
 ### --why--
 
 Samotná hodnota nestačí — prázdné pole na začátku vypadá stejně jako prázdné pole
-po odchodu. Proto se u každého pole drží ještě příznak „už jsem v něm byl"
+po odchodu. Proto se u každého pole drží ještě [[příznak dotknuto|příznak]] „už jsem v něm byl"
 (anglicky *touched*), který nastaví `onBlur`.
 
 ### --see--
