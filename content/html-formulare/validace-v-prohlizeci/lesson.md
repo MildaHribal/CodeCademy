@@ -1,119 +1,403 @@
 # Validace v prohlížeči
 
 :::check pretest
-Když pole označím atributem `required`, znamená to, že data už nemusím kontrolovat na backendu (serveru)?
-### --correct--
-Ano, prohlížeč uživatele nepustí dál, pokud pole nevyplní.
+Pole označíš atributem `required`. Znamená to, že data už nemusíš kontrolovat na serveru?
+
 ### --answer--
-Ne, validace v prohlížeči je jen pro pohodlí. Zlý uživatel ji může obejít.
+Ano, prohlížeč uživatele bez vyplnění dál nepustí.
+
 #### --why--
-Lidi můžou validaci obejít, server to musí kontrolovat.
+Nepustí **uživatele v prohlížeči**. Požadavek na server ale může přijít odkudkoli — třeba
+z příkazové řádky, která o tvém HTML nic neví.
+
+### --correct--
+Ne. Validace v prohlížeči je pohodlí pro uživatele, ne obrana serveru.
+
+#### --why--
+Každý si může HTML upravit v DevTools nebo poslat požadavek úplně mimo prohlížeč.
+Server musí kontrolovat všechno znovu.
+
+### --answer--
+Záleží na typu pole — u `type="email"` už kontrola na serveru potřeba není.
+
+#### --why--
+Typ pole na tom nic nemění. Ať je pole jakékoli, do serveru může dorazit cokoli.
 :::
 
 > [!REMEMBER]
-> Validace v prohlížeči je tu **jen pro uživatele**, aby dostal okamžitou zpětnou vazbu a věděl, co má opravit. Bezpečnost a konečná kontrola dat musí VŽDY proběhnout na serveru.
+> Validace v prohlížeči je tu **jen pro uživatele**, aby dostal okamžitou zpětnou vazbu
+> a věděl, co opravit. Bezpečnost a konečná kontrola dat musí **vždy** proběhnout
+> na serveru.
 
 ## Základní validační atributy
 
-HTML nabízí několik jednoduchých atributů pro kontrolu:
+Většinu běžných kontrol umí HTML samo, bez jediného řádku JavaScriptu:
 
-- `required` – pole nesmí být prázdné.
-- `minlength` a `maxlength` – omezení počtu znaků (např. `minlength="5"`).
-- `min`, `max`, `step` – pro číselná pole (např. omezení věku nebo hodnoty v rozsahu).
+| atribut | co hlídá | na čem |
+|---|---|---|
+| `required` | pole nesmí zůstat prázdné | skoro všechno |
+| `minlength`, `maxlength` | počet znaků | text, heslo, textarea |
+| `min`, `max` | rozsah hodnoty | číslo, datum, čas |
+| `step` | povolené násobky | číslo, datum, čas |
+| `pattern` | shoda s regulárním výrazem | text, tel |
 
+:::live
 ```html
 <form>
-  <label for="jmeno">Jméno (min 2 znaky):</label>
-  <input type="text" id="jmeno" name="jmeno" required minlength="2">
+  <p>
+    <label for="jmeno">Jméno (aspoň 2 znaky)</label><br>
+    <input type="text" id="jmeno" name="jmeno" required minlength="2">
+  </p>
+  <p>
+    <label for="pocet">Počet bedýnek (1 až 5)</label><br>
+    <input type="number" id="pocet" name="pocet" min="1" max="5" value="9">
+  </p>
   <button>Odeslat</button>
 </form>
 ```
+```css
+body { font-family: system-ui, sans-serif; padding: 1rem; }
+label { font-weight: 600; }
+input { padding: 0.4rem; font: inherit; }
+button { padding: 0.45rem 1rem; font: inherit; }
+```
+:::
 
-Zkus si tenhle kód spustit u sebe a odeslat prázdný formulář. Prohlížeč sám ukáže bublinu, že pole je povinné.
+Zkus odeslat formulář prázdný a pak s devíti bedýnkami. Prohlížeč pokaždé zastaví
+odeslání u **prvního** vadného pole, zaostří ho a ukáže bublinu ve tvém jazyce — tu
+bublinu nepíšeš ty, dodá ji prohlížeč.
+
+:::check
+Pole má `min="1" max="5"` a uživatel do něj napíše `9`. Co udělá prohlížeč při odeslání?
+
+### --correct--
+Odeslání zastaví, zaostří to pole a ukáže u něj bublinu s hláškou.
+
+#### --why--
+Validace běží při odeslání. Prohlížeč se zastaví u prvního vadného pole — proto se
+vyplatí mít pole v rozumném pořadí.
+
+### --answer--
+Hodnotu opraví na nejbližší povolenou, tedy `5`.
+
+#### --why--
+Nic za uživatele nepřepisuje. Šipky nahoru a dolů se rozsahem řídí, ale ručně napsanou
+hodnotu prohlížeč nemění.
+
+### --answer--
+Formulář odešle, `min` a `max` jsou jen nápověda.
+
+#### --why--
+`min` a `max` jsou plnohodnotná pravidla validace. Nápověda bez vlivu na odeslání by byl
+třeba `placeholder`.
+:::
 
 ## Validace podle typu `type`
 
-Velkou část práce odvede už samotný atribut `type` na inputu:
-- `type="email"` zkontroluje formát e-mailové adresy.
-- `type="number"` povolí zadat jen čísla a kontroluje je přes `min`/`max`.
-- `type="url"` vyžaduje validní webovou adresu.
+Velký kus práce odvede už samotný `type` — a na mobilu navíc rozhodne, jakou klávesnici
+uživatel dostane:
 
-:::live dom predict
---question--
-Nastavili jsme pole takto. Zkus do něj vepsat hodnotu `1.005` a odeslat. Projde to? (Nápověda: výchozí step je 1).
+- `type="email"` — musí vypadat jako e-mailová adresa (a na mobilu je zavináč po ruce),
+- `type="url"` — musí to být adresa včetně schématu,
+- `type="number"` — jen čísla, spolu s `min`, `max` a `step`,
+- `type="date"` a `type="time"` — datum a čas, s vlastním výběrem,
+- `type="tel"` — číselná klávesnice, ale **bez** kontroly formátu; na ten je `pattern`.
 
+> [!PITFALL]
+> `type="email"` kontroluje jen **tvar** adresy, ne její existenci. `a@b` projde.
+> Jestli schránka existuje, zjistíš jediným spolehlivým způsobem: pošleš na ni
+> ověřovací e-mail.
+
+:::live predict
 ```html
-<form action="">
-  <input type="number" step="0.01">
-  <button>Test</button>
+<form>
+  <label for="cena">Cena za kus (Kč)</label>
+  <input type="number" id="cena" name="cena" step="0.01" value="1.005">
+  <button>Odeslat</button>
 </form>
 ```
+--question-- Uživatel má v poli `1.005` a odesílá. Pustí prohlížeč formulář dál?
+--option-- Ano — `step` je `0.01`, takže desetinná čísla jsou povolená.
+--option*-- Ne — `1.005` není násobek `0.01`, takže pole neprojde validací.
+--option-- Ano, `step` ovlivní jen šipky nahoru a dolů, ne ručně napsanou hodnotu.
+--why-- `step` neurčuje počet desetinných míst, ale **povolené násobky** (počítané od `min`, jinak od nuly). `1.005` mezi násobky `0.01` nepatří, a tak prohlížeč odeslání zastaví. Šipky se `step` řídí taky, ale validace platí i pro ručně napsanou hodnotu.
+:::
 
---option--
-Ano, protože `step` je `0.01`.
---option*--
-Ne, protože číslo nesedí do násobků povolených atributem `step`.
---why--
-Krok určuje povolené násobky. `1.005` má tři desetinná místa, takže do násobků `0.01` nesedí.
+:::check
+Chceš pole na české PSČ ve tvaru `123 45`. Který atribut na to použiješ?
+
+### --expected--
+pattern
+
+### --accept--
+atribut pattern
+pattern s regulárním výrazem
 :::
 
 ## CSS a validace: pseudotřídy
 
-V CSS můžeme na aktuální stav polí reagovat. HTML nám dává:
-- `:valid` – pole je v pořádku (nebo je prázdné, ale není povinné).
-- `:invalid` – pole obsahuje chybu.
-- `:user-invalid` – pole obsahuje chybu A ZÁROVEŇ do něj uživatel už zkusil něco napsat, nebo formulář odeslat.
+Stav pole si můžeš obarvit sám. CSS nabízí tři pseudotřídy:
+
+- `:valid` — pole je v pořádku (nebo je prázdné a není povinné),
+- `:invalid` — pole má chybu, **už od načtení stránky**,
+- `:user-invalid` — pole má chybu **a zároveň** do něj uživatel sáhl nebo zkusil odeslat.
+
+:::compare
+```html
+<form>
+  <label for="mail">E-mail</label>
+  <input type="email" id="mail" required placeholder="jan@example.cz">
+  <p class="popis">Takhle vypadá prázdný formulář hned po načtení stránky.</p>
+</form>
+```
+```css
+body { font-family: system-ui, sans-serif; padding: 1rem; }
+label { display: block; font-weight: 600; margin-bottom: 0.25rem; }
+input { padding: 0.4rem; font: inherit; border: 2px solid #999; border-radius: 4px; }
+.popis { color: #555; font-size: 0.9rem; }
+```
+--variant-- S `:invalid`
+```css
+input:invalid { border-color: #c62828; background: #fdecea; }
+```
+--variant-- S `:user-invalid`
+```css
+input:user-invalid { border-color: #c62828; background: #fdecea; }
+```
+:::
+
+Rozdíl je vidět hned: s `:invalid` křičí formulář na uživatele dřív, než stihl cokoli
+napsat. `:user-invalid` počká, až bude mít co vytknout.
 
 > [!TIP]
-> Proč radši `:user-invalid`? Pokud obarvíme `:invalid` pole červeně hned po načtení stránky (kdy jsou všechna povinná pole prázdná = nevalidní), uživatel se vyděsí, protože na něj křičí chyby, i když ještě nestihl nic udělat.
+> Zelená u `:user-valid` funguje stejně a stojí za to — potvrzení, že je pole v pořádku,
+> uklidní stejně, jako červená varuje.
 
-```css
-input:user-invalid {
-  border: 2px solid red;
-}
+:::check
+Proč se na obarvení chyb hodí `:user-invalid` líp než `:invalid`?
+
+### --correct--
+Protože začne platit až poté, co uživatel do pole sáhl nebo zkusil odeslat — ne hned po načtení.
+
+#### --why--
+Prázdné povinné pole je od první vteřiny neplatné. S `:invalid` by tedy formulář svítil
+červeně dřív, než uživatel něco udělá, a varování by ztratilo význam.
+
+### --answer--
+Protože `:invalid` se nedá použít na `input`.
+
+#### --why--
+Dá, funguje na všech polích. Rozdíl je jen v tom, **kdy** začne platit.
+
+### --answer--
+Protože `:user-invalid` kontroluje data i na serveru.
+
+#### --why--
+CSS se serveru netýká vůbec. Obě pseudotřídy jen reagují na stav pole v prohlížeči.
+:::
+
+## Když chceš chyby řešit po svém
+
+Bubliny prohlížeče se nedají nastylovat a v každém prohlížeči vypadají jinak. Když
+potřebuješ vlastní hlášky na vlastních místech, řekneš prohlížeči, ať se do toho neplete:
+
+```html
+<form novalidate>
 ```
 
-## Vypnutí validace
+Atribut `novalidate` patří na `<form>`, ne na pole. **Vypne jen bubliny a blokování
+odeslání** — pravidla platí dál, takže `:user-invalid` v CSS i kontrola v JavaScriptu
+fungují pořád. Tak se to obvykle používá: validace zůstane v HTML, jen si chyby vypíšeš
+sám tam, kam patří.
 
-Někdy chceme řešit zobrazení chyb čistě po svém (v JavaScriptu) a vestavěné bubliny prohlížeče nám překážejí. V takovém případě dáme na značku `<form>` atribut `novalidate`.
+:::check
+Kam se píše atribut `novalidate` a co vypne?
+
+### --expected--
+na form a vypne bubliny
+
+### --accept--
+na formulář, vypne bubliny prohlížeče
+na form, vypne prohlížečové bubliny a blokování odeslání
+na značku form
+:::
+
+## Proč to nestačí
+
+Všechno, co jsi v téhle lekci viděl, běží **na počítači uživatele**. Což znamená, že to
+může kdokoli obejít, a nemusí k tomu být hacker:
+
+- v DevTools smaže `required` nebo změní `type` a formulář odešle,
+- pošle požadavek úplně bez prohlížeče (`curl`, Postman, skript),
+- má starý prohlížeč, který `pattern` u daného pole nezná.
+
+Server proto musí zkontrolovat **všechno znovu**, jako by v prohlížeči žádná validace
+nebyla. Validace v HTML tím neztrácí smysl: ušetří uživateli cestu na server a zpátky
+a řekne mu chybu okamžitě. Jen to není bezpečnost.
+
+:::check
+Napiš, co musí udělat server s daty, která prošla validací v prohlížeči.
+
+### --expected--
+zkontrolovat je znovu
+
+### --accept--
+ověřit je znovu
+validovat je znovu
+zkontrolovat všechno znovu
+:::
 
 ## Kde to najdeš v MDN
-- [Form data validation](https://developer.mozilla.org/en-US/docs/Learn/Forms/Form_validation)
-- [:user-invalid](https://developer.mozilla.org/en-US/docs/Web/CSS/:user-invalid)
+
+- [Client-side form validation](https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Forms/Form_validation) — přehled atributů i příklady.
+- [`:user-invalid`](https://developer.mozilla.org/en-US/docs/Web/CSS/:user-invalid) — včetně tabulky podpory.
+- [Constraint Validation API](https://developer.mozilla.org/en-US/docs/Web/HTML/Constraint_validation) — až budeš chtít stavy číst z JavaScriptu.
+
+# --questions--
 
 ## --question--
 
-K čemu slouží atribut `novalidate` a kam se píše?
+Kam se píše atribut `novalidate` a co udělá?
+
 ### --answer--
-Zabrání odeslání dat, píše se na input.
+
+Zabrání odeslání dat, píše se na `input`.
+
 #### --why--
-Píše se na celou form a jen vypne bubliny.
+
+Píše se na `<form>` a odeslání naopak povolí i s chybami — jen vypne bubliny prohlížeče.
+
 ### --correct--
-Vypne prohlížečové bubliny validace a píše se na `<form>`.
+
+Vypne bubliny prohlížeče a blokování odeslání; píše se na `<form>`.
+
 #### --why--
-Tím si můžeš udělat celou validaci i zobrazování podle svého ve tvém skriptu.
+
+Pravidla v HTML přitom platí dál, takže `:user-invalid` v CSS i kontrola v JavaScriptu
+fungují. Používá se, když chceš chyby vypisovat na vlastních místech.
+
+### --answer--
+
+Vypne validaci úplně, včetně pseudotříd v CSS; píše se na `<form>`.
+
+#### --why--
+
+Pseudotřídy fungují dál — `novalidate` mění jen chování prohlížeče při odeslání,
+ne platnost polí.
+
+### --see--
+
+html-formulare/validace-v-prohlizeci#kdyz-chces-chyby-resit-po-svem
 
 ## --question--
 
-Proč je v CSS lepší používat `:user-invalid` než `:invalid`?
-### --answer--
-Protože `:user-invalid` je bezpečnější.
-#### --why--
-Obě fungují lokálně, ale `:invalid` se aplikuje ihned, zatímco `:user-invalid` dává lepší UX.
-### --correct--
-Protože `:user-invalid` aplikuje styly až poté, co uživatel pole upravil, nenadává mu hned po načtení prázdné stránky.
-#### --why--
-Správně! Nikdo nemá rád, když se na něj krzyčí za něco, co ještě ani nezačal dělat.
+Napiš atribut, kterým pole omezíš na nejvýš 200 znaků.
+
+### --expected--
+
+maxlength="200"
+
+### --accept--
+
+maxlength=200
+maxlength
+
+### --why--
+
+`maxlength` navíc uživateli víc znaků rovnou nedovolí napsat — narozdíl od `minlength`,
+který se projeví až při odeslání. Na serveru se délka stejně kontroluje znovu.
+
+### --see--
+
+html-formulare/validace-v-prohlizeci#zakladni-validacni-atributy
 
 ## --question--
 
-Proč nemůžeme věřit datům zaslaným z klienta, i když máme všude `required` a `type="email"`?
-### --answer--
-Protože by to bylo pomalé.
-#### --why--
-Naopak, kontrola na klientu je nejrychlejší, protože nečeká na server. Jde o bezpečnost.
-### --correct--
-Protože kdokoli si může HTML upravit ve Vývojářských nástrojích nebo poslat požadavek úplně bez prohlížeče (např. přes Postman/curl).
-#### --why--
-Frontendová validace je pro zrychlení UX, ale skutečná obrana databází se musí odehrát na serveru, kde ti na ni nikdo zvenku nesahá.
+Pole má `type="email"` a uživatel zadá `a@b`. Projde validací v prohlížeči?
 
+### --correct--
+
+Ano — tvar odpovídá, i když taková schránka skoro jistě neexistuje.
+
+#### --why--
+
+`type="email"` kontroluje jen tvar, ne existenci. Jestli adresa funguje, zjistíš jedině
+tím, že na ni pošleš ověřovací e-mail.
+
+### --answer--
+
+Ne, chybí doména nejvyššího řádu (`.cz`, `.com`).
+
+#### --why--
+
+Specifikace ji nevyžaduje — adresy na vnitrofiremních doménách bez tečky jsou platné.
+
+### --answer--
+
+Ne, prohlížeč adresu ověří dotazem na poštovní server.
+
+#### --why--
+
+Nic takového prohlížeč nedělá. Byl by to dotaz do sítě u každého stisku klávesy.
+
+### --see--
+
+html-formulare/validace-v-prohlizeci#validace-podle-typu-type
+
+## --question--
+
+Proč se nedá věřit datům z klienta, i když máš všude `required` a `type="email"`?
+
+### --answer--
+
+Protože by kontrola na klientovi byla pomalá.
+
+#### --why--
+
+Naopak, kontrola v prohlížeči je nejrychlejší možná — nečeká na server. Problém je
+v bezpečnosti, ne v rychlosti.
+
+### --correct--
+
+Protože kdokoli si HTML upraví v DevTools nebo pošle požadavek úplně bez prohlížeče.
+
+#### --why--
+
+Validace v HTML je pro uživatele, ne pro obranu. Server dostává jen HTTP požadavek
+a nemá jak poznat, jestli přišel z tvého formuláře.
+
+### --answer--
+
+Protože starší prohlížeče `required` neumí.
+
+#### --why--
+
+`required` umí všechny hlavní prohlížeče přes deset let. I kdyby ne, na požadavek
+poslaný mimo prohlížeč to nemá vliv.
+
+### --see--
+
+html-formulare/validace-v-prohlizeci#proc-to-nestaci
+
+## --question--
+
+Napiš, čím se liší `:invalid` a `:user-invalid`.
+
+### --expected--
+
+user-invalid platí až po interakci
+
+### --accept--
+
+user-invalid se projeví až když uživatel do pole sáhl
+invalid platí hned od načtení, user-invalid až po interakci
+user-invalid až po odeslání nebo psaní
+
+### --why--
+
+Prázdné povinné pole je neplatné od první vteřiny, takže s `:invalid` svítí formulář
+červeně dřív, než uživatel cokoli udělá. `:user-invalid` počká, až bude co vytknout.
+
+### --see--
+
+html-formulare/validace-v-prohlizeci#css-a-validace-pseudotridy
