@@ -1248,7 +1248,20 @@ konzoli pod editorem (`.workspace__stack`, 65/35), po splnění kroku se Zkontro
 `tools/theme-unit.test.js` i kontrast ≥ 4.5:1 a to, že žádné CSS mimo tokens.css nepíše barvu
 natvrdo). Tokeny výkladu z kontraktu 5.11: `--callout-{remember,pitfall,tip,note}-{bg,border,fg,icon}`,
 `--text-strong-accent`, `--code-inline-bg/fg`, `--term-fg`, `--mark-bg` (+ `--mark-fg`). Navíc:
-`--rule-heavy`, `--shadow-pop`, `--backdrop`, `--preview-stage`, `--code-fold-bg`.
+`--rule-heavy`, `--shadow-pop`, `--backdrop`, `--preview-stage`, `--code-fold-bg`,
+`--shadow-page` a `--page-edge` (hrana a stín listu, viz níž).
+
+**Vzhled: stránka je list papíru.** Světlá paleta stojí na teplém papíru (`--paper`), ne na
+studené šedi; tmavá je „učebnice večer" s deskou tmavší než list. Čtecí obrazovky (`.page`)
+mají vlastní plochu `--surface`, hranu `--page-edge` a nízký stín `--shadow-page`, takže leží
+na desce stolu; pracoviště naopak zabírá celé okno, protože se v něm pracuje, ne čte. Na úzkém
+okně list hranu i stín ztrácí a vyplní obrazovku.
+
+Opakované sazečské motivy: **dvojitá linka** (silná + vlasová) pod titulem přehledu i pod hlavou
+části, **tečkovaná vodicí linka** v obsahu, **čísla kroků jako paginace** (antikva, tabulkové
+číslice, bez rámečků; splněný krok podtržený, aktuální v plném inkoustu), **štítek typu modulu
+jako marginálie** (antikva kurzívou v barvě typu) a **záložka „Pokračovat"** jako vložený lístek
+se stužkou. Výběr textu má barvu zvýrazňovače (`--mark-bg`).
 
 **Ověření:** `node --test server/routes/notes.test.js server/routes/settings.test.js tools/orientation-unit.test.js tools/notes-unit.test.js tools/theme-unit.test.js tools/ui-orientation.test.js tools/ui.test.js`
 (UI testy: porty 4500–4519, fixture `tools/fixtures/orientation-content/`).
