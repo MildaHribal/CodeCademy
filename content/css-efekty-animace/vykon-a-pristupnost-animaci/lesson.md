@@ -353,6 +353,25 @@ hlášku v živé oblasti
 stav i textem
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč animace psaná v JavaScriptu nemá automaticky splněnou
+přístupnost, i když v CSS máš `prefers-reduced-motion` ošetřené.
+
+## --model--
+`prefers-reduced-motion` je jen **dotaz na nastavení systému**. Prohlížeč podle něj nic
+sám nevypíná — v CSS funguje proto, že jsem tam napsal pravidlo, které se na něj ptá.
+Animace spuštěná z JavaScriptu žádným takovým pravidlem neprochází: běží, protože jsem
+ji zavolal. Musím se tedy zeptat sám přes `matchMedia` a podle odpovědi buď animaci
+přeskočit, nebo ji nahradit prostým přepnutím stavu. Knihovny to většinou neudělají za
+mě a uživatel, kterého pohyb fyzicky obtěžuje, nemá jak si pomoct.
+
+## --checklist--
+- Dotaz jen sděluje nastavení, sám nic nevypíná.
+- V CSS funguje proto, že jsem pravidlo napsal.
+- Animace z JavaScriptu žádným takovým pravidlem neprojde.
+- Na nastavení se musím zeptat sám a nabídnout tlumenou variantu.
+:::
+
 ## Typické chyby a pasti
 
 - **Animace `width`, `height`, `top` nebo `left`** místo `transform`. Vypadá stejně,

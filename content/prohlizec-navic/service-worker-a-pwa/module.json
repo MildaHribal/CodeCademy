@@ -1,7 +1,7 @@
 {
   "type": "lesson",
-  "title": "Service worker a PWA",
-  "summary": "PWA",
+  "title": "Service worker a offline režim",
+  "summary": "Pochopíš, jak service worker odchytává požadavky, a vybereš strategii cachování podle typu dat.",
   "minutes": 40,
   "runtime": "dom"
 }

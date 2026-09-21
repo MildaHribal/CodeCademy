@@ -1,5 +1,56 @@
 {
   "title": "Prohlížečová API navíc",
-  "intro": "x",
-  "modules": ["web-components"]
+  "intro": "Prohlížeč umí mnohem víc než DOM a `fetch`. V téhle sekci si projdeš čtyři věci, které se v běžných tutoriálech přeskakují, a přitom je potkáš v každé větší aplikaci: **vlastní HTML značky** (web components), **druhé vlákno** pro výpočty (Web Workers), **service worker** a offline režim a **úložiště v prohlížeči** od `localStorage` po IndexedDB.\n\nSekce je rozšíření: nic z toho nepotřebuješ k tomu, abys postavil běžnou stránku. Potřebuješ to ve chvíli, kdy tvoje appka má fungovat i ve vlaku bez signálu, kdy widget musí fungovat na cizím webu, nebo když filtrování deseti tisíc řádků zamrzne prohlížeč.\n\nPředpoklady: DOM a události, třídy, asynchronní JavaScript (promise a `async`/`await`) a základy HTTP.",
+  "modules": [
+    "web-components",
+    "workshop-web-component",
+    "web-workers",
+    "service-worker-a-pwa",
+    "lab-cache-strategie",
+    "indexeddb",
+    "kviz"
+  ],
+  "outcomes": [
+    {
+      "text": "Napíšeš vlastní HTML značku s vlastním chováním, atributy a událostí ven — a použiješ ji bez frameworku.",
+      "links": [
+        "prohlizec-navic/web-components#vlastni-znacka-trida-a-customelements-define",
+        "prohlizec-navic/workshop-web-component/012"
+      ]
+    },
+    {
+      "text": "Uzavřeš styly komponenty do shadow DOM a víš, co do něj zvenčí pronikne a co ne.",
+      "links": [
+        "prohlizec-navic/web-components#shadow-dom-styly-ktere-nikam-neutecou",
+        "prohlizec-navic/workshop-web-component/004"
+      ]
+    },
+    {
+      "text": "Přesuneš dlouhý výpočet do Web Workeru, takže stránka zůstane klikatelná.",
+      "links": [
+        "prohlizec-navic/web-workers#vlakno-navic-a-co-v-nem-neni",
+        "prohlizec-navic/web-workers#jak-worker-vznikne"
+      ]
+    },
+    {
+      "text": "Popíšeš životní cyklus service workeru a vybereš strategii cachování podle toho, o jaký požadavek jde.",
+      "links": [
+        "prohlizec-navic/service-worker-a-pwa#zivotni-cyklus-install-activate-fetch",
+        "prohlizec-navic/lab-cache-strategie"
+      ]
+    },
+    {
+      "text": "Vybereš správné úložiště prohlížeče pro daná data a víš, proč `localStorage` nestačí na všechno.",
+      "links": [
+        "prohlizec-navic/indexeddb#ctyri-uloziste-a-kdy-ktere"
+      ]
+    },
+    {
+      "text": "Zpřístupníš vlastní komponentu klávesnici i odečítači obrazovky a připojíš ji k formuláři.",
+      "links": [
+        "prohlizec-navic/workshop-web-component/014",
+        "prohlizec-navic/workshop-web-component/016"
+      ]
+    }
+  ]
 }

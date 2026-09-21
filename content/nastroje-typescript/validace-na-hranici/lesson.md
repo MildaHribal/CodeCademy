@@ -185,6 +185,25 @@ Ověřování dat probíhá u obou metod úplně stejně, rozdíl je jen ve form
 Obě metody lze použít pro libovolně složité nebo jednoduché struktury.
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč `as Uzivatel` nad odpovědí z API není validace.
+
+## --model--
+Přetypování je **slib překladači**, ne kontrola dat. Říká jen „věř mi, že tohle má
+tenhle tvar" — a od té chvíle s hodnotou zachází, jako by slib platil. Za běhu se
+přitom nestane vůbec nic: `as` z výsledného JavaScriptu zmizí, takže když server pošle
+`null` místo objektu nebo přejmenuje pole, kód to zjistí až na místě, kde hodnotu
+použije, a spadne tam. Skutečná kontrola musí proběhnout **za běhu** — schématem, které
+data projde a buď vrátí ověřenou hodnotu, nebo srozumitelně selže hned na hranici, kde
+data do aplikace vstoupila.
+
+## --checklist--
+- Přetypování je slib překladači, ne kontrola hodnoty.
+- Za běhu se z něj nezachová nic.
+- Špatná data se projeví až na místě použití.
+- Kontrola musí proběhnout za běhu, na hranici aplikace.
+:::
+
 ## Kde to najdeš v MDN
 
 V dokumentaci MDN se dočtete o funkcích na rozhraní vaší aplikace (`fetch`, `JSON.parse`), ale o samotné knihovně Zod tam nenajdete nic, protože je to externí balíček. Její výbornou dokumentaci najdete na oficiálním webu [zod.dev](https://zod.dev).

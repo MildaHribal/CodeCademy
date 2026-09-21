@@ -1,7 +1,7 @@
 {
   "type": "lesson",
-  "title": "Web Workers",
-  "summary": "Workers",
-  "minutes": 40,
+  "title": "Web Workers: výpočet mimo hlavní vlákno",
+  "summary": "Přesuneš dlouhý výpočet do druhého vlákna, takže stránka zůstane klikatelná.",
+  "minutes": 35,
   "runtime": "dom"
 }

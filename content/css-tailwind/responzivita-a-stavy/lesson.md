@@ -288,6 +288,25 @@ motion-safe:hover:scale-105
 motion-safe:hover:scale-110
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč má znovupoužitelná komponenta reagovat na šířku
+kontejneru, a ne na šířku okna.
+
+## --model--
+Šířka okna říká něco o zařízení, ne o místě, které má komponenta k dispozici. Tatáž
+karta může být na širokém displeji jednou přes celou stránku a podruhé v úzkém postranním
+sloupci — a `md:` by jí v obou případech nařídilo to samé, takže v tom sloupci by se
+rozsypala. Kontejnerový dotaz se ptá na skutečně dostupné místo, takže komponenta
+rozhodne správně bez ohledu na to, kam ji někdo vloží. Na okno se naopak ptá rozvržení
+celé stránky, protože to opravdu o zařízení je.
+
+## --checklist--
+- Šířka okna nevypovídá o místě pro komponentu.
+- Tatáž komponenta může být v širokém i úzkém sloupci.
+- Kontejnerový dotaz se ptá na skutečně dostupné místo.
+- Šířka okna zůstává správná pro rozvržení celé stránky.
+:::
+
 ## Typické chyby a pasti
 
 - **Psaní od velkého displeje dolů.** `lg:grid-cols-1` jako základ a výjimky pro telefon

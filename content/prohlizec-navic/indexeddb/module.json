@@ -1,7 +1,7 @@
 {
   "type": "lesson",
-  "title": "IndexedDB a úložiště",
-  "summary": "IndexedDB",
+  "title": "Úložiště v prohlížeči: od localStorage k IndexedDB",
+  "summary": "Vybereš správné úložiště pro daná data a víš, kde localStorage končí.",
   "minutes": 40,
   "runtime": "dom"
 }

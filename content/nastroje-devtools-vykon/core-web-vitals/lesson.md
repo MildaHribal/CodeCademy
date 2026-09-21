@@ -513,6 +513,25 @@ bottomup
 nastroje-devtools-vykon/core-web-vitals#panel-performance-zaznam-a-cteni
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč se výkon měří třemi metrikami místo jednou.
+
+## --model--
+„Web je pomalý" může znamenat tři úplně různé věci s různými příčinami. **LCP** měří,
+jak dlouho trvá, než se objeví hlavní obsah — léčí se velikostí obrázků a tím, co stojí
+v cestě vykreslení. **INP** měří, jak dlouho trvá odezva na kliknutí — léčí se
+rozdělením dlouhých výpočtů v hlavním vlákně. **CLS** měří, jak moc stránka poskakuje —
+léčí se rezervací místa pro obrázky a reklamy. Jedno číslo by tyhle tři poruchy smíchalo
+dohromady a neřeklo by, co opravit. Proto se nejdřív měří, která z metrik je špatně,
+a teprve pak se sahá na kód.
+
+## --checklist--
+- Pomalost má víc příčin s různými opravami.
+- Každá z metrik měří jinou část zážitku.
+- Jedno číslo by neřeklo, kde je problém.
+- Nejdřív se zjistí, která metrika je špatně.
+:::
+
 ## Typické chyby a pasti
 
 ### Měření bez zpomalení

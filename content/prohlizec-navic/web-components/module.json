@@ -1,1 +1,7 @@
-{ "type": "lesson", "title": "Web components", "summary": "Vlastní HTML prvek: třída a značka, životní cyklus, shadow DOM a jeho stylování, sloty, události a kdy sáhnout po frameworku.", "minutes": 35, "runtime": "dom" }
+{
+  "type": "lesson",
+  "title": "Vlastní HTML prvek",
+  "summary": "Napíšeš vlastní značku s chováním, atributy, shadow DOM a vlastní událostí — bez frameworku.",
+  "minutes": 40,
+  "runtime": "dom"
+}

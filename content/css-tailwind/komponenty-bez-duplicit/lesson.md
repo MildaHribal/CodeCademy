@@ -315,6 +315,26 @@ do čistého css
 do stylopisu
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč se dlouhý opakující se seznam tříd neřeší tím, že se
+z něj udělá vlastní třída přes `@apply`.
+
+## --model--
+Opakované třídy nejsou nemoc, ale **příznak**: na třech místech je napsaná ta samá
+značka. Když z nich udělám `.karta` přes `@apply`, příznak zmizí, ale duplicita zůstane
+— jen se přesune do HTML, kde je `.karta` napsaná pořád třikrát, a navíc přijdu o to,
+kvůli čemu se Tailwind používá: vzhled už není vidět ve značce a vznikl další soubor,
+který se musí udržovat. Správná oprava je vytáhnout **celou tu opakovanou značku** do
+komponenty nebo šablony; třídy pak existují jen jednou, protože jednou existuje
+i značka.
+
+## --checklist--
+- Opakované třídy jsou příznakem opakované značky.
+- `@apply` schová symptom, duplicitu nechá být.
+- Vzhled přestane být vidět v místě použití.
+- Řešením je vytáhnout celou značku do komponenty.
+:::
+
 ## Typické chyby a pasti
 
 - **`@apply` jako první reakce na opakování.** Skoro vždycky tam měla být komponenta.

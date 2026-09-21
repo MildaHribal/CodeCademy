@@ -1,0 +1,7 @@
+{
+  "type": "lab",
+  "title": "Rozhodovací jádro service workeru",
+  "summary": "Naprogramuješ tři strategie cachování a pravidlo, které z nich pro daný požadavek vybere.",
+  "minutes": 45,
+  "runtime": "js"
+}

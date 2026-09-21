@@ -487,6 +487,26 @@ Vzdálenost si určuje prohlížeč sám. `contain-intrinsic-size` nese jinou in
 nastroje-devtools-vykon/nacitani-stranky#vykreslit-jen-to-co-je-videt-content-visibility
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč skript v hlavičce bez `defer` zdrží vykreslení celé
+stránky.
+
+## --model--
+Prohlížeč staví stránku průchodem HTML odshora dolů. Když narazí na obyčejnou značku
+skriptu, musí ho stáhnout a spustit **dřív, než bude pokračovat** — skript totiž může
+do dokumentu dopsat další obsah, takže parser neví, co by za ním následovalo. Po tu
+dobu se nic nevykreslí, i když je zbytek HTML dávno stažený. `defer` tenhle slib mění:
+skript se stáhne souběžně a spustí se až po dokončení dokumentu, takže vykreslení
+nezdrží. Proto platí pravidlo, že v cestě k prvnímu vykreslení smí stát jen to, co je
+pro ně opravdu nutné.
+
+## --checklist--
+- Prohlížeč zpracovává HTML odshora dolů.
+- Obyčejný skript musí doběhnout, než se pokračuje.
+- Důvodem je, že může do dokumentu dopisovat.
+- `defer` skript odsune za dokončení dokumentu.
+:::
+
 ## Typické chyby a pasti
 
 ### Preload písma bez `crossorigin`

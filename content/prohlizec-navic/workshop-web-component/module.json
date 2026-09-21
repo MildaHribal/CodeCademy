@@ -1,7 +1,7 @@
 {
   "type": "workshop",
   "title": "Hodnocení hvězdičkami jako web component",
-  "summary": "Workshop",
-  "minutes": 60,
+  "summary": "Postavíš klikací hodnocení hvězdičkami jako vlastní HTML značku se shadow DOM, slotem, vlastní událostí, klávesovým ovládáním a odesláním ve formuláři.",
+  "minutes": 65,
   "runtime": "dom"
 }

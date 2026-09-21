@@ -325,6 +325,25 @@ vypne vestavěné barevné tokeny
 zruší všechny barvy, které Tailwind dodává
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč se v komponentách používají sémantické tokeny, a ne ty
+primitivní.
+
+## --model--
+Primitivní token říká **jaká to je barva** (`sediva-100`), sémantický říká **k čemu
+slouží** (`plocha`, `text`, `okraj`). Utilita se v obou případech odkazuje na proměnnou,
+takže rozdíl není technický, ale významový: když je v komponentě `bg-plocha`, stačí
+přepsat jednu proměnnou a změní se všechno, co tu roli hraje — tmavý motiv je pak výměna
+dvou hodnot, ne průchod celým projektem. Se `bg-sediva-100` by jméno po přepnutí do tmy
+lhalo a musel bych sáhnout na každou komponentu zvlášť.
+
+## --checklist--
+- Primitivní token pojmenovává barvu, sémantický roli.
+- Komponenta se odkazuje na roli, ne na konkrétní odstín.
+- Změna motivu je pak přepsání hodnot na jednom místě.
+- Jméno primitivního tokenu by po přebarvení lhalo.
+:::
+
 ## Typické chyby a pasti
 
 - **Proměnná v `:root` místo v `@theme`.** Vypadá stejně, ale utilita z ní nevznikne.

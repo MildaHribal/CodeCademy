@@ -485,6 +485,26 @@ Protože PostgreSQL do svazku zapisuje v nečitelném formátu.
 Formát souborů nehraje roli. I čitelná data na jediném disku zmizí s tím diskem.
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč data uložená kontejnerem zmizí a jak to souvisí s tím,
+že „u mě to fungovalo".
+
+## --model--
+Image je zapečený obraz aplikace i s prostředím a kontejner je proces z něj spuštěný.
+Vrstva, do které kontejner za běhu zapisuje, patří **tomu jednomu běhu** — smazáním
+kontejneru zmizí, a nový kontejner začíná zase od čistého obrazu. To je zároveň důvod,
+proč kontejnery řeší „u mě to fungovalo": obraz obsahuje všechno, na čem aplikace
+závisí, takže na každém stroji běží to samé. Cenou za tu záruku je, že co v obrazu nebo
+v proměnných prostředí není, to v produkci neexistuje — a data, která mají přežít, musí
+ven do připojeného svazku nebo do databáze.
+
+## --checklist--
+- Kontejner zapisuje do vrstvy, která patří jen jeho běhu.
+- Nový kontejner startuje znovu z nezměněného obrazu.
+- Stejný obraz je důvod, proč se prostředí neliší.
+- Data, která mají přežít, patří mimo kontejner.
+:::
+
 ## Typické chyby a pasti
 
 > [!PITFALL]
