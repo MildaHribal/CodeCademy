@@ -45,29 +45,6 @@ U `auth-bezpecnost`, `nasazeni-provoz` a `sql-databaze` platí, že jsou hotové
 | `prohlizec-navic` | `web-components` zástupný, zbytek sekce na disku není |
 | `nastroje-cizi-kod` | 7 modulů: obsah leží ve špatném tvaru (`<modul>.md` vedle sebe místo `<modul>/lesson.md`), chybí `module.json`; `workshop-feature-v-cizim-projektu` má 11 hotových kroků a 4 zástupné (012–015) |
 
-## Známá vada v runneru: Tailwind a `translate-*`
-
-`react-ui-knihovny/workshop-pristupne-komponenty` krok 012 **občas** neprojde vlastním
-řešením — v jednom běhu ověření spadne, v jiném projde. Co je ověřené, když spadne:
-
-- pravidlo `data-[state=checked]:translate-x-5` se použije — `--tw-translate-x` má
-  správnou hodnotu `calc(0.25rem * 5)` a `--tw-translate-y` je `0`,
-- spočítaná vlastnost `translate` přesto zůstane `0px`, takže se puntík nepohne,
-- s libovolnou hodnotou (`translate-x-[1.25rem]`) je to stejné,
-- ostatní utility na tomtéž prvku (`size-5`) fungují.
-
-Vypadá to, že `@tailwindcss/browser` v runneru za určitých okolností vydá jen vlastní
-vlastnost `--tw-translate-x`, ale ne samotnou deklaraci `translate`. **Obsah kroku je
-v pořádku, opravit je potřeba runner nebo verzi Tailwindu.**
-
-## Vada v pořadí kurzu
-
-`html-formulare` je na doporučené trase pátá, ale `workshop-objednavka` v ní používá
-`addEventListener`, `FormData`, `checkValidity()` a `setCustomValidity()` — tedy DOM,
-který se učí až v `js-dom` (21. na trase). Buď ten workshop přesunout, nebo ho přepsat
-bez JavaScriptu a DOM verzi zařadit do `js-dom`. Ostatní moduly sekce JavaScript
-nepotřebují.
-
 ## Osiřelé adresáře
 
 Nejsou v žádném `section.json`, takže je ověření přeskakuje. Buď je doplň do sekce,
@@ -129,6 +106,10 @@ Co se osvědčilo při dopisování:
 - **Test na „uvolnil se hlavní vlákno" nedělej přes `setTimeout`.** `scheduler.yield()`
   se před čekající timery předbíhá. Spolehlivější je zkusit, jestli je promise po
   dvou stech mikroúlohách pořád nevyřízená.
+- **Na animovanou pozici čekej na cílovou hodnotu, ne na ustálení.** Iframe runneru
+  nemaluje každých 60 ms, takže dva stejné vzorky po sobě neznamenají, že je animace
+  u konce — znamenají, že ještě nezačala. Piš
+  `await helpers.waitFor(() => odsazeni() - predtim >= 18, 3000)`.
 - **Testy piš tak, aby prošel i jiný rozumný postup.** Když požadavek zní „styl odkazu",
   hledej ho v `index.html` **i** v `style.css` — jinak sestřelíš vlastní `# --approaches--`.
 
