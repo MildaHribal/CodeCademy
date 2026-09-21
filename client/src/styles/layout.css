@@ -10,7 +10,7 @@
   height: var(--bar-height);
   padding-inline: 20px;
   background: var(--surface);
-  border-bottom: 1px solid var(--rule);
+  border-bottom: 1px solid var(--page-edge);
 }
 
 .app-bar__brand {
@@ -158,15 +158,34 @@
 
 /* ——— Stránky ——— */
 
+/* Stránka na čtení je list papíru položený na desku stolu (--paper): má vlastní
+   plochu, hranu a nízký stín. Díky tomu se čtení opticky odděluje od lišty a od
+   pracoviště, kde se naopak pracuje na celé ploše okna. */
 .page {
+  position: relative;
   width: 100%;
   max-width: 48rem;
-  margin-inline: auto;
-  padding: 40px 24px 96px;
+  margin: 28px auto 64px;
+  padding: 52px 56px 80px;
+  background: var(--surface);
+  border: 1px solid var(--page-edge);
+  border-radius: 2px;
+  box-shadow: var(--shadow-page);
 }
 
 .page--wide {
   max-width: 68rem;
+}
+
+/* Na úzkém displeji list vyplní okno — hrana a stín by tam jen ubíraly místo. */
+@media (max-width: 720px) {
+  .page {
+    margin: 0 auto;
+    padding: 28px 18px 72px;
+    border-inline: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
 }
 
 /* Pracovní plocha zabírá celé okno pod lištou a neposouvá se jako celek. */

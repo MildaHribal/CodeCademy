@@ -1,53 +1,102 @@
 /* Přehled osnovy jako obsah učebnice + detail sekce. */
 
+/* Titulní strana: název, podtitul, tiráž — a pod tím dvojitá linka, jakou má
+   titulní strana v sazbě (silná a pod ní vlasová). */
 .overview__head {
+  position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1.35fr) minmax(280px, 1fr);
-  gap: 48px;
+  gap: 56px;
   align-items: end;
-  padding-bottom: 40px;
-  border-bottom: 1px solid var(--rule);
+  padding-bottom: 34px;
+  border-bottom: 3px solid var(--rule-heavy);
+}
+
+.overview__head::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
+  border-bottom: 1px solid var(--rule-heavy);
+}
+
+/* Za dvojitou linkou musí být vzduch. Na slot za hlavičkou margin nezabírá
+   (`display: contents`), takže odsazení drží sama hlavička. */
+.overview__head {
+  margin-bottom: 36px;
 }
 
 .overview__title {
-  font-size: clamp(36px, 5vw, 52px);
-  letter-spacing: -0.015em;
-  line-height: 1.08;
+  font-size: clamp(38px, 5.4vw, 60px);
+  letter-spacing: -0.02em;
+  line-height: 1.04;
+  text-wrap: balance;
 }
 
 .overview__lead {
-  margin-top: 16px;
-  max-width: 38ch;
+  margin-top: 18px;
+  max-width: 40ch;
   color: var(--ink-soft);
-  font-size: 18px;
-  line-height: 1.55;
+  font-family: var(--font-serif);
+  font-size: 19px;
+  line-height: 1.5;
 }
 
-/* Záložka "Pokračovat" — jediná ozdoba přehledu: stužka jako v knize. */
+/* Tiráž: rozsah kurzu v číslech, tiše, jako údaj o vydání. */
+.overview__colophon {
+  margin-top: 18px;
+  color: var(--ink-faint);
+  font-family: var(--font-serif);
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+}
+
+/* Záložka "Pokračovat" — jediná ozdoba přehledu: lístek vložený do knihy, ze kterého
+   kouká stužka. Ostré rohy a hrana listu, ať to nevypadá jako kartička z dashboardu. */
 .resume {
   position: relative;
   display: grid;
   gap: 4px;
-  padding: 22px 24px 24px;
-  border: 1px solid var(--rule);
-  border-radius: var(--radius-large);
-  background: var(--surface);
+  padding: 24px 26px 26px;
+  border: 1px solid var(--page-edge);
+  border-radius: 2px;
+  background: var(--surface-sunken);
+  box-shadow: var(--shadow-page);
 }
 
+/* Vlasová linka uvnitř lístku — sazečský detail, který dělá z obdélníku lístek.
+   Kreslí se jako ::before, aby ji stužka (::after) přebila. */
 .resume::before {
   content: '';
   position: absolute;
-  top: -1px;
-  right: 24px;
-  width: 18px;
-  height: 34px;
+  inset: 5px;
+  border: 1px solid var(--rule);
+  border-radius: 1px;
+  pointer-events: none;
+}
+
+.resume::after {
+  content: '';
+  position: absolute;
+  top: -12px;
+  right: 28px;
+  width: 16px;
+  height: 46px;
   background: var(--accent);
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 76%, 0 100%);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 80%, 0 100%);
+}
+
+.resume--done::after {
+  background: var(--done);
 }
 
 .resume__label {
   color: var(--ink-soft);
-  font-size: 14px;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 15px;
 }
 
 .resume__title {
@@ -68,9 +117,7 @@
   margin-top: 16px;
 }
 
-.resume--done::before {
-  background: var(--done);
-}
+
 
 /* ——— Obsah ——— */
 
@@ -167,12 +214,24 @@
 }
 
 .toc-part__head {
+  position: relative;
   display: grid;
   grid-template-columns: 3.5rem minmax(0, 1fr) auto;
   align-items: baseline;
   column-gap: 0;
   padding-bottom: 12px;
+  margin-bottom: 5px;
   border-bottom: 2px solid var(--rule-heavy);
+}
+
+/* Stejná dvojitá linka jako na titulní straně — opakovaný motiv drží stránku pohromadě. */
+.toc-part__head::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -5px;
+  border-bottom: 1px solid var(--rule);
 }
 
 .toc-part__number {
@@ -254,8 +313,18 @@ a.toc-row__title:hover {
   color: var(--accent);
 }
 
+/* Při najetí se vodicí linka „naplní inkoustem" a číslo sekce ji následuje. */
 a.toc-row__title:hover::after {
-  border-bottom-color: var(--accent-muted);
+  border-bottom-color: var(--accent);
+}
+
+.toc-row:hover .toc-row__number {
+  color: var(--accent);
+}
+
+.toc-row__number,
+.toc-row__title::after {
+  transition: color 120ms ease, border-color 120ms ease;
 }
 
 .toc-row__summary {

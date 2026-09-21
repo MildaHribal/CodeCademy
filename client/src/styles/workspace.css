@@ -159,47 +159,66 @@
   scrollbar-width: thin;
 }
 
+/* Čísla kroků jsou sázená jako čísla stránek v patě: antikva, tabulkové číslice,
+   žádné rámečky. Splněný krok podtrhává linka, na tom aktuálním stojí plný inkoust. */
 .stepper__item,
 .stepper__arrow {
   display: grid;
   place-items: center;
   width: 28px;
   height: 28px;
-  border-radius: 5px;
-  font-size: 13px;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
+  border-radius: 4px;
+  font-family: var(--font-serif);
+  font-size: 15px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums lining-nums;
   text-decoration: none;
 }
 
 .stepper__item {
-  border: 1px solid var(--rule-strong);
-  color: var(--ink-soft);
-  background: var(--surface);
+  position: relative;
+  border: 1px solid transparent;
+  color: var(--ink-faint);
+  background: transparent;
 }
 
 .stepper__item:hover {
-  border-color: var(--accent);
+  border-color: transparent;
+  background: var(--hover-tint);
   color: var(--accent);
 }
 
+/* Splněný krok: linka pod číslem, jako odškrtnuto v obsahu. */
 .stepper__item[data-done='true'] {
-  border-color: var(--done-border);
-  background: var(--done-soft);
+  border-color: transparent;
+  background: transparent;
   color: var(--done);
+}
+
+.stepper__item[data-done='true']::after {
+  content: '';
+  position: absolute;
+  left: 5px;
+  right: 5px;
+  bottom: 3px;
+  border-bottom: 2px solid var(--done);
 }
 
 .stepper__item[aria-current='step'] {
   border-color: var(--accent);
   background: var(--accent);
   color: var(--on-accent);
-  box-shadow: 0 0 0 2px var(--accent-soft);
+  box-shadow: none;
+}
+
+.stepper__item[aria-current='step']::after {
+  display: none;
 }
 
 .stepper__item[aria-current='step'][data-done='true'] {
   border-color: var(--done);
   background: var(--done);
-  box-shadow: 0 0 0 2px var(--done-soft);
+  box-shadow: none;
 }
 
 .stepper__arrow {

@@ -100,7 +100,7 @@ describe('orientace, tmavý režim a poznámky v prohlížeči', () => {
   test('tmavý režim: žádný prvek aplikace nezůstane se světlou barvou (natvrdo zapsanou)', async () => {
     await api('PUT', '/api/settings', { theme: 'dark' });
     // Světlé barvy, které by v tmavém režimu znamenaly zapomenutou barvu mimo tokeny.
-    const LIGHT_BACKGROUNDS = ['rgb(255, 255, 255)', 'rgb(243, 245, 247)', 'rgb(238, 241, 245)', 'rgb(248, 249, 251)'];
+    const LIGHT_BACKGROUNDS = ['rgb(255, 255, 255)', 'rgb(253, 252, 248)', 'rgb(236, 234, 223)', 'rgb(230, 227, 215)', 'rgb(246, 244, 236)'];
     const LIGHT_TEXT = ['rgb(24, 33, 46)', 'rgb(74, 85, 102)', 'rgb(95, 104, 118)', 'rgb(0, 0, 0)'];
     for (const hash of ['#/', '#/sekce/zaklady', '#/modul/zaklady/lekce', '#/modul/zaklady/workshop/001', '#/poznamky']) {
       const page = await openPage(hash);

@@ -47,6 +47,7 @@ export async function renderOverview(ctx, route = {}) {
             { class: 'overview__lead' },
             'Od HTML a CSS přes JavaScript po vlastní fullstack projekty. Kód píšeš přímo tady, testy ti hned řeknou, co ještě chybí.',
           ),
+          h('p', { class: 'overview__colophon' }, colophon(curriculum)),
         ),
         resumePanel(curriculum),
       ),
@@ -82,6 +83,17 @@ function fillPartRails(page) {
       for (const [el, target] of rails) el.style.setProperty('--fill', target);
     }),
   );
+}
+
+/**
+ * Tiráž pod názvem: rozsah kurzu v číslech. Na titulní straně učebnice stojí, kolik
+ * toho člověk drží v ruce — tady to samé, spočítané z osnovy, ne napsané natvrdo.
+ */
+function colophon(curriculum) {
+  const sections = curriculum.parts.flatMap((part) => part.sections);
+  const entries = allModules(curriculum);
+  const hours = Math.round(entries.reduce((sum, entry) => sum + (entry.module.minutes ?? 0), 0) / 60);
+  return `${sections.length} sekcí · ${entries.length} modulů · zhruba ${hours} hodin`;
 }
 
 function findResumeTarget(curriculum) {

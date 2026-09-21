@@ -17,21 +17,26 @@
   color-scheme: light;
 
   /* Plochy a text */
-  --paper: #f3f5f7;
-  --surface: #ffffff;
-  --surface-sunken: #eef1f5;
-  --footer-bg: #f8f9fb;
+  --paper: #eceadf;
+  --surface: #fdfcf8;
+  --surface-sunken: #e6e3d7;
+  --footer-bg: #f6f4ec;
   --ink: #18212e;
   --ink-soft: #4a5566;
   --ink-faint: #5f6876;
   --on-ink: #fff;
-  --rule: #d9dee5;
-  --rule-strong: #b6bfcb;
+  --rule: #dad5c6;
+  --rule-strong: #b5ae9b;
   --rule-heavy: #18212e; /* silná linka pod nadpisem části (jako v obsahu knihy) */
   --hover-tint: rgba(24, 33, 46, 0.06);
-  --segment-empty: #e0e5eb;
+  --segment-empty: #ddd9cb;
   --shadow-pop: 0 6px 24px rgba(24, 33, 46, 0.14), 0 1px 3px rgba(24, 33, 46, 0.12);
   --backdrop: rgba(24, 33, 46, 0.35);
+
+  /* List papíru: stránka na čtení leží na ploše stolu (--paper) jako sheet.
+     Stín je měkký a nízký, ať to vypadá položené, ne vznášející se. */
+  --shadow-page: 0 1px 2px rgba(60, 50, 30, 0.06), 0 12px 32px -18px rgba(60, 50, 30, 0.3);
+  --page-edge: #ccc5b2;
 
   /* Akcent (školní modrý inkoust) */
   --accent: #2b50a8;
@@ -81,8 +86,8 @@
   --callout-tip-border: #86c39f;
   --callout-tip-fg: #173a27;
   --callout-tip-icon: #1f7a4d;
-  --callout-note-bg: #f1f3f6;
-  --callout-note-border: #b6bfcb;
+  --callout-note-bg: #efece2;
+  --callout-note-border: #bdb7a6;
   --callout-note-fg: #2a3340;
   --callout-note-icon: #4a5566;
 
@@ -97,7 +102,7 @@
 
   /* Náhled uživatelovy stránky — stránka má vlastní barvy, podklad zůstává bílý i v tmavém režimu */
   --preview-bg: #fff;
-  --preview-stage: #dfe4ea; /* plocha kolem zmenšeného náhledu (přepínač šířky) */
+  --preview-stage: #ddd8c9; /* plocha kolem zmenšeného náhledu (přepínač šířky) */
 
   /* Editor a bloky kódu (One Dark) */
   --code-bg: #282c34;
@@ -156,6 +161,10 @@
   --segment-empty: #2c323c;
   --shadow-pop: 0 8px 28px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(0, 0, 0, 0.4);
   --backdrop: rgba(5, 7, 10, 0.55);
+
+  /* List papíru večer: stín je hlubší a okraj listu světlejší než plocha kolem. */
+  --shadow-page: 0 1px 2px rgba(0, 0, 0, 0.35), 0 16px 40px -20px rgba(0, 0, 0, 0.75);
+  --page-edge: #333a46;
 
   /* Akcent */
   --accent: #8fabf2;
