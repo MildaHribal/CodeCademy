@@ -1,6 +1,7 @@
 // Typy otázek jsou v registru: `choice` (volby) a `text` (psaná odpověď, kontrakt kap. 4).
 //   isSolved()     — zodpovězená správně, nebo si odpověď nechal ukázat (kontrakt kap. 4.5)
 // ——— Pravidla (kontrakt kap. 4.5) ———
+import { riseIn } from '../motion.js';
 import './questions/questions.css';
 import { h, svg } from '../dom.js';
 import { icons } from '../icons.js';
@@ -72,6 +73,10 @@ export function createQuestion(question, options = {}) {
 
   const confidence = askConfidence ? createConfidencePicker() : null;
   const verdict = h('p', { class: 'question__verdict', role: 'status' });
+  // Verdikt se mění přepsáním textu na mnoha místech; pohyb proto hlídá změnu sám.
+  new MutationObserver(() => {
+    if (verdict.textContent) riseIn(verdict, { distance: 4 });
+  }).observe(verdict, { childList: true, characterData: true, subtree: true });
   const feedback = h('p', { class: 'question__feedback' });
   const actions = h('div', { class: 'question__actions' });
   const footer = h('div', { class: 'question__footer' }, confidence?.element, verdict, feedback, actions);

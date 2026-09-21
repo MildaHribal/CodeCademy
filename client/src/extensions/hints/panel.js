@@ -6,6 +6,7 @@ import {
   firstFailedIndex, focusTipIndex, helpButtonState, nextFailStreak, restoredOpenedCount, shouldHighlight,
 } from './logic.js';
 import { renderSeeLinks } from './see-links.js';
+import { expand } from '../../motion.js';
 
 let panelCounter = 0;
 
@@ -54,6 +55,7 @@ export function createHintsUi({ id, item, hintList, onCompare, signal }) {
     render();
     recordQuietly({ id, tipsOpened: opened });
     const newest = list.lastElementChild;
+    expand(newest);
     newest?.focus();
     newest?.scrollIntoView({ block: 'nearest' });
   }

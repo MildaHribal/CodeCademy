@@ -9,6 +9,7 @@ import { createExtensionPoint } from '../core/registry.js';
 import { createSlots } from '../core/slots.js';
 import { withLoading, showLoadError } from './load.js';
 import { routeView } from '../extensions/orientation/route.js';
+import { riseInEach } from '../motion.js';
 
 const VIEW_KEY = 'akademie.overview.view';
 
@@ -62,6 +63,7 @@ export async function renderOverview(ctx, route = {}) {
   ctx.root.append(page);
 
   fillPartRails(page);
+  riseInEach(page.querySelectorAll('.toc-part'), { step: 0.06, distance: 10 });
 
   const partHeading = route.query?.cast ? document.getElementById(`part-${route.query.cast}`) : null;
   partHeading?.closest('.toc-part')?.scrollIntoView({ block: 'start' });

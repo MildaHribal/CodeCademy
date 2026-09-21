@@ -11,6 +11,7 @@ import './styles/project.css';
 import './styles/motion.css';
 
 import { startRouter } from './router.js';
+import { riseInEach, settleIn } from './motion.js';
 import { progress } from './progress.js';
 import { h, replace } from './dom.js';
 import { appEvents } from './core/events.js';
@@ -101,6 +102,10 @@ async function renderRoute(route) {
 
   try {
     await screenFor(route.name)(ctx, route);
+    // List papíru se po navigaci prolne. Jen průhlednost, žádný posun: `transform` na
+    // předkovi by na chvíli rozhodil `position: fixed` u připnutého obsahu lekce
+    // a odstavec by uhnul pod kurzorem. Pracoviště mezi kroky vedou View Transitions.
+    if (!controller.signal.aborted) settleIn(main.querySelector(':scope > .page'));
   } catch (error) {
     if (controller.signal.aborted) return;
     console.error(error);
@@ -150,3 +155,16 @@ progress.onSaveState((state) => {
 });
 
 startRouter(show);
+
+
+// Rozbalovací bloky (<details>: tahák, pojmy sekce, „Proč to neprošlo") — obsah po
+// otevření přijde, místo aby skočil. `toggle` nebublá, proto zachytávací fáze.
+document.addEventListener(
+  'toggle',
+  (event) => {
+    const details = event.target;
+    if (!(details instanceof HTMLDetailsElement) || !details.open) return;
+    riseInEach([...details.children].filter((child) => child.tagName !== 'SUMMARY'), { step: 0.03, distance: 5 });
+  },
+  true,
+);

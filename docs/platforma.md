@@ -1263,6 +1263,19 @@ Opakované sazečské motivy: **dvojitá linka** (silná + vlasová) pod titulem
 jako marginálie** (antikva kurzívou v barvě typu) a **záložka „Pokračovat"** jako vložený lístek
 se stužkou. Výběr textu má barvu zvýrazňovače (`--mark-bg`).
 
+**Pohyb** (`client/src/motion.js` nad knihovnou `motion`, styly v `styles/motion.css`). Komponenty
+knihovnu neimportují přímo, volají pomocníky `popIn`, `settleIn`, `riseIn`, `riseInEach`, `growIn`,
+`expand`, `nudge` — délky a křivky jsou tak na jednom místě. Pravidla: pohyb **odpovídá na akci**
+a ukazuje, co se změnilo; u neúspěchu se nic neposmívá (křížek jen přijde, fajfka doskočí);
+při `prefers-reduced-motion` se všechno stane okamžitě; **stav v DOM je správně hned**, zpožděný
+smí být jen vzhled (testy čtou `data-status` bez čekání). Kde je pohyb: požadavky se po kontrole
+vyhodnotí postupně shora dolů, tlačítko Check hned roztočí kolečko, nový tip a detail chyby se
+rozbalí, popover pojmu vyroste od pojmu, řádky konzole přijdou (nejvýš 6 na snímek), verdikt
+otázky přijde, `<details>` odhalí obsah, list se po navigaci prolne (**jen průhledností** —
+`transform` na předkovi rozbije `position: fixed` připnutého obsahu lekce), části přehledu přijdou
+postupně. Čistě v CSS: linka čtení pod lištou řízená posunem (`animation-timeline: scroll()`),
+stín lišty po odrolování, odezva řádků a odpovědí na najetí a stisk, razítko u správné odpovědi.
+
 **Ověření:** `node --test server/routes/notes.test.js server/routes/settings.test.js tools/orientation-unit.test.js tools/notes-unit.test.js tools/theme-unit.test.js tools/ui-orientation.test.js tools/ui.test.js`
 (UI testy: porty 4500–4519, fixture `tools/fixtures/orientation-content/`).
 

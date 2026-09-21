@@ -51,6 +51,7 @@ export function createBriefPane({ item, module, isWorkshop, hintList, slots, onC
     resetButton,
     setChecking(checking) {
       checkButton.disabled = checking;
+      checkButton.dataset.busy = String(checking);
       checkButton.querySelector('.btn__label').textContent = checking ? 'Checking…' : 'Check';
     },
     setPassed(passed) {

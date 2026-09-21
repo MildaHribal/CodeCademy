@@ -1,6 +1,7 @@
 // Navíc proti běžnému markdownu (kontrakt kap. 2.6, 2.9 a 5.11):
 
 import { Marked } from 'marked';
+import { growIn } from './motion.js';
 import { highlightCode, classHighlighter } from '@lezer/highlight';
 import { htmlLanguage } from '@codemirror/lang-html';
 import { cssLanguage } from '@codemirror/lang-css';
@@ -338,6 +339,7 @@ function openTermPopover(button, term, { pinned }) {
   element.addEventListener('mouseenter', () => clearTimeout(hoverTimer));
   document.body.append(element);
   positionPopover(element, button);
+  growIn(element, { origin: 'top left' });
 
   button.setAttribute('aria-expanded', 'true');
   button.setAttribute('aria-controls', element.id);

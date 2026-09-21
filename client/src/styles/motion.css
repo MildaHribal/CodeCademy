@@ -211,3 +211,159 @@
     view-transition-name: none;
   }
 }
+
+
+/* ——— Okamžitá odezva na kontrolu ——— */
+
+/* Po kliknutí na Check se v tlačítku hned roztočí kolečko: uživatel ví, že klik došel,
+   ještě než testy cokoli vrátí. Tohle dělá s pocitem rychlosti víc než samotná rychlost. */
+.btn[data-busy='true'] .btn__kbd {
+  display: none;
+}
+
+.btn[data-busy='true']::before {
+  content: '';
+  width: 14px;
+  height: 14px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin 640ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Požadavek, který se právě ověřuje, tiše pulzuje — je vidět, že se něco děje. */
+@media (prefers-reduced-motion: no-preference) {
+  .hint[data-status='running'] .hint__status {
+    animation: breathe 900ms ease-in-out infinite;
+  }
+}
+
+@keyframes breathe {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+/* ——— Odezva na dotek ——— */
+
+/* Řádky, na které se kliká celé (modul v sekci, sekce v obsahu), se při stisku o vlas
+   zamáčknou — stejně jako tlačítka. */
+@media (prefers-reduced-motion: no-preference) {
+  .module-row,
+  .next-on-route__link,
+  .resume {
+    transition: transform 140ms cubic-bezier(0.22, 0.61, 0.36, 1), box-shadow 140ms ease;
+  }
+
+  .module-row:active {
+    transform: scale(0.995);
+  }
+
+  .next-on-route__link:hover {
+    transform: translateY(-2px);
+  }
+
+  .next-on-route__link:active {
+    transform: translateY(0);
+  }
+
+  /* Proužek typu se při najetí na řádek protáhne na celou výšku. */
+  .module-row::before {
+    transition: top 160ms cubic-bezier(0.22, 0.61, 0.36, 1), bottom 160ms cubic-bezier(0.22, 0.61, 0.36, 1), width 160ms ease;
+  }
+
+  .module-row:hover::before {
+    top: 4px;
+    bottom: 4px;
+    width: 4px;
+  }
+
+  /* Stužka záložky při najetí povyjede, jako když za ni vezmeš. */
+  .resume::after {
+    transition: transform 200ms cubic-bezier(0.34, 1.4, 0.64, 1);
+  }
+
+  .resume:hover::after {
+    transform: translateY(5px);
+  }
+}
+
+/* ——— Odpovědi v otázkách ——— */
+
+/* Volba odpovědi je nejčastější klik v lekcích a kvízech: najetí ji o vlas posune,
+   stisk zamáčkne, správná odpověď dostane stejné razítko jako splněný krok. */
+@media (prefers-reduced-motion: no-preference) {
+  .answer {
+    transition:
+      transform 140ms cubic-bezier(0.22, 0.61, 0.36, 1),
+      border-color 140ms ease,
+      background-color 140ms ease;
+  }
+
+  .answer:not([data-state]):not(:has(.answer__input:disabled)):hover {
+    transform: translateX(3px);
+  }
+
+  .answer:not(:has(.answer__input:disabled)):active {
+    transform: scale(0.995);
+  }
+
+  .answer[data-state='correct'] .answer__mark {
+    animation: stamp 320ms cubic-bezier(0.34, 1.4, 0.64, 1) 1;
+  }
+
+  /* Dílky průběhu kvízu se při zodpovězení zabarví plynule. */
+  .quiz__meter span {
+    transition: background-color 240ms ease, transform 240ms cubic-bezier(0.34, 1.4, 0.64, 1);
+  }
+
+  .quiz__meter span[data-state='current'] {
+    transform: scaleY(1.6);
+  }
+}
+
+/* ——— Čtení: inkoustová linka pod lištou ——— */
+
+/* Jak čteš stránku, plní se pod lištou tenká linka inkoustem — stejný motiv jako lišta
+   na ořízce v přehledu. Je řízená posunem (žádný skript), takže se hýbe přesně s rukou.
+   Kde prohlížeč časovou osu posunu neumí, linka prostě není. */
+@supports (animation-timeline: scroll()) {
+  body[data-layout='page'] .app-bar::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 2px;
+    background: var(--accent);
+    transform-origin: left;
+    transform: scaleX(0);
+    animation: read-progress linear both;
+    animation-timeline: scroll(root block);
+  }
+
+  /* Lišta se při odrolování odlepí od stránky stínem. */
+  body[data-layout='page'] .app-bar {
+    animation: bar-lift linear both;
+    animation-timeline: scroll(root block);
+    animation-range: 0 80px;
+  }
+}
+
+@keyframes read-progress {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes bar-lift {
+  to {
+    box-shadow: var(--shadow-page);
+  }
+}
