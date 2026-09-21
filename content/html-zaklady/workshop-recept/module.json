@@ -1,7 +1,7 @@
 {
   "type": "workshop",
   "title": "Stránka s receptem",
-  "summary": "První stránka: texty, seznamy, obrázky.",
-  "minutes": 40,
+  "summary": "Z holého textu postavíš stránku receptu s nadpisy, fotkami s popiskem, seznamy surovin a postupu, tabulkou hodnot a odkazy včetně skoku na postup.",
+  "minutes": 75,
   "runtime": "dom"
 }
