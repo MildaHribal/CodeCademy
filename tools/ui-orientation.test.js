@@ -87,6 +87,9 @@ describe('orientace, tmavý režim a poznámky v prohlížeči', () => {
       const reloaded = await openPage('#/');
       try {
         await waitUntil(reloaded, 'motiv tmavý', () => document.documentElement.dataset.theme === 'dark');
+        // Při omezeném pohybu má každá změna barvy nepatrný přechod (0.01 ms), takže se barva
+        // čte až ve chvíli, kdy doběhl — ne ve stejném okamžiku, kdy se nastavil motiv.
+        await waitUntil(reloaded, 'tmavá plocha těla', () => getComputedStyle(document.body).backgroundColor === 'rgb(16, 20, 26)');
         const background = await reloaded.evaluate(() => getComputedStyle(document.body).backgroundColor);
         assert.equal(background, 'rgb(16, 20, 26)', 'tělo stránky má tmavý token --paper');
       } finally {
