@@ -1,6 +1,6 @@
 {
   "title": "Práce v cizím kódu",
-  "intro": "Vítej v sekci **Práce v cizím kódu**. Tady se naučíš, jak přistupovat k repozitáři, který jsi nenapsal.\n\nPředpoklady: Máš za sebou testování a API.",
+  "intro": "Vítej v sekci **Práce v cizím kódu**. Do téhle chvíle jsi psal projekty od začátku. Tady se naučíš to, co v práci děláš skoro pořád: přijít k repozitáři, který psal někdo jiný, zorientovat se v něm, bezpečně v něm něco změnit a domluvit se o tom se zbytkem týmu.\n\nPředpoklady: máš za sebou testování, API a základy Gitu.",
   "modules": [
     "orientace-v-cizim-kodu",
     "workshop-feature-v-cizim-projektu",
@@ -11,10 +11,41 @@
     "kviz"
   ],
   "outcomes": [
-    { "text": "Zorientovat se v neznámém repozitáři: README, skripty, vstupní body, testy, historie.", "links": ["nastroje-cizi-kod/orientace-v-cizim-kodu#mapa-repozitare"] },
-    { "text": "Projít cestu od issue k pull requestu: reprodukce, větev, malé commity, test, popis.", "links": ["nastroje-cizi-kod/od-issue-k-pr#reprodukce"] },
-    { "text": "Dávat code review věcně a srozumitelně a přijímat ho bez ega.", "links": ["nastroje-cizi-kod/code-review#jak-psat-komentar"] },
-    { "text": "Odhadnout úkol, včas se ozvat se zaseknutím a komunikovat stav.", "links": ["nastroje-cizi-kod/odhad-a-komunikace#timebox"] },
-    { "text": "Změnit cizí kód bezpečně: charakterizační test, minimální změna, dodržení konvencí.", "links": ["nastroje-cizi-kod/workshop-feature-v-cizim-projektu#testy"] }
+    {
+      "text": "Zorientovat se v neznámém repozitáři: rozběhnout ho, nakreslit hrubou mapu, vystopovat jeden požadavek.",
+      "links": [
+        "nastroje-cizi-kod/orientace-v-cizim-kodu#2-nakresli-si-hrubou-mapu"
+      ]
+    },
+    {
+      "text": "Zjistit z historie Gitu, proč je kód takový, jaký je — než ho začneš měnit.",
+      "links": [
+        "nastroje-cizi-kod/orientace-v-cizim-kodu#4-zeptej-se-historie"
+      ]
+    },
+    {
+      "text": "Změnit cizí kód bezpečně: charakterizační test, nejmenší možná změna, dodržení konvencí projektu.",
+      "links": [
+        "nastroje-cizi-kod/orientace-v-cizim-kodu#6-bezpecna-zmena-charakterizacni-test"
+      ]
+    },
+    {
+      "text": "Projít cestu od issue k pull requestu: reprodukce, test před opravou, malé commity, popis, ze kterého je vidět proč.",
+      "links": [
+        "nastroje-cizi-kod/od-issue-k-pr#1-reprodukuj-nez-zacnes-opravovat"
+      ]
+    },
+    {
+      "text": "Dávat code review věcně a srozumitelně a přijímat ho bez ega.",
+      "links": [
+        "nastroje-cizi-kod/code-review#2-jak-napsat-komentar-ktery-se-da-prijmout"
+      ]
+    },
+    {
+      "text": "Odhadnout úkol v rozsahu, držet se timeboxu a napsat zprávu, na kterou jde odpovědět napoprvé.",
+      "links": [
+        "nastroje-cizi-kod/odhad-a-komunikace#3-timebox-kdy-prestat-bojovat-sam"
+      ]
+    }
   ]
 }
