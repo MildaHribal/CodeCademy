@@ -1,1 +1,7 @@
-{ "type": "quiz", "title": "Kvíz: HTTP a REST", "summary": "Ověříš si stavové kódy, idempotenci, návrh adres, preflight a ETag, i v cizím routeru.", "minutes": 25 }
+{
+  "type": "quiz",
+  "title": "Kvíz: HTTP a návrh REST API",
+  "summary": "Ověříš si metody a stavové kódy, návrh adres, validaci na serveru, CORS a cache — a zopakuješ si Node z minulé sekce.",
+  "minutes": 25,
+  "runtime": "node"
+}
