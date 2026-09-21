@@ -565,7 +565,7 @@ Lenis); 3D přes Three.js je rozšíření.
   `@layer`, specificita, pořadí ve zdroji, inline styly, `!important` obrací
   pořadí vrstev. Cvičení: `pretest`, `predict` ×3 (dom volby: jakou barvu má
   text), `explain` (pořadí kaskády vlastními slovy).
-- **lesson** `specificita` — *Specificita* — trojice (A, B, C), porovnání
+- **lesson** `specificita` *(na disku sloučeno do `kaskada`)* — *Specificita* — trojice (A, B, C), porovnání
   zleva, `*` a kombinátory, `:is()`/`:not()`/`:has()` přebírají nejvyšší
   argument, `:where()` nulu; jak z války specificity ven. Cvičení: `specificita`
   (kalkulačka u každého příkladu), `predict` ×2.
@@ -588,7 +588,7 @@ Lenis); 3D přes Three.js je rozšíření.
   kartu podle obsahu, nesting, stavy tlačítek, tokeny pro varianty. ~18 kroků.
   Cvičení: `parsons` (vnořené pravidlo se stavy), `vyber-sam` (karta s obrázkem
   vypadá jinak — bez jmenování `:has()`).
-- **lab** `lab-motiv-formulare` [dom] — *Styly formuláře* — samostatně: formulář
+- **lab** `lab-prihlaska-na-hackathon` *(nahradil plánovaný `lab-motiv-formulare`)* [dom] — *Styly formuláře* — samostatně: formulář
   ve vrstvách, chyby přes `:user-invalid` a `:has()`, bez `!important`.
   Cvičení: `approaches` (`:has()` na formuláři vs. třída na poli).
 - **quiz** `kviz` — *Kvíz: kaskáda* — které pravidlo vyhraje, výpočet
@@ -1996,7 +1996,7 @@ Pull request a code review se přesunuly do `nastroje-cizi-kod`.
   samostatně, bez uvedení sekcí: v repozitáři s TS modulem rezervací
   (`ISSUE.md` popisuje chybu) napsat test, který chybu zachytí, opravit ji,
   doplnit chybějící funkci s testy a vše commitnout po krocích. Testy: `node
-  --test` projde, skrytý test chyby projde, přibyly testy, ≥ 2 nové commity,
+  --test` projde, skrytý test chyby projde, přibyly testy, ≥ 2 nové commity *(v runneru se nekontroluje — není tam repozitář)*,
   čistý pracovní adresář. Bez tipů `help`.
 - **project** `projekt-rozpoctovac` [node] — *Rozpočet ve Vite a TypeScriptu* —
   cvičný projekt (~6 h): příjmy, výdaje, kategorie, měsíční přehled,
@@ -2157,16 +2157,16 @@ před `react-zaklady`.
   funkce vracející JSX, render, React 19 a Vite, React vs. Vue a Svelte bez
   fanatismu, React Compiler zmínkou. Cvičení: `compare` (render seznamu
   ručně v DOM vs. v Reactu), `pretest`.
-- **lesson** `jsx` — *JSX* — JSX jako volání funkce, výrazy v `{}`,
-  `className`, `htmlFor`, `style` objekt, fragmenty, escapování (JSX je proti
-  XSS bezpečné), `dangerouslySetInnerHTML`. Cvičení: `predict` ×2
-  (`{count && <p/>}` při nule vykreslí `0`; co vypíše `{['a','b']}`).
+- **workshop** `workshop-stranka-festivalu` [react] — *Stránka festivalu* — staví:
+  první komponenty a JSX v praxi (výrazy v `{}`, `className`, `htmlFor`, fragmenty,
+  escapování). Samostatná lekce o JSX na disku není: látka je rozdělená mezi
+  `proc-react` (JSX jako výraz, escapování) a `komponenty-a-props`.
 - **lesson** `komponenty-a-props` — *Komponenty a props* — props jako
   parametry, destrukturalizace s výchozími hodnotami, `children`, props se
   nemění, kompozice, seznamy přes `map` a `key` (proč ne index), podmíněné
   vykreslení. Cvičení: `predict` (co se stane se vstupem v řádku po smazání
   prvního, když `key` je index), `explain` (`key`).
-- **workshop** `workshop-karta-produktu` [react] — *Katalog produktů* — staví:
+- **workshop** `workshop-katalog-produktu` [react] — *Katalog produktů* — staví:
   `ProductCard`, `Price`, `Badge`, `ProductList` z pole dat, stav „vyprodáno",
   `children` pro rozvržení. ~16 kroků. Cvičení: `parsons` (komponenta
   s destrukturalizací props), `debug` (prázdný košík ukazuje „0" —
@@ -2900,10 +2900,10 @@ praktické části jako projekt ve VS Code s Playwright testy ve starteru.
   Cvičení: `eventloop` (hlavní vlákno s workerem a bez).
 - **lesson** `indexeddb` — *IndexedDB a úložiště* — databáze, object stores,
   transakce, indexy, obal `idb` zmínkou, kvóty a `navigator.storage.persist()`.
-- **project** `projekt-offline-poznamky` [node] — *Offline poznámky* — cvičný
-  projekt: poznámky v IndexedDB, service worker s offline režimem, manifest,
-  synchronizace po připojení. Kontrola: `npm run build` a Playwright testy
-  ze starteru (offline režim prohlížeče). Cvičení: `review`.
+- **lab** `lab-cache-strategie` [js] — *Rozhodovací jádro service workeru* —
+  samostatně: tři strategie cachování (cache first, network first, stale while
+  revalidate) a pravidlo, které z nich pro daný požadavek vybere. Nahradil plánovaný
+  projekt `projekt-offline-poznamky`; ten zůstává jako námět na samostatnou práci.
 - **quiz** `kviz` — *Kvíz: prohlížeč navíc* — shadow DOM, cache strategie,
   worker, IndexedDB transakce.
 
