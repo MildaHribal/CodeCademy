@@ -584,6 +584,25 @@ Preference jsou známé od začátku, CSS media dotazy fungují hned při první
 web-3d-efekty/interakce-a-castice#bez-webgl-a-s-omezenym-pohybem
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč se poloha myši do scény nepřenáší přímo, ale přes
+postupné přibližování.
+
+## --model--
+Události myši přicházejí nepravidelně a skokově, kdežto scéna se překresluje ve vlastní
+smyčce zhruba šedesátkrát za vteřinu. Kdybych hodnotu dosadil přímo, objekt by sebou
+při každém pohybu trhl a mezi událostmi by stál. Proto si stránka jen **uloží cílové
+číslo** a render smyčka se ke každému snímku o kousek přiblíží — výsledek je plynulý,
+nezávislý na tom, jak často události chodí, a navíc přirozeně tlumí drobné záškuby.
+Je to stejný princip jako u setrvačnosti: sleduje se cíl, ne poslední hodnota.
+
+## --checklist--
+- Události myši chodí nepravidelně a skokově.
+- Scéna se překresluje ve vlastní pravidelné smyčce.
+- Přímé dosazení by vypadalo trhaně.
+- Postupné přibližování k cíli je plynulé a tlumí záškuby.
+:::
+
 ## Typické chyby a pasti
 
 > [!PITFALL]

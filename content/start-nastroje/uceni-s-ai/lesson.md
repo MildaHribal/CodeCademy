@@ -285,6 +285,25 @@ Protože AI na otázky z kvízu odpovídat neumí.
 Myslíš si, že AI na to nestačí? Nejspíš by odpověděla správně. O to tady nejde.
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč hotové řešení od modelu učení spíš uškodí než pomůže.
+
+## --model--
+Učení vzniká v okamžiku, kdy se vlastní pokus setká se zpětnou vazbou — když si něco
+myslím, zkusím to a zjistím, že je to jinak. Hotové řešení tenhle okamžik přeskočí:
+kód přečtu, rozumím mu (čtení je snadné), a mám pocit, že to umím. Jenže ten pocit
+vzniká z rozpoznání, ne z vybavení — a při dalším podobném úkolu se ukáže, že to bez
+předlohy nenapíšu. Proto je užitečnější mít model jako **tutora, který se ptá**: dá
+protipříklad, navede otázkou, opraví domněnku. Odpověď pak vznikne v mé hlavě, a to je
+přesně ta část, která se pamatuje.
+
+## --checklist--
+- Učení vzniká z vlastního pokusu a zpětné vazby.
+- Čtení hotového kódu vyvolá pocit porozumění bez schopnosti ho napsat.
+- Rozpoznat řešení je snadnější než vybavit si ho.
+- Otázka a protipříklad nechají závěr na mně.
+:::
+
 ## Kde to najdeš v MDN
 
 - [Research and learning](https://developer.mozilla.org/en-US/docs/Learn_web_development/Getting_started/Soft_skills/Research_and_learning): jak hledat odpovědi a ověřovat, co najdeš.

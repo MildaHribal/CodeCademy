@@ -397,6 +397,26 @@ V režimu `standalone` vyrobí build složku se serverem a jen s těmi balíčky
 aplikace skutečně importuje. Obraz je pak malý a nepotřebuje `npm install`.
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč projekt může bezchybně běžet ve vývoji a spadnout při
+sestavení pro produkci.
+
+## --model--
+Dev server je shovívavý: stránky vyrábí na vyžádání, takže se nikdy nedostane k těm,
+na které jsi během vývoje neklikl, a chyby může jen vypsat a pokračovat. Produkční
+sestavení naopak zkouší vyrobit **všechno dopředu**: projde každou trasu, spustí
+serverový kód a cokoli, co selže — chybějící proměnná prostředí, odkaz na `window`
+v serverové komponentě, API, které při sestavení neodpovídá — ohlásí jako chybu.
+Je to tedy první opravdová zkouška, a proto se na nasazení nesahá dřív, než sestavení
+projde lokálně.
+
+## --checklist--
+- Dev vyrábí stránky až na vyžádání.
+- Nenavštívené trasy se ve vývoji nikdy nespustí.
+- Sestavení projde všechny trasy a serverový kód.
+- Proto se problémy objeví až při něm.
+:::
+
 ## Typické chyby a pasti
 
 > [!PITFALL] `next build` spadne na `window is not defined`

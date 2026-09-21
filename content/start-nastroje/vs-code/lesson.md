@@ -295,6 +295,25 @@ Smažu mezipaměť prohlížeče.
 Myslíš si, že prohlížeč drží starou verzi? Na disku změna ještě není, takže ji nenačte žádný prohlížeč.
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč se v editoru otevírá složka projektu, a ne jednotlivý
+soubor.
+
+## --model--
+Editor toho hodně odvozuje od **kořene, který má otevřený**. Terminál se v něm spustí,
+hledání v něm hledá, Git v něm pozná repozitář, nastavení projektu i doporučená
+rozšíření se čtou z jeho `.vscode`, a relativní cesty v kódu sedí. Když otevřu jen
+jeden soubor, editor žádný kořen nemá: terminál startuje v domovské složce, hledání
+nenajde nic, Git nic neukazuje a půlka rad z internetu přestane platit. Ten rozdíl
+stojí za nespočet hodin zmatku začátečníků.
+
+## --checklist--
+- Editor odvozuje chování od otevřeného kořene.
+- Terminál, hledání i Git se počítají od něj.
+- Bez kořene startuje terminál jinde a Git nic nevidí.
+- Relativní cesty pak nesedí.
+:::
+
 ## Kde to najdeš v MDN
 
 - [Code editors](https://developer.mozilla.org/en-US/docs/Learn_web_development/Getting_started/Environment_setup/Code_editors): k čemu je editor kódu a co od něj čekat.

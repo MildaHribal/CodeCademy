@@ -439,6 +439,25 @@ CLS sčítá, o kolik se během načítání posunul viditelný obsah. Nejčast�
 jsou obrázky bez rozměrů, reklamy a písma bez rezervovaného místa.
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč nestačí nastavit titulek stránky z JavaScriptu na
+klientovi.
+
+## --model--
+Robot vyhledávače nebo náhledový robot sociální sítě si vyžádá HTML a obvykle se
+spokojí s tím, co v něm najde. Když se titulek a popis doplňují až po načtení
+z prohlížeče, robot je v tu chvíli nemá — v odkazu se pak objeví název celého webu,
+nebo vůbec nic. Proto se metadata exportují ze stránky či layoutu a framework je složí
+do hlavičky **na serveru**, tedy v čase, kdy odpověď vzniká. Vedlejší výhoda je, že
+metadata dědí strukturu složek: co je společné, stačí napsat jednou v layoutu.
+
+## --checklist--
+- Robot čte HTML, jak přijde ze serveru.
+- Hodnoty doplněné později už nemusí vidět.
+- Metadata se proto skládají do hlavičky na serveru.
+- Společná část se dá nastavit jednou v layoutu.
+:::
+
 ## Typické chyby a pasti
 
 > [!PITFALL] `og:image` se v náhledu neukáže

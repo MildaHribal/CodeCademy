@@ -559,6 +559,25 @@ comparison view
 nastroje-devtools-vykon/devtools-mapa#snimek-haldy-a-porovnani
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč se před otevřením DevTools vyplatí nahlas pojmenovat
+otázku.
+
+## --model--
+DevTools mají devět panelů a v každém desítky přepínačů — bez otázky se v nich dá
+strávit půl hodiny a nic nezjistit, protože se jen kouká na zajímavá čísla. Otázka
+naopak panel vybere skoro sama: „co je vlastně na stránce" vede do Elements, „co se
+stalo při kliknutí" do Console a Sources, „přišla ta data ze serveru" do Network, „co
+si to uložilo" do Application, „kam mizí paměť" do Memory. Navíc se z otázky pozná,
+kdy jsem hotový — mám odpověď, nebo nemám.
+
+## --checklist--
+- Bez otázky se panely procházejí náhodně.
+- Otázka určí, který panel je ten správný.
+- Zároveň říká, jaká data v něm hledat.
+- Podle odpovědi se pozná, kdy je vyšetřování u konce.
+:::
+
 ## Typické chyby a pasti
 
 ### `$0` v kódu stránky

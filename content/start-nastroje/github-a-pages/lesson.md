@@ -234,6 +234,25 @@ GitHub klíč automaticky zašifruje.
 GitHub umí šifrovaná tajemství pro GitHub Actions, ne pro soubory ve veřejném repozitáři.
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč obrázek, který se zobrazuje lokálně, po nasazení na
+GitHub Pages zmizí.
+
+## --model--
+Lokálně mám web v kořeni, takže cesta `/obrazky/logo.png` vede přesně tam, kam čekám.
+Na GitHub Pages ale projekt leží v **podsložce** (`uzivatel.github.io/projekt/`),
+a cesta začínající lomítkem míří od kořene domény — tedy o jednu úroveň mimo projekt,
+kde nic není. Proto se uvnitř projektu píšou cesty relativně (`obrazky/logo.png`,
+`../styl.css`): ty se počítají od aktuálního souboru a fungují lokálně i po nasazení.
+Stejná past platí pro odkazy na stránky i pro skripty.
+
+## --checklist--
+- Lokálně je web v kořeni, na Pages v podsložce.
+- Cesta s lomítkem míří od kořene domény, ne projektu.
+- Relativní cesta se počítá od souboru, takže sedí vždy.
+- Týká se to obrázků, stylů, skriptů i odkazů.
+:::
+
 ## Typické chyby a pasti
 
 - **Zapomenutý `index.html`** v kořeni publikované složky → 404 na hlavní adrese.

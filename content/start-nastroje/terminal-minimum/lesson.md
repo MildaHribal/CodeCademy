@@ -237,6 +237,24 @@ Složka `projekty` je prázdná.
 Myslíš si, že Tab kontroluje obsah složky? Doplňuje jméno a to na obsahu nezávisí.
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč tentýž příkaz jednou funguje a podruhé hlásí, že soubor
+neexistuje.
+
+## --model--
+Terminál je vždycky **v nějaké složce** a všechno relativní se počítá od ní: jméno
+souboru, `./skript.js`, `npm start` i cesta k obrázku. Když jsem o složku vedle, tentýž
+příkaz hledá jinde — a hlášku „soubor neexistuje" čtu jako chybu programu, ačkoli je to
+chyba polohy. Proto první reakce na nečekanou chybu není měnit příkaz, ale zeptat se,
+kde vlastně jsem, a podívat se, co v té složce je.
+
+## --checklist--
+- Terminál má vždy aktuální složku.
+- Relativní cesty i příkazy se počítají od ní.
+- Jiná složka znamená, že se hledá jinde.
+- První reakce je zjistit polohu, ne měnit příkaz.
+:::
+
 ## Kde to najdeš v MDN
 
 - [Command line crash course](https://developer.mozilla.org/en-US/docs/Learn_web_development/Getting_started/Environment_setup/Command_line): terminál pro webové vývojáře, cesty a základní příkazy.

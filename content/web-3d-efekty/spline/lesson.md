@@ -413,6 +413,25 @@ stop
 web-3d-efekty/spline#pristupnost-a-kdy-spline-nepouzit
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč se 3D scéna na stránce chová spíš jako velké video než
+jako obrázek.
+
+## --model--
+Scéna není statický soubor, který prohlížeč jen vykreslí — je to několik megabajtů dat
+a k nim běžící runtime, který každý snímek něco počítá na grafické kartě. To znamená
+stejné povinnosti jako u těžkého média: **načíst až když je potřeba** (líné načítání,
+ne hned při otevření stránky), mít **náhradu** pro pomalé připojení a pro případ, že se
+nenačte, hlídat **spotřebu** na slabém zařízení a respektovat nastavení omezeného
+pohybu. Obrázek nic z toho nepotřebuje, protože po vykreslení nic nedělá.
+
+## --checklist--
+- Scéna je velký soubor a k tomu běžící runtime.
+- Počítá se průběžně, ne jednou při vykreslení.
+- Proto potřebuje líné načtení a náhradní obsah.
+- A ohled na výkon i na omezený pohyb.
+:::
+
 ## Typické chyby a pasti
 
 > [!PITFALL]
