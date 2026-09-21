@@ -496,11 +496,6 @@ Lenis); 3D přes Three.js je rozšíření.
   `minlength`/`maxlength`, `min`/`max`/`step`, `pattern`, `type` jako validace,
   `novalidate`, `:valid`/`:invalid`/`:user-invalid`, limity hlášek.
   Cvičení: `predict` (projde `step="0.01"` s hodnotou 1.005?).
-- **workshop** `workshop-objednavka` [dom] — *Objednávkový formulář* — staví:
-  objednávka s doručením a platbou. Učí: skupiny radio, `output`, `range`,
-  `datalist`, chyby přes `aria-describedby`, `inputmode`, nápověda k formátu.
-  ~18 kroků. Cvičení: `debug` (radio tlačítka nemají stejné `name`, dají se
-  vybrat obě), `vyber-sam` (vhodný typ pole pro PSČ).
 - **lab** `lab-kontaktni-formular` [dom] — *Kontaktní formulář* — samostatně:
   formulář s validací, skupinami a srozumitelnými popisky. Cvičení: `pred-startem`.
 - **quiz** `kviz` — *Kvíz: formuláře* — GET vs. POST, co se odešle a pod jakým
@@ -1706,6 +1701,13 @@ Stav na disku (`content/js-pole/section.json`) a plánované úpravy D1–D3:
   (delegace reaguje na klik do ikony uvnitř tlačítka — `target` místo `closest`).
 - **lesson** `formulare-v-js` — *Formuláře v JavaScriptu* — `submit`
   a `preventDefault`, `FormData`, `input` vs. `change`, Constraint Validation API.
+- **workshop** `workshop-objednavka` [dom] — *Objednávkový formulář* — staví:
+  objednávka bedýnky zeleniny s výběrem velikosti, posuvníkem a našeptávačem měst.
+  Učí: skupiny radio, `output`, `range`, `datalist`, chyby propojené s poli přes
+  `aria-describedby`, `inputmode`. ~11 kroků. Cvičení: `debug` (radio tlačítka
+  nemají stejné `name`, dají se vybrat obě), `vyber-sam` (vhodný typ pole pro PSČ).
+  Původně byl v `html-formulare`, ale píše se v něm `addEventListener`, `FormData`
+  a `setCustomValidity` — látka, která se probírá teprve tady.
 - **lesson** `prohlizecova-api` — *Stav a API prohlížeče* — `localStorage`
   (jen řetězce, výjimky), `URL` a `URLSearchParams`, History API, událost
   `storage`, `IntersectionObserver`, `ResizeObserver`, layout thrashing
