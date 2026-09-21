@@ -7,8 +7,9 @@
   --font-serif: 'Century Schoolbook', 'C059', 'TeX Gyre Schola', 'New Century Schoolbook', Georgia, serif;
   --font-sans: system-ui, 'Segoe UI', 'Noto Sans', 'Adwaita Sans', sans-serif;
   --font-mono: 'JetBrains Mono', 'JetBrainsMono Nerd Font', 'Cascadia Code', 'DejaVu Sans Mono', ui-monospace, monospace;
-  --radius: 6px;
-  --radius-large: 10px;
+  /* Papír má ostré rohy: zaoblení je jen náznak, ať bloky na listu nepůsobí jako kartičky. */
+  --radius: 4px;
+  --radius-large: 5px;
   --bar-height: 52px;
 }
 

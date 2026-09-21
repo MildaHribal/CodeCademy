@@ -25,21 +25,21 @@
   font-size: 21px;
 }
 
+/* Položky jsou řádky oddělené vlasovou linkou jako v obsahu, ne sloupec kartiček. */
 .stats__list {
   display: grid;
-  gap: 10px;
+  gap: 0;
   margin: 0;
   padding: 0;
   list-style: none;
+  border-top: 2px solid var(--rule-heavy);
 }
 
 .stats__item {
   display: grid;
   gap: 4px;
-  padding: 12px 16px;
-  border: 1px solid var(--rule);
-  border-radius: var(--radius-large);
-  background: var(--surface);
+  padding: 14px 2px;
+  border-bottom: 1px solid var(--rule);
 }
 
 .stats__item-head {
