@@ -47,6 +47,25 @@ je** — podle osnovy jim pořád chybí moduly (viz níž).
 | `prohlizec-navic` | `web-components` zástupný, zbytek sekce na disku není |
 | `nastroje-cizi-kod` | 7 modulů: obsah leží ve špatném tvaru (`<modul>.md` vedle sebe místo `<modul>/lesson.md`), chybí `module.json`; `workshop-feature-v-cizim-projektu` má 11 hotových kroků a 4 zástupné (012–015) |
 
+## Známá vada v runneru: Tailwind a `translate-*`
+
+`react-ui-knihovny/workshop-pristupne-komponenty` krok 012 neprojde vlastním řešením.
+Co je ověřené:
+
+- pravidlo `data-[state=checked]:translate-x-5` **se použije** — `--tw-translate-x`
+  má správnou hodnotu `calc(0.25rem * 5)`,
+- `--tw-translate-y` je `0`,
+- spočítaná vlastnost `translate` přesto zůstane `0px`, takže se puntík nepohne,
+- s libovolnou hodnotou (`translate-x-[1.25rem]`) je to stejné, takže nejde o výpočet
+  z `--spacing`,
+- ostatní utility na tomtéž prvku (`size-5`) fungují.
+
+Vypadá to, že `@tailwindcss/browser` v runneru vydá jen vlastní vlastnost
+`--tw-translate-x`, ale ne samotnou deklaraci `translate`. Při prvním ověření
+21. 9. 2026 modul ještě procházel, takže se to rozbilo někde mezi verzemi nebo
+v sestavení knihoven (`node tools/build-vendor.js`). **Obsah kroku je v pořádku,
+opravit je potřeba runner nebo verzi Tailwindu.**
+
 ## Vada v pořadí kurzu
 
 `html-formulare` je na doporučené trase pátá, ale `workshop-objednavka` v ní používá
