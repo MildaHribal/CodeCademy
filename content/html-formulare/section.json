@@ -7,5 +7,39 @@
     "validace-v-prohlizeci",
     "lab-kontaktni-formular",
     "kviz"
+  ],
+  "outcomes": [
+    {
+      "text": "Popsat, co se z formuláře odešle, pod jakým jménem a kam — a ověřit si to v Network.",
+      "links": [
+        "html-formulare/jak-funguje-formular#name-je-klic-value-je-hodnota",
+        "html-formulare/jak-funguje-formular#co-uvidis-v-network"
+      ]
+    },
+    {
+      "text": "Vybrat mezi GET a POST podle toho, co formulář dělá.",
+      "links": [
+        "html-formulare/jak-funguje-formular#get-nebo-post"
+      ]
+    },
+    {
+      "text": "Nechat prohlížeč hlídat vstup validačními atributy a obarvit pole až po interakci.",
+      "links": [
+        "html-formulare/validace-v-prohlizeci#zakladni-validacni-atributy",
+        "html-formulare/validace-v-prohlizeci#css-a-validace-pseudotridy"
+      ]
+    },
+    {
+      "text": "Vědět, proč validace v prohlížeči nenahradí kontrolu na serveru.",
+      "links": [
+        "html-formulare/validace-v-prohlizeci#proc-to-nestaci"
+      ]
+    },
+    {
+      "text": "Postavit formulář, který jde ovládat klávesnicí a jehož popisky přečte čtečka obrazovky.",
+      "links": [
+        "html-formulare/jak-funguje-formular#tlacitka-submit-button-a-reset"
+      ]
+    }
   ]
 }
