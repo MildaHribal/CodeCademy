@@ -293,6 +293,25 @@ Instance sama iterátor není, jen umí iterátor vyrobit. `Iterator.from(trip)`
 js-tridy-kolekce/iterator-helpers#iterator-from-helpers-pro-cokoli-iterovatelneho
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč `.map().filter().take(3)` nad iterátorem projde jen pár
+hodnot, kdežto nad polem všechny.
+
+## --model--
+Metody pole vyrábějí **nové pole**: `map` projde celý vstup a vyrobí celý mezivýsledek,
+`filter` nad ním udělá totéž, a teprve pak se z toho vezmou tři položky. U iterátoru se
+nic nevyrábí dopředu — každá metoda jen zabalí ten předchozí a hodnotu si vyžádá, až si
+o ni někdo řekne. Řetěz se proto protáčí **po jedné hodnotě** odzadu: `take(3)` si
+vyžádá hodnotu, ta projde filtrem a mapou, a jakmile má tři, přestane se ptát. Tím pádem
+řetěz funguje i nad nekonečnou posloupností a nad velkými daty ušetří paměť.
+
+## --checklist--
+- Metody pole vyrábějí celý mezivýsledek dopředu.
+- Iterátorové metody hodnotu jen obalí a čekají na vyžádání.
+- Řetěz se protáčí po jedné hodnotě, dokud odběratel chce.
+- Proto zvládne i nekonečnou posloupnost a šetří paměť.
+:::
+
 ## Typické chyby a pasti
 
 ### `map` na iterátoru nevrací pole

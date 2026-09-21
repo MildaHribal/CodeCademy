@@ -342,6 +342,25 @@ Protože `cp` zálohu nezkomprimuje.
 Komprese se dá přidat kdykoli. Kopie rozepsaného souboru ale zůstane rozbitá, ať ji zkomprimuješ, nebo ne.
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč se aplikace na serveru pouští přes službu systému, a ne
+příkazem v terminálu.
+
+## --model--
+Proces spuštěný v terminálu patří tomu přihlášení: po odhlášení skončí, po pádu se
+nespustí znovu, po restartu stroje taky ne, a jeho výstup nikde nezůstane. Služba
+systému tohle všechno řeší za mě — nastartuje aplikaci po startu, po pádu ji zvedne,
+běží pod vlastním nepřivilegovaným uživatelem a výstup posílá do systémového logu, kde
+se dá prohledávat a rotovat. Provoz je totiž z velké části právě tohle: ne „jak to
+spustit", ale „co se stane, až to spadne v noci".
+
+## --checklist--
+- Proces v terminálu patří přihlášení a s ním skončí.
+- Po pádu ani po restartu se sám nespustí.
+- Služba se stará o start, restart i běh pod vlastním uživatelem.
+- Výstup skončí v systémovém logu, kde se dá dohledat.
+:::
+
 ## Typické chyby a pasti
 
 > [!PITFALL]

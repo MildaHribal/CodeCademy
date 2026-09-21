@@ -1,6 +1,6 @@
 {
   "title": "Soubory, realtime a úlohy na pozadí",
-  "intro": "Práce se soubory a živá data. Toto je rozšíření.",
+  "intro": "Nahrávání souborů, živá data bez obnovení stránky a práce, která nepatří do požadavku. Toto je rozšíření.",
   "modules": [
     "nahravani-souboru",
     "realtime-prehled",
@@ -12,9 +12,46 @@
   ],
   "outcomes": [
     {
-      "text": "bezpečně přijmout nahraný soubor",
+      "text": "Bezpečně přijmeš nahraný soubor: ohlídáš velikost, formát určíš z obsahu a uložíš ho pod jménem, které sis určil sám.",
       "links": [
-        "api-soubory-realtime/nahravani-souboru#anchor"
+        "api-soubory-realtime/nahravani-souboru#limit-velikosti-driv-nez-ctes",
+        "api-soubory-realtime/nahravani-souboru#typ-podle-obsahu-ne-podle-pripony",
+        "api-soubory-realtime/nahravani-souboru#jmeno-souboru-je-vstup-od-utocnika"
+      ]
+    },
+    {
+      "text": "Vybereš mezi dotazováním, SSE a WebSocketem a rozhodnutí zdůvodníš směrem dat, ne zvykem.",
+      "links": [
+        "api-soubory-realtime/realtime-prehled#jak-mezi-nimi-vybrat",
+        "api-soubory-realtime/kviz"
+      ]
+    },
+    {
+      "text": "Napíšeš SSE server v čistém Node: hlavičky proudu, formát rámce, rozesílání víc klientům a úklid po odpojení.",
+      "links": [
+        "api-soubory-realtime/workshop-sse",
+        "api-soubory-realtime/realtime-prehled#server-sent-events-jednosmerny-proud"
+      ]
+    },
+    {
+      "text": "Udržíš spojení naživu heartbeatem a po výpadku doplníš klientovi zmeškané události podle Last-Event-ID.",
+      "links": [
+        "api-soubory-realtime/workshop-sse/013",
+        "api-soubory-realtime/websockety#znovupripojeni-a-heartbeat"
+      ]
+    },
+    {
+      "text": "Pustíš do proudu jen přihlášeného a každému pošleš jen to, co mu patří.",
+      "links": [
+        "api-soubory-realtime/lab-notifikace",
+        "api-soubory-realtime/websockety#overeni-a-autorizace-spojeni"
+      ]
+    },
+    {
+      "text": "Vysvětlíš, proč pomalá práce patří do fronty na pozadí, a navrhneš úlohu, které neublíží druhé spuštění.",
+      "links": [
+        "api-soubory-realtime/emaily-a-ulohy-na-pozadi#fronta-uloh-na-pozadi",
+        "api-soubory-realtime/emaily-a-ulohy-na-pozadi#idempotence-uloha-se-spusti-vickrat"
       ]
     }
   ]

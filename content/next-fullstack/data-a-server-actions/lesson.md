@@ -494,6 +494,26 @@ i jinému uživateli — tedy s cizí session. Next.js na to upozorní hláškou
 „Route used `cookies` inside `use cache`".
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč pro vlastní stránku obvykle nepotřebuješ psát API
+endpoint.
+
+## --model--
+API endpoint existuje proto, aby si **cizí klient** mohl vyžádat data po síti. Serverová
+komponenta ale běží na serveru už předtím, než se cokoli pošle do prohlížeče — může si
+tedy sáhnout do databáze rovnou a poslat dolů už hotové HTML. Kdybych mezi to vložil
+vlastní endpoint, server by volal sám sebe po síti a přidal si kolo navíc. Stejně tak
+na zápis stačí serverová akce, kterou zavolá formulář. Endpoint se píše až tehdy, když
+data chce někdo jiný: mobilní aplikace, webhook, partnerský web — tedy klient, který
+moje stránky vůbec nenačítá.
+
+## --checklist--
+- Endpoint slouží klientům, kteří se ptají po síti.
+- Serverová komponenta už na serveru je a data si vezme přímo.
+- Vlastní endpoint by znamenal, že server volá sám sebe.
+- Endpoint se píše pro cizí klienty, ne pro vlastní stránku.
+:::
+
 ## Typické chyby a pasti
 
 > [!PITFALL] `Route used "cookies" inside "use cache"`

@@ -387,6 +387,26 @@ Myslíš si, že placeholder nahradí popisek? Zmizí, jakmile uživatel začne 
 není vidět, co do pole patří. Hlášku možná umlčí, ale pole zůstane horší než s popiskem.
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč se prvek v e2e testu hledá podle role a popisku, a ne
+podle CSS třídy.
+
+## --model--
+Test má ověřovat, že aplikace **jde použít**, ne jak je napsaná uvnitř. Třída
+`.btn-primary-2` je implementační detail: přejmenuje se při redesignu a test spadne, i
+když se pro uživatele nic nezměnilo. Naopak role a popisek (`tlačítko Odeslat`) jsou
+přesně to, co vidí člověk a co slyší čtečka obrazovky — když se změní, změnila se
+i aplikace a test má spadnout právem. Jako vedlejší efekt tenhle způsob hledání tlačí
+k přístupnému kódu: co se nedá najít podle role a jména, s tím bude mít problém
+i uživatel čtečky.
+
+## --checklist--
+- Test má ověřovat použitelnost, ne vnitřní zápis.
+- Třída se změní při redesignu, aniž by se změnilo chování.
+- Role a popisek odpovídají tomu, co vnímá uživatel.
+- Hledání podle role zároveň tlačí k přístupnému kódu.
+:::
+
 ## Typické chyby a pasti
 
 > [!PITFALL]

@@ -1,1 +1,1 @@
-{ "type": "workshop", "title": "Živé objednávky pro kuchyň bistra", "summary": "Postavíš kuchyňskou obrazovku, na které se nové objednávky objeví samy: SSE server v čistém Node s rozesíláním, heartbeatem a doplněním zmeškaných událostí.", "minutes": 120, "runtime": "node" }
+{ "type": "workshop", "title": "Živé objednávky pro kuchyň bistra", "summary": "Postavíš kuchyňskou obrazovku, na které se nové objednávky objeví samy: SSE server v čistém Node s rozesíláním, heartbeatem a doplněním zmeškaných událostí.", "minutes": 85, "runtime": "node" }

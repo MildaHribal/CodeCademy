@@ -365,6 +365,26 @@ Smyčka se opakuje, jen ne najednou: každé `next()` ji posune o jedno kolo k d
 js-tridy-kolekce/iteratory-generatory#line-a-nekonecne-sekvence
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč `for…of` funguje nad `Map`, `Set` i textem, ale ne nad
+obyčejným objektem.
+
+## --model--
+`for…of` neumí procházet „všechno" — umí procházet to, co se **umí představit jako
+posloupnost**, tedy objekty s metodou pod klíčem `Symbol.iterator`. Ta vrátí iterátor
+a cyklus pak jen opakovaně volá `next()`, dokud nepřijde `done: true`. Pole, text, `Map`
+i `Set` tu metodu mají, protože u nich pořadí dává smysl. Obyčejný objekt ji nemá:
+jeho vlastnosti jsou pojmenované hodnoty, ne řada, a nebylo by jasné, jestli se mají
+vydávat klíče, hodnoty, nebo dvojice. Proto se u něj musí zvolit výslovně —
+`Object.keys`, `Object.values`, `Object.entries` — nebo si iterátor dopsat sám.
+
+## --checklist--
+- `for…of` potřebuje metodu `Symbol.iterator`.
+- Cyklus jen opakovaně volá `next()` až do `done`.
+- Pole, text, `Map` a `Set` ji mají, protože u nich pořadí dává smysl.
+- U objektu se musí výslovně zvolit klíče, hodnoty, nebo dvojice.
+:::
+
 ## Typické chyby a pasti
 
 ### Iterátor se vyčerpá

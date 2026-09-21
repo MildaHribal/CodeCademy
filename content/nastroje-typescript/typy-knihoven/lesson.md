@@ -340,6 +340,25 @@ ohlásí `TS2578: Unused '@ts-expect-error' directive` a ty ten řádek smažeš
 `@ts-ignore` mlčí pořád — a nikdo se k němu už nikdy nevrátí.
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč se vyplatí otevřít soubor `.d.ts` knihovny místo hledání
+odpovědi na internetu.
+
+## --model--
+Deklarační soubor je **přesně ta verze, kterou máš nainstalovanou**. Odpověď na fóru
+může být o tři velké verze starší, dokumentace bývá zjednodušená a našeptávač ukáže
+jen tvar, ne souvislosti. V `.d.ts` naopak vidíš úplný seznam přetížení, nepovinné
+parametry, přesné typy návratových hodnot i komentáře autora — a protože v něm není
+jediný řádek, který by něco dělal, čte se rychleji než zdrojový kód. Skok na definici
+v editoru tam vede na jedno kliknutí.
+
+## --checklist--
+- Deklarace odpovídá nainstalované verzi, ne obecné radě.
+- Obsahuje úplné tvary včetně nepovinných parametrů.
+- Neobsahuje žádnou logiku, takže se čte rychle.
+- Editor na ni skočí ze skoku na definici.
+:::
+
 ## Typické chyby a pasti
 
 > [!PITFALL] `error TS7016: Could not find a declaration file for module 'jmeno'.`

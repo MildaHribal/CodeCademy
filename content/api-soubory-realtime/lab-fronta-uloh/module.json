@@ -1,1 +1,0 @@
-{ "type": "lab", "title": "Lab: fronta úloh s opakováním", "summary": "Samostatně napíšeš frontu úloh, která úlohy neduplikuje, po chybě je zopakuje s rostoucím odstupem a trvalou chybu nezkouší donekonečna.", "minutes": 70, "runtime": "node" }

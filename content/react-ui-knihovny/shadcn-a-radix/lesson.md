@@ -322,6 +322,26 @@ AlertDialog, protože akce je nevratná
 AlertDialog — nevratnou akci nesmí zavřít klik mimo
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč se vyplatí vzít si hotové primitivum místo napsání
+vlastního rozbalovacího menu.
+
+## --model--
+Menu vypadá jako jednoduchá komponenta, dokud se nezačnou počítat požadavky: fokus se
+musí přesunout dovnitř a po zavření zpátky, šipky mají přepínat položky, Escape zavírat,
+klik mimo taky, čtečka musí ohlásit roli i stav, obsah nesmí být oříznutý přetečením
+rodiče a na dotykovém zařízení se to chová jinak. To je několik set řádků, které se
+navíc těžko testují — a každá z nich je chyba, kterou si nevšimnu, protože myší mi to
+funguje. Primitivum tohle všechno přináší hotové a **vzhled nechává na mně**, takže si
+neberu cizí design, jen cizí chování.
+
+## --checklist--
+- Skryté požadavky jsou fokus, klávesnice, role a přetečení.
+- Vlastní implementace je dlouhá a špatně se testuje.
+- Chyby v přístupnosti při ovládání myší nejsou vidět.
+- Primitivum dá chování a vzhled nechá na mně.
+:::
+
 ## Typické chyby a pasti
 
 > [!PITFALL]

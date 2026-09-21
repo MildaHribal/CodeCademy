@@ -419,6 +419,24 @@ načte ji dopředu a vymění jen část
 už data má a mění jen tu část stromu, která se liší — layout zůstane.
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč ve složce `app/` nikde nestojí seznam tras.
+
+## --model--
+Seznam tras by byl druhý zdroj pravdy vedle souborů — a ty dva se dřív nebo později
+rozejdou. Místo toho platí, že **adresu určuje cesta ke složce a roli souboru jeho
+jméno**: `app/kava/[slug]/page.tsx` je stránka na `/kava/<cokoli>`, `layout.tsx` je
+obal, `route.ts` endpoint. Přidat trasu tedy znamená přidat složku a nic víc; smazat ji
+znamená smazat složku. Cenou za to je, že na jménech souborů záleží doslova a překlep
+v `page.tsx` se neprojeví jako chyba, ale jako neexistující stránka.
+
+## --checklist--
+- Seznam tras by byl druhý zdroj pravdy vedle souborů.
+- Adresu určuje cesta ke složce, roli jméno souboru.
+- Přidání trasy je přidání složky, nic se neregistruje.
+- Překlep ve jméně se projeví jako chybějící stránka.
+:::
+
 ## Typické chyby a pasti
 
 > [!PITFALL] Složka je, stránka není → 404
