@@ -1,1 +1,7 @@
-{"type": "workshop", "title": "Utility z pohovorů", "summary": "Debounce, clone a sliby.", "minutes": 45, "runtime": "js"}
+{
+  "type": "workshop",
+  "title": "Utility, na které se ptají u tabule",
+  "summary": "Postavíš modul pomocných funkcí, které se v práci píšou pořád a na pohovoru se na ně ptá skoro každý: debounce, throttle, once, memoize, groupBy, hluboká kopie s cykly, opakování po chybě, omezený souběh a řazení podle víc kritérií.",
+  "minutes": 75,
+  "runtime": "js"
+}

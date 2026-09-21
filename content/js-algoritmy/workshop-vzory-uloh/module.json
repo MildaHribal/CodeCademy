@@ -1,1 +1,7 @@
-{"type": "workshop", "title": "Vzory úloh", "summary": "Two pointers a Hash map.", "minutes": 45, "runtime": "js"}
+{
+  "type": "workshop",
+  "title": "Přehled návštěvnosti e-shopu",
+  "summary": "Postavíš modul, který ze záznamů o návštěvách spočítá nejčastější stránku, nejsilnější tři dny a dvojici cen na poukázku.",
+  "minutes": 65,
+  "runtime": "js"
+}

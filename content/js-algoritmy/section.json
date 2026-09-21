@@ -1,6 +1,6 @@
 {
   "title": "Algoritmy a úlohy na pohovor",
-  "intro": "Příprava na technické pohovory a řešení komplexních úloh. Naučíš se analyzovat složitost, používat pokročilé datové struktury a vzory pro řešení algoritmických problémů.\n\n**Předpoklady:** Dobrá znalost polí, objektů a jejich metod v JavaScriptu.",
+  "intro": "Vítej v sekci **Algoritmy a úlohy na pohovor**. Tahle sekce neučí nový jazyk — učí způsob, jakým se k úloze přistupuje, když ti nad ní někdo kouká přes rameno.\n\nNaučíš se odhadnout, kolik tvoje řešení stojí, vybrat pro úlohu správnou datovou strukturu a postupovat od hrubé síly k něčemu rychlejšímu — nahlas a po krocích.\n\n**Předpoklady:** pole, objekty a jejich metody, uzávěry, sliby a `async`/`await`.",
   "modules": [
     "postup-reseni",
     "big-o",
@@ -13,19 +13,31 @@
   ],
   "outcomes": [
     {
-      "text": "Odhadneš časovou a prostorovou složitost kódu.",
+      "text": "Odhadnout časovou i prostorovou složitost kódu a pojmenovat, co je v úloze ono n.",
       "links": [
-        "js-algoritmy/big-o#o-cem-to-je"
+        "js-algoritmy/big-o#pocitame-kroky-ne-sekundy"
       ]
     },
     {
-      "text": "Aplikuješ běžné vzory (two pointers, sliding window) na problémy.",
+      "text": "Postupovat od zadání přes příklady a hrubou sílu k lepšímu řešení — a popsat to nahlas.",
       "links": [
-        "js-algoritmy/workshop-vzory-uloh"
+        "js-algoritmy/postup-reseni#nejdriv-hruba-sila-pak-zlepseni"
       ]
     },
     {
-      "text": "Navrhneš a implementuješ běžné utility (debounce, deepClone).",
+      "text": "Vyměnit vnořený cyklus za `Map` nebo `Set` a poznat, kdy se to vyplatí.",
+      "links": [
+        "js-algoritmy/datove-struktury#frekvencni-mapa-nejcastejsi-vzor-z-pohovoru"
+      ]
+    },
+    {
+      "text": "Napsat rekurzi se základním případem a rozeznat, kdy se hodí rozděl a panuj.",
+      "links": [
+        "js-algoritmy/razeni-a-rekurze#rekurze-zakladni-pripad-a-krok"
+      ]
+    },
+    {
+      "text": "Odvodit z hlavy pomocné funkce, na které se u tabule ptají: debounce, memoize, hlubokou kopii i omezený souběh.",
       "links": [
         "js-algoritmy/workshop-pohovorove-utility"
       ]

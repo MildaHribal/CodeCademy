@@ -1,1 +1,7 @@
-{"type": "lab", "title": "10 úloh", "summary": "Cvičné úkoly.", "minutes": 60, "runtime": "js"}
+{
+  "type": "lab",
+  "title": "Deset úloh na rozehřátí",
+  "summary": "Deset klasických pohovorových úloh v jednom souboru: frekvence slov, dvojice se součtem, anagramy, zploštění, nejdelší řada, binární hledání a další — s důrazem na to, kolik která stojí.",
+  "minutes": 90,
+  "runtime": "js"
+}
