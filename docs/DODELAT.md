@@ -93,6 +93,13 @@ Co se osvědčilo při dopisování:
 - **Kroky workshopu vysázet generátorem.** Stránka roste po kouscích a každý kousek má
   číslo kroku, od kterého je hotový; seed kroku N je pak automaticky řešení kroku N−1.
   Ušetří to opisování celého HTML do dvaceti souborů.
+- **Generátor musí umět čtyři zpětné apostrofy.** Soubor, který sám obsahuje blok kódu
+  (typicky `README.md` nebo `CONTRIBUTING.md`), se ve zdroji kroku sází `````` ```` ``````,
+  ne `````` ``` ``````. Regulární výraz, který hledá jen tři, takový soubor tiše zkrátí
+  na první vnitřní plot — a pozná se to až podle varování `[K3]` o pár kroků dál.
+- **Seed kroku smí navíc mít prázdnou oblast `--edit--` / `--edit--`.** Při kontrole
+  návaznosti (K3) se značky ignorují, takže `seed(N) = solution(N−1) + prázdná oblast`
+  je správný tvar. Kdo do seedu přidá i kostru nové funkce, dostane varování.
 - **Přístup v `# --approaches--` musí dodat celou sadu souborů.** Slučuje se se
   **seedem**, ne s řešením — takže když přístup mění jen `script.js`, zbytek si vezme
   z prázdné kostry a testy spadnou.
