@@ -88,6 +88,21 @@ Sekce mimo hlavičku (např. Dovednosti, Kontakt) mají své vlastní podnadpisy
 assert.ok(document.querySelectorAll('h2').length >= 2, 'Použij alespoň dva nadpisy <h2> pro oddělení sekcí (např. "O mně", "Dovednosti", "Kontakt")');
 ```
 
+# --help--
+
+## --tip--
+
+Jdi po pořadí: nejdřív kostra dokumentu, pak obsah, nakonec sémantické obaly. Když
+nevíš, jakou značku použít, zeptej se, **co ta část je** — ne jak má vypadat. Fotka
+a jméno jsou uvození stránky, seznam dovedností je seznam, kontakty jsou vlastní
+oddíl s vlastním nadpisem.
+
+## --tip--
+
+Dvě věci, na které se u téhle úlohy nejčastěji zapomíná: obrázek musí mít `alt`, který
+ho popisuje (ne „obrázek" ani prázdný řetězec), a text odkazu má říct, kam vede —
+„napiš mi" nebo „můj GitHub", ne „klikni zde" a ne vypsaná adresa.
+
 # --approaches--
 
 ## --approach-- Kontakty v patičce

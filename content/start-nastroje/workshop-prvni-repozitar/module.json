@@ -1,7 +1,7 @@
 {
   "type": "workshop",
   "title": "První repozitář",
-  "summary": "Založení Git repozitáře a první commity.",
+  "summary": "Založíš repozitář, uděláš první commity, opravíš zprávu i omylem přidaný soubor a projdeš celý cyklus až po odeslání na GitHub.",
   "minutes": 40,
   "runtime": "node"
 }

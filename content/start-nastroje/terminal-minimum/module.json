@@ -1,6 +1,6 @@
 {
   "type": "lesson",
   "title": "Terminál: minimum na začátek",
-  "summary": "Základní příkazy pro práci se složkami.",
+  "summary": "Naučíš se těch pár příkazů, bez kterých se vývoj neobejde: pohyb po složkách, tvorba a mazání souborů, spouštění skriptů a čtení chybových hlášek.",
   "minutes": 20
 }

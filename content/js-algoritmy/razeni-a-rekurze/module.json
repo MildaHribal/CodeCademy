@@ -1,1 +1,7 @@
-{"type": "lesson", "title": "Řazení a rekurze", "summary": "Merge sort a cykly.", "minutes": 30, "runtime": "js"}
+{
+  "type": "lesson",
+  "title": "Řazení a rekurze",
+  "summary": "Naučíš se řadit porovnávací funkcí, hledat půlením v seřazeném poli a psát rekurzi se základním případem — až po rozděl a panuj v merge sortu.",
+  "minutes": 30,
+  "runtime": "js"
+}

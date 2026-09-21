@@ -1,1 +1,7 @@
-{"type": "lesson", "title": "Big O", "summary": "Časová a prostorová složitost.", "minutes": 30, "runtime": "js"}
+{
+  "type": "lesson",
+  "title": "Big O",
+  "summary": "Naučíš se počítat kroky místo sekund, poznávat skryté n v metodách pole a srazit kvadratický průchod na lineární — včetně toho, co to stojí paměť.",
+  "minutes": 30,
+  "runtime": "js"
+}

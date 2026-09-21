@@ -1,7 +1,7 @@
 {
   "type": "lab",
   "title": "Profilová stránka",
-  "summary": "Samostatná práce.",
+  "summary": "Sám postavíš osobní vizitku s fotkou, představením, seznamem dovedností a kontakty — a hlavně se sémantickou strukturou, kterou pochopí prohlížeč i čtečka obrazovky.",
   "minutes": 30,
   "runtime": "dom"
 }

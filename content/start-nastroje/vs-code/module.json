@@ -1,6 +1,6 @@
 {
   "type": "lesson",
   "title": "VS Code a projekt na disku",
-  "summary": "Otevření složky a základní práce v editoru.",
+  "summary": "Nastavíš si editor tak, abys v něm byl rychlý: otevření složky, hledání v projektu, skok na definici, formátování a integrovaný terminál.",
   "minutes": 15
 }

@@ -1,1 +1,7 @@
-{"type": "lesson", "title": "Postup řešení", "summary": "Jak rozlousknout těžkou úlohu.", "minutes": 20, "runtime": "js"}
+{
+  "type": "lesson",
+  "title": "Postup řešení",
+  "summary": "Projdeš postup, kterým se u tabule rozlouskne i neznámá úloha: přeformulovat zadání, vyrobit ošklivé příklady, začít hrubou silou a teprve pak zlepšovat.",
+  "minutes": 20,
+  "runtime": "js"
+}

@@ -1,1 +1,7 @@
-{"type": "quiz", "title": "Kvíz algoritmů", "summary": "Ověř si znalosti.", "minutes": 15, "runtime": "js"}
+{
+  "type": "quiz",
+  "title": "Kvíz algoritmů",
+  "summary": "Ověříš si složitosti, skryté cykly v metodách pole, výměnu paměti za čas, binární hledání a rekurzi — a přečteš cizí modul se statistikami.",
+  "minutes": 15,
+  "runtime": "js"
+}

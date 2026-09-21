@@ -1,1 +1,7 @@
-{"type": "lesson", "title": "Datové struktury", "summary": "Pole, Map, Set a další.", "minutes": 40, "runtime": "js"}
+{
+  "type": "lesson",
+  "title": "Datové struktury",
+  "summary": "Vyměníš hledání v poli za Map a Set, postavíš frekvenční mapu, která je jádrem poloviny pohovorových úloh, a přidáš mezipaměť s memoizací.",
+  "minutes": 40,
+  "runtime": "js"
+}
