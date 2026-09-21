@@ -3,7 +3,9 @@ title: "Přestavba na Tailwind"
 runtime: dom
 see: css-tailwind/utility-first
 ---
-<--description-->
+
+# --description--
+
 Tvá firma se rozhodla zahodit staré, neudržovatelné CSS a přejít na Tailwind CSS v4. Tvým úkolem je přepsat starý článek s profilem autora. CSS už jsme smazali.
 Stránka musí vypadat tak, jak to určuje design, a navíc musí podporovat tmavý motiv.
 
@@ -12,8 +14,9 @@ Co musíš splnit:
 - Nadpis článku má být velikosti 3xl a font bold.
 - Karta autora dole má mít šedé pozadí `bg-gray-100`, `padding 4` a zaoblené rohy `rounded-xl`.
 - V tmavém režimu (`dark:`) se má pozadí autora změnit na `bg-gray-800` a text na `text-white`.
-</--description-->
-<--hints-->
+
+# --hints--
+
 Nastav elementu `main`: `max-w-2xl` a `mx-auto`.
 Nastav elementu `h1`: `text-3xl` a `font-bold`.
 Nastav elementu `aside`: `bg-gray-100`, `p-4`, `rounded-xl`, `dark:bg-gray-800`, `dark:text-white`.
@@ -25,8 +28,9 @@ assert.equal(h1.classList.contains('text-3xl'), true, 'Nadpis je velký 3xl');
 const aside = document.querySelector('aside');
 assert.equal(aside.classList.contains('dark:bg-gray-800'), true, 'Karta autora reaguje na tmavý režim');
 ```
-</--hints-->
-<--seed-->
+
+# --seed--
+
 ## --file-- index.html
 ```html
 <main>
@@ -39,8 +43,9 @@ assert.equal(aside.classList.contains('dark:bg-gray-800'), true, 'Karta autora r
   </aside>
 </main>
 ```
-</--seed-->
-<--solution-->
+
+# --solution--
+
 ## --file-- index.html
 ```html
 <main class="max-w-2xl mx-auto p-4">
@@ -53,4 +58,3 @@ assert.equal(aside.classList.contains('dark:bg-gray-800'), true, 'Karta autora r
   </aside>
 </main>
 ```
-</--solution-->

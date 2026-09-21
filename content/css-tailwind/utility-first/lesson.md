@@ -209,7 +209,7 @@ Ten rozbalí do stylopisu čtyři [[kaskádová vrstva|kaskádové vrstvy]] v to
 | vrstva | co v ní je |
 |---|---|
 | `theme` | tokeny jako CSS proměnné na `:root`: `--spacing`, `--color-sky-500`, `--radius-lg`… |
-| `base` | [[preflight]]: sjednocení výchozích stylů prohlížečů |
+| `base` | preflight: sjednocení výchozích stylů prohlížečů |
 | `components` | prázdná, pro tvoje komponentové třídy |
 | `utilities` | vygenerované utility |
 
