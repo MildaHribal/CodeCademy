@@ -287,6 +287,24 @@ Aby se do commitu nedostaly soubory, které neprošly kontrolou u kolegů.
 Soubory kolegů do tvého commitu nejdou. `lint-staged` omezuje kontrolu kvůli rychlosti a zaměření na tvoje změny.
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč se o formátování kódu nemá diskutovat v code review.
+
+## --model--
+Formátování je pravidlo bez kontextu — dá se popsat konfigurací a vynutit strojem při
+uložení nebo v CI. Když se o něm diskutuje v review, stojí to dvě lidské pozornosti
+a nic to nepřináší: výsledek je stejný, jako kdyby to udělal formátovač, jen o den
+později a s pachutí. Navíc každý komentář o mezerách je komentář, který reviewer
+nenapsal o chybějícím okrajovém případu. Když se tedy v review formátování objeví,
+není to problém autora — je to chybějící řádek v konfiguraci.
+
+## --checklist--
+- Formátování je pravidlo bez kontextu, takže ho zvládne stroj.
+- Diskuze o něm spotřebuje pozornost obou lidí.
+- Pozornost reviewera je omezená a patří logice.
+- Opakovaný spor znamená chybějící nastavení v projektu.
+:::
+
 ## Typické chyby a pasti
 
 > [!PITFALL]

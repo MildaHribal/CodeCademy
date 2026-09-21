@@ -336,6 +336,25 @@ Spustím `npm audit`, ten podvržený balíček odhalí.
 `npm audit` hlídá známé zranitelnosti v registrovaných verzích. Čerstvě vydaný podvrh v databázi být nemusí.
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč se lockfile commituje, i když je v něm „jen to samé"
+co v `package.json`.
+
+## --model--
+`package.json` popisuje **rozsah** („aspoň 4.2, ale ne 5"), lockfile zaznamenává
+**přesně jednu** verzi každého balíčku včetně všech jeho závislostí a jejich závislostí.
+Bez lockfilu si každý vývojář a každé sestavení v CI nainstaluje to nejnovější, co do
+rozsahu spadá — a rozbití, které přinese cizí balíček o dvě úrovně níž, uvidí jen ten,
+komu se zrovna trefilo. S commitnutým lockfilem má celý tým i produkce stejné soubory,
+a když se něco rozbije, je z diffu lockfilu vidět, která verze se změnila.
+
+## --checklist--
+- `package.json` určuje rozsah povolených verzí.
+- Lockfile určuje přesnou verzi každé závislosti, i nepřímé.
+- Bez něj má každý vývojář jinou instalaci.
+- Změnu verze je díky němu vidět v diffu.
+:::
+
 ## Typické chyby a pasti
 
 > [!PITFALL]

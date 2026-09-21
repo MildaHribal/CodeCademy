@@ -583,6 +583,25 @@ takže by se všechno načítalo pořád dokola a optimistické úpravy by mizel
 react-aplikace/tanstack-query#kam-s-tim-ve-skutecnem-projektu
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč se dvě komponenty se stejným klíčem dotazu zeptají
+serveru jen jednou.
+
+## --model--
+Knihovna si data nedrží u komponenty, ale v **mezipaměti podle klíče**. Když se
+komponenta přihlásí k dotazu, nejdřív se podívá, jestli pod tím klíčem něco je: když
+ano, dostane to okamžitě, a jen podle nastavení se na pozadí ověří, jestli to není
+staré. Dvě komponenty se stejným klíčem jsou proto dva odběratelé jednoho záznamu, ne
+dva dotazy. Odtud plyne i to, proč na klíči tolik záleží: musí obsahovat všechno, co
+odpověď ovlivňuje (id, filtr, stránku), jinak si dvě různá data přepíšou jedno místo.
+
+## --checklist--
+- Data se drží v mezipaměti podle klíče, ne u komponenty.
+- Komponenta se ke klíči jen přihlašuje jako odběratel.
+- Stejný klíč proto znamená jeden dotaz a sdílená data.
+- Klíč musí obsahovat všechno, co odpověď ovlivňuje.
+:::
+
 ## Typické chyby a pasti
 
 > [!PITFALL]

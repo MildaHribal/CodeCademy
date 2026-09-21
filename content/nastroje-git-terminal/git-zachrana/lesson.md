@@ -412,6 +412,24 @@ Ne, klíč je v historii a v kopiích repozitáře. Je potřeba ho zneplatnit a 
 Cokoli, co bylo pushnuté, považuj za prozrazené. Jediná skutečná oprava je klíč zneplatnit.
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč se commit „ztratí", i když v repozitáři pořád je.
+
+## --model--
+Git si commity drží jako objekty v databázi a větev je jen **štítek s adresou** jednoho
+z nich. Když štítek přesunu (`reset --hard`) nebo přepíšu (`rebase`, `--amend`), původní
+commit nikam nezmizí — jen na něj nic neukazuje, takže ho neuvidím v `git log` ani
+v žádné větvi. Přesně proto existuje `git reflog`: zaznamenává, kde `HEAD` a štítky
+v posledních dnech stály, takže ztracenou adresu jde dohledat a štítek na ni vrátit.
+Teprve úklid nepoužitých objektů po několika týdnech commit skutečně smaže.
+
+## --checklist--
+- Commity jsou objekty v databázi, větev je jen štítek.
+- Přesunutý štítek commit nemaže, jen ho schová z dohledu.
+- `git reflog` si pamatuje, kde štítky stály.
+- Nepoužitý objekt zmizí až po úklidu za několik týdnů.
+:::
+
 ## Typické chyby a pasti
 
 > [!PITFALL]

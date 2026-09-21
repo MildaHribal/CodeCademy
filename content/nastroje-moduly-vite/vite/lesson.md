@@ -333,6 +333,26 @@ base: './'
 Výchozí `base` je `/`, takže adresy vedou od kořene domény. S `base: '/kurty/'` začnou všechny adresy v `dist/` podsložkou, kde web opravdu leží.
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč se při vývoji moduly servírují jednotlivě, ale pro
+produkci se slepí dohromady.
+
+## --model--
+Při vývoji je nejdražší **čekání po uložení souboru**. Když prohlížeč načítá moduly
+tak, jak jsou, může se po změně znovu poslat jen ten jeden soubor — odezva je okamžitá
+bez ohledu na velikost projektu. V produkci se ale nikdo nedívá na rychlost úprav,
+zato na rychlost načtení stránky u návštěvníka: tisíc samostatných požadavků je
+pomalých, nepomůže ani komprese a nejde z nich vyhodit nepoužitý kód. Proto se pro
+produkci soubory slepí, zmenší a rozdělí tak, aby se stahovalo jen to, co je pro danou
+stránku potřeba. Jsou to dva různé cíle, a proto dva různé režimy.
+
+## --checklist--
+- Při vývoji rozhoduje rychlost odezvy po uložení.
+- Jednotlivé moduly umožní poslat jen změněný soubor.
+- V produkci rozhoduje rychlost načtení u návštěvníka.
+- Sloučení a zmenšení dává smysl až tam.
+:::
+
 ## Typické chyby a pasti
 
 > [!PITFALL]

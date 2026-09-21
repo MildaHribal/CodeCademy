@@ -553,6 +553,24 @@ při dalším vykreslení změní, druhý `useState` dostane hodnotu prvního �
 react-aplikace/vite-react-ts#lint-ktery-hlida-hooky
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč prohlížeč nemůže spustit soubor `.tsx` přímo.
+
+## --model--
+Prohlížeč umí JavaScript, nic jiného. TypeScript přidává zápis typů a JSX přidává
+zápis podobný HTML uprostřed kódu — obojí je syntaxe, kterou by prohlížeč nepřečetl,
+protože ve specifikaci jazyka není. Proto musí před spuštěním projít překladem, který
+typy odstraní (za běhu už nic nekontrolují) a JSX převede na obyčejná volání funkcí.
+Vite tohle dělá v obou režimech: při vývoji po jednotlivých souborech a na vyžádání,
+při sestavení pro celý projekt najednou.
+
+## --checklist--
+- Prohlížeč rozumí jen JavaScriptu.
+- Typy i JSX jsou syntaxe navíc, kterou by nepřečetl.
+- Typy se při překladu odstraní, JSX se změní na volání funkcí.
+- Překlad probíhá při vývoji i při sestavení, jen jinak.
+:::
+
 ## Typické chyby a pasti
 
 > [!PITFALL]

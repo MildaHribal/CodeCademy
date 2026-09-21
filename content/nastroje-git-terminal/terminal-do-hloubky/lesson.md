@@ -457,6 +457,25 @@ Spustí se ve složce, ze které byl skript spuštěný.
 `cd` selže, ale bez `set -e` skript pokračuje a `git pull` běží tam, kde zrovna je.
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč `prikaz > soubor.txt` uloží jen část výstupu, když
+příkaz skončí chybou.
+
+## --model--
+Příkaz nemá jeden výstup, ale dva: běžný (stdout) a chybový (stderr). Přesměrování
+`>` bere jen ten běžný, takže chybové hlášky do souboru nejdou — objeví se v terminálu
+a v souboru po nich zbude díra. Je to tak schválně: díky oddělení se dá výsledek
+příkazu poslat dál rourou a chyby přitom pořád vidět na obrazovce. Když chci mít
+v souboru obojí, musím chybový proud výslovně připojit (`2>&1`), nebo ho poslat do
+vlastního souboru.
+
+## --checklist--
+- Příkaz píše do dvou oddělených proudů.
+- `>` přesměruje jen běžný výstup.
+- Oddělení umožní posílat data rourou a chyby pořád vidět.
+- Chybový proud se připojuje výslovně.
+:::
+
 ## Typické chyby a pasti
 
 > [!PITFALL]

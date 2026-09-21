@@ -665,6 +665,26 @@ si otevře jen domovskou stránku. `lazy` (nebo `React.lazy`) balíček rozděl�
 react-aplikace/routovani#datovy-rezim-createbrowserrouter
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč patří filtr ve výpisu produktů spíš do adresy než do
+`useState`.
+
+## --model--
+Stav v `useState` žije jen v paměti té jedné záložky: po obnovení stránky je pryč,
+nejde poslat odkazem a tlačítko Zpět se k němu nevrátí. Adresa naproti tomu tohle
+všechno umí sama — je to stav, který je vidět, dá se sdílet, zálohovat v záložkách
+a prohlížeč pro něj vede historii. Proto do ní patří všechno, co by měl uživatel umět
+uložit nebo někomu poslat: hledaný výraz, zvolený filtr, číslo stránky, otevřená
+záložka. V paměti zůstává to, co je opravdu pomíjivé: rozepsaný text, otevřené menu,
+zda se právě načítá.
+
+## --checklist--
+- Stav v paměti nepřežije obnovení stránky.
+- Adresa jde poslat odkazem a uložit do záložek.
+- Prohlížeč pro adresu vede historii, takže funguje Zpět.
+- V paměti zůstává jen pomíjivý stav.
+:::
+
 ## Typické chyby a pasti
 
 > [!PITFALL]
