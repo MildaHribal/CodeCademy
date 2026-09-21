@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Spustí Akademii: sestaví klienta (když je potřeba) a nastartuje server.
+# Spustí Kovárnu: sestaví klienta (když je potřeba) a nastartuje server.
 set -euo pipefail
 cd "$(dirname "$0")"
 
@@ -13,5 +13,5 @@ fi
 node tools/build-vendor.js
 
 PORT="${PORT:-4300}"
-echo "Akademie běží na http://localhost:$PORT"
+echo "Kovárna běží na http://localhost:$PORT"
 exec env PORT="$PORT" node server/index.js

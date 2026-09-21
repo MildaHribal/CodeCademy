@@ -19,6 +19,7 @@ export const icons = {
   note: stroke('M4 2.5h5.5l2.5 2.5v8.5H4zM9.5 2.5V5H12M6 8h4M6 10.5h3'),
   question: '<circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.6"/>' + stroke('M6.3 6.3a1.8 1.8 0 1 1 2.5 1.6c-.5.2-.8.6-.8 1.1v.4') + '<circle cx="8" cy="11.4" r=".9" fill="currentColor"/>',
   close: stroke('M4 4l8 8M12 4l-8 8'),
+  phone: stroke('M5 2.5h6v11H5zM7.2 11.6h1.6', 1.5),
   search: '<circle cx="7" cy="7" r="4.3" fill="none" stroke="currentColor" stroke-width="1.7"/>' + stroke('M10.2 10.2L13.5 13.5'),
   eye: stroke('M1.5 8s2.5-4.5 6.5-4.5S14.5 8 14.5 8 12 12.5 8 12.5 1.5 8 1.5 8z') + '<circle cx="8" cy="8" r="1.8" fill="currentColor"/>',
 };

@@ -60,16 +60,19 @@ function hostnameOf(value) {
   }
 }
 
-export function checkLocalRequest(req) {
+export function checkLocalRequest(req, { remoteHosts = null } = {}) {
+  const allowed = (name) => LOOPBACK_HOSTS.has(name) || Boolean(remoteHosts?.has(name));
   const host = req.headers.host;
-  if (host && !LOOPBACK_HOSTS.has(hostnameOf(host))) {
+  if (host && !allowed(hostnameOf(host))) {
     throw new HttpError(403, 'Server přijímá jen požadavky na localhost');
   }
   const origin = req.headers.origin;
-  if (req.method !== 'GET' && req.method !== 'HEAD' && origin && !LOOPBACK_HOSTS.has(hostnameOf(origin))) {
+  if (req.method !== 'GET' && req.method !== 'HEAD' && origin && !allowed(hostnameOf(origin))) {
     throw new HttpError(403, 'Požadavek z cizí stránky je zakázaný');
   }
 }
+
+export const isLoopbackHost = (hostHeader) => !hostHeader || LOOPBACK_HOSTS.has(hostnameOf(hostHeader));
 
 export function createLimiter(limit) {
   let running = 0;

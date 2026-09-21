@@ -8,7 +8,7 @@ export class ApiError extends Error {
   }
 }
 
-const OFFLINE_MESSAGE = 'Server Akademie neodpovídá. Zkontroluj, že běží (./start.sh), a zkus to znovu.';
+const OFFLINE_MESSAGE = 'Server Kovárny neodpovídá. Zkontroluj, že běží (./start.sh), a zkus to znovu.';
 
 export async function apiRequest(method, path, body, { signal, keepalive } = {}) {
   let response;

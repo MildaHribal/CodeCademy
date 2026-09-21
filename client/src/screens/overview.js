@@ -1,6 +1,7 @@
 
 import { h } from '../dom.js';
 import { href, hrefForId } from '../router.js';
+import { HEADLINE, LEAD } from '../brand.js';
 import { progress, moduleStatus, sectionStatus } from '../progress.js';
 import { loadCurriculum, allModules } from '../content.js';
 import { MODULE_TYPE_LABELS, modules as modulesText, percent } from '../text.js';
@@ -41,11 +42,11 @@ export async function renderOverview(ctx, route = {}) {
         h(
           'div',
           { class: 'overview__intro' },
-          h('h1', { class: 'overview__title' }, 'Kurz webového vývoje'),
+          h('h1', { class: 'overview__title' }, HEADLINE),
           h(
             'p',
             { class: 'overview__lead' },
-            'Od HTML a CSS přes JavaScript po vlastní fullstack projekty. Kód píšeš přímo tady, testy ti hned řeknou, co ještě chybí.',
+            LEAD,
           ),
           h('p', { class: 'overview__colophon' }, colophon(curriculum)),
         ),

@@ -86,13 +86,38 @@ export function renderWorkspace(ctx, { module, item, nav, steps = null, stepInde
         'akademie.columns.workspace',
       );
 
+  // Telefon: panely se nevejdou vedle sebe, takže se mezi nimi přepíná spodní lištou
+  // (Zadání / Kód / Výstup). Na širokém okně je lišta skrytá a nic se nemění.
+  const MOBILE_PANES = [
+    { id: 'brief', label: 'Zadání' },
+    { id: 'code', label: 'Kód' },
+    { id: 'output', label: isNode || runtime === 'js' ? 'Výstup' : 'Náhled' },
+  ];
+  const mobileTabs = h(
+    'nav',
+    { class: 'workspace__tabs', 'aria-label': 'Panely pracoviště' },
+    MOBILE_PANES.map((pane) =>
+      h('button', { type: 'button', class: 'workspace__tab', dataset: { pane: pane.id }, onclick: () => showMobilePane(pane.id) }, pane.label),
+    ),
+    h('button', { type: 'button', class: 'btn btn--primary btn--small workspace__tab-check', 'aria-label': 'Check / Zkontrolovat', onclick: () => { showMobilePane('brief'); check(); } }, 'Check'),
+  );
+
   const root = h(
     'div',
     { class: `workspace workspace--${runtime}` },
     isWorkshop ? createStepperBar({ steps, stepIndex, slot: slots.element('bar') }) : null,
     columns,
+    mobileTabs,
   );
   ctx.root.append(root);
+
+  function showMobilePane(id) {
+    root.dataset.mobilePane = id;
+    for (const tab of mobileTabs.querySelectorAll('.workspace__tab')) {
+      tab.setAttribute('aria-pressed', String(tab.dataset.pane === id));
+    }
+  }
+  showMobilePane('brief');
 
   if (!isNode) {
     preview = output.mount(editor.getFiles());

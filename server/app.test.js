@@ -21,7 +21,7 @@ describe('HTTP API', () => {
     projectsDir = path.join(root, 'moje-projekty');
     const distDir = path.join(root, 'dist');
     fs.mkdirSync(path.join(distDir, 'assets'), { recursive: true });
-    fs.writeFileSync(path.join(distDir, 'index.html'), '<!doctype html><title>Akademie</title>');
+    fs.writeFileSync(path.join(distDir, 'index.html'), '<!doctype html><title>Kovárna</title>');
     fs.writeFileSync(path.join(distDir, 'assets', 'app.js'), 'console.log(1);');
     fs.writeFileSync(path.join(distDir, 'assets', 'app.css'), 'body {}');
 
@@ -277,7 +277,7 @@ describe('HTTP API', () => {
 
     const spa = await rawRequest({ path: '/sekce/ukazka' });
     assert.equal(spa.status, 200);
-    assert.match(spa.text, /<title>Akademie/);
+    assert.match(spa.text, /<title>Kovárna/);
 
     assert.equal((await rawRequest({ path: '/assets/chybi.js' })).status, 404);
     const traversal = await rawRequest({ path: '/..%2F..%2F..%2Fpackage.json' });

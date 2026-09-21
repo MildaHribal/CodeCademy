@@ -5,6 +5,7 @@ import { pipeline } from 'node:stream';
 import { createContext } from './context.js';
 import { HttpError } from './errors.js';
 import { checkLocalRequest, describeError, sendJson } from './http.js';
+import { guardRemote } from './remote.js';
 import { createRequestContext, createRouter } from './router.js';
 import { registerRouteModules, routeModules } from './routes/index.js';
 
@@ -25,6 +26,7 @@ const MIME_TYPES = {
   '.md': 'text/markdown; charset=utf-8',
   '.svg': 'image/svg+xml',
   '.png': 'image/png',
+  '.webmanifest': 'application/manifest+json',
   '.jpg': 'image/jpeg',
   '.jpeg': 'image/jpeg',
   '.gif': 'image/gif',
@@ -37,13 +39,15 @@ const MIME_TYPES = {
   '.wasm': 'application/wasm',
 };
 
-export function createApp({ contentDir, dataDir, projectsDir, distDir, routes = routeModules }) {
+export function createApp({ contentDir, dataDir, projectsDir, distDir, routes = routeModules, remote = null }) {
   const ctx = createContext({ contentDir, dataDir, projectsDir, distDir });
+  ctx.remote = remote;
+  const remoteHosts = remote ? new Set(remote.hosts) : null;
   const router = createRouter();
   registerRouteModules(router, routes, ctx);
 
   async function handleApi(req, res, url) {
-    checkLocalRequest(req);
+    checkLocalRequest(req, { remoteHosts });
     const { handler, params } = router.match(req.method, url.pathname);
     const data = await handler(createRequestContext(req, res, url, params));
     if (res.headersSent || res.writableEnded) return;
@@ -127,6 +131,7 @@ export function createApp({ contentDir, dataDir, projectsDir, distDir, routes = 
   async function handle(req, res) {
     const url = new URL(req.url, 'http://localhost');
     try {
+      if (guardRemote(req, res, url, remote)) return;
       if (url.pathname === '/api' || url.pathname.startsWith('/api/')) await handleApi(req, res, url);
       else if (url.pathname.startsWith('/vendor/')) serveVendor(req, res, url);
       else serveStatic(req, res, url);

@@ -1,0 +1,66 @@
+/* Dialog párování telefonu. */
+.phone-pair {
+  width: min(26rem, calc(100vw - 32px));
+  padding: 24px;
+  border: 1px solid var(--rule-strong);
+  border-radius: 20px;
+  background: var(--surface);
+  box-shadow: var(--shadow-pop);
+  color: var(--ink);
+}
+
+.phone-pair::backdrop {
+  background: var(--backdrop);
+  backdrop-filter: blur(4px);
+}
+
+.phone-pair__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.phone-pair__title {
+  font-size: 22px;
+}
+
+.phone-pair__lead {
+  color: var(--ink-soft);
+}
+
+.phone-pair__hint {
+  margin-top: 12px;
+  color: var(--ink-faint);
+  font-size: 13px;
+}
+
+/* QR kód musí zůstat černý na bílé v obou motivech, jinak ho čtečka nepřečte. */
+.phone-pair__qr {
+  width: 220px;
+  margin: 20px auto 6px;
+  padding: 10px;
+  border-radius: 14px;
+  background: var(--preview-bg);
+}
+
+.phone-pair__qr svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.phone-pair__url,
+.phone-pair__code {
+  width: 100%;
+  margin-top: 12px;
+  padding: 9px 12px;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  background: var(--surface-sunken);
+  color: var(--ink-soft);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  overflow-x: auto;
+}

@@ -6,3 +6,8 @@ moje-projekty/
 .e2e/
 .idea/
 .aider*
+
+# mobilní aplikace: build a soubory s párovacím tokenem
+mobile/build/
+mobile/debug.ks
+mobile/res/values/strings.xml

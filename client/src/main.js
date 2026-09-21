@@ -13,9 +13,10 @@ import './styles/quiz.css';
 import './styles/project.css';
 import './styles/motion.css';
 
-import { startRouter } from './router.js';
+import { rerender, startRouter } from './router.js';
 import { arrive, riseInEach } from './motion.js';
 import { progress } from './progress.js';
+import { BRAND } from './brand.js';
 import { h, replace } from './dom.js';
 import { appEvents } from './core/events.js';
 import { mountHeaderMenu, setHeaderRoute } from './core/header.js';
@@ -92,7 +93,7 @@ async function renderRoute(route) {
     onCleanup: (fn) => cleanups.push(fn),
     setCrumbs: (items) => renderCrumbs(items),
     setLayout: (layout) => (document.body.dataset.layout = layout),
-    setTitle: (title) => (document.title = title ? `${title} – Akademie` : 'Akademie'),
+    setTitle: (title) => (document.title = title ? `${title} – ${BRAND}` : BRAND),
   };
 
   ctx.setLayout('page');
@@ -157,6 +158,24 @@ progress.onSaveState((state) => {
 });
 
 startRouter(show);
+
+// Stejný postup se dá rozdělat na počítači a dodělat na telefonu: obojí čte z jednoho
+// serveru. Když se okno vrátí do popředí po delší pauze, stránka si stav načte znovu.
+const RESYNC_AFTER_MS = 20_000;
+let hiddenAt = 0;
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    hiddenAt = Date.now();
+    progress.flushAll();
+    return;
+  }
+  if (!hiddenAt || Date.now() - hiddenAt < RESYNC_AFTER_MS) return;
+  // Jen přehledy: rozečtená lekce ani pracoviště se pod rukama nepřekreslují.
+  if (!['overview', 'section'].includes(currentRoute?.name) || document.querySelector('dialog[open]')) return;
+  const scroll = window.scrollY;
+  rerender();
+  setTimeout(() => window.scrollTo(0, scroll), 400);
+});
 
 
 // Rozbalovací bloky (<details>: tahák, pojmy sekce, „Proč to neprošlo") — obsah po

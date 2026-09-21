@@ -1313,3 +1313,43 @@ stín lišty po odrolování, odezva řádků a odpovědí na najetí a stisk, r
 Každá zpráva začíná kódem pravidla (`[K1] krok 002: …`). `shared/diff.js` (D1) a `shared/errors-cs.js` (S4) se načítají volitelně.
 Tahák se značkami `--x--` nebo `:::` = `[S1]`. Testy: `tools/verify-unit.test.js` (fixture `tools/fixtures/verify-content/`, běhy simulované),
 `tools/verify.test.js` (skutečný runner nad `tools/fixtures/content/`).
+
+## Nástroj: telefon (vzdálený přístup, mobilní rozhraní, aplikace)
+
+Telefon nemá vlastní data. Připojuje se na server v počítači, takže postup, rozepsaný
+kód, poznámky i karty na opakování jsou na obou zařízeních tytéž — není co synchronizovat.
+
+**Spuštění.** `./start-telefon.sh` (= `AKADEMIE_REMOTE=tailscale ./start.sh`). Server pak
+poslouchá navíc na adrese Tailscale; místo `tailscale` jde zadat konkrétní IP. Bez té
+proměnné poslouchá jen na `127.0.0.1` jako dřív.
+
+**Párování.** Server umí spouštět kód (`/api/run-node`, dev-process), takže ze sítě
+nesmí být dostupný bez ověření. `server/remote.js`:
+
+- token se vygeneruje při prvním startu do `data/remote-token.txt` (práva 0600, `data/`
+  je v `.gitignore`),
+- `guardRemote` stojí v `server/app.js` před vším ostatním: požadavek na localhost projde,
+  vzdálený musí mít cookie `akademie_token` (HttpOnly). Adresa s `?token=…` cookie nastaví
+  a přesměruje na adresu bez tokenu; cokoli jiného dostane 401,
+- `GET /api/remote/pairing` vrací párovací adresu **jen** pro localhost. V nabídce je z ní
+  položka „Phone" s QR kódem (`client/src/extensions/phone/`); na telefonu se neukazuje.
+
+**Mobilní rozhraní** (do 760 px, resp. 900 px u pracoviště):
+
+- nabídka z horní lišty se stěhuje do spodní lišty s ikonami. Horní lišta kvůli tomu na
+  telefonu nemá `backdrop-filter` — ten by z ní udělal kotvu pro `position: fixed`,
+- pracoviště ukazuje vždy jeden panel; dole se přepíná Zadání / Kód / Výstup (u HTML
+  Náhled) a vedle je Check. Stav drží `data-mobile-pane` na `.workspace`, skrývá se jen
+  přes CSS, takže editor i náhled žijí dál a nic se nepřekresluje,
+- přehled a stránka sekce si po návratu do popředí (po 20 s) načtou postup znovu —
+  co se udělalo na počítači, je na telefonu vidět bez ručního obnovení.
+
+**Aplikace pro Android** je v `mobile/`: WebView obal bez Gradle, `mobile/build.sh`
+(aapt2 → javac → d8 → zipalign → apksigner). Adresu serveru i s tokenem zapéká do
+`res/values/strings.xml` — ten, klíč `debug.ks` a `build/` jsou v `.gitignore` a hotové
+APK se nikomu neposílá. Instalace: `adb install -r mobile/build/kovarna.apk`. Bez aplikace
+stačí QR kód a prohlížeč; `manifest.webmanifest` dovolí přidat si stránku na plochu.
+
+**Jméno produktu** je v `client/src/brand.js` (`BRAND`, `HEADLINE`, `LEAD`). Vnitřní
+identifikátory — složka, balíček, cookie, klíče v úložišti — zůstávají `akademie`, aby
+přejmenování nikomu nesmazalo postup.

@@ -305,4 +305,33 @@ describe('orientace, tmavý režim a poznámky v prohlížeči', () => {
       await page.close();
     }
   });
+
+  test('telefon: nabídka je dole, pracoviště přepíná panely a nic nepřetéká do strany', async () => {
+    const page = await openPage('#/', { width: 412, height: 915 });
+    try {
+      await waitUntil(page, 'přehled', () => document.querySelector('.overview__title'));
+      const menu = await page.evaluate(() => {
+        const box = document.querySelector('.app-bar__menu').getBoundingClientRect();
+        return { bottom: Math.round(box.bottom), height: innerHeight, overflow: document.documentElement.scrollWidth - innerWidth };
+      });
+      assert.equal(menu.bottom, menu.height, 'nabídka sedí u spodního okraje');
+      assert.equal(menu.overflow, 0, 'přehled nepřetéká do strany');
+
+      await page.goto(`${baseUrl}/#/modul/zaklady/workshop/001`);
+      await waitUntil(page, 'pracoviště', () => document.querySelector('.workspace__tabs'));
+      const visiblePanes = () =>
+        page.evaluate(() => ({
+          pane: document.querySelector('.workspace').dataset.mobilePane,
+          editor: Boolean(document.querySelector('.cm-editor')?.offsetParent),
+          menu: Boolean(document.querySelector('.app-bar__menu')?.offsetParent),
+          overflow: document.documentElement.scrollWidth - innerWidth,
+        }));
+      assert.deepEqual(await visiblePanes(), { pane: 'brief', editor: false, menu: false, overflow: 0 });
+      await page.click('.workspace__tabs button:nth-child(2)');
+      assert.deepEqual(await visiblePanes(), { pane: 'code', editor: true, menu: false, overflow: 0 });
+      assert.deepEqual(page.errors, []);
+    } finally {
+      await page.close();
+    }
+  });
 });
