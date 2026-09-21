@@ -1,7 +1,7 @@
 {
   "type": "quiz",
   "title": "Kvíz: HTML a web",
-  "summary": "Ověření znalostí.",
-  "minutes": 15,
+  "summary": "Ověříš si URL a HTTP, výběr sémantických prvků, alt texty a chyby, které prohlížeč opraví za tebe.",
+  "minutes": 25,
   "runtime": "dom"
 }

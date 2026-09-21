@@ -90,13 +90,99 @@ assert.ok(document.querySelectorAll('h2').length >= 2, 'Použij alespoň dva nad
 
 # --approaches--
 
-## Vše v `<main>` vs. použití `<header>` a `<footer>`
+## --approach-- Kontakty v patičce
 
-Někdo raději umístí celou vizitku, včetně jména a fotky, přímo do `<main>`. Jiný naopak obalí jméno a fotku do `<header>`, do `<main>` dá dovednosti a odstavce a kontakty hodí do `<footer>`. Obě cesty jsou platné. My jsme v testech vyžadovali `<header>` a `<main>`, protože se tak učíš strukturovat i velmi malé dokumenty podle stejných pravidel jako velké weby.
+Jméno a fotka do `<header>`, text a dovednosti do `<main>`, kontakty do `<footer>`.
+Rozvržení, které má většina skutečných webů: patička je místo, kde lidé kontakty
+hledají. Testy ji nevyžadují, ale nevadí jí.
 
-## Seznam vs. odstavce pro kontakty
+### --file-- index.html
 
-Kontakty můžeš napsat jako obyčejné odstavce (`<p><a href="...">...</a></p>`), nebo je strukturovat jako seznam (`<ul><li>...</li></ul>`). Seznam je často lepší volba, protože čtečka obrazovky předem ohlásí „seznam se dvěma položkami“, takže uživatel ví, kolik kontaktů na něj čeká.
+```html
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Karel Novák — profil</title>
+</head>
+<body>
+  <header>
+    <img src="https://picsum.photos/200" alt="Portrét Karla Nováka před panelákem v Brně" width="200" height="200">
+    <h1>Karel Novák</h1>
+    <p>Začínající webový vývojář z Brna</p>
+  </header>
+
+  <main>
+    <h2>O mně</h2>
+    <p>Rok si po večerech stavím vlastní weby a teď se učím pořádně od základů. Nejvíc mě baví, když z prázdného souboru vznikne něco, co jde poslat kamarádům.</p>
+
+    <h2>Co se učím</h2>
+    <ul>
+      <li>HTML a sémantická struktura</li>
+      <li>CSS a rozvržení stránky</li>
+      <li>JavaScript v prohlížeči</li>
+      <li>Git a práce s terminálem</li>
+    </ul>
+  </main>
+
+  <footer>
+    <h2>Kontakt</h2>
+    <p><a href="mailto:karel.novak@example.com">Napiš mi e-mail</a></p>
+    <p><a href="https://github.com/karelnovak">Moje projekty na GitHubu</a></p>
+  </footer>
+</body>
+</html>
+```
+
+## --approach-- Sekce místo patičky
+
+Všechno kromě hlavičky leží v `<main>`, rozdělené do `<section>` s vlastními nadpisy,
+a kontakty jsou seznam. Hodí se, když je stránka jediná a patička by na ní nic
+neoddělovala. Čtečka obrazovky u seznamu předem ohlásí, kolik kontaktů čeká.
+
+### --file-- index.html
+
+```html
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Karel Novák — profil</title>
+</head>
+<body>
+  <header>
+    <img src="https://picsum.photos/200" alt="Portrét Karla Nováka před panelákem v Brně" width="200" height="200">
+    <h1>Karel Novák</h1>
+  </header>
+
+  <main>
+    <section>
+      <h2>O mně</h2>
+      <p>Rok si po večerech stavím vlastní weby a teď se učím pořádně od základů. Nejvíc mě baví, když z prázdného souboru vznikne něco, co jde poslat kamarádům.</p>
+    </section>
+
+    <section>
+      <h2>Co se učím</h2>
+      <ul>
+        <li>HTML a sémantická struktura</li>
+        <li>CSS a rozvržení stránky</li>
+        <li>JavaScript v prohlížeči</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Kontakt</h2>
+      <ul>
+        <li><a href="mailto:karel.novak@example.com">Napiš mi e-mail</a></li>
+        <li><a href="https://github.com/karelnovak">Moje projekty na GitHubu</a></li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>
+```
 
 # --review--
 
