@@ -208,3 +208,132 @@ lekce: auth-bezpecnost/owasp-zranitelnosti#xss-na-serveru-escapovani-a-kontext
 Vložení cizího skriptu do stránky tím, že server vypíše vstup od uživatele bez
 escapování. Escapuje se **podle místa**, kam se hodnota dostane: jinak v textu,
 jinak v atributu, jinak v URL a jinak uvnitř `<script>`.
+
+## --term-- OAuth 2.0
+
+en: OAuth 2.0
+aliases: OAuth, OAuthu, OAuth 2, OAuth 2.1, protokol OAuth
+lekce: auth-bezpecnost/auth-v-praxi#oauth-2-0-kdo-za-co-odpovida
+
+Protokol o **delegovaném přístupu**: aplikace dostane povolení sáhnout na část cizích dat,
+aniž by znala heslo uživatele. Role v něm jsou uživatel, aplikace, autorizační server
+a API s daty.
+
+## --term-- OpenID Connect
+
+en: OpenID Connect
+aliases: OIDC, OpenID, OpenID Connectu
+lekce: auth-bezpecnost/auth-v-praxi#oauth-2-0-kdo-za-co-odpovida
+
+Tenká vrstva nad OAuth 2.0, která k povolení přidává **výpověď o totožnosti** (ID token).
+Teprve s ní je z OAuthu přihlášení, ne jen přístup k datům.
+
+## --term-- poskytovatel identity
+
+en: identity provider
+aliases: poskytovatele identity, poskytovatelem identity, identity provider, IdP
+lekce: auth-bezpecnost/auth-v-praxi#heslo-ktere-nikdy-nevznikne
+
+Služba, která ověří totožnost uživatele místo tebe (Google, GitHub, firemní Microsoft
+Entra) a tvé aplikaci pošle potvrzení. Heslo zůstává u ní.
+
+## --term-- authorization code
+
+en: authorization code
+aliases: autorizační kód, autorizačního kódu, authorization code flow, tok s autorizačním kódem
+lekce: auth-bezpecnost/auth-v-praxi#authorization-code-s-pkce-krok-za-krokem
+
+Krátkodobý jednorázový kód, který se po návratu od poskytovatele vymění za tokeny.
+Výměna jde ze serveru na server, takže tokeny nikdy neprojdou adresním řádkem.
+
+## --term-- PKCE
+
+en: Proof Key for Code Exchange
+aliases: code verifier, code challenge, Proof Key for Code Exchange, PKCE rozšíření
+lekce: auth-bezpecnost/auth-v-praxi#authorization-code-s-pkce-krok-za-krokem
+
+Doplněk toku s autorizačním kódem: aplikace pošle nejdřív otisk tajemství (*code
+challenge*) a při výměně ukáže originál (*code verifier*). Zachycený kód je pak bez
+originálu nepoužitelný.
+
+## --term-- access token
+
+en: access token
+aliases: přístupový token, access tokenu, přístupového tokenu
+lekce: auth-bezpecnost/auth-v-praxi#oauth-2-0-kdo-za-co-odpovida
+
+Klíč k API poskytovatele. Posílá se v hlavičce `Authorization: Bearer …`; tvoje aplikace
+si ho nečte, jen ho předává dál. Není to přihlášení do tvé aplikace.
+
+## --term-- ID token
+
+en: ID token
+aliases: ID tokenu, identitní token
+lekce: auth-bezpecnost/auth-v-praxi#oauth-2-0-kdo-za-co-odpovida
+
+Podepsaný JWT s údaji o uživateli (`sub`, `email`, `email_verified`), který si přečte
+tvoje aplikace. Klíčem do vlastní tabulky uživatelů je `sub`, ne e-mail.
+
+## --term-- passkey
+
+en: passkey
+aliases: passkeys, passkeye, passkeyem, přístupový klíč
+lekce: auth-bezpecnost/auth-v-praxi#passkeys-a-webauthn
+
+Pár klíčů místo hesla: soukromý zůstane v zařízení nebo v klíčence, veřejný si uloží
+server. Podpis je svázaný s doménou, takže passkey nejde phishnout.
+
+## --term-- WebAuthn
+
+en: Web Authentication API
+aliases: Web Authentication API, WebAuthnu, webauthn
+mdn: https://developer.mozilla.org/en-US/docs/Web/API/Web_Authentication_API
+lekce: auth-bezpecnost/auth-v-praxi#passkeys-a-webauthn
+
+Rozhraní prohlížeče, kterým se passkeys vytvářejí a používají
+(`navigator.credentials.create()` a `.get()`).
+
+## --term-- TOTP
+
+en: time-based one-time password
+aliases: dvoufaktorové ověření, 2FA, druhý faktor, jednorázový kód z aplikace, time-based one-time password
+lekce: auth-bezpecnost/auth-v-praxi#druhy-faktor-totp-a-kody-pro-obnovu
+
+Šestimístný kód počítaný ze sdíleného tajemství a aktuálního času, který se mění každých
+30 vteřin. Funguje bez sítě a bez SMS.
+
+## --term-- kódy pro obnovu
+
+en: recovery codes
+aliases: kód pro obnovu, kódů pro obnovu, záložní kódy, recovery codes
+lekce: auth-bezpecnost/auth-v-praxi#druhy-faktor-totp-a-kody-pro-obnovu
+
+Jednorázové řetězce, kterými se uživatel dostane do účtu i bez druhého faktoru. V databázi
+patří hashované jako heslo a po použití se škrtají.
+
+## --term-- RBAC
+
+en: role-based access control
+aliases: řízení přístupu podle rolí, model rolí, role-based access control
+lekce: auth-bezpecnost/lab-role-a-opravneni
+
+Model autorizace, ve kterém má uživatel roli a role určuje, co smí. Pravidlo se píše
+jednou na jednom místě, ne do každé routy zvlášť.
+
+## --term-- princip nejmenších oprávnění
+
+en: principle of least privilege
+aliases: nejmenší oprávnění, princip nejmenšího oprávnění, least privilege
+lekce: auth-bezpecnost/lab-role-a-opravneni
+
+Pravidlo, že účet i role dostanou přesně tolik práv, kolik potřebují k práci, a nic
+navíc. Nová role proto začíná prázdná a práva se přidávají, ne odebírají.
+
+## --term-- audit log
+
+en: audit log
+aliases: auditní záznam, auditního logu, audit trail
+lekce: auth-bezpecnost/lab-role-a-opravneni
+
+Záznam o citlivých akcích (kdo, co, kdy, komu), který se jen přidává a nemaže. Odpovídá
+na otázku „kdo to smazal" i na otázku „zkoušel někdo sahat, kam nemá".

@@ -1,0 +1,7 @@
+{
+  "type": "workshop",
+  "title": "Oprava děravého API",
+  "summary": "Dostaneš hotový bazar s inzeráty a krok po kroku z něj vyženeš SQL injection, XSS, IDOR, slabý hash hesla, ukecané chyby i chybějící omezení pokusů.",
+  "minutes": 100,
+  "runtime": "node"
+}

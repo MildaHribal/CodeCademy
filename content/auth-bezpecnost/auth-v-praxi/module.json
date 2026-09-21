@@ -1,0 +1,6 @@
+{
+  "type": "lesson",
+  "title": "Přihlášení v praxi",
+  "summary": "Jak funguje přihlášení přes Google, co je authorization code s PKCE, proč passkey nahrazuje heslo a jak se přidává druhý faktor.",
+  "minutes": 35
+}

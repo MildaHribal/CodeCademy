@@ -1,10 +1,58 @@
 {
   "title": "Autentizace a bezpečnost",
-  "intro": "Přihlašování je první místo, kde chyba nestojí rozbité rozvržení, ale cizí data. Tahle sekce ukazuje, proč se heslo neukládá ani zašifrované, jak server pozná přihlášeného uživatele a kde všude se dá aplikace prolomit, když se vstupu věří.\n\nPostup: lekce o hashování hesel, lekce o session, cookies a JWT, workshop, ve kterém postavíš registraci a přihlášení pro web běžeckého klubu, a lekce o typických zranitelnostech (SQL injection, XSS, CSRF).\n\n**Předpoklady:** Node, HTTP API a SQL. Kryptografii znát nemusíš.\n\n> [!NOTE]\n> Sekce se ještě dopisuje: chybí workshop s opravou zranitelností, lekce o autentizaci v praxi (OAuth, passkeys), lab s rolemi a kvíz.",
+  "intro": "Přihlašování je první místo, kde chyba nestojí rozbité rozvržení, ale cizí data. Tahle sekce ukazuje, proč se heslo neukládá ani zašifrované, jak server pozná přihlášeného uživatele a kde všude se dá aplikace prolomit, když se vstupu věří.\n\nPostup: dvě lekce o hesle a o session, workshop, ve kterém postavíš registraci a přihlášení pro web běžeckého klubu, lekce o typických zranitelnostech a druhý workshop, kde děravý bazar s inzeráty krok po kroku opravíš. Pak přijde lekce o přihlášení přes cizí účet a o passkeys, lab s rolemi a oprávněními a kvíz.\n\n**Předpoklady:** Node, HTTP API a SQL. Kryptografii znát nemusíš.\n\n> [!NOTE]\n> Kód píšeš ručně, bez knihoven, abys viděl každý kus, který za tebe jinak dělá framework. V projektu pak sáhneš po hotovém řešení — a budeš vědět, co dělá.",
   "modules": [
     "hesla",
     "session-a-cookies",
     "workshop-prihlaseni",
-    "owasp-zranitelnosti"
+    "owasp-zranitelnosti",
+    "workshop-oprav-zranitelnosti",
+    "auth-v-praxi",
+    "lab-role-a-opravneni",
+    "kviz"
+  ],
+  "outcomes": [
+    {
+      "text": "Uložíš heslo tak, že z uniklé databáze se zpátky získat nedá.",
+      "links": [
+        "auth-bezpecnost/hesla#pomaly-hash-scrypt-a-argon2",
+        "auth-bezpecnost/workshop-prihlaseni/002"
+      ]
+    },
+    {
+      "text": "Postavíš přihlášení se session v cookie, odhlášení a routy jen pro přihlášené.",
+      "links": [
+        "auth-bezpecnost/session-a-cookies#session-v-databazi",
+        "auth-bezpecnost/workshop-prihlaseni/011"
+      ]
+    },
+    {
+      "text": "Oddělíš autentizaci od autorizace a kontroluješ oprávnění na každé routě.",
+      "links": [
+        "auth-bezpecnost/session-a-cookies#autentizace-a-autorizace",
+        "auth-bezpecnost/lab-role-a-opravneni"
+      ]
+    },
+    {
+      "text": "Poznáš a opravíš SQL injection, XSS, CSRF a IDOR v cizím kódu.",
+      "links": [
+        "auth-bezpecnost/owasp-zranitelnosti#sql-injection",
+        "auth-bezpecnost/workshop-oprav-zranitelnosti/005"
+      ]
+    },
+    {
+      "text": "Omezíš zneužití API: počet pokusů, velikost vstupu a bezpečnostní hlavičky.",
+      "links": [
+        "auth-bezpecnost/owasp-zranitelnosti#omezeni-zneuziti-rate-limit-velikost-a-hlavicky",
+        "auth-bezpecnost/workshop-oprav-zranitelnosti/011"
+      ]
+    },
+    {
+      "text": "Vysvětlíš OAuth a OIDC s PKCE i passkeys a víš, kdy sáhnout po hotové knihovně.",
+      "links": [
+        "auth-bezpecnost/auth-v-praxi#authorization-code-s-pkce-krok-za-krokem",
+        "auth-bezpecnost/auth-v-praxi#knihovna-misto-vlastniho-reseni"
+      ]
+    }
   ]
 }

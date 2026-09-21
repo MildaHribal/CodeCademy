@@ -1,0 +1,7 @@
+{
+  "type": "lab",
+  "title": "Role a oprávnění",
+  "summary": "Sám postavíš API obecního zpravodaje, ve kterém čtenář, redaktor a správce smí každý něco jiného — a o každém rozhodnutí zůstane stopa.",
+  "minutes": 90,
+  "runtime": "node"
+}

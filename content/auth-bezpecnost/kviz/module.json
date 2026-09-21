@@ -1,0 +1,6 @@
+{
+  "type": "quiz",
+  "title": "Kvíz: bezpečnost",
+  "summary": "Osmnáct otázek na hesla, session, cookies, zranitelnosti a OAuth — včetně hledání díry v cizím kódu.",
+  "minutes": 25
+}

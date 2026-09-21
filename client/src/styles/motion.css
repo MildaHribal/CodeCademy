@@ -94,11 +94,17 @@
   padding-left: 11px;
 }
 
+/* Štítek typu je marginálie: antikva kurzívou v barvě typu, ne tučný štítek. */
 .module-row__type {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
   color: var(--row-type-color, var(--ink-soft));
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: 15px;
+  letter-spacing: 0.01em;
 }
 
 .module-row__type .icon {

@@ -87,6 +87,18 @@ svg {
   max-width: 100%;
 }
 
+/* Výběr textu má barvu zvýrazňovače, ne systémovou modř — ať to i při čtení
+   vypadá jako podtržené v učebnici. */
+::selection {
+  background: var(--mark-bg);
+  color: var(--mark-fg);
+}
+
+/* Posuvníky v barvě papíru, ať nerozbíjejí klid stránky. */
+* {
+  scrollbar-color: var(--rule-strong) transparent;
+}
+
 .icon {
   flex: none;
   vertical-align: middle;
@@ -173,6 +185,10 @@ svg {
   border-color: var(--ink-faint);
   background: var(--surface-sunken);
   color: var(--ink);
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(1px);
 }
 
 .btn:disabled {

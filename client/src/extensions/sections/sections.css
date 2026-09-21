@@ -57,6 +57,19 @@
   color: var(--ink-faint);
 }
 
+/* Odkaz „kde se to učíš" je poznámka pod čarou, ne výzva k akci: bez podtržení,
+   tečkovaná linka se objeví až při najetí. */
+.section-outcomes__link {
+  color: var(--ink-soft);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--rule-strong);
+}
+
+.section-outcomes__link:hover {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
 /* ——— Tahák a pojmy (rozbalovací) ——— */
 
 .cheatsheet,

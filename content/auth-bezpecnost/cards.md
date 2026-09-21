@@ -246,3 +246,173 @@ se ven posílá obecná hláška a identifikátor, podrobnost patří do logu.
 ### --see--
 
 auth-bezpecnost/owasp-zranitelnosti#unik-tajemstvi-a-chybovych-hlasek
+
+## --card-- free
+
+Co je [[PKCE]] a proti čemu chrání, když už authorization code stejně vyprší za pár minut?
+
+### --back--
+
+Aplikace si vylosuje tajný *code verifier*, do adresy pošle jen jeho otisk (*code
+challenge*) a při výměně kódu za tokeny ukáže originál. Chrání proti zachycenému kódu:
+kdo ho ukradne z logu, z historie nebo z cizí aplikace v telefonu, nemá verifier, a tokeny
+tedy nedostane.
+
+### --see--
+
+auth-bezpecnost/auth-v-praxi#authorization-code-s-pkce-krok-za-krokem
+
+## --card-- free
+
+Jaký je rozdíl mezi [[ID token|ID tokenem]] a [[access token|access tokenem]]?
+
+### --back--
+
+ID token je **doklad o totožnosti pro tvoji aplikaci** — přečteš si ho, ověříš podpis
+a podle `sub` najdeš nebo založíš uživatele. Access token je **klíč k API poskytovatele**
+(kalendář, profil); tvoje aplikace ho nečte, jen ho posílá v hlavičce `Authorization`.
+Přítomnost access tokenu není přihlášení — mohl ho vydat někdo úplně jiné aplikaci.
+
+### --see--
+
+auth-bezpecnost/auth-v-praxi#oauth-2-0-kdo-za-co-odpovida
+
+## --card-- free
+
+Proč [[passkey]] neprojde na podvodné doméně, i když vypadá úplně stejně jako ta pravá?
+
+### --back--
+
+Klíč vzniká **pro konkrétní doménu** a prohlížeč ho jinde vůbec nenabídne. Uživatel tedy
+nemá co opsat ani co potvrdit. Tím passkeys ruší celou kategorii phishingu, na kterou
+heslo ani jednorázový kód z aplikace nestačí — ty jdou přepsat kamkoli.
+
+### --see--
+
+auth-bezpecnost/auth-v-praxi#passkeys-a-webauthn
+
+## --card-- free
+
+Proč se [[kódy pro obnovu]] k druhému faktoru ukládají hashované, když je to jen náhodný řetězec?
+
+### --back--
+
+Protože obejdou druhý faktor, a jsou tedy plnohodnotným přihlašovacím údajem. Kdyby ležely
+v databázi otevřeně, únik databáze by znamenal převzetí účtů. Náhodnost chrání proti
+hádání, ne proti čtení. Po použití se kód navíc škrtá.
+
+### --see--
+
+auth-bezpecnost/auth-v-praxi#druhy-faktor-totp-a-kody-pro-obnovu
+
+## --card-- free
+
+Kdy API vrací `401` a kdy `403`? A proč se to nesmí plést?
+
+### --back--
+
+`401` znamená „nevím, kdo jsi" — chybí nebo neplatí přihlášení; klient má na to reagovat
+přihlášením. `403` znamená „vím, kdo jsi, a tohle nesmíš" — přihlášení je v pořádku, chybí
+oprávnění; opakovaným přihlášením se nic nezlepší. Když se pletou, klient buď zbytečně
+odhlašuje uživatele, nebo mu nabízí akci, která nikdy neprojde.
+
+### --see--
+
+auth-bezpecnost/session-a-cookies#autentizace-a-autorizace
+
+## --card-- free
+
+Proč se role uživatele nesmí brát z cookie, z těla požadavku ani z tokenu, který si napsal klient?
+
+### --back--
+
+Všechno, co přijde v požadavku, si odesílatel může přepsat — cookie `role=user` se
+v DevTools změní na `role=admin` za tři vteřiny. O oprávnění smí rozhodovat jen údaj, který
+server zná sám: řádek uživatele v databázi dohledaný podle session. Totéž platí pro cenu
+v objednávce nebo pro id autora.
+
+### --see--
+
+auth-bezpecnost/session-a-cookies#autentizace-a-autorizace
+
+## --card-- free
+
+Proč [[rate limit]] na přihlašování podle e-mailu nestačí?
+
+### --back--
+
+Zastaví hádání hesla k jednomu účtu, ale ne útok napříč účty: útočník vezme jedno běžné
+heslo a zkusí ho na tisíc různých e-mailů, takže žádné počítadlo se nenaplní. Proto se
+limity kombinují — podle účtu, podle IP adresy a za celou routu.
+
+### --see--
+
+auth-bezpecnost/owasp-zranitelnosti#omezeni-zneuziti-rate-limit-velikost-a-hlavicky
+
+## --card-- output
+
+Šablona escapuje název inzerátu takhle. Co vypíše `console.log`?
+
+```js
+const nazev = '<b>Kolo</b>';
+console.log(nazev.replaceAll('<', '&lt;').replaceAll('&', '&amp;'));
+```
+
+### --expected--
+
+&amp;lt;b>Kolo&amp;lt;/b>
+
+### --why--
+
+Ampersand musí jít **první**. Tady se nahradil až nakonec, takže přepsal i ampersandy,
+které právě vznikly z `<`. Výsledek je dvojitě escapovaný a na stránce se ukáže `&lt;`
+jako text.
+
+### --see--
+
+auth-bezpecnost/owasp-zranitelnosti#xss-na-serveru-escapovani-a-kontext
+
+## --card-- code js
+
+Doplň `maPravo(role, pravo)`, která odpoví podle tabulky práv. Neznámá role nesmí nic.
+
+### --seed--
+
+```js
+const PRAVA = {
+  ctenar: [],
+  redaktor: ['clanek:psat', 'clanek:publikovat'],
+  spravce: ['clanek:psat', 'clanek:publikovat', 'clanek:mazat'],
+};
+
+function maPravo(role, pravo) {
+}
+```
+
+### --test--
+
+```js
+assert.equal(maPravo('redaktor', 'clanek:psat'), true, 'redaktor má právo clanek:psat');
+assert.equal(maPravo('redaktor', 'clanek:mazat'), false, 'redaktor nemá právo clanek:mazat');
+assert.equal(maPravo('spravce', 'clanek:mazat'), true, 'spravce má právo clanek:mazat');
+assert.equal(maPravo('ctenar', 'clanek:psat'), false, 'ctenar nemá žádné právo');
+assert.equal(maPravo('kral', 'clanek:psat'), false, 'neznámá role nemá žádné právo');
+```
+
+### --solution--
+
+```js
+const PRAVA = {
+  ctenar: [],
+  redaktor: ['clanek:psat', 'clanek:publikovat'],
+  spravce: ['clanek:psat', 'clanek:publikovat', 'clanek:mazat'],
+};
+
+function maPravo(role, pravo) {
+  return (PRAVA[role] ?? []).includes(pravo);
+}
+```
+
+### --see--
+
+auth-bezpecnost/session-a-cookies#autentizace-a-autorizace
