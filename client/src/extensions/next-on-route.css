@@ -23,9 +23,9 @@
   display: grid;
   gap: 2px;
   padding: 16px 44px 16px 18px;
-  border: 1px solid var(--rule);
-  border-radius: var(--radius-large);
-  background: var(--surface);
+  border: 1px solid var(--page-edge);
+  border-radius: 2px;
+  background: var(--surface-sunken);
   color: var(--ink);
   text-decoration: none;
 }
