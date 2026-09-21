@@ -373,6 +373,26 @@ run, changes
 nebo smazaných řádků.
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč se pravidlo „cena musí být větší než nula" vyplatí
+napsat do databáze, i když ho hlídá i aplikace.
+
+## --model--
+Kontrola v aplikaci platí jen pro tu jednu cestu, kterou data přicházejí. Do databáze
+ale sahá víc věcí: druhá služba, migrační skript, import z tabulky, kolega z konzole,
+budoucí verze aplikace, kterou napíše někdo jiný. Omezení v databázi platí pro
+**každý** zápis bez výjimky a nedá se obejít ani omylem. Navíc je to dokumentace: kdo
+otevře schéma, hned vidí, co je povinné, co jedinečné a jaké hodnoty dávají smysl —
+nemusí to hledat rozházené po kódu. Kontrola v aplikaci zůstává kvůli srozumitelné
+hlášce pro uživatele, ne kvůli správnosti dat.
+
+## --checklist--
+- Kontrola v aplikaci platí jen pro jednu cestu k datům.
+- Do databáze sahají i skripty, jiné služby a lidé.
+- Omezení v databázi platí pro každý zápis.
+- Zároveň slouží jako dokumentace pravidel.
+:::
+
 ## Typické chyby a pasti
 
 > [!PITFALL]

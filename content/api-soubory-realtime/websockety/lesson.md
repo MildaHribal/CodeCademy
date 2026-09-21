@@ -373,6 +373,27 @@ odesláno zpráv: 1
 --why-- První volání přijde dřív, než spojení dosáhne stavu `OPEN`, takže se zpráva jen odloží — a v téhle podobě kódu se k ní už nikdo nevrátí. Odkládání má smysl jen tehdy, když odložené zprávy po otevření spojení opravdu odešleš. Zkus si v hlavě dopsat pole `pending` a jeho vyprázdnění v handleru `open`.
 :::
 
+:::explain
+Vysvětli vlastními slovy, proč se u WebSocketu musí řešit věci, které u běžného
+HTTP API řešit nemusíš.
+
+## --model--
+HTTP přináší hotovou dohodu: každý požadavek má metodu a adresu, odpověď má stavový
+kód, chyby se poznají, požadavek jde zopakovat a autorizace se posílá v hlavičce.
+WebSocket žádnou takovou dohodu nemá — po navázání je to jen **roura, kterou tečou
+zprávy oběma směry**. Co je zpráva, jak se pozná odpověď na konkrétní dotaz, jak se
+ohlásí chyba, jak se pozná, že spojení tiše umřelo, a jak se klient po výpadku vrátí
+tam, kde skončil, to všechno si musím navrhnout sám. Proto se WebSocket bere až tehdy,
+když se data opravdu posílají oběma směry a často; na jednosměrné aktualizace stačí
+SSE, které si dohodu o číslování a znovupřipojení nese s sebou.
+
+## --checklist--
+- HTTP přináší hotovou dohodu o požadavku, odpovědi a chybách.
+- WebSocket je po navázání jen obousměrná roura na zprávy.
+- Formát, chyby, potvrzování i znovupřipojení si navrhuju sám.
+- Proto se sahá po jednodušším řešení, dokud stačí.
+:::
+
 ## Typické chyby a pasti
 
 > [!PITFALL]
