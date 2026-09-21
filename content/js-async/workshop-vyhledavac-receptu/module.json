@@ -1,7 +1,0 @@
-{
-  "type": "workshop",
-  "title": "Vyhledávač receptů",
-  "summary": "Workshop na vyhledávání a DOM.",
-  "minutes": 60,
-  "runtime": "dom"
-}

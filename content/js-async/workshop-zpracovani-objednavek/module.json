@@ -1,7 +1,0 @@
-{
-  "type": "workshop",
-  "title": "Zpracování objednávek",
-  "summary": "Workshop na slibování.",
-  "minutes": 60,
-  "runtime": "js"
-}

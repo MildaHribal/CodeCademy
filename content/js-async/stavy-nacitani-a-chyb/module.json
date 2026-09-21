@@ -1,7 +1,0 @@
-{
-  "type": "lesson",
-  "title": "Stavy načítání a chyb",
-  "summary": "Jak v DOMu ukázat uživateli, co se děje.",
-  "minutes": 40,
-  "runtime": "dom"
-}
