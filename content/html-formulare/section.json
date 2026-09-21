@@ -1,0 +1,12 @@
+{
+  "title": "Formuláře",
+  "intro": "Formulář je jediné místo, kde web od člověka něco **dostane** — objednávka, registrace, hledání, kontakt. A je to místo, kde se nejvíc pozná rozdíl mezi „vypadá to\" a „funguje to\": špatně popsané pole projde zrakem, ale ne čtečkou obrazovky, a validace v prohlížeči vypadá jako bezpečnost, dokud si někdo neotevře DevTools.\n\nPostup: lekce o tom, co a pod jakým jménem doopravdy dorazí na server, dva workshopy (registrace na konferenci a objednávka bedýnky zeleniny), lekce o validaci atributy HTML, samostatný lab a kvíz.\n\n**Předpoklady:** HTML ze sekce 1.1 — sémantické prvky, osnova nadpisů a odkazy. JavaScript tu nepotřebuješ, všechno umí samo HTML.",
+  "modules": [
+    "jak-funguje-formular",
+    "workshop-registrace",
+    "validace-v-prohlizeci",
+    "workshop-objednavka",
+    "lab-kontaktni-formular",
+    "kviz"
+  ]
+}

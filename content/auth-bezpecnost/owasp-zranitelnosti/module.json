@@ -1,0 +1,6 @@
+{
+  "type": "lesson",
+  "title": "Typické zranitelnosti",
+  "summary": "Projdeš SQL injection, XSS, CSRF a rate limit na kódu, který vypadá nevinně, a naučíš se, čím se každá z nich zavírá.",
+  "minutes": 45
+}

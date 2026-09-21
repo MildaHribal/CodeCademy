@@ -1,0 +1,10 @@
+{
+  "title": "Autentizace a bezpečnost",
+  "intro": "Přihlašování je první místo, kde chyba nestojí rozbité rozvržení, ale cizí data. Tahle sekce ukazuje, proč se heslo neukládá ani zašifrované, jak server pozná přihlášeného uživatele a kde všude se dá aplikace prolomit, když se vstupu věří.\n\nPostup: lekce o hashování hesel, lekce o session, cookies a JWT, workshop, ve kterém postavíš registraci a přihlášení pro web běžeckého klubu, a lekce o typických zranitelnostech (SQL injection, XSS, CSRF).\n\n**Předpoklady:** Node, HTTP API a SQL. Kryptografii znát nemusíš.\n\n> [!NOTE]\n> Sekce se ještě dopisuje: chybí workshop s opravou zranitelností, lekce o autentizaci v praxi (OAuth, passkeys), lab s rolemi a kvíz.",
+  "modules": [
+    "hesla",
+    "session-a-cookies",
+    "workshop-prihlaseni",
+    "owasp-zranitelnosti"
+  ]
+}

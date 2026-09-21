@@ -259,7 +259,7 @@ const url = api.match(/DATABASE_URL\s*[:=]\s*["']?(\S+?)["']?\s*$/m)?.[1];
 assert.ok(url, 'Služba api má mít v environment proměnnou DATABASE_URL');
 assert.match(url, /^postgres(ql)?:\/\/[^@]+@db(:5432)?\//, `DATABASE_URL ${url} má mířit na službu db (…@db:5432/…), ne na localhost`);
 assert.match(url, /\$\{POSTGRES_PASSWORD(:?[-?][^}]*)?\}/, `Heslo v DATABASE_URL ${url} má být \${POSTGRES_PASSWORD}, ne napsané natvrdo`);
-const password = db.match(/POSTGRES_PASSWORD\s*[:=]\s*["']?(\S+?)["']?\s*$/m)?.[1];
+const password = db.match(/POSTGRES_PASSWORD\s*[:=]\s*["']?(\$\{[^}]*\}|\S+)/m)?.[1];
 assert.match(String(password), /^\$\{POSTGRES_PASSWORD(:?[-?][^}]*)?\}$/, 'Služba db má dostat POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}, ne heslo napsané v souboru');
 ```
 
@@ -341,8 +341,9 @@ for (const name of called) {
 
 ## --tip--
 
-Pořadí `COPY` a `RUN npm ci` a proč výsledná fáze nebere `node_modules` z buildu, je
-v lekci [Kontejnery, servery a HTTPS](see:nasazeni-provoz/kontejnery-a-servery#vicefazovy-build).
+Rozmysli si pořadí instrukcí v Dockerfile podle toho, co se mění nejčastěji — a co
+z fáze buildu má a nemá přejít do výsledného image. Obojí je v části
+[Vícefázový build](see:nasazeni-provoz/kontejnery-a-servery#vicefazovy-build).
 
 ## --tip--
 
@@ -715,6 +716,16 @@ jobs:
         run: npm run build
 ```
 
+### --file-- .dockerignore
+
+```text
+node_modules
+dist
+.git
+.env
+*.log
+```
+
 ## --approach-- Prořezání závislostí po buildu
 
 Jedna instalace všech závislostí, build a pak `npm prune --omit=dev` ve vlastní fázi.
@@ -742,6 +753,76 @@ COPY --from=build /app/dist ./dist
 COPY package.json ./
 USER node
 CMD ["node", "dist/server.js"]
+```
+
+### --file-- .dockerignore
+
+```text
+node_modules
+dist
+.git
+.env
+*.log
+```
+
+### --file-- compose.yaml
+
+```yaml
+# API jídelníčku a PostgreSQL.
+services:
+  api:
+    build: .
+    ports:
+      - "8080:3000"
+    environment:
+      DATABASE_URL: postgres://jidelna:${POSTGRES_PASSWORD}@db:5432/jidelna
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: jidelna
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: jidelna
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U jidelna"]
+      interval: 5s
+      retries: 10
+
+volumes:
+  db-data:
+```
+
+### --file-- .github/workflows/ci.yml
+
+```yaml
+# Kontroly u pull requestů a pushů do main.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
 ```
 
 # --review--

@@ -17,6 +17,10 @@ Port, cesta k databázi nebo adresa jiné služby se mezi počítači liší. Pr
 
 ### --answer--
 Hosting nepodporuje Node.
+
+#### --why--
+Pak by aplikace nenaběhla vůbec a hláška by byla jiná. `EACCES` na portu říká, že se server
+spustil a teprve pak ho systém nepustil na port, který si vyžádal.
 :::
 
 Na notebooku server spouštíš ručně, databáze leží ve složce projektu, heslo k platební

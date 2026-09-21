@@ -1,0 +1,14 @@
+{
+  "title": "Nasazení a provoz",
+  "intro": "Aplikace, která běží na tvém notebooku, ještě není hotová. Mezi „funguje mi to\" a „běží to lidem\" je konfigurace z prostředí, logy, ve kterých se dá hledat, obraz, který jde spustit kdekoli, HTTPS a automat, co to všechno před nasazením zkontroluje.\n\nPostup: tři lekce o produkčním režimu, logování a serverech, workshop, ve kterém z API půjčovny kol uděláš službu připravenou na provoz, lekce o Dockeru a CI/CD, lab s vlastním Dockerfile a workflow, kvíz a na konec kontrolní bod s rezervačním API.\n\n**Předpoklady:** Node, HTTP API, SQL a testování. Vlastní server mít nemusíš.\n\n> [!NOTE]\n> Kontrolní bod s rezervačním API se ještě dopisuje — sekce je jinak hotová.",
+  "modules": [
+    "produkcni-rezim",
+    "logovani-a-chyby",
+    "workshop-pripraveny-server",
+    "kontejnery-a-servery",
+    "ci-cd",
+    "linux-server",
+    "lab-dockerfile-a-ci",
+    "kviz"
+  ]
+}

@@ -5,75 +5,399 @@
       "title": "Web a CSS",
       "summary": "Od prázdného souboru k responzivní, přístupné, dobře navržené a animované stránce: HTML, formuláře, přístupnost, CSS do hloubky, Tailwind a efekty od přechodů po 3D.",
       "sections": [
-        { "id": "html-zaklady", "title": "HTML a jak funguje web", "summary": "Co se stane mezi adresou a vykreslenou stránkou, sémantická struktura dokumentu, obrázky, tabulky a čtení MDN.", "uroven": "jadro", "modules": [
-          { "id": "jak-funguje-web", "type": "lesson", "title": "Jak funguje web", "summary": "Projdeš cestu od adresy v prohlížeči k vykreslené stránce a přečteš si požadavek i odpověď v DevTools.", "minutes": 40 },
-          { "id": "anatomie-dokumentu", "type": "lesson", "title": "Anatomie HTML dokumentu", "summary": "Napíšeš validní dokument s hlavičkou a tělem a uvidíš, jak prohlížeč tiše opravuje chyby ve vnořování.", "minutes": 45 },
-          { "id": "mdn-a-dokumentace", "type": "lesson", "title": "Jak číst MDN", "summary": "Najdeš odpověď v dokumentaci a přečteš tabulku podpory prohlížečů.", "minutes": 30 },
-          { "id": "workshop-recept", "type": "workshop", "title": "Stránka s receptem", "summary": "Postavíš stránku receptu s nadpisy, obrázkem, seznamem surovin, postupem a tabulkou hodnot.", "minutes": 70 },
-          { "id": "semanticka-struktura", "type": "lesson", "title": "Sémantická struktura stránky", "summary": "Rozvrhneš stránku do landmarků a poznáš, kdy použít article, kdy section a kdy jen div.", "minutes": 40 },
-          { "id": "workshop-blog", "type": "workshop", "title": "Článek na blogu", "summary": "Postavíš stránku blogu s hlavičkou, navigací, článkem, bočním panelem a responzivními obrázky.", "minutes": 75 },
-          { "id": "lab-profil", "type": "lab", "title": "Profilová stránka", "summary": "Sám napíšeš osobní stránku se sémantickou kostrou, seznamy, tabulkou a odkazy.", "minutes": 60 },
-          { "id": "kviz", "type": "quiz", "title": "Kvíz: HTML a web", "summary": "Ověříš si URL a HTTP, výběr sémantických prvků, alt texty a chyby, které prohlížeč opraví za tebe.", "minutes": 25 }
-        ] },
-        { "id": "start-nastroje", "title": "Start: nástroje a jak se učit", "summary": "Jak se v Akademii učit (předpověď, nápovědy, opakování), učení s AI bez zkratek, VS Code, minimum terminálu, první repozitář a web na GitHub Pages.", "uroven": "jadro", "modules": [
-          { "id": "jak-se-ucit-v-akademii", "type": "lesson", "title": "Jak se učit v Akademii", "summary": "Naučíš se předpovídat před spuštěním, brát nápovědy po stupních a opakovat s odstupem.", "minutes": 35 },
-          { "id": "uceni-s-ai", "type": "lesson", "title": "Učení s AI bez zkratek", "summary": "Poznáš, kdy ti AI učení pomáhá a kdy ho krade, a jak si nechat vysvětlit místo napsat.", "minutes": 30 },
-          { "id": "vs-code", "type": "lesson", "title": "VS Code a projekt na disku", "summary": "Otevřeš projekt ve VS Code a zvládneš v něm terminál, hledání a formátování při uložení.", "minutes": 30 },
-          { "id": "terminal-minimum", "type": "lesson", "title": "Terminál: minimum na začátek", "summary": "Pohybuješ se po složkách, spustíš program a rozumíš relativní i absolutní cestě.", "minutes": 30 },
-          { "id": "workshop-prvni-repozitar", "type": "workshop", "title": "První repozitář", "summary": "Založíš Git repozitář, commitneš po malých krocích a pushneš práci na vzdálený repozitář.", "minutes": 40 },
-          { "id": "github-a-pages", "type": "lesson", "title": "GitHub a GitHub Pages", "summary": "Nasadíš statický web na vlastní adresu přes GitHub Pages.", "minutes": 40 },
-          { "id": "kviz", "type": "quiz", "title": "Kvíz: nástroje a učení", "summary": "Ověříš si stav repozitáře po sérii příkazů, cesty v terminálu a pravidla učení.", "minutes": 20 },
-          { "id": "projekt-profil-na-githubu", "type": "project", "title": "Profil na GitHubu", "summary": "Dáš svou profilovou stránku do repozitáře s README a živou adresou na GitHub Pages.", "minutes": 90 }
-        ] },
-        { "id": "css-zaklady", "title": "Základy CSS", "summary": "Selektory, barvy, jednotky, typografie, vlastní vlastnosti jako design tokeny a DevTools pro CSS.", "uroven": "jadro" },
-        { "id": "html-formulare", "title": "Formuláře", "summary": "Formulář, který funguje bez JavaScriptu: typy polí, labely, skupiny, validace v prohlížeči a co se odešle na server.", "uroven": "jadro", "modules": [
-          { "id": "jak-funguje-formular", "type": "lesson", "title": "Jak funguje formulář", "summary": "Odešleš formulář bez JavaScriptu a uvidíš, co a pod jakým jménem dorazí na server.", "minutes": 35 },
-          { "id": "workshop-registrace", "type": "workshop", "title": "Registrační formulář", "summary": "Postavíš registraci na akci s přístupnými popisky, vhodnými typy polí a seskupením.", "minutes": 75 },
-          { "id": "validace-v-prohlizeci", "type": "lesson", "title": "Validace v prohlížeči", "summary": "Zvaliduješ vstup atributy HTML a vysvětlíš, proč to nenahradí kontrolu na serveru.", "minutes": 40 },
-          { "id": "workshop-objednavka", "type": "workshop", "title": "Objednávkový formulář", "summary": "Postavíš objednávku s doručením, platbou, posuvníkem a chybami propojenými s poli.", "minutes": 60 },
-          { "id": "lab-kontaktni-formular", "type": "lab", "title": "Kontaktní formulář", "summary": "Sám napíšeš kontaktní formulář s validací, skupinami polí a srozumitelnými popisky.", "minutes": 60 },
-          { "id": "kviz", "type": "quiz", "title": "Kvíz: formuláře", "summary": "Ověříš si GET a POST, přístupná jména polí a validaci v prohlížeči.", "minutes": 25 }
-        ] },
-        { "id": "html-pristupnost", "title": "Přístupnost", "summary": "Strom přístupnosti, klávesnice a fokus, ARIA jen tam, kde pomáhá, audit a oprava stránky. Končí portfoliem v Gitu nasazeným na URL.", "uroven": "jadro" },
-        { "id": "css-kaskada", "title": "Selektory a kaskáda do hloubky", "summary": "Kdo vyhraje a proč: kaskáda, specificita, dědičnost, @layer, :is(), :where(), :has(), nesting a @scope.", "uroven": "jadro" },
-        { "id": "css-box-model", "title": "Box model a tok dokumentu", "summary": "Velikost boxu, block a inline, margin collapse, blokový formátovací kontext a přetečení.", "uroven": "jadro" },
-        { "id": "css-flexbox", "title": "CSS Flexbox", "summary": "Rozvržení v jedné ose, dělení volného místa, min-width: auto a zalamování bez media dotazů.", "uroven": "jadro" },
-        { "id": "css-grid", "title": "CSS Grid", "summary": "Dvourozměrný layout, pojmenované oblasti, mřížka bez media queries, subgrid a volba mezi gridem a flexboxem.", "uroven": "jadro" },
-        { "id": "css-pozicovani", "title": "Pozicování a vrstvení", "summary": "position a containing block, stacking context a z-index, sticky, popover a anchor positioning.", "uroven": "jadro" },
-        { "id": "css-responzivita", "title": "Responzivní design a témata", "summary": "Mobile-first, media a container queries, clamp(), světlý a tmavý motiv a preference uživatele.", "uroven": "jadro" },
-        { "id": "css-design", "title": "Design pro vývojáře", "summary": "Hierarchie a rozestupy, barvy v oklch a kontrast, typografická stupnice, čtení návrhu z Figmy, SVG a ikony.", "uroven": "jadro" },
-        { "id": "css-tailwind", "title": "Tailwind CSS v4", "summary": "Utility-first myšlení, design tokeny v @theme, varianty pro responzivitu a stavy, komponenty bez duplicit a kdy Tailwind místo čistého CSS.", "uroven": "jadro", "modules": [
-          { "id": "utility-first", "type": "lesson", "title": "Utility-first myšlení", "summary": "Přečteš dlouhý atribut class jako zkratky za CSS, které znáš, a víš, jaké deklarace z utilit vzniknou.", "minutes": 45 },
-          { "id": "workshop-karta-v-utilitach", "type": "workshop", "title": "Vstupenka na koncert v utilitách", "summary": "Postavíš kartu koncertu se štítkem, cenou a stavy jen z utilit Tailwindu.", "minutes": 55 },
-          { "id": "theme-a-tokeny", "type": "lesson", "title": "@theme a design tokeny", "summary": "Přeneseš paletu, písmo a rozestupy do @theme a použiješ tokeny v utilitách i v čistém CSS.", "minutes": 45 },
-          { "id": "workshop-motiv-znacky", "type": "workshop", "title": "Motiv pražírny kávy", "summary": "Nastavíš vzhled ceníku pražírny z vlastních tokenů a tmavý motiv přepneš jejich přepsáním.", "minutes": 50 },
-          { "id": "responzivita-a-stavy", "type": "lesson", "title": "Responzivita a stavy", "summary": "Skládáš varianty md, hover, focus-visible, dark, group a peer a víš, proč třída bez prefixu platí na mobilu.", "minutes": 50 },
-          { "id": "workshop-landing-sekce", "type": "workshop", "title": "Landing sekce herního serveru", "summary": "Postavíš úvodní stránku herního serveru s hero sekcí, mřížkou funkcí, ceníkem VIP balíčků a přihláškou do novinek.", "minutes": 75 },
-          { "id": "komponenty-bez-duplicit", "type": "lesson", "title": "Komponenty bez duplicit", "summary": "Zvolíš mezi smyčkou v šabloně, @utility a @apply tak, aby se bloky tříd nekopírovaly, a rozhodneš, kdy Tailwind a kdy čisté CSS.", "minutes": 45 },
-          { "id": "lab-prestavba-podle-navrhu", "type": "lab", "title": "Přestavba stránky podle návrhu", "summary": "Sám přestavíš stránku z čistého CSS do Tailwindu podle návrhu, ve světlém i tmavém motivu.", "minutes": 90 },
-          { "id": "kviz", "type": "quiz", "title": "Kvíz: Tailwind", "summary": "Ověříš si, co vygeneruje třída, mobile-first varianty, group a peer a jmenné prostory @theme.", "minutes": 25 }
-        ] },
-        { "id": "css-animace", "title": "Přechody, transformace a animace", "summary": "Přechody, klíčové snímky, výkon animací, view transitions a animace řízené scrollem. Končí kontrolním bodem a vlajkovým projektem landing page.", "uroven": "jadro" },
-        { "id": "css-efekty-animace", "title": "Animace a efekty pro „wow“ web", "summary": "GSAP a timeline, ScrollTrigger a parallax, Motion, plynulé scrollování s Lenis, View Transitions a reveal textu — s výkonem a omezeným pohybem.", "uroven": "jadro", "modules": [
-          { "id": "gsap-zaklady", "type": "lesson", "title": "Kdy knihovna a základy GSAP", "summary": "Vybereš mezi CSS, Web Animations API, GSAP a Motion a složíš první timeline s easingem, stagger a ovládáním.", "minutes": 55 },
-          { "id": "workshop-animovana-hero", "type": "workshop", "title": "Hero sekce hudebního festivalu", "summary": "Postavíš úvodní obrazovku festivalu s nadpisem odhaleným po řádcích, plovoucími tvary a magnetickým tlačítkem.", "minutes": 80 },
-          { "id": "scroll-efekty", "type": "lesson", "title": "Animace řízené scrollem a Lenis", "summary": "Rozjedeš efekty na scroll přes ScrollTrigger, CSS animation-timeline a Lenis a poznáš, kdy scroll efekt škodí.", "minutes": 55 },
-          { "id": "workshop-produktova-stranka", "type": "workshop", "title": "Prezentace bezdrátových sluchátek", "summary": "Postavíš produktovou stránku s plynulým scrollováním, pinovanou sekcí, parallaxem a počítadly parametrů.", "minutes": 90 },
-          { "id": "layout-a-view-transitions", "type": "lesson", "title": "Flip, View Transitions a Motion", "summary": "Zanimuješ změnu layoutu technikou FLIP, přechod v jednom dokumentu a pružinu v Motion.", "minutes": 50 },
-          { "id": "workshop-galerie-flip", "type": "workshop", "title": "Portfolio fotografky", "summary": "Postavíš galerii s filtrem, kde se fotky plynule přeskupí, a detailem, který se z miniatury roztáhne na celou obrazovku.", "minutes": 75 },
-          { "id": "vykon-a-pristupnost-animaci", "type": "lesson", "title": "Výkon a přístupnost animací", "summary": "Udržíš animace na 60 fps a připravíš variantu pro lidi s omezeným pohybem.", "minutes": 45 },
-          { "id": "lab-scroll-pribeh", "type": "lab", "title": "Scroll příběh", "summary": "Sám postavíš stránku, která vypráví příběh po kapitolách odhalených při scrollu, s pinovanou sekcí a parallaxem.", "minutes": 90 },
-          { "id": "kviz", "type": "quiz", "title": "Kvíz: efekty a animace", "summary": "Ověříš si pozice v timeline, nastavení ScrollTriggeru, kroky Flip a co vypnout při omezeném pohybu.", "minutes": 25 }
-        ] },
-        { "id": "web-3d-efekty", "title": "3D a vizuální efekty", "summary": "Three.js od scény a render loopu po částice a vlastní shadery: 3D pozadí a interaktivní náhled, který nesrazí výkon.", "uroven": "rozsireni", "modules": [
-          { "id": "threejs-zaklady", "type": "lesson", "title": "Scéna, kamera a render loop", "summary": "Postavíš první Three.js scénu s kamerou, materiálem, světlem a smyčkou, která přežije změnu velikosti okna.", "minutes": 55 },
-          { "id": "workshop-konfigurator-lampy", "type": "workshop", "title": "Konfigurátor designové lampy", "summary": "Postavíš 3D náhled lampy z primitiv s otáčením myší, výběrem materiálu a kliknutím na její části.", "minutes": 55 },
-          { "id": "interakce-a-castice", "type": "lesson", "title": "Interakce, částice a výkon", "summary": "Napojíš scénu na myš a scroll, vytvoříš částice z BufferGeometry a udržíš počet draw calls nízko.", "minutes": 50 },
-          { "id": "workshop-3d-pozadi", "type": "workshop", "title": "3D pozadí hero sekce planetária", "summary": "Postavíš hero sekci s rotující planetou, hvězdným polem z tisíců částic a kamerou, která odjíždí při scrollu.", "minutes": 75 },
-          { "id": "shadery", "type": "lesson", "title": "Shadery: uniformy, gradienty a noise", "summary": "Napíšeš vlastní fragment shader s uniformami, gradientem a noise a budeš ho řídit z JavaScriptu.", "minutes": 55 },
-          { "id": "lab-shader-pozadi", "type": "lab", "title": "Animované gradientní pozadí", "summary": "Sám napíšeš celoobrazovkové pozadí ve vlastním shaderu s reakcí na myš a záložní variantou bez WebGL.", "minutes": 75 },
-          { "id": "kviz", "type": "quiz", "title": "Kvíz: 3D a shadery", "summary": "Ověříš si kameru po změně velikosti, proč je objekt černý, Points proti InstancedMesh a co zpomalí scénu.", "minutes": 25 }
-        ] }
+        {
+          "id": "html-zaklady",
+          "title": "HTML a jak funguje web",
+          "summary": "Co se stane mezi adresou a vykreslenou stránkou, sémantická struktura dokumentu, obrázky, tabulky a čtení MDN.",
+          "uroven": "jadro",
+          "modules": [
+            {
+              "id": "jak-funguje-web",
+              "type": "lesson",
+              "title": "Jak funguje web",
+              "summary": "Projdeš cestu od adresy v prohlížeči k vykreslené stránce a přečteš si požadavek i odpověď v DevTools.",
+              "minutes": 40
+            },
+            {
+              "id": "anatomie-dokumentu",
+              "type": "lesson",
+              "title": "Anatomie HTML dokumentu",
+              "summary": "Napíšeš validní dokument s hlavičkou a tělem a uvidíš, jak prohlížeč tiše opravuje chyby ve vnořování.",
+              "minutes": 45
+            },
+            {
+              "id": "mdn-a-dokumentace",
+              "type": "lesson",
+              "title": "Jak číst MDN",
+              "summary": "Najdeš odpověď v dokumentaci a přečteš tabulku podpory prohlížečů.",
+              "minutes": 30
+            },
+            {
+              "id": "workshop-recept",
+              "type": "workshop",
+              "title": "Stránka s receptem",
+              "summary": "Postavíš stránku receptu s nadpisy, obrázkem, seznamem surovin, postupem a tabulkou hodnot.",
+              "minutes": 70
+            },
+            {
+              "id": "semanticka-struktura",
+              "type": "lesson",
+              "title": "Sémantická struktura stránky",
+              "summary": "Rozvrhneš stránku do landmarků a poznáš, kdy použít article, kdy section a kdy jen div.",
+              "minutes": 40
+            },
+            {
+              "id": "workshop-blog",
+              "type": "workshop",
+              "title": "Článek na blogu",
+              "summary": "Postavíš stránku blogu s hlavičkou, navigací, článkem, bočním panelem a responzivními obrázky.",
+              "minutes": 75
+            },
+            {
+              "id": "lab-profil",
+              "type": "lab",
+              "title": "Profilová stránka",
+              "summary": "Sám napíšeš osobní stránku se sémantickou kostrou, seznamy, tabulkou a odkazy.",
+              "minutes": 60
+            },
+            {
+              "id": "kviz",
+              "type": "quiz",
+              "title": "Kvíz: HTML a web",
+              "summary": "Ověříš si URL a HTTP, výběr sémantických prvků, alt texty a chyby, které prohlížeč opraví za tebe.",
+              "minutes": 25
+            }
+          ]
+        },
+        {
+          "id": "start-nastroje",
+          "title": "Start: nástroje a jak se učit",
+          "summary": "Jak se v Akademii učit (předpověď, nápovědy, opakování), učení s AI bez zkratek, VS Code, minimum terminálu, první repozitář a web na GitHub Pages.",
+          "uroven": "jadro",
+          "modules": [
+            {
+              "id": "jak-se-ucit-v-akademii",
+              "type": "lesson",
+              "title": "Jak se učit v Akademii",
+              "summary": "Naučíš se předpovídat před spuštěním, brát nápovědy po stupních a opakovat s odstupem.",
+              "minutes": 35
+            },
+            {
+              "id": "uceni-s-ai",
+              "type": "lesson",
+              "title": "Učení s AI bez zkratek",
+              "summary": "Poznáš, kdy ti AI učení pomáhá a kdy ho krade, a jak si nechat vysvětlit místo napsat.",
+              "minutes": 30
+            },
+            {
+              "id": "vs-code",
+              "type": "lesson",
+              "title": "VS Code a projekt na disku",
+              "summary": "Otevřeš projekt ve VS Code a zvládneš v něm terminál, hledání a formátování při uložení.",
+              "minutes": 30
+            },
+            {
+              "id": "terminal-minimum",
+              "type": "lesson",
+              "title": "Terminál: minimum na začátek",
+              "summary": "Pohybuješ se po složkách, spustíš program a rozumíš relativní i absolutní cestě.",
+              "minutes": 30
+            },
+            {
+              "id": "workshop-prvni-repozitar",
+              "type": "workshop",
+              "title": "První repozitář",
+              "summary": "Založíš Git repozitář, commitneš po malých krocích a pushneš práci na vzdálený repozitář.",
+              "minutes": 40
+            },
+            {
+              "id": "github-a-pages",
+              "type": "lesson",
+              "title": "GitHub a GitHub Pages",
+              "summary": "Nasadíš statický web na vlastní adresu přes GitHub Pages.",
+              "minutes": 40
+            },
+            {
+              "id": "kviz",
+              "type": "quiz",
+              "title": "Kvíz: nástroje a učení",
+              "summary": "Ověříš si stav repozitáře po sérii příkazů, cesty v terminálu a pravidla učení.",
+              "minutes": 20
+            },
+            {
+              "id": "projekt-profil-na-githubu",
+              "type": "project",
+              "title": "Profil na GitHubu",
+              "summary": "Dáš svou profilovou stránku do repozitáře s README a živou adresou na GitHub Pages.",
+              "minutes": 90
+            }
+          ]
+        },
+        {
+          "id": "css-zaklady",
+          "title": "Základy CSS",
+          "summary": "Selektory, barvy, jednotky, typografie, vlastní vlastnosti jako design tokeny a DevTools pro CSS.",
+          "uroven": "jadro"
+        },
+        {
+          "id": "html-formulare",
+          "title": "Formuláře",
+          "summary": "Formulář, který funguje bez JavaScriptu: typy polí, labely, skupiny, validace v prohlížeči a co se odešle na server.",
+          "uroven": "jadro"
+        },
+        {
+          "id": "html-pristupnost",
+          "title": "Přístupnost",
+          "summary": "Strom přístupnosti, klávesnice a fokus, ARIA jen tam, kde pomáhá, audit a oprava stránky. Končí portfoliem v Gitu nasazeným na URL.",
+          "uroven": "jadro"
+        },
+        {
+          "id": "css-kaskada",
+          "title": "Selektory a kaskáda do hloubky",
+          "summary": "Kdo vyhraje a proč: kaskáda, specificita, dědičnost, @layer, :is(), :where(), :has(), nesting a @scope.",
+          "uroven": "jadro"
+        },
+        {
+          "id": "css-box-model",
+          "title": "Box model a tok dokumentu",
+          "summary": "Velikost boxu, block a inline, margin collapse, blokový formátovací kontext a přetečení.",
+          "uroven": "jadro"
+        },
+        {
+          "id": "css-flexbox",
+          "title": "CSS Flexbox",
+          "summary": "Rozvržení v jedné ose, dělení volného místa, min-width: auto a zalamování bez media dotazů.",
+          "uroven": "jadro"
+        },
+        {
+          "id": "css-grid",
+          "title": "CSS Grid",
+          "summary": "Dvourozměrný layout, pojmenované oblasti, mřížka bez media queries, subgrid a volba mezi gridem a flexboxem.",
+          "uroven": "jadro"
+        },
+        {
+          "id": "css-pozicovani",
+          "title": "Pozicování a vrstvení",
+          "summary": "position a containing block, stacking context a z-index, sticky, popover a anchor positioning.",
+          "uroven": "jadro"
+        },
+        {
+          "id": "css-responzivita",
+          "title": "Responzivní design a témata",
+          "summary": "Mobile-first, media a container queries, clamp(), světlý a tmavý motiv a preference uživatele.",
+          "uroven": "jadro"
+        },
+        {
+          "id": "css-design",
+          "title": "Design pro vývojáře",
+          "summary": "Hierarchie a rozestupy, barvy v oklch a kontrast, typografická stupnice, čtení návrhu z Figmy, SVG a ikony.",
+          "uroven": "jadro"
+        },
+        {
+          "id": "css-tailwind",
+          "title": "Tailwind CSS v4",
+          "summary": "Utility-first myšlení, design tokeny v @theme, varianty pro responzivitu a stavy, komponenty bez duplicit a kdy Tailwind místo čistého CSS.",
+          "uroven": "jadro",
+          "modules": [
+            {
+              "id": "utility-first",
+              "type": "lesson",
+              "title": "Utility-first myšlení",
+              "summary": "Přečteš dlouhý atribut class jako zkratky za CSS, které znáš, a víš, jaké deklarace z utilit vzniknou.",
+              "minutes": 45
+            },
+            {
+              "id": "workshop-karta-v-utilitach",
+              "type": "workshop",
+              "title": "Vstupenka na koncert v utilitách",
+              "summary": "Postavíš kartu koncertu se štítkem, cenou a stavy jen z utilit Tailwindu.",
+              "minutes": 55
+            },
+            {
+              "id": "theme-a-tokeny",
+              "type": "lesson",
+              "title": "@theme a design tokeny",
+              "summary": "Přeneseš paletu, písmo a rozestupy do @theme a použiješ tokeny v utilitách i v čistém CSS.",
+              "minutes": 45
+            },
+            {
+              "id": "workshop-motiv-znacky",
+              "type": "workshop",
+              "title": "Motiv pražírny kávy",
+              "summary": "Nastavíš vzhled ceníku pražírny z vlastních tokenů a tmavý motiv přepneš jejich přepsáním.",
+              "minutes": 50
+            },
+            {
+              "id": "responzivita-a-stavy",
+              "type": "lesson",
+              "title": "Responzivita a stavy",
+              "summary": "Skládáš varianty md, hover, focus-visible, dark, group a peer a víš, proč třída bez prefixu platí na mobilu.",
+              "minutes": 50
+            },
+            {
+              "id": "workshop-landing-sekce",
+              "type": "workshop",
+              "title": "Landing sekce herního serveru",
+              "summary": "Postavíš úvodní stránku herního serveru s hero sekcí, mřížkou funkcí, ceníkem VIP balíčků a přihláškou do novinek.",
+              "minutes": 75
+            },
+            {
+              "id": "komponenty-bez-duplicit",
+              "type": "lesson",
+              "title": "Komponenty bez duplicit",
+              "summary": "Zvolíš mezi smyčkou v šabloně, @utility a @apply tak, aby se bloky tříd nekopírovaly, a rozhodneš, kdy Tailwind a kdy čisté CSS.",
+              "minutes": 45
+            },
+            {
+              "id": "lab-prestavba-podle-navrhu",
+              "type": "lab",
+              "title": "Přestavba stránky podle návrhu",
+              "summary": "Sám přestavíš stránku z čistého CSS do Tailwindu podle návrhu, ve světlém i tmavém motivu.",
+              "minutes": 90
+            },
+            {
+              "id": "kviz",
+              "type": "quiz",
+              "title": "Kvíz: Tailwind",
+              "summary": "Ověříš si, co vygeneruje třída, mobile-first varianty, group a peer a jmenné prostory @theme.",
+              "minutes": 25
+            }
+          ]
+        },
+        {
+          "id": "css-animace",
+          "title": "Přechody, transformace a animace",
+          "summary": "Přechody, klíčové snímky, výkon animací, view transitions a animace řízené scrollem. Končí kontrolním bodem a vlajkovým projektem landing page.",
+          "uroven": "jadro"
+        },
+        {
+          "id": "css-efekty-animace",
+          "title": "Animace a efekty pro „wow“ web",
+          "summary": "GSAP a timeline, ScrollTrigger a parallax, Motion, plynulé scrollování s Lenis, View Transitions a reveal textu — s výkonem a omezeným pohybem.",
+          "uroven": "jadro",
+          "modules": [
+            {
+              "id": "gsap-zaklady",
+              "type": "lesson",
+              "title": "Kdy knihovna a základy GSAP",
+              "summary": "Vybereš mezi CSS, Web Animations API, GSAP a Motion a složíš první timeline s easingem, stagger a ovládáním.",
+              "minutes": 55
+            },
+            {
+              "id": "workshop-animovana-hero",
+              "type": "workshop",
+              "title": "Hero sekce hudebního festivalu",
+              "summary": "Postavíš úvodní obrazovku festivalu s nadpisem odhaleným po řádcích, plovoucími tvary a magnetickým tlačítkem.",
+              "minutes": 80
+            },
+            {
+              "id": "scroll-efekty",
+              "type": "lesson",
+              "title": "Animace řízené scrollem a Lenis",
+              "summary": "Rozjedeš efekty na scroll přes ScrollTrigger, CSS animation-timeline a Lenis a poznáš, kdy scroll efekt škodí.",
+              "minutes": 55
+            },
+            {
+              "id": "workshop-produktova-stranka",
+              "type": "workshop",
+              "title": "Prezentace bezdrátových sluchátek",
+              "summary": "Postavíš produktovou stránku s plynulým scrollováním, pinovanou sekcí, parallaxem a počítadly parametrů.",
+              "minutes": 90
+            },
+            {
+              "id": "layout-a-view-transitions",
+              "type": "lesson",
+              "title": "Flip, View Transitions a Motion",
+              "summary": "Zanimuješ změnu layoutu technikou FLIP, přechod v jednom dokumentu a pružinu v Motion.",
+              "minutes": 50
+            },
+            {
+              "id": "workshop-galerie-flip",
+              "type": "workshop",
+              "title": "Portfolio fotografky",
+              "summary": "Postavíš galerii s filtrem, kde se fotky plynule přeskupí, a detailem, který se z miniatury roztáhne na celou obrazovku.",
+              "minutes": 75
+            },
+            {
+              "id": "vykon-a-pristupnost-animaci",
+              "type": "lesson",
+              "title": "Výkon a přístupnost animací",
+              "summary": "Udržíš animace na 60 fps a připravíš variantu pro lidi s omezeným pohybem.",
+              "minutes": 45
+            },
+            {
+              "id": "lab-scroll-pribeh",
+              "type": "lab",
+              "title": "Scroll příběh",
+              "summary": "Sám postavíš stránku, která vypráví příběh po kapitolách odhalených při scrollu, s pinovanou sekcí a parallaxem.",
+              "minutes": 90
+            },
+            {
+              "id": "kviz",
+              "type": "quiz",
+              "title": "Kvíz: efekty a animace",
+              "summary": "Ověříš si pozice v timeline, nastavení ScrollTriggeru, kroky Flip a co vypnout při omezeném pohybu.",
+              "minutes": 25
+            }
+          ]
+        },
+        {
+          "id": "web-3d-efekty",
+          "title": "3D a vizuální efekty",
+          "summary": "Three.js od scény a render loopu po částice a vlastní shadery: 3D pozadí a interaktivní náhled, který nesrazí výkon.",
+          "uroven": "rozsireni",
+          "modules": [
+            {
+              "id": "threejs-zaklady",
+              "type": "lesson",
+              "title": "Scéna, kamera a render loop",
+              "summary": "Postavíš první Three.js scénu s kamerou, materiálem, světlem a smyčkou, která přežije změnu velikosti okna.",
+              "minutes": 55
+            },
+            {
+              "id": "workshop-konfigurator-lampy",
+              "type": "workshop",
+              "title": "Konfigurátor designové lampy",
+              "summary": "Postavíš 3D náhled lampy z primitiv s otáčením myší, výběrem materiálu a kliknutím na její části.",
+              "minutes": 55
+            },
+            {
+              "id": "interakce-a-castice",
+              "type": "lesson",
+              "title": "Interakce, částice a výkon",
+              "summary": "Napojíš scénu na myš a scroll, vytvoříš částice z BufferGeometry a udržíš počet draw calls nízko.",
+              "minutes": 50
+            },
+            {
+              "id": "workshop-3d-pozadi",
+              "type": "workshop",
+              "title": "3D pozadí hero sekce planetária",
+              "summary": "Postavíš hero sekci s rotující planetou, hvězdným polem z tisíců částic a kamerou, která odjíždí při scrollu.",
+              "minutes": 75
+            },
+            {
+              "id": "shadery",
+              "type": "lesson",
+              "title": "Shadery: uniformy, gradienty a noise",
+              "summary": "Napíšeš vlastní fragment shader s uniformami, gradientem a noise a budeš ho řídit z JavaScriptu.",
+              "minutes": 55
+            },
+            {
+              "id": "lab-shader-pozadi",
+              "type": "lab",
+              "title": "Animované gradientní pozadí",
+              "summary": "Sám napíšeš celoobrazovkové pozadí ve vlastním shaderu s reakcí na myš a záložní variantou bez WebGL.",
+              "minutes": 75
+            },
+            {
+              "id": "kviz",
+              "type": "quiz",
+              "title": "Kvíz: 3D a shadery",
+              "summary": "Ověříš si kameru po změně velikosti, proč je objekt černý, Points proti InstancedMesh a co zpomalí scénu.",
+              "minutes": 25
+            }
+          ]
+        }
       ]
     },
     {
@@ -81,16 +405,66 @@
       "title": "JavaScript",
       "summary": "Jazyk od první proměnné po event loop: ladění od začátku, funkce, objekty a pole do hloubky, closures, třídy, chyby, DOM a asynchronní kód.",
       "sections": [
-        { "id": "js-zaklady", "title": "Základy JavaScriptu", "summary": "Proměnné a typy, operátory, porovnání a truthy/falsy, podmínky, cykly, čtení chyb a debugger a postup řešení úlohy.", "uroven": "jadro" },
-        { "id": "js-retezce-cisla", "title": "Řetězce, čísla, data a regulární výrazy", "summary": "Práce s textem a Unicode, plovoucí čárka a peníze, Intl, Date a Temporal, regulární výrazy.", "uroven": "jadro" },
-        { "id": "js-funkce", "title": "Funkce a rozsah platnosti", "summary": "Deklarace a šipky, parametry, scope, hoisting a TDZ, funkce jako hodnoty a ladění breakpointem.", "uroven": "jadro" },
-        { "id": "js-objekty", "title": "Objekty, reference a kopie", "summary": "Objekty, hodnota vs. reference krokovaná v paměti, mutace vs. kopie, destrukturalizace, spread, structuredClone a JSON.", "uroven": "jadro" },
-        { "id": "js-pole", "title": "Pole v JavaScriptu", "summary": "Indexy a reference, map, filter, reduce a spol., řazení bez mutace a čtení cizího řetězení metod.", "uroven": "jadro" },
-        { "id": "js-funkce-hloubka", "title": "Closures, this a funkcionální styl", "summary": "Closures, čtyři pravidla this, kompozice, rekurze, memoizace, debounce a throttle.", "uroven": "jadro" },
-        { "id": "js-tridy-kolekce", "title": "Třídy, prototypy, Map, Set a iterátory", "summary": "Prototypy a třídy se soukromými poli, Map, Set a jeho nové metody, iterátory a generátory.", "uroven": "jadro" },
-        { "id": "js-chyby-ladeni", "title": "Chyby a systematické ladění", "summary": "Výjimky, error.cause, vlastní třídy chyb, kde chyby chytat a systematické hledání chyby v cizím kódu.", "uroven": "jadro" },
-        { "id": "js-dom", "title": "DOM, události a prohlížeč", "summary": "Práce s DOM bez XSS, události a delegace, formuláře v JS, localStorage, URL a observery. Končí projektem kanban tabule.", "uroven": "jadro" },
-        { "id": "js-async", "title": "Asynchronní JavaScript a fetch", "summary": "Event loop, Promise, async/await, souběh a zrušení, fetch se stavy načítání a chyb. Končí kontrolním bodem a projektem filmové databáze.", "uroven": "jadro" }
+        {
+          "id": "js-zaklady",
+          "title": "Základy JavaScriptu",
+          "summary": "Proměnné a typy, operátory, porovnání a truthy/falsy, podmínky, cykly, čtení chyb a debugger a postup řešení úlohy.",
+          "uroven": "jadro"
+        },
+        {
+          "id": "js-retezce-cisla",
+          "title": "Řetězce, čísla, data a regulární výrazy",
+          "summary": "Práce s textem a Unicode, plovoucí čárka a peníze, Intl, Date a Temporal, regulární výrazy.",
+          "uroven": "jadro"
+        },
+        {
+          "id": "js-funkce",
+          "title": "Funkce a rozsah platnosti",
+          "summary": "Deklarace a šipky, parametry, scope, hoisting a TDZ, funkce jako hodnoty a ladění breakpointem.",
+          "uroven": "jadro"
+        },
+        {
+          "id": "js-objekty",
+          "title": "Objekty, reference a kopie",
+          "summary": "Objekty, hodnota vs. reference krokovaná v paměti, mutace vs. kopie, destrukturalizace, spread, structuredClone a JSON.",
+          "uroven": "jadro"
+        },
+        {
+          "id": "js-pole",
+          "title": "Pole v JavaScriptu",
+          "summary": "Indexy a reference, map, filter, reduce a spol., řazení bez mutace a čtení cizího řetězení metod.",
+          "uroven": "jadro"
+        },
+        {
+          "id": "js-funkce-hloubka",
+          "title": "Closures, this a funkcionální styl",
+          "summary": "Closures, čtyři pravidla this, kompozice, rekurze, memoizace, debounce a throttle.",
+          "uroven": "jadro"
+        },
+        {
+          "id": "js-tridy-kolekce",
+          "title": "Třídy, prototypy, Map, Set a iterátory",
+          "summary": "Prototypy a třídy se soukromými poli, Map, Set a jeho nové metody, iterátory a generátory.",
+          "uroven": "jadro"
+        },
+        {
+          "id": "js-chyby-ladeni",
+          "title": "Chyby a systematické ladění",
+          "summary": "Výjimky, error.cause, vlastní třídy chyb, kde chyby chytat a systematické hledání chyby v cizím kódu.",
+          "uroven": "jadro"
+        },
+        {
+          "id": "js-dom",
+          "title": "DOM, události a prohlížeč",
+          "summary": "Práce s DOM bez XSS, události a delegace, formuláře v JS, localStorage, URL a observery. Končí projektem kanban tabule.",
+          "uroven": "jadro"
+        },
+        {
+          "id": "js-async",
+          "title": "Asynchronní JavaScript a fetch",
+          "summary": "Event loop, Promise, async/await, souběh a zrušení, fetch se stavy načítání a chyb. Končí kontrolním bodem a projektem filmové databáze.",
+          "uroven": "jadro"
+        }
       ]
     },
     {
@@ -98,82 +472,490 @@
       "title": "Nástroje a řemeslo",
       "summary": "Git do hloubky, moduly, Vite a lint, DevTools a výkon, TypeScript a testy — a řemeslo první práce: cizí kód, práce s AI a algoritmy na pohovor.",
       "sections": [
-        { "id": "nastroje-git-terminal", "title": "Git a terminál do hloubky", "summary": "Roury, PATH a procesy; větve, konflikty, rebase, reflog, bisect a SSH.", "uroven": "jadro", "modules": [
-          { "id": "terminal-do-hloubky", "type": "lesson", "title": "Terminál do hloubky", "summary": "Skládáš příkazy rourami a přesměrováním, najdeš text i soubory a rozumíš PATH, návratovému kódu a procesům na portech.", "minutes": 45 },
-          { "id": "workshop-terminal", "type": "workshop", "title": "Úklid projektu v terminálu", "summary": "Přesuneš soubory, najdeš v projektu text a výsledek zapíšeš do souboru jednou sérií příkazů.", "minutes": 40 },
-          { "id": "git-model", "type": "lesson", "title": "Jak Git myslí", "summary": "Uvidíš commit jako snímek s rodičem a přečteš graf commitů, větví a HEAD.", "minutes": 35 },
-          { "id": "workshop-vetve-a-konflikty", "type": "workshop", "title": "Větve a konflikty", "summary": "Rozvětvíš repozitář, vyřešíš konflikt a porovnáš merge s rebase na vlastní historii.", "minutes": 50 },
-          { "id": "git-zachrana", "type": "lesson", "title": "Záchrana z průšvihů", "summary": "Vrátíš se z chybného commitu přes reset, revert a reflog a najdeš commit s chybou přes bisect.", "minutes": 40 },
-          { "id": "lab-git-zachrana", "type": "lab", "title": "Záchrana repozitáře", "summary": "Sám dostaneš repozitář z pěti průšvihů včetně commitnutého .env a chyby k nalezení bisectem.", "minutes": 60 },
-          { "id": "kviz", "type": "quiz", "title": "Kvíz: terminál a Git", "summary": "Ověříš si stav po sérii příkazů, merge proti rebase a reset proti revert.", "minutes": 20 }
-        ] },
-        { "id": "nastroje-moduly-vite", "title": "Moduly, npm, Vite a lint", "summary": "ES moduly, package.json, npm a pnpm, verze a lockfile, Vite, ESLint a formátování.", "uroven": "jadro", "modules": [
-          { "id": "es-moduly", "type": "lesson", "title": "ES moduly", "summary": "Rozdělíš kód do modulů s rozumným veřejným rozhraním a pochopíš živé vazby exportů.", "minutes": 40 },
-          { "id": "workshop-moduly", "type": "workshop", "title": "Rozdělení aplikace do modulů", "summary": "Rozdělíš jednu velkou aplikaci do modulů s jasným vstupním bodem.", "minutes": 50 },
-          { "id": "npm-a-pnpm", "type": "lesson", "title": "npm, pnpm a package.json", "summary": "Nastavíš závislosti, skripty a lockfile a odhadneš, které verze pustí zápis se stříškou.", "minutes": 40 },
-          { "id": "vite", "type": "lesson", "title": "Vite a bundlery", "summary": "Založíš projekt ve Vite, rozumíš dev serveru s HMR a tomu, co skončí ve složce dist.", "minutes": 40 },
-          { "id": "lint-a-format", "type": "lesson", "title": "Lint a formátování", "summary": "Nastavíš ESLint a formátovač a pustíš je před každým commitem.", "minutes": 35 },
-          { "id": "workshop-vite-projekt", "type": "workshop", "title": "Projekt ve Vite", "summary": "Převedeš hotovou aplikaci do projektu ve Vite se skripty, lintem a buildem.", "minutes": 50 },
-          { "id": "lab-knihovna-utilit", "type": "lab", "title": "Balíček s utilitami", "summary": "Sám napíšeš malý balíček s exporty, skripty, lintem a README.", "minutes": 60 },
-          { "id": "kviz", "type": "quiz", "title": "Kvíz: moduly a npm", "summary": "Ověříš si exporty, semver, lockfile, build a rozdíl mezi lintem a formátováním.", "minutes": 20 }
-        ] },
-        { "id": "nastroje-devtools-vykon", "title": "DevTools a výkon webu", "summary": "Všechny panely DevTools, úniky paměti, Core Web Vitals, rychlé načtení stránky a dlouhé úlohy.", "uroven": "jadro", "modules": [
-          { "id": "devtools-mapa", "type": "lesson", "title": "DevTools do hloubky", "summary": "Najdeš příčinu problému v Elements, Console, Sources, Network i Memory a odhalíš únik paměti.", "minutes": 55 },
-          { "id": "core-web-vitals", "type": "lesson", "title": "Core Web Vitals", "summary": "Změříš LCP, INP a CLS a vysvětlíš, co je zhoršuje.", "minutes": 40 },
-          { "id": "nacitani-stranky", "type": "lesson", "title": "Rychlé načtení", "summary": "Zrychlíš načtení stránky obrázky, písmy, prioritami a cache.", "minutes": 45 },
-          { "id": "workshop-zrychleni", "type": "workshop", "title": "Zrychlení pomalé stránky", "summary": "Opravíš na jedné stránce poskakující layout, blokující skript, obří obrázky a dlouhé úlohy.", "minutes": 60 },
-          { "id": "lab-audit-vykonu", "type": "lab", "title": "Audit výkonu", "summary": "Sám najdeš a opravíš osm výkonových problémů, každý ověřený jedním testem.", "minutes": 75 },
-          { "id": "kviz", "type": "quiz", "title": "Kvíz: DevTools a výkon", "summary": "Ověříš si metriky, výběr panelu, co blokuje vykreslení a příčiny CLS.", "minutes": 20 }
-        ] },
-        { "id": "nastroje-typescript", "title": "TypeScript", "summary": "Typy funkcí a dat, unknown místo any, zúžení, rozlišená sjednocení, generika, typy knihoven a validace na hranici se Zod.", "uroven": "jadro", "modules": [
-          { "id": "proc-typescript", "type": "lesson", "title": "Proč TypeScript", "summary": "Uvidíš, co typy zachytí ještě před spuštěním, a spustíš .ts bez kompilace.", "minutes": 35 },
-          { "id": "zakladni-typy", "type": "lesson", "title": "Základní typy", "summary": "Otypuješ funkce, objekty a stavy a zbytek necháš na odvození.", "minutes": 45 },
-          { "id": "workshop-typy-kosiku", "type": "workshop", "title": "Otypovaný košík", "summary": "Přepíšeš modul košíku do TypeScriptu a typy ti odhalí chyby, o kterých jsi nevěděl.", "minutes": 60 },
-          { "id": "zuzovani-a-genericita", "type": "lesson", "title": "Zúžení typů a generika", "summary": "Zúžíš typ z neznámých dat, namodeluješ stav rozlišeným sjednocením a napíšeš generickou funkci.", "minutes": 50 },
-          { "id": "typy-knihoven", "type": "lesson", "title": "Typy knihoven a dlouhé hlášky", "summary": "Přečteš typy knihovny v .d.ts a dlouhou typovou chybu rozebereš odspodu nahoru.", "minutes": 40 },
-          { "id": "validace-na-hranici", "type": "lesson", "title": "Validace na hranici", "summary": "Zvaliduješ data zvenku schématem v Zodu a typ si z něj odvodíš.", "minutes": 40 },
-          { "id": "workshop-api-klient", "type": "workshop", "title": "Typově bezpečný API klient", "summary": "Napíšeš klienta nad JSON API, který ověří odpověď a vrátí otypovaná data.", "minutes": 50 },
-          { "id": "lab-typy-udalosti", "type": "lab", "title": "Systém událostí", "summary": "Sám otypuješ emitter tak, aby posluchač dostal data přesně podle názvu události.", "minutes": 70 },
-          { "id": "kviz", "type": "quiz", "title": "Kvíz: TypeScript", "summary": "Ověříš si unknown proti any, zúžení, generika a co z kódu zbude po odstranění typů.", "minutes": 25 }
-        ] },
-        { "id": "nastroje-testovani", "title": "Testování", "summary": "Unit testy v node:test a Vitestu, mocky času a sítě s MSW, Playwright s kontrolou přístupnosti a refaktoring pod testy. Končí kontrolním bodem a projektem.", "uroven": "jadro", "modules": [
-          { "id": "proc-testovat", "type": "lesson", "title": "Co testovat a proč", "summary": "Rozhodneš, co a na jaké úrovni testovat, a poznáš křehký test.", "minutes": 30 },
-          { "id": "workshop-unit-testy", "type": "workshop", "title": "Unit testy utilit", "summary": "Napíšeš testy utilit včetně okrajových případů a chyb, které mají spadnout.", "minutes": 60 },
-          { "id": "mocky-cas-sit", "type": "lesson", "title": "Čas, síť a závislosti", "summary": "Zmockuješ čas a síť falešnými časovači a MSW a poznáš, kdy mock škodí.", "minutes": 45 },
-          { "id": "playwright", "type": "lesson", "title": "End-to-end v Playwrightu", "summary": "Napíšeš e2e test s lokátory podle role a kontrolou přístupnosti.", "minutes": 45 },
-          { "id": "workshop-refaktoring", "type": "workshop", "title": "Refaktoring pod testy", "summary": "Obalíš přerostlou funkci charakterizačními testy a pak ji bezpečně rozdělíš.", "minutes": 50 },
-          { "id": "lab-testy-validatoru", "type": "lab", "title": "Testy pro cizí kód", "summary": "Sám napíšeš sadu testů, která odhalí tři chyby v cizím validátoru.", "minutes": 60 },
-          { "id": "kviz", "type": "quiz", "title": "Kvíz: testování", "summary": "Ověříš si, co testovat, křehké testy, mocky a lokátory.", "minutes": 25 },
-          { "id": "lab-kontrolni-bod-3", "type": "lab", "title": "Kontrolní bod: nahlášená chyba", "summary": "Sám napíšeš test na nahlášenou chybu, opravíš ji, doplníš chybějící funkci a commitneš po krocích.", "minutes": 120 },
-          { "id": "projekt-rozpoctovac", "type": "project", "title": "Rozpočet ve Vite a TypeScriptu", "summary": "Postavíš aplikaci na příjmy a výdaje s kategoriemi, měsíčním přehledem, testy a buildem.", "minutes": 360 }
-        ] },
-        { "id": "nastroje-cizi-kod", "title": "Práce v cizím kódu", "summary": "Orientace v neznámém repozitáři, od issue k pull requestu, code review, odhad a komunikace, feature v cizím projektu.", "uroven": "jadro", "modules": [
-          { "id": "orientace-v-cizim-kodu", "type": "lesson", "title": "Orientace v cizím kódu", "summary": "Zorientuješ se v neznámém repozitáři a vysleduješ jeden požadavek skrz celý kód.", "minutes": 55 },
-          { "id": "workshop-feature-v-cizim-projektu", "type": "workshop", "title": "Feature v cizím projektu", "summary": "Přidáš slevový kód do cizího projektu podle issue, podle jeho vzorů a bez rozbití testů.", "minutes": 60 },
-          { "id": "od-issue-k-pr", "type": "lesson", "title": "Od issue k pull requestu", "summary": "Projdeš cestu od reprodukce chyby k pull requestu, který se dá rychle zrevidovat.", "minutes": 45 },
-          { "id": "code-review", "type": "lesson", "title": "Code review", "summary": "Napíšeš věcný review komentář a přijmeš cizí review bez ega.", "minutes": 45 },
-          { "id": "odhad-a-komunikace", "type": "lesson", "title": "Odhad a komunikace", "summary": "Rozpadneš úkol, odhadneš ho v rozsahu a včas se ozveš, když se zasekneš.", "minutes": 40 },
-          { "id": "lab-code-review", "type": "lab", "title": "Code review s testy", "summary": "Sám opravíš šest problémů v cizím pull requestu a napíšeš k nim komentáře.", "minutes": 90 },
-          { "id": "kviz", "type": "quiz", "title": "Kvíz: cizí kód", "summary": "Ověříš si Git archeologii, výběr komentáře a velikost pull requestu.", "minutes": 25 }
-        ] },
-        { "id": "prace-s-ai", "title": "Práce s AI při vývoji", "summary": "Jak jazykové modely selhávají, AI jako tutor, zadávání úkolu agentovi a review vygenerovaného kódu.", "uroven": "jadro", "modules": [
-          { "id": "jak-llm-selhava", "type": "lesson", "title": "Jak jazykový model selhává", "summary": "Poznáš typické chyby generovaného kódu: vymyšlené API, zastaralé vzory a sebejistý omyl.", "minutes": 50 },
-          { "id": "ai-jako-tutor", "type": "lesson", "title": "AI jako tutor", "summary": "Necháš si vysvětlit pojem nebo chybovou hlášku, aniž bys dostal hotové řešení.", "minutes": 35 },
-          { "id": "zadavani-agentovi", "type": "lesson", "title": "Zadávání úkolu agentovi", "summary": "Zadáš úkol s kontextem, omezeními a kritérii přijetí jako testy a pohlídáš malé kroky.", "minutes": 50 },
-          { "id": "review-kodu-z-ai", "type": "lesson", "title": "Review kódu z AI", "summary": "Projdeš vygenerovaný kód checklistem: spuštění, testy, okrajové případy, bezpečnost a závislosti.", "minutes": 45 },
-          { "id": "workshop-oprav-skryte-chyby", "type": "workshop", "title": "Oprav kód se sedmi skrytými chybami", "summary": "Najdeš sedm chyb ve vygenerovaném modulu, na každou napíšeš test a pak ji opravíš.", "minutes": 50 },
-          { "id": "kviz", "type": "quiz", "title": "Kvíz: práce s AI", "summary": "Ověříš si typy selhání, dobré zadání a co zkontrolovat v review.", "minutes": 25 }
-        ] },
-        { "id": "js-algoritmy", "title": "Algoritmy a úlohy na pohovor", "summary": "Postup řešení, Big O, datové struktury, vzory úloh a pohovorové utility jako debounce, deepClone a LRU cache.", "uroven": "jadro", "modules": [
-          { "id": "postup-reseni", "type": "lesson", "title": "Postup řešení úlohy", "summary": "Rozebereš neznámou úlohu na příklady, hrubou sílu, zlepšení a ověření a mluvíš přitom nahlas.", "minutes": 40 },
-          { "id": "big-o", "type": "lesson", "title": "Big O", "summary": "Odhadneš časovou i paměťovou složitost kódu a poznáš skryté n² v metodách pole.", "minutes": 55 },
-          { "id": "datove-struktury", "type": "lesson", "title": "Datové struktury", "summary": "Zvolíš mezi polem, Map, Set, zásobníkem, frontou, stromem a grafem podle operací, které potřebuješ.", "minutes": 55 },
-          { "id": "workshop-vzory-uloh", "type": "workshop", "title": "Vzory úloh", "summary": "Vyřešíš osm klasických úloh vzory hash mapa, dva ukazatele, klouzavé okno, binární vyhledávání a BFS/DFS.", "minutes": 65 },
-          { "id": "razeni-a-rekurze", "type": "lesson", "title": "Řazení a rekurze", "summary": "Pochopíš merge sort, stabilitu řazení a kdy rekurze vyhraje nad cyklem.", "minutes": 45 },
-          { "id": "workshop-pohovorove-utility", "type": "workshop", "title": "Pohovorové utility", "summary": "Napíšeš debounce, throttle, deepClone, Promise.all, LRU cache a curry bez nápovědy.", "minutes": 55 },
-          { "id": "lab-10-uloh", "type": "lab", "title": "Deset úloh", "summary": "Sám vyřešíš deset úloh s testy včetně vstupu, na kterém řešení O(n²) nedoběhne v limitu.", "minutes": 180 },
-          { "id": "kviz", "type": "quiz", "title": "Kvíz: algoritmy", "summary": "Ověříš si složitost kódu, výběr datové struktury a rozpoznání vzoru úlohy.", "minutes": 25 }
-        ] }
+        {
+          "id": "nastroje-git-terminal",
+          "title": "Git a terminál do hloubky",
+          "summary": "Roury, PATH a procesy; větve, konflikty, rebase, reflog, bisect a SSH.",
+          "uroven": "jadro",
+          "modules": [
+            {
+              "id": "terminal-do-hloubky",
+              "type": "lesson",
+              "title": "Terminál do hloubky",
+              "summary": "Skládáš příkazy rourami a přesměrováním, najdeš text i soubory a rozumíš PATH, návratovému kódu a procesům na portech.",
+              "minutes": 45
+            },
+            {
+              "id": "workshop-terminal",
+              "type": "workshop",
+              "title": "Úklid projektu v terminálu",
+              "summary": "Přesuneš soubory, najdeš v projektu text a výsledek zapíšeš do souboru jednou sérií příkazů.",
+              "minutes": 40
+            },
+            {
+              "id": "git-model",
+              "type": "lesson",
+              "title": "Jak Git myslí",
+              "summary": "Uvidíš commit jako snímek s rodičem a přečteš graf commitů, větví a HEAD.",
+              "minutes": 35
+            },
+            {
+              "id": "workshop-vetve-a-konflikty",
+              "type": "workshop",
+              "title": "Větve a konflikty",
+              "summary": "Rozvětvíš repozitář, vyřešíš konflikt a porovnáš merge s rebase na vlastní historii.",
+              "minutes": 50
+            },
+            {
+              "id": "git-zachrana",
+              "type": "lesson",
+              "title": "Záchrana z průšvihů",
+              "summary": "Vrátíš se z chybného commitu přes reset, revert a reflog a najdeš commit s chybou přes bisect.",
+              "minutes": 40
+            },
+            {
+              "id": "lab-git-zachrana",
+              "type": "lab",
+              "title": "Záchrana repozitáře",
+              "summary": "Sám dostaneš repozitář z pěti průšvihů včetně commitnutého .env a chyby k nalezení bisectem.",
+              "minutes": 60
+            },
+            {
+              "id": "kviz",
+              "type": "quiz",
+              "title": "Kvíz: terminál a Git",
+              "summary": "Ověříš si stav po sérii příkazů, merge proti rebase a reset proti revert.",
+              "minutes": 20
+            }
+          ]
+        },
+        {
+          "id": "nastroje-moduly-vite",
+          "title": "Moduly, npm, Vite a lint",
+          "summary": "ES moduly, package.json, npm a pnpm, verze a lockfile, Vite, ESLint a formátování.",
+          "uroven": "jadro",
+          "modules": [
+            {
+              "id": "es-moduly",
+              "type": "lesson",
+              "title": "ES moduly",
+              "summary": "Rozdělíš kód do modulů s rozumným veřejným rozhraním a pochopíš živé vazby exportů.",
+              "minutes": 40
+            },
+            {
+              "id": "workshop-moduly",
+              "type": "workshop",
+              "title": "Rozdělení aplikace do modulů",
+              "summary": "Rozdělíš jednu velkou aplikaci do modulů s jasným vstupním bodem.",
+              "minutes": 50
+            },
+            {
+              "id": "npm-a-pnpm",
+              "type": "lesson",
+              "title": "npm, pnpm a package.json",
+              "summary": "Nastavíš závislosti, skripty a lockfile a odhadneš, které verze pustí zápis se stříškou.",
+              "minutes": 40
+            },
+            {
+              "id": "vite",
+              "type": "lesson",
+              "title": "Vite a bundlery",
+              "summary": "Založíš projekt ve Vite, rozumíš dev serveru s HMR a tomu, co skončí ve složce dist.",
+              "minutes": 40
+            },
+            {
+              "id": "lint-a-format",
+              "type": "lesson",
+              "title": "Lint a formátování",
+              "summary": "Nastavíš ESLint a formátovač a pustíš je před každým commitem.",
+              "minutes": 35
+            },
+            {
+              "id": "workshop-vite-projekt",
+              "type": "workshop",
+              "title": "Projekt ve Vite",
+              "summary": "Převedeš hotovou aplikaci do projektu ve Vite se skripty, lintem a buildem.",
+              "minutes": 50
+            },
+            {
+              "id": "lab-knihovna-utilit",
+              "type": "lab",
+              "title": "Balíček s utilitami",
+              "summary": "Sám napíšeš malý balíček s exporty, skripty, lintem a README.",
+              "minutes": 60
+            },
+            {
+              "id": "kviz",
+              "type": "quiz",
+              "title": "Kvíz: moduly a npm",
+              "summary": "Ověříš si exporty, semver, lockfile, build a rozdíl mezi lintem a formátováním.",
+              "minutes": 20
+            }
+          ]
+        },
+        {
+          "id": "nastroje-devtools-vykon",
+          "title": "DevTools a výkon webu",
+          "summary": "Všechny panely DevTools, úniky paměti, Core Web Vitals, rychlé načtení stránky a dlouhé úlohy.",
+          "uroven": "jadro",
+          "modules": [
+            {
+              "id": "devtools-mapa",
+              "type": "lesson",
+              "title": "DevTools do hloubky",
+              "summary": "Najdeš příčinu problému v Elements, Console, Sources, Network i Memory a odhalíš únik paměti.",
+              "minutes": 55
+            },
+            {
+              "id": "core-web-vitals",
+              "type": "lesson",
+              "title": "Core Web Vitals",
+              "summary": "Změříš LCP, INP a CLS a vysvětlíš, co je zhoršuje.",
+              "minutes": 40
+            },
+            {
+              "id": "nacitani-stranky",
+              "type": "lesson",
+              "title": "Rychlé načtení",
+              "summary": "Zrychlíš načtení stránky obrázky, písmy, prioritami a cache.",
+              "minutes": 45
+            },
+            {
+              "id": "workshop-zrychleni",
+              "type": "workshop",
+              "title": "Zrychlení pomalé stránky",
+              "summary": "Opravíš na jedné stránce poskakující layout, blokující skript, obří obrázky a dlouhé úlohy.",
+              "minutes": 60
+            },
+            {
+              "id": "lab-audit-vykonu",
+              "type": "lab",
+              "title": "Audit výkonu",
+              "summary": "Sám najdeš a opravíš osm výkonových problémů, každý ověřený jedním testem.",
+              "minutes": 75
+            },
+            {
+              "id": "kviz",
+              "type": "quiz",
+              "title": "Kvíz: DevTools a výkon",
+              "summary": "Ověříš si metriky, výběr panelu, co blokuje vykreslení a příčiny CLS.",
+              "minutes": 20
+            }
+          ]
+        },
+        {
+          "id": "nastroje-typescript",
+          "title": "TypeScript",
+          "summary": "Typy funkcí a dat, unknown místo any, zúžení, rozlišená sjednocení, generika, typy knihoven a validace na hranici se Zod.",
+          "uroven": "jadro",
+          "modules": [
+            {
+              "id": "proc-typescript",
+              "type": "lesson",
+              "title": "Proč TypeScript",
+              "summary": "Uvidíš, co typy zachytí ještě před spuštěním, a spustíš .ts bez kompilace.",
+              "minutes": 35
+            },
+            {
+              "id": "zakladni-typy",
+              "type": "lesson",
+              "title": "Základní typy",
+              "summary": "Otypuješ funkce, objekty a stavy a zbytek necháš na odvození.",
+              "minutes": 45
+            },
+            {
+              "id": "workshop-typy-kosiku",
+              "type": "workshop",
+              "title": "Otypovaný košík",
+              "summary": "Přepíšeš modul košíku do TypeScriptu a typy ti odhalí chyby, o kterých jsi nevěděl.",
+              "minutes": 60
+            },
+            {
+              "id": "zuzovani-a-genericita",
+              "type": "lesson",
+              "title": "Zúžení typů a generika",
+              "summary": "Zúžíš typ z neznámých dat, namodeluješ stav rozlišeným sjednocením a napíšeš generickou funkci.",
+              "minutes": 50
+            },
+            {
+              "id": "typy-knihoven",
+              "type": "lesson",
+              "title": "Typy knihoven a dlouhé hlášky",
+              "summary": "Přečteš typy knihovny v .d.ts a dlouhou typovou chybu rozebereš odspodu nahoru.",
+              "minutes": 40
+            },
+            {
+              "id": "validace-na-hranici",
+              "type": "lesson",
+              "title": "Validace na hranici",
+              "summary": "Zvaliduješ data zvenku schématem v Zodu a typ si z něj odvodíš.",
+              "minutes": 40
+            },
+            {
+              "id": "workshop-api-klient",
+              "type": "workshop",
+              "title": "Typově bezpečný API klient",
+              "summary": "Napíšeš klienta nad JSON API, který ověří odpověď a vrátí otypovaná data.",
+              "minutes": 50
+            },
+            {
+              "id": "lab-typy-udalosti",
+              "type": "lab",
+              "title": "Systém událostí",
+              "summary": "Sám otypuješ emitter tak, aby posluchač dostal data přesně podle názvu události.",
+              "minutes": 70
+            },
+            {
+              "id": "kviz",
+              "type": "quiz",
+              "title": "Kvíz: TypeScript",
+              "summary": "Ověříš si unknown proti any, zúžení, generika a co z kódu zbude po odstranění typů.",
+              "minutes": 25
+            }
+          ]
+        },
+        {
+          "id": "nastroje-testovani",
+          "title": "Testování",
+          "summary": "Unit testy v node:test a Vitestu, mocky času a sítě s MSW, Playwright s kontrolou přístupnosti a refaktoring pod testy. Končí kontrolním bodem a projektem.",
+          "uroven": "jadro",
+          "modules": [
+            {
+              "id": "proc-testovat",
+              "type": "lesson",
+              "title": "Co testovat a proč",
+              "summary": "Rozhodneš, co a na jaké úrovni testovat, a poznáš křehký test.",
+              "minutes": 30
+            },
+            {
+              "id": "workshop-unit-testy",
+              "type": "workshop",
+              "title": "Unit testy utilit",
+              "summary": "Napíšeš testy utilit včetně okrajových případů a chyb, které mají spadnout.",
+              "minutes": 60
+            },
+            {
+              "id": "mocky-cas-sit",
+              "type": "lesson",
+              "title": "Čas, síť a závislosti",
+              "summary": "Zmockuješ čas a síť falešnými časovači a MSW a poznáš, kdy mock škodí.",
+              "minutes": 45
+            },
+            {
+              "id": "playwright",
+              "type": "lesson",
+              "title": "End-to-end v Playwrightu",
+              "summary": "Napíšeš e2e test s lokátory podle role a kontrolou přístupnosti.",
+              "minutes": 45
+            },
+            {
+              "id": "workshop-refaktoring",
+              "type": "workshop",
+              "title": "Refaktoring pod testy",
+              "summary": "Obalíš přerostlou funkci charakterizačními testy a pak ji bezpečně rozdělíš.",
+              "minutes": 50
+            },
+            {
+              "id": "lab-testy-validatoru",
+              "type": "lab",
+              "title": "Testy pro cizí kód",
+              "summary": "Sám napíšeš sadu testů, která odhalí tři chyby v cizím validátoru.",
+              "minutes": 60
+            },
+            {
+              "id": "kviz",
+              "type": "quiz",
+              "title": "Kvíz: testování",
+              "summary": "Ověříš si, co testovat, křehké testy, mocky a lokátory.",
+              "minutes": 25
+            },
+            {
+              "id": "lab-kontrolni-bod-3",
+              "type": "lab",
+              "title": "Kontrolní bod: nahlášená chyba",
+              "summary": "Sám napíšeš test na nahlášenou chybu, opravíš ji, doplníš chybějící funkci a commitneš po krocích.",
+              "minutes": 120
+            },
+            {
+              "id": "projekt-rozpoctovac",
+              "type": "project",
+              "title": "Rozpočet ve Vite a TypeScriptu",
+              "summary": "Postavíš aplikaci na příjmy a výdaje s kategoriemi, měsíčním přehledem, testy a buildem.",
+              "minutes": 360
+            }
+          ]
+        },
+        {
+          "id": "nastroje-cizi-kod",
+          "title": "Práce v cizím kódu",
+          "summary": "Orientace v neznámém repozitáři, od issue k pull requestu, code review, odhad a komunikace, feature v cizím projektu.",
+          "uroven": "jadro",
+          "modules": [
+            {
+              "id": "orientace-v-cizim-kodu",
+              "type": "lesson",
+              "title": "Orientace v cizím kódu",
+              "summary": "Zorientuješ se v neznámém repozitáři a vysleduješ jeden požadavek skrz celý kód.",
+              "minutes": 55
+            },
+            {
+              "id": "workshop-feature-v-cizim-projektu",
+              "type": "workshop",
+              "title": "Feature v cizím projektu",
+              "summary": "Přidáš slevový kód do cizího projektu podle issue, podle jeho vzorů a bez rozbití testů.",
+              "minutes": 60
+            },
+            {
+              "id": "od-issue-k-pr",
+              "type": "lesson",
+              "title": "Od issue k pull requestu",
+              "summary": "Projdeš cestu od reprodukce chyby k pull requestu, který se dá rychle zrevidovat.",
+              "minutes": 45
+            },
+            {
+              "id": "code-review",
+              "type": "lesson",
+              "title": "Code review",
+              "summary": "Napíšeš věcný review komentář a přijmeš cizí review bez ega.",
+              "minutes": 45
+            },
+            {
+              "id": "odhad-a-komunikace",
+              "type": "lesson",
+              "title": "Odhad a komunikace",
+              "summary": "Rozpadneš úkol, odhadneš ho v rozsahu a včas se ozveš, když se zasekneš.",
+              "minutes": 40
+            },
+            {
+              "id": "lab-code-review",
+              "type": "lab",
+              "title": "Code review s testy",
+              "summary": "Sám opravíš šest problémů v cizím pull requestu a napíšeš k nim komentáře.",
+              "minutes": 90
+            },
+            {
+              "id": "kviz",
+              "type": "quiz",
+              "title": "Kvíz: cizí kód",
+              "summary": "Ověříš si Git archeologii, výběr komentáře a velikost pull requestu.",
+              "minutes": 25
+            }
+          ]
+        },
+        {
+          "id": "prace-s-ai",
+          "title": "Práce s AI při vývoji",
+          "summary": "Jak jazykové modely selhávají, AI jako tutor, zadávání úkolu agentovi a review vygenerovaného kódu.",
+          "uroven": "jadro",
+          "modules": [
+            {
+              "id": "jak-llm-selhava",
+              "type": "lesson",
+              "title": "Jak jazykový model selhává",
+              "summary": "Poznáš typické chyby generovaného kódu: vymyšlené API, zastaralé vzory a sebejistý omyl.",
+              "minutes": 50
+            },
+            {
+              "id": "ai-jako-tutor",
+              "type": "lesson",
+              "title": "AI jako tutor",
+              "summary": "Necháš si vysvětlit pojem nebo chybovou hlášku, aniž bys dostal hotové řešení.",
+              "minutes": 35
+            },
+            {
+              "id": "zadavani-agentovi",
+              "type": "lesson",
+              "title": "Zadávání úkolu agentovi",
+              "summary": "Zadáš úkol s kontextem, omezeními a kritérii přijetí jako testy a pohlídáš malé kroky.",
+              "minutes": 50
+            },
+            {
+              "id": "review-kodu-z-ai",
+              "type": "lesson",
+              "title": "Review kódu z AI",
+              "summary": "Projdeš vygenerovaný kód checklistem: spuštění, testy, okrajové případy, bezpečnost a závislosti.",
+              "minutes": 45
+            },
+            {
+              "id": "workshop-oprav-skryte-chyby",
+              "type": "workshop",
+              "title": "Oprav kód se sedmi skrytými chybami",
+              "summary": "Najdeš sedm chyb ve vygenerovaném modulu, na každou napíšeš test a pak ji opravíš.",
+              "minutes": 50
+            },
+            {
+              "id": "kviz",
+              "type": "quiz",
+              "title": "Kvíz: práce s AI",
+              "summary": "Ověříš si typy selhání, dobré zadání a co zkontrolovat v review.",
+              "minutes": 25
+            }
+          ]
+        },
+        {
+          "id": "js-algoritmy",
+          "title": "Algoritmy a úlohy na pohovor",
+          "summary": "Postup řešení, Big O, datové struktury, vzory úloh a pohovorové utility jako debounce, deepClone a LRU cache.",
+          "uroven": "jadro",
+          "modules": [
+            {
+              "id": "postup-reseni",
+              "type": "lesson",
+              "title": "Postup řešení úlohy",
+              "summary": "Rozebereš neznámou úlohu na příklady, hrubou sílu, zlepšení a ověření a mluvíš přitom nahlas.",
+              "minutes": 40
+            },
+            {
+              "id": "big-o",
+              "type": "lesson",
+              "title": "Big O",
+              "summary": "Odhadneš časovou i paměťovou složitost kódu a poznáš skryté n² v metodách pole.",
+              "minutes": 55
+            },
+            {
+              "id": "datove-struktury",
+              "type": "lesson",
+              "title": "Datové struktury",
+              "summary": "Zvolíš mezi polem, Map, Set, zásobníkem, frontou, stromem a grafem podle operací, které potřebuješ.",
+              "minutes": 55
+            },
+            {
+              "id": "workshop-vzory-uloh",
+              "type": "workshop",
+              "title": "Vzory úloh",
+              "summary": "Vyřešíš osm klasických úloh vzory hash mapa, dva ukazatele, klouzavé okno, binární vyhledávání a BFS/DFS.",
+              "minutes": 65
+            },
+            {
+              "id": "razeni-a-rekurze",
+              "type": "lesson",
+              "title": "Řazení a rekurze",
+              "summary": "Pochopíš merge sort, stabilitu řazení a kdy rekurze vyhraje nad cyklem.",
+              "minutes": 45
+            },
+            {
+              "id": "workshop-pohovorove-utility",
+              "type": "workshop",
+              "title": "Pohovorové utility",
+              "summary": "Napíšeš debounce, throttle, deepClone, Promise.all, LRU cache a curry bez nápovědy.",
+              "minutes": 55
+            },
+            {
+              "id": "lab-10-uloh",
+              "type": "lab",
+              "title": "Deset úloh",
+              "summary": "Sám vyřešíš deset úloh s testy včetně vstupu, na kterém řešení O(n²) nedoběhne v limitu.",
+              "minutes": 180
+            },
+            {
+              "id": "kviz",
+              "type": "quiz",
+              "title": "Kvíz: algoritmy",
+              "summary": "Ověříš si složitost kódu, výběr datové struktury a rozpoznání vzoru úlohy.",
+              "minutes": 25
+            }
+          ]
+        }
       ]
     },
     {
@@ -181,55 +963,324 @@
       "title": "Frontend framework — React",
       "summary": "React 19 od JSX po aplikaci ve Vite a TypeScriptu: stav, efekty, hooky, UI knihovny a animace, routování, serverová data, formuláře a testy. Vue a Nuxt jako volitelné rozšíření.",
       "sections": [
-        { "id": "react-zaklady", "title": "React: základy", "summary": "JSX, komponenty a props, key, useState jako snímek, události a formuláře, zvednutí stavu.", "uroven": "jadro", "modules": [
-          { "id": "proc-react", "type": "lesson", "title": "Proč React", "summary": "Porovnáš ruční práci s DOM a deklarativní UI, kde vzhled plyne ze stavu.", "minutes": 35 },
-          { "id": "jsx", "type": "lesson", "title": "JSX", "summary": "Napíšeš JSX s výrazy, fragmenty a atributy a víš, proč je proti XSS bezpečné.", "minutes": 40 },
-          { "id": "komponenty-a-props", "type": "lesson", "title": "Komponenty a props", "summary": "Poskládáš komponenty z props a children a vykreslíš seznam se stabilním key.", "minutes": 45 },
-          { "id": "workshop-karta-produktu", "type": "workshop", "title": "Katalog produktů", "summary": "Postavíš katalog z komponent karty, ceny a štítku nad polem dat.", "minutes": 55 },
-          { "id": "stav-jako-snimek", "type": "lesson", "title": "Stav jako snímek", "summary": "Pochopíš, proč je stav snímek renderu a proč se tři volání setCount sečtou jen s funkcí.", "minutes": 55 },
-          { "id": "udalosti-a-formulare", "type": "lesson", "title": "Události a formuláře", "summary": "Ovládneš formulářová pole stavem a zvedneš stav do společného rodiče.", "minutes": 45 },
-          { "id": "workshop-pocitadlo-kalorii", "type": "workshop", "title": "Počítadlo kalorií", "summary": "Postavíš denní přehled jídel s formulářem, mazáním, součty, filtrem a ukazatelem cíle.", "minutes": 70 },
-          { "id": "lab-kviz-v-reactu", "type": "lab", "title": "Kvíz v Reactu", "summary": "Sám přepíšeš kvízovou aplikaci z čistého JavaScriptu do Reactu.", "minutes": 90 },
-          { "id": "kviz", "type": "quiz", "title": "Kvíz: React základy", "summary": "Ověříš si, co se vykreslí, kolikrát proběhne render, key a řízená pole.", "minutes": 25 }
-        ] },
-        { "id": "react-hloubka", "title": "React do hloubky", "summary": "Render a rerender, useEffect správně, useRef, vlastní hooky, useReducer a kontext, error boundary, Suspense a portály.", "uroven": "jadro", "modules": [
-          { "id": "render-a-rerender", "type": "lesson", "title": "Render a rerender", "summary": "Řekneš, kdy React komponentu vykreslí znovu a kdy to vadí.", "minutes": 55 },
-          { "id": "useeffect-spravne", "type": "lesson", "title": "useEffect správně", "summary": "Poznáš, kdy efekt nepotřebuješ, a když ano, napíšeš ho s úplnými závislostmi a úklidem.", "minutes": 65 },
-          { "id": "useref-a-dom", "type": "lesson", "title": "useRef a DOM", "summary": "Použiješ ref na prvek i jako schránku pro hodnotu mimo render.", "minutes": 40 },
-          { "id": "workshop-modal-a-toasty", "type": "workshop", "title": "Modal a oznámení", "summary": "Postavíš modal přes portál se správou fokusu a oznámení s časovačem ve vlastním hooku.", "minutes": 60 },
-          { "id": "vlastni-hooky", "type": "lesson", "title": "Vlastní hooky", "summary": "Vytáhneš logiku do vlastního hooku a víš, že hook sdílí logiku, ne stav.", "minutes": 45 },
-          { "id": "reducer-a-context", "type": "lesson", "title": "Reducer a kontext", "summary": "Spravuješ složitější stav reducerem a sdílíš ho kontextem bez zbytečných překreslení.", "minutes": 55 },
-          { "id": "chyby-suspense-portaly", "type": "lesson", "title": "Chyby, Suspense a portály", "summary": "Ošetříš chyby error boundary, načítání Suspense a vykreslíš obsah přes portál.", "minutes": 50 },
-          { "id": "lab-tabulka-dat", "type": "lab", "title": "Tabulka dat", "summary": "Sám postavíš tabulku s řazením, filtrem, stránkováním a výběrem řádků nad reducerem.", "minutes": 120 },
-          { "id": "kviz", "type": "quiz", "title": "Kvíz: React do hloubky", "summary": "Ověříš si rerender, závislosti efektu, úklid, kontext a Suspense.", "minutes": 25 }
-        ] },
-        { "id": "react-ui-knihovny", "title": "UI knihovny a animace v Reactu", "summary": "Tailwind v komponentách, vlastní sada ve stylu shadcn/ui nad přístupnými primitivy Radix a animace přes Motion for React.", "uroven": "jadro", "modules": [
-          { "id": "tailwind-v-reactu", "type": "lesson", "title": "Tailwind v komponentách", "summary": "Složíš třídy podle props přes clsx a tailwind-merge tak, aby se utility nepřebíjely náhodou.", "minutes": 45 },
-          { "id": "workshop-sada-komponent", "type": "workshop", "title": "Komponenty rezervačního systému kadeřnictví", "summary": "Postavíš sadu Button, Badge, Card, Input a Avatar s variantami přes cva a z nich stránku s volnými termíny.", "minutes": 60 },
-          { "id": "shadcn-a-radix", "type": "lesson", "title": "shadcn/ui a Radix primitivy", "summary": "Pochopíš, co za tebe řeší přístupné primitivum a proč shadcn/ui kopíruje kód do repozitáře.", "minutes": 50 },
-          { "id": "workshop-pristupne-komponenty", "type": "workshop", "title": "Nastavení účtu hudební služby", "summary": "Postavíš stránku nastavení se záložkami, menu, dialogem a přepínači nad Radix primitivy a ověříš ji klávesnicí.", "minutes": 70 },
-          { "id": "motion-for-react", "type": "lesson", "title": "Motion for React", "summary": "Zanimuješ vstup, odchod, změnu layoutu a gesta přes Motion a ohlídáš omezený pohyb.", "minutes": 55 },
-          { "id": "workshop-dashboard-s-animacemi", "type": "workshop", "title": "Dashboard půjčovny elektrokol", "summary": "Postavíš přehled půjčovny s animovaným vstupem karet, plovoucím ukazatelem menu a oznámeními na odtažení.", "minutes": 85 },
-          { "id": "design-system-projektu", "type": "lesson", "title": "Design systém projektu", "summary": "Rozvrstvíš tokeny, primitivy a komponenty a rozhodneš, kdy přidat variantu a kdy novou komponentu.", "minutes": 50 },
-          { "id": "lab-formular-s-komponentami", "type": "lab", "title": "Přihláška s komponentami", "summary": "Sám poskládáš vícekrokovou přihlášku z vlastních komponent, s animovaným přechodem kroků a návratem fokusu.", "minutes": 90 },
-          { "id": "kviz", "type": "quiz", "title": "Kvíz: UI knihovny v Reactu", "summary": "Ověříš si clsx proti tailwind-merge, varianty cva, co řeší Radix, AnimatePresence a layoutId.", "minutes": 25 }
-        ] },
-        { "id": "react-aplikace", "title": "React aplikace", "summary": "Vite a TypeScript, React Router, druhy stavu, TanStack Query, formuláře se Zod, styly, přihlášení a testy komponent. Končí kontrolním bodem a vlajkovým projektem.", "uroven": "jadro", "modules": [
-          { "id": "vite-react-ts", "type": "lesson", "title": "Vite, React a TypeScript", "summary": "Založíš React projekt ve Vite s TypeScriptem, lintem a strukturou podle funkcí.", "minutes": 45 },
-          { "id": "routovani", "type": "lesson", "title": "Routování", "summary": "Nastavíš trasy s parametry, vnořenými layouty, stránkou 404 a filtrem v URL.", "minutes": 50 },
-          { "id": "workshop-routovani", "type": "workshop", "title": "Vícestránkový katalog", "summary": "Postavíš katalog se seznamem, detailem, vnořeným layoutem a filtrem drženým v URL.", "minutes": 40 },
-          { "id": "druhy-stavu", "type": "lesson", "title": "Druhy stavu", "summary": "Rozlišíš UI stav, formulář, serverová data, URL a globální stav a pro každý zvolíš nástroj.", "minutes": 40 },
-          { "id": "tanstack-query", "type": "lesson", "title": "Serverová data: TanStack Query", "summary": "Načteš a změníš serverová data s cache, invalidací a optimistickou úpravou.", "minutes": 60 },
-          { "id": "workshop-data-z-api", "type": "workshop", "title": "Úkoly nad API", "summary": "Postavíš seznam úkolů nad API se stavy načítání, přidáváním, invalidací a optimistickým odškrtnutím.", "minutes": 60 },
-          { "id": "formulare-a-validace", "type": "lesson", "title": "Formuláře a validace", "summary": "Postavíš formulář se schématem v Zodu a přístupnými chybami.", "minutes": 50 },
-          { "id": "styly-v-reactu", "type": "lesson", "title": "Styly v Reactu", "summary": "Porovnáš CSS Modules a Tailwind v komponentách a pro projekt si vybereš jedno.", "minutes": 40 },
-          { "id": "auth-z-klienta", "type": "lesson", "title": "Přihlášení z klienta", "summary": "Přihlásíš uživatele proti API s cookie HttpOnly a ochráníš trasy aplikace.", "minutes": 45 },
-          { "id": "testy-komponent", "type": "lesson", "title": "Testy komponent", "summary": "Otestuješ komponenty s Testing Library a API si zmockuješ přes MSW.", "minutes": 50 },
-          { "id": "lab-kontrolni-bod-4", "type": "lab", "title": "Kontrolní bod: rezervace stolů", "summary": "Sám postavíš aplikaci na rezervaci stolů s daty z API, formulářem, validací a stavy chyb.", "minutes": 120 },
-          { "id": "kviz", "type": "quiz", "title": "Kvíz: React aplikace", "summary": "Ověříš si druhy stavu, queryKey a invalidaci, trasy a testy komponent.", "minutes": 25 },
-          { "id": "projekt-react-spa", "type": "project", "title": "Plánovač jídel a nákupů", "summary": "Postavíš vlajkové SPA nad API: recepty s filtry v URL, oblíbené, týdenní plán a nákupní seznam.", "minutes": 720 }
-        ] },
-        { "id": "vue-nuxt-druhy-framework", "title": "Vue a Nuxt jako druhý framework", "summary": "Převod z Reactu do Vue, reaktivita přes Proxy, SFC a Pinia, Nuxt v kostce proti Next.js.", "uroven": "rozsireni" }
+        {
+          "id": "react-zaklady",
+          "title": "React: základy",
+          "summary": "JSX, komponenty a props, key, useState jako snímek, události a formuláře, zvednutí stavu.",
+          "uroven": "jadro",
+          "modules": [
+            {
+              "id": "proc-react",
+              "type": "lesson",
+              "title": "Proč React",
+              "summary": "Porovnáš ruční práci s DOM a deklarativní UI, kde vzhled plyne ze stavu.",
+              "minutes": 35
+            },
+            {
+              "id": "jsx",
+              "type": "lesson",
+              "title": "JSX",
+              "summary": "Napíšeš JSX s výrazy, fragmenty a atributy a víš, proč je proti XSS bezpečné.",
+              "minutes": 40
+            },
+            {
+              "id": "komponenty-a-props",
+              "type": "lesson",
+              "title": "Komponenty a props",
+              "summary": "Poskládáš komponenty z props a children a vykreslíš seznam se stabilním key.",
+              "minutes": 45
+            },
+            {
+              "id": "workshop-karta-produktu",
+              "type": "workshop",
+              "title": "Katalog produktů",
+              "summary": "Postavíš katalog z komponent karty, ceny a štítku nad polem dat.",
+              "minutes": 55
+            },
+            {
+              "id": "stav-jako-snimek",
+              "type": "lesson",
+              "title": "Stav jako snímek",
+              "summary": "Pochopíš, proč je stav snímek renderu a proč se tři volání setCount sečtou jen s funkcí.",
+              "minutes": 55
+            },
+            {
+              "id": "udalosti-a-formulare",
+              "type": "lesson",
+              "title": "Události a formuláře",
+              "summary": "Ovládneš formulářová pole stavem a zvedneš stav do společného rodiče.",
+              "minutes": 45
+            },
+            {
+              "id": "workshop-pocitadlo-kalorii",
+              "type": "workshop",
+              "title": "Počítadlo kalorií",
+              "summary": "Postavíš denní přehled jídel s formulářem, mazáním, součty, filtrem a ukazatelem cíle.",
+              "minutes": 70
+            },
+            {
+              "id": "lab-kviz-v-reactu",
+              "type": "lab",
+              "title": "Kvíz v Reactu",
+              "summary": "Sám přepíšeš kvízovou aplikaci z čistého JavaScriptu do Reactu.",
+              "minutes": 90
+            },
+            {
+              "id": "kviz",
+              "type": "quiz",
+              "title": "Kvíz: React základy",
+              "summary": "Ověříš si, co se vykreslí, kolikrát proběhne render, key a řízená pole.",
+              "minutes": 25
+            }
+          ]
+        },
+        {
+          "id": "react-hloubka",
+          "title": "React do hloubky",
+          "summary": "Render a rerender, useEffect správně, useRef, vlastní hooky, useReducer a kontext, error boundary, Suspense a portály.",
+          "uroven": "jadro",
+          "modules": [
+            {
+              "id": "render-a-rerender",
+              "type": "lesson",
+              "title": "Render a rerender",
+              "summary": "Řekneš, kdy React komponentu vykreslí znovu a kdy to vadí.",
+              "minutes": 55
+            },
+            {
+              "id": "useeffect-spravne",
+              "type": "lesson",
+              "title": "useEffect správně",
+              "summary": "Poznáš, kdy efekt nepotřebuješ, a když ano, napíšeš ho s úplnými závislostmi a úklidem.",
+              "minutes": 65
+            },
+            {
+              "id": "useref-a-dom",
+              "type": "lesson",
+              "title": "useRef a DOM",
+              "summary": "Použiješ ref na prvek i jako schránku pro hodnotu mimo render.",
+              "minutes": 40
+            },
+            {
+              "id": "workshop-modal-a-toasty",
+              "type": "workshop",
+              "title": "Modal a oznámení",
+              "summary": "Postavíš modal přes portál se správou fokusu a oznámení s časovačem ve vlastním hooku.",
+              "minutes": 60
+            },
+            {
+              "id": "vlastni-hooky",
+              "type": "lesson",
+              "title": "Vlastní hooky",
+              "summary": "Vytáhneš logiku do vlastního hooku a víš, že hook sdílí logiku, ne stav.",
+              "minutes": 45
+            },
+            {
+              "id": "reducer-a-context",
+              "type": "lesson",
+              "title": "Reducer a kontext",
+              "summary": "Spravuješ složitější stav reducerem a sdílíš ho kontextem bez zbytečných překreslení.",
+              "minutes": 55
+            },
+            {
+              "id": "chyby-suspense-portaly",
+              "type": "lesson",
+              "title": "Chyby, Suspense a portály",
+              "summary": "Ošetříš chyby error boundary, načítání Suspense a vykreslíš obsah přes portál.",
+              "minutes": 50
+            },
+            {
+              "id": "lab-tabulka-dat",
+              "type": "lab",
+              "title": "Tabulka dat",
+              "summary": "Sám postavíš tabulku s řazením, filtrem, stránkováním a výběrem řádků nad reducerem.",
+              "minutes": 120
+            },
+            {
+              "id": "kviz",
+              "type": "quiz",
+              "title": "Kvíz: React do hloubky",
+              "summary": "Ověříš si rerender, závislosti efektu, úklid, kontext a Suspense.",
+              "minutes": 25
+            }
+          ]
+        },
+        {
+          "id": "react-ui-knihovny",
+          "title": "UI knihovny a animace v Reactu",
+          "summary": "Tailwind v komponentách, vlastní sada ve stylu shadcn/ui nad přístupnými primitivy Radix a animace přes Motion for React.",
+          "uroven": "jadro",
+          "modules": [
+            {
+              "id": "tailwind-v-reactu",
+              "type": "lesson",
+              "title": "Tailwind v komponentách",
+              "summary": "Složíš třídy podle props přes clsx a tailwind-merge tak, aby se utility nepřebíjely náhodou.",
+              "minutes": 45
+            },
+            {
+              "id": "workshop-sada-komponent",
+              "type": "workshop",
+              "title": "Komponenty rezervačního systému kadeřnictví",
+              "summary": "Postavíš sadu Button, Badge, Card, Input a Avatar s variantami přes cva a z nich stránku s volnými termíny.",
+              "minutes": 60
+            },
+            {
+              "id": "shadcn-a-radix",
+              "type": "lesson",
+              "title": "shadcn/ui a Radix primitivy",
+              "summary": "Pochopíš, co za tebe řeší přístupné primitivum a proč shadcn/ui kopíruje kód do repozitáře.",
+              "minutes": 50
+            },
+            {
+              "id": "workshop-pristupne-komponenty",
+              "type": "workshop",
+              "title": "Nastavení účtu hudební služby",
+              "summary": "Postavíš stránku nastavení se záložkami, menu, dialogem a přepínači nad Radix primitivy a ověříš ji klávesnicí.",
+              "minutes": 70
+            },
+            {
+              "id": "motion-for-react",
+              "type": "lesson",
+              "title": "Motion for React",
+              "summary": "Zanimuješ vstup, odchod, změnu layoutu a gesta přes Motion a ohlídáš omezený pohyb.",
+              "minutes": 55
+            },
+            {
+              "id": "workshop-dashboard-s-animacemi",
+              "type": "workshop",
+              "title": "Dashboard půjčovny elektrokol",
+              "summary": "Postavíš přehled půjčovny s animovaným vstupem karet, plovoucím ukazatelem menu a oznámeními na odtažení.",
+              "minutes": 85
+            },
+            {
+              "id": "design-system-projektu",
+              "type": "lesson",
+              "title": "Design systém projektu",
+              "summary": "Rozvrstvíš tokeny, primitivy a komponenty a rozhodneš, kdy přidat variantu a kdy novou komponentu.",
+              "minutes": 50
+            },
+            {
+              "id": "lab-formular-s-komponentami",
+              "type": "lab",
+              "title": "Přihláška s komponentami",
+              "summary": "Sám poskládáš vícekrokovou přihlášku z vlastních komponent, s animovaným přechodem kroků a návratem fokusu.",
+              "minutes": 90
+            },
+            {
+              "id": "kviz",
+              "type": "quiz",
+              "title": "Kvíz: UI knihovny v Reactu",
+              "summary": "Ověříš si clsx proti tailwind-merge, varianty cva, co řeší Radix, AnimatePresence a layoutId.",
+              "minutes": 25
+            }
+          ]
+        },
+        {
+          "id": "react-aplikace",
+          "title": "React aplikace",
+          "summary": "Vite a TypeScript, React Router, druhy stavu, TanStack Query, formuláře se Zod, styly, přihlášení a testy komponent. Končí kontrolním bodem a vlajkovým projektem.",
+          "uroven": "jadro",
+          "modules": [
+            {
+              "id": "vite-react-ts",
+              "type": "lesson",
+              "title": "Vite, React a TypeScript",
+              "summary": "Založíš React projekt ve Vite s TypeScriptem, lintem a strukturou podle funkcí.",
+              "minutes": 45
+            },
+            {
+              "id": "routovani",
+              "type": "lesson",
+              "title": "Routování",
+              "summary": "Nastavíš trasy s parametry, vnořenými layouty, stránkou 404 a filtrem v URL.",
+              "minutes": 50
+            },
+            {
+              "id": "workshop-routovani",
+              "type": "workshop",
+              "title": "Vícestránkový katalog",
+              "summary": "Postavíš katalog se seznamem, detailem, vnořeným layoutem a filtrem drženým v URL.",
+              "minutes": 40
+            },
+            {
+              "id": "druhy-stavu",
+              "type": "lesson",
+              "title": "Druhy stavu",
+              "summary": "Rozlišíš UI stav, formulář, serverová data, URL a globální stav a pro každý zvolíš nástroj.",
+              "minutes": 40
+            },
+            {
+              "id": "tanstack-query",
+              "type": "lesson",
+              "title": "Serverová data: TanStack Query",
+              "summary": "Načteš a změníš serverová data s cache, invalidací a optimistickou úpravou.",
+              "minutes": 60
+            },
+            {
+              "id": "workshop-data-z-api",
+              "type": "workshop",
+              "title": "Úkoly nad API",
+              "summary": "Postavíš seznam úkolů nad API se stavy načítání, přidáváním, invalidací a optimistickým odškrtnutím.",
+              "minutes": 60
+            },
+            {
+              "id": "formulare-a-validace",
+              "type": "lesson",
+              "title": "Formuláře a validace",
+              "summary": "Postavíš formulář se schématem v Zodu a přístupnými chybami.",
+              "minutes": 50
+            },
+            {
+              "id": "styly-v-reactu",
+              "type": "lesson",
+              "title": "Styly v Reactu",
+              "summary": "Porovnáš CSS Modules a Tailwind v komponentách a pro projekt si vybereš jedno.",
+              "minutes": 40
+            },
+            {
+              "id": "auth-z-klienta",
+              "type": "lesson",
+              "title": "Přihlášení z klienta",
+              "summary": "Přihlásíš uživatele proti API s cookie HttpOnly a ochráníš trasy aplikace.",
+              "minutes": 45
+            },
+            {
+              "id": "testy-komponent",
+              "type": "lesson",
+              "title": "Testy komponent",
+              "summary": "Otestuješ komponenty s Testing Library a API si zmockuješ přes MSW.",
+              "minutes": 50
+            },
+            {
+              "id": "lab-kontrolni-bod-4",
+              "type": "lab",
+              "title": "Kontrolní bod: rezervace stolů",
+              "summary": "Sám postavíš aplikaci na rezervaci stolů s daty z API, formulářem, validací a stavy chyb.",
+              "minutes": 120
+            },
+            {
+              "id": "kviz",
+              "type": "quiz",
+              "title": "Kvíz: React aplikace",
+              "summary": "Ověříš si druhy stavu, queryKey a invalidaci, trasy a testy komponent.",
+              "minutes": 25
+            },
+            {
+              "id": "projekt-react-spa",
+              "type": "project",
+              "title": "Plánovač jídel a nákupů",
+              "summary": "Postavíš vlajkové SPA nad API: recepty s filtry v URL, oblíbené, týdenní plán a nákupní seznam.",
+              "minutes": 720
+            }
+          ]
+        },
+        {
+          "id": "vue-nuxt-druhy-framework",
+          "title": "Vue a Nuxt jako druhý framework",
+          "summary": "Převod z Reactu do Vue, reaktivita přes Proxy, SFC a Pinia, Nuxt v kostce proti Next.js.",
+          "uroven": "rozsireni"
+        }
       ]
     },
     {
@@ -237,65 +1288,263 @@
       "title": "Backend a fullstack",
       "summary": "Backend bez frameworku, REST a SQL, bezpečnost a provoz, pak Next.js jako fullstack framework se závěrečným vlajkovým projektem.",
       "sections": [
-        { "id": "node-zaklady", "title": "Node.js základy", "summary": "JavaScript mimo prohlížeč, vestavěné moduly, HTTP server bez frameworku a REST API ukládající data do souboru.", "uroven": "jadro" },
-        { "id": "api-http-rest", "title": "HTTP a návrh REST API", "summary": "Metody a stavové kódy, návrh zdrojů, stránkování, validace na serveru, CORS, cache a přepis API do Express 5.", "uroven": "jadro", "modules": [
-          { "id": "http-do-hloubky", "type": "lesson", "title": "HTTP do hloubky", "summary": "Vybereš správnou metodu i stavový kód a požadavek si vyzkoušíš přes curl.", "minutes": 45 },
-          { "id": "navrh-rest", "type": "lesson", "title": "Návrh REST API", "summary": "Navrhneš zdroje, filtry, stránkování a jednotný tvar chyb.", "minutes": 50 },
-          { "id": "workshop-api-knihovny", "type": "workshop", "title": "API knihovny", "summary": "Postavíš API knih a výpůjček s parametry v URL, stránkováním a správnými kódy odpovědí.", "minutes": 60 },
-          { "id": "validace-a-chyby-api", "type": "lesson", "title": "Validace a chyby na serveru", "summary": "Zvaliduješ vstup schématem a vrátíš konzistentní chyby bez úniku vnitřností.", "minutes": 45 },
-          { "id": "cors-a-cache", "type": "lesson", "title": "CORS a cache", "summary": "Nastavíš CORS včetně preflightu a cache hlavičky s ETag.", "minutes": 45 },
-          { "id": "workshop-api-ve-frameworku", "type": "workshop", "title": "API ve frameworku", "summary": "Přepíšeš své API do Express 5 a řekneš, co za tebe framework dělá.", "minutes": 40 },
-          { "id": "lab-api-ukolu", "type": "lab", "title": "API úkolů", "summary": "Sám napíšeš API úkolů s validací, stránkováním, filtrem a konzistentními chybami.", "minutes": 90 },
-          { "id": "kviz", "type": "quiz", "title": "Kvíz: HTTP a REST", "summary": "Ověříš si stavové kódy, idempotenci, návrh URL, preflight a ETag.", "minutes": 25 }
-        ] },
-        { "id": "sql-databaze", "title": "SQL a databáze", "summary": "Schéma s klíči a vazbami, JOIN a agregace, transakce, indexy a N+1, Drizzle ORM a PostgreSQL v Dockeru.", "uroven": "jadro", "modules": [
-          { "id": "relacni-databaze", "type": "lesson", "title": "Relační databáze", "summary": "Založíš tabulky s typy, klíči a omezeními a porovnáš SQLite s PostgreSQL.", "minutes": 40 },
-          { "id": "workshop-prvni-dotazy", "type": "workshop", "title": "Katalog v SQL", "summary": "Napíšeš dotazy nad databází filmů od SELECT a WHERE po INSERT, UPDATE a vázané parametry.", "minutes": 60 },
-          { "id": "navrh-schematu", "type": "lesson", "title": "Návrh schématu", "summary": "Navrhneš vazby 1:N a M:N, chování při mazání a postup migrací.", "minutes": 45 },
-          { "id": "workshop-join-agregace", "type": "workshop", "title": "Recenze a hodnocení", "summary": "Spojíš tabulky přes JOIN a spočítáš průměry i počty přes GROUP BY a HAVING.", "minutes": 70 },
-          { "id": "transakce-a-indexy", "type": "lesson", "title": "Transakce, indexy a N+1", "summary": "Zabalíš změny do transakce, najdeš pomalý dotaz a odstraníš problém N+1.", "minutes": 50 },
-          { "id": "okenni-funkce", "type": "lesson", "title": "Okenní funkce", "summary": "Spočítáš pořadí, klouzavý průměr a součty po skupinách přes okenní funkce.", "minutes": 50 },
-          { "id": "orm-drizzle", "type": "lesson", "title": "ORM: Drizzle", "summary": "Napíšeš schéma a dotazy v Drizzle, vygeneruješ migraci a poznáš, kdy psát SQL ručně.", "minutes": 50 },
-          { "id": "postgres-v-dockeru", "type": "lesson", "title": "PostgreSQL v Dockeru", "summary": "Spustíš Postgres v Dockeru a převedeš aplikaci ze SQLite.", "minutes": 45 },
-          { "id": "lab-eshop-dotazy", "type": "lab", "title": "Dotazy pro e-shop", "summary": "Sám navrhneš schéma objednávek a napíšeš nad ním deset dotazů.", "minutes": 90 },
-          { "id": "kviz", "type": "quiz", "title": "Kvíz: SQL", "summary": "Ověříš si výsledek dotazu, JOIN proti LEFT JOIN, WHERE proti HAVING a indexy.", "minutes": 25 },
-          { "id": "projekt-api-receptu", "type": "project", "title": "API receptů s databází", "summary": "Postavíš REST API receptů nad SQLite se schématem, migrací, transakcemi a stránkováním.", "minutes": 240 }
-        ] },
-        { "id": "auth-bezpecnost", "title": "Autentizace a bezpečnost", "summary": "Hesla, session a cookies, JWT, OAuth s PKCE a passkeys, autorizace a role, SQL injection, XSS, CSRF a rate limit.", "uroven": "jadro", "modules": [
-          { "id": "hesla", "type": "lesson", "title": "Hesla", "summary": "Uložíš heslo tak, aby se z databáze nedalo získat zpátky, a porovnáš ho bezpečně.", "minutes": 40 },
-          { "id": "session-a-cookies", "type": "lesson", "title": "Session, cookies a JWT", "summary": "Přihlásíš uživatele session cookie a řekneš, kdy má JWT smysl a kdy ne.", "minutes": 55 },
-          { "id": "workshop-prihlaseni", "type": "workshop", "title": "Registrace a přihlášení", "summary": "Postavíš registraci, přihlášení, odhlášení a chráněnou routu nad SQLite v čistém Node.", "minutes": 75 },
-          { "id": "owasp-zranitelnosti", "type": "lesson", "title": "Nejčastější zranitelnosti", "summary": "Poznáš SQL injection, XSS, CSRF a IDOR na konkrétním kódu.", "minutes": 55 },
-          { "id": "workshop-oprav-zranitelnosti", "type": "workshop", "title": "Oprava děravého API", "summary": "Opravíš v děravém API SQL injection, IDOR, XSS, chybějící rate limit a únik stack trace.", "minutes": 60 },
-          { "id": "auth-v-praxi", "type": "lesson", "title": "Přihlášení v praxi", "summary": "Projdeš OAuth s PKCE a passkeys a nasadíš hotovou knihovnu místo vlastního řešení.", "minutes": 55 },
-          { "id": "lab-role-a-opravneni", "type": "lab", "title": "Role a oprávnění", "summary": "Sám přidáš role, kontrolu oprávnění na každé routě a audit log.", "minutes": 90 },
-          { "id": "kviz", "type": "quiz", "title": "Kvíz: bezpečnost", "summary": "Ověříš si nalezení zranitelnosti, atributy cookie, 401 proti 403 a OAuth.", "minutes": 25 }
-        ] },
-        { "id": "nasazeni-provoz", "title": "Nasazení a provoz", "summary": "Konfigurace a tajemství, logování, Docker, HTTPS a CI/CD. Končí kontrolním bodem s rezervačním API.", "uroven": "jadro", "modules": [
-          { "id": "produkcni-rezim", "type": "lesson", "title": "Z vývoje do produkce", "summary": "Připravíš aplikaci na produkci: konfiguraci z prostředí, tajemství, health check a SIGTERM.", "minutes": 45 },
-          { "id": "logovani-a-chyby", "type": "lesson", "title": "Logování a monitoring", "summary": "Zavedeš strukturované logy s request id a poznáš, co do logu nepatří.", "minutes": 40 },
-          { "id": "workshop-pripraveny-server", "type": "workshop", "title": "Server připravený na provoz", "summary": "Doplníš do svého API konfiguraci, logy, health check a korektní ukončení.", "minutes": 50 },
-          { "id": "kontejnery-a-servery", "type": "lesson", "title": "Kontejnery, servery a HTTPS", "summary": "Napíšeš Dockerfile a compose s databází a vybereš mezi VPS a platformou.", "minutes": 55 },
-          { "id": "ci-cd", "type": "lesson", "title": "CI/CD", "summary": "Nastavíš workflow, které před nasazením pustí lint, typy, testy a build.", "minutes": 50 },
-          { "id": "linux-server", "type": "lesson", "title": "Vlastní Linux server", "summary": "Rozjedeš aplikaci na vlastním serveru: SSH, firewall, systemd služba, Caddy a zálohy.", "minutes": 120 },
-          { "id": "lab-dockerfile-a-ci", "type": "lab", "title": "Dockerfile a workflow", "summary": "Sám napíšeš Dockerfile, compose a CI workflow pro přiložený projekt.", "minutes": 75 },
-          { "id": "kviz", "type": "quiz", "title": "Kvíz: provoz", "summary": "Ověříš si konfiguraci z prostředí, logování, pořadí kroků v CI a vícefázový build.", "minutes": 25 },
-          { "id": "lab-kontrolni-bod-5", "type": "lab", "title": "Kontrolní bod: rezervační API", "summary": "Sám postavíš rezervační API s přihlášením, rolemi, validací, transakcí a provozními požadavky.", "minutes": 120 }
-        ] },
-        { "id": "next-fullstack", "title": "Next.js: fullstack aplikace", "summary": "SSR a streamování, App Router, serverové a klientské komponenty, data a server actions, SEO a nasazení. Končí závěrečným vlajkovým projektem.", "uroven": "jadro", "modules": [
-          { "id": "ssr-csr-ssg", "type": "lesson", "title": "CSR, SSR, SSG a streamování", "summary": "Vybereš pro stránku strategii vykreslení a pochopíš hydrataci i její chyby.", "minutes": 55 },
-          { "id": "app-router", "type": "lesson", "title": "App Router", "summary": "Rozvrhneš složku app s layouty, stránkami, stavy načítání a chyb a dynamickými segmenty.", "minutes": 55 },
-          { "id": "server-a-client-komponenty", "type": "lesson", "title": "Serverové a klientské komponenty", "summary": "Rozdělíš UI na serverové a klientské komponenty a pohlídáš hranici i tajemství.", "minutes": 60 },
-          { "id": "projekt-next-zaklad", "type": "project", "title": "Řízený projekt: katalog v Next.js", "summary": "Postavíš po etapách katalog v Next.js se serverovým vykreslením, detailem, stránkou 404 a klientským filtrem.", "minutes": 360 },
-          { "id": "data-a-server-actions", "type": "lesson", "title": "Data a server actions", "summary": "Načteš data v serverové komponentě a změníš je server action s validací, autorizací a revalidací.", "minutes": 70 },
-          { "id": "auth-v-nextu", "type": "lesson", "title": "Přihlášení v Next.js", "summary": "Přihlásíš uživatele přes Better Auth a ochráníš stránky i akce, ne jen proxy.", "minutes": 50 },
-          { "id": "seo-a-metadata", "type": "lesson", "title": "SEO, metadata, obrázky a písma", "summary": "Nastavíš metadata, OG obrázky, sitemap, next/image a next/font.", "minutes": 45 },
-          { "id": "testy-a-nasazeni-nextu", "type": "lesson", "title": "Testy a nasazení Next.js", "summary": "Otestuješ aplikaci proti produkčnímu buildu a nasadíš ji na platformu nebo do kontejneru.", "minutes": 50 },
-          { "id": "kviz", "type": "quiz", "title": "Kvíz: Next.js", "summary": "Ověříš si, kde co běží, hranici klient a server, cache a revalidaci a bezpečnost server actions.", "minutes": 25 },
-          { "id": "projekt-zaverecny", "type": "project", "title": "Závěrečný fullstack projekt", "summary": "Postavíš vlajkovou fullstack aplikaci v Next.js s databází, přihlášením, rolemi, testy a nasazením.", "minutes": 900 }
-        ] },
-        { "id": "api-soubory-realtime", "title": "Soubory, realtime a úlohy na pozadí", "summary": "Bezpečné nahrávání souborů, SSE a WebSockety, e-maily a fronty úloh.", "uroven": "rozsireni" },
-        { "id": "prohlizec-navic", "title": "Prohlížečová API navíc", "summary": "Web components, service worker a PWA, Web Workers a offline data v IndexedDB.", "uroven": "rozsireni" }
+        {
+          "id": "node-zaklady",
+          "title": "Node.js základy",
+          "summary": "JavaScript mimo prohlížeč, vestavěné moduly, HTTP server bez frameworku a REST API ukládající data do souboru.",
+          "uroven": "jadro"
+        },
+        {
+          "id": "api-http-rest",
+          "title": "HTTP a návrh REST API",
+          "summary": "Metody a stavové kódy, návrh zdrojů, stránkování, validace na serveru, CORS, cache a přepis API do Express 5.",
+          "uroven": "jadro",
+          "modules": [
+            {
+              "id": "http-do-hloubky",
+              "type": "lesson",
+              "title": "HTTP do hloubky",
+              "summary": "Vybereš správnou metodu i stavový kód a požadavek si vyzkoušíš přes curl.",
+              "minutes": 45
+            },
+            {
+              "id": "navrh-rest",
+              "type": "lesson",
+              "title": "Návrh REST API",
+              "summary": "Navrhneš zdroje, filtry, stránkování a jednotný tvar chyb.",
+              "minutes": 50
+            },
+            {
+              "id": "workshop-api-knihovny",
+              "type": "workshop",
+              "title": "API knihovny",
+              "summary": "Postavíš API knih a výpůjček s parametry v URL, stránkováním a správnými kódy odpovědí.",
+              "minutes": 60
+            },
+            {
+              "id": "validace-a-chyby-api",
+              "type": "lesson",
+              "title": "Validace a chyby na serveru",
+              "summary": "Zvaliduješ vstup schématem a vrátíš konzistentní chyby bez úniku vnitřností.",
+              "minutes": 45
+            },
+            {
+              "id": "cors-a-cache",
+              "type": "lesson",
+              "title": "CORS a cache",
+              "summary": "Nastavíš CORS včetně preflightu a cache hlavičky s ETag.",
+              "minutes": 45
+            },
+            {
+              "id": "workshop-api-ve-frameworku",
+              "type": "workshop",
+              "title": "API ve frameworku",
+              "summary": "Přepíšeš své API do Express 5 a řekneš, co za tebe framework dělá.",
+              "minutes": 40
+            },
+            {
+              "id": "lab-api-ukolu",
+              "type": "lab",
+              "title": "API úkolů",
+              "summary": "Sám napíšeš API úkolů s validací, stránkováním, filtrem a konzistentními chybami.",
+              "minutes": 90
+            },
+            {
+              "id": "kviz",
+              "type": "quiz",
+              "title": "Kvíz: HTTP a REST",
+              "summary": "Ověříš si stavové kódy, idempotenci, návrh URL, preflight a ETag.",
+              "minutes": 25
+            }
+          ]
+        },
+        {
+          "id": "sql-databaze",
+          "title": "SQL a databáze",
+          "summary": "Schéma s klíči a vazbami, JOIN a agregace, transakce, indexy a N+1, Drizzle ORM a PostgreSQL v Dockeru.",
+          "uroven": "jadro",
+          "modules": [
+            {
+              "id": "relacni-databaze",
+              "type": "lesson",
+              "title": "Relační databáze",
+              "summary": "Založíš tabulky s typy, klíči a omezeními a porovnáš SQLite s PostgreSQL.",
+              "minutes": 40
+            },
+            {
+              "id": "workshop-prvni-dotazy",
+              "type": "workshop",
+              "title": "Katalog v SQL",
+              "summary": "Napíšeš dotazy nad databází filmů od SELECT a WHERE po INSERT, UPDATE a vázané parametry.",
+              "minutes": 60
+            },
+            {
+              "id": "navrh-schematu",
+              "type": "lesson",
+              "title": "Návrh schématu",
+              "summary": "Navrhneš vazby 1:N a M:N, chování při mazání a postup migrací.",
+              "minutes": 45
+            },
+            {
+              "id": "workshop-join-agregace",
+              "type": "workshop",
+              "title": "Recenze a hodnocení",
+              "summary": "Spojíš tabulky přes JOIN a spočítáš průměry i počty přes GROUP BY a HAVING.",
+              "minutes": 70
+            },
+            {
+              "id": "transakce-a-indexy",
+              "type": "lesson",
+              "title": "Transakce, indexy a N+1",
+              "summary": "Zabalíš změny do transakce, najdeš pomalý dotaz a odstraníš problém N+1.",
+              "minutes": 50
+            },
+            {
+              "id": "okenni-funkce",
+              "type": "lesson",
+              "title": "Okenní funkce",
+              "summary": "Spočítáš pořadí, klouzavý průměr a součty po skupinách přes okenní funkce.",
+              "minutes": 50
+            },
+            {
+              "id": "orm-drizzle",
+              "type": "lesson",
+              "title": "ORM: Drizzle",
+              "summary": "Napíšeš schéma a dotazy v Drizzle, vygeneruješ migraci a poznáš, kdy psát SQL ručně.",
+              "minutes": 50
+            },
+            {
+              "id": "postgres-v-dockeru",
+              "type": "lesson",
+              "title": "PostgreSQL v Dockeru",
+              "summary": "Spustíš Postgres v Dockeru a převedeš aplikaci ze SQLite.",
+              "minutes": 45
+            },
+            {
+              "id": "lab-eshop-dotazy",
+              "type": "lab",
+              "title": "Dotazy pro e-shop",
+              "summary": "Sám navrhneš schéma objednávek a napíšeš nad ním deset dotazů.",
+              "minutes": 90
+            },
+            {
+              "id": "kviz",
+              "type": "quiz",
+              "title": "Kvíz: SQL",
+              "summary": "Ověříš si výsledek dotazu, JOIN proti LEFT JOIN, WHERE proti HAVING a indexy.",
+              "minutes": 25
+            },
+            {
+              "id": "projekt-api-receptu",
+              "type": "project",
+              "title": "API receptů s databází",
+              "summary": "Postavíš REST API receptů nad SQLite se schématem, migrací, transakcemi a stránkováním.",
+              "minutes": 240
+            }
+          ]
+        },
+        {
+          "id": "auth-bezpecnost",
+          "title": "Autentizace a bezpečnost",
+          "summary": "Hesla, session a cookies, JWT, OAuth s PKCE a passkeys, autorizace a role, SQL injection, XSS, CSRF a rate limit.",
+          "uroven": "jadro"
+        },
+        {
+          "id": "nasazeni-provoz",
+          "title": "Nasazení a provoz",
+          "summary": "Konfigurace a tajemství, logování, Docker, HTTPS a CI/CD. Končí kontrolním bodem s rezervačním API.",
+          "uroven": "jadro"
+        },
+        {
+          "id": "next-fullstack",
+          "title": "Next.js: fullstack aplikace",
+          "summary": "SSR a streamování, App Router, serverové a klientské komponenty, data a server actions, SEO a nasazení. Končí závěrečným vlajkovým projektem.",
+          "uroven": "jadro",
+          "modules": [
+            {
+              "id": "ssr-csr-ssg",
+              "type": "lesson",
+              "title": "CSR, SSR, SSG a streamování",
+              "summary": "Vybereš pro stránku strategii vykreslení a pochopíš hydrataci i její chyby.",
+              "minutes": 55
+            },
+            {
+              "id": "app-router",
+              "type": "lesson",
+              "title": "App Router",
+              "summary": "Rozvrhneš složku app s layouty, stránkami, stavy načítání a chyb a dynamickými segmenty.",
+              "minutes": 55
+            },
+            {
+              "id": "server-a-client-komponenty",
+              "type": "lesson",
+              "title": "Serverové a klientské komponenty",
+              "summary": "Rozdělíš UI na serverové a klientské komponenty a pohlídáš hranici i tajemství.",
+              "minutes": 60
+            },
+            {
+              "id": "projekt-next-zaklad",
+              "type": "project",
+              "title": "Řízený projekt: katalog v Next.js",
+              "summary": "Postavíš po etapách katalog v Next.js se serverovým vykreslením, detailem, stránkou 404 a klientským filtrem.",
+              "minutes": 360
+            },
+            {
+              "id": "data-a-server-actions",
+              "type": "lesson",
+              "title": "Data a server actions",
+              "summary": "Načteš data v serverové komponentě a změníš je server action s validací, autorizací a revalidací.",
+              "minutes": 70
+            },
+            {
+              "id": "auth-v-nextu",
+              "type": "lesson",
+              "title": "Přihlášení v Next.js",
+              "summary": "Přihlásíš uživatele přes Better Auth a ochráníš stránky i akce, ne jen proxy.",
+              "minutes": 50
+            },
+            {
+              "id": "seo-a-metadata",
+              "type": "lesson",
+              "title": "SEO, metadata, obrázky a písma",
+              "summary": "Nastavíš metadata, OG obrázky, sitemap, next/image a next/font.",
+              "minutes": 45
+            },
+            {
+              "id": "testy-a-nasazeni-nextu",
+              "type": "lesson",
+              "title": "Testy a nasazení Next.js",
+              "summary": "Otestuješ aplikaci proti produkčnímu buildu a nasadíš ji na platformu nebo do kontejneru.",
+              "minutes": 50
+            },
+            {
+              "id": "kviz",
+              "type": "quiz",
+              "title": "Kvíz: Next.js",
+              "summary": "Ověříš si, kde co běží, hranici klient a server, cache a revalidaci a bezpečnost server actions.",
+              "minutes": 25
+            },
+            {
+              "id": "projekt-zaverecny",
+              "type": "project",
+              "title": "Závěrečný fullstack projekt",
+              "summary": "Postavíš vlajkovou fullstack aplikaci v Next.js s databází, přihlášením, rolemi, testy a nasazením.",
+              "minutes": 900
+            }
+          ]
+        },
+        {
+          "id": "api-soubory-realtime",
+          "title": "Soubory, realtime a úlohy na pozadí",
+          "summary": "Bezpečné nahrávání souborů, SSE a WebSockety, e-maily a fronty úloh.",
+          "uroven": "rozsireni"
+        },
+        {
+          "id": "prohlizec-navic",
+          "title": "Prohlížečová API navíc",
+          "summary": "Web components, service worker a PWA, Web Workers a offline data v IndexedDB.",
+          "uroven": "rozsireni"
+        }
       ]
     },
     {
@@ -303,17 +1552,77 @@
       "title": "Kariéra",
       "summary": "Portfolio, CV, domácí úkol a pohovor — technický i behaviorální — a první měsíce v práci. Přístupné kdykoli.",
       "sections": [
-        { "id": "kariera-pohovor", "title": "Portfolio, CV a pohovor", "summary": "Portfolio ze tří vlajkových projektů, CV, LinkedIn a GitHub, domácí úkol, technický a behaviorální pohovor a první měsíce v práci.", "uroven": "jadro", "modules": [
-          { "id": "trh-a-role", "type": "lesson", "title": "Trh práce a role", "summary": "Zorientuješ se v juniorních pozicích a přečteš inzerát podle toho, co je nutné a co výhodou.", "minutes": 40 },
-          { "id": "portfolio", "type": "lesson", "title": "Portfolio", "summary": "Připravíš portfolio ze tří projektů s README, živou adresou a čitelnou historií commitů.", "minutes": 60 },
-          { "id": "cv-linkedin-github", "type": "lesson", "title": "CV, LinkedIn a GitHub", "summary": "Napíšeš CV na jednu stranu a vyladíš LinkedIn i profil na GitHubu.", "minutes": 60 },
-          { "id": "domaci-ukol", "type": "lesson", "title": "Domácí úkol", "summary": "Odhadneš rozsah domácího úkolu a víš, co na něm hodnotitel skutečně čte.", "minutes": 45 },
-          { "id": "lab-domaci-ukol", "type": "lab", "title": "Typický domácí úkol", "summary": "Sám vypracuješ typický domácí úkol: seznam s hledáním z API, stránkování, detail a stavy.", "minutes": 240 },
-          { "id": "technicky-pohovor", "type": "lesson", "title": "Technický pohovor", "summary": "Vyprávíš o projektu, řešíš live coding nahlas a rozebereš frontend system design ve čtyřech krocích.", "minutes": 70 },
-          { "id": "behavioralni-a-anglictina", "type": "lesson", "title": "Behaviorální pohovor a angličtina", "summary": "Odpovídáš metodou STAR a zvládneš pohovorové fráze i v angličtině.", "minutes": 50 },
-          { "id": "prvni-mesice", "type": "lesson", "title": "První měsíce v práci", "summary": "Zvládneš onboarding, ptaní se a code review z přijímající strany podle plánu 30-60-90.", "minutes": 45 },
-          { "id": "kviz-mock-pohovor", "type": "quiz", "title": "Mock pohovor", "summary": "Projdeš si pohovorové otázky s psanou odpovědí a porovnáš se s modelovou odpovědí.", "minutes": 60 }
-        ] }
+        {
+          "id": "kariera-pohovor",
+          "title": "Portfolio, CV a pohovor",
+          "summary": "Portfolio ze tří vlajkových projektů, CV, LinkedIn a GitHub, domácí úkol, technický a behaviorální pohovor a první měsíce v práci.",
+          "uroven": "jadro",
+          "modules": [
+            {
+              "id": "trh-a-role",
+              "type": "lesson",
+              "title": "Trh práce a role",
+              "summary": "Zorientuješ se v juniorních pozicích a přečteš inzerát podle toho, co je nutné a co výhodou.",
+              "minutes": 40
+            },
+            {
+              "id": "portfolio",
+              "type": "lesson",
+              "title": "Portfolio",
+              "summary": "Připravíš portfolio ze tří projektů s README, živou adresou a čitelnou historií commitů.",
+              "minutes": 60
+            },
+            {
+              "id": "cv-linkedin-github",
+              "type": "lesson",
+              "title": "CV, LinkedIn a GitHub",
+              "summary": "Napíšeš CV na jednu stranu a vyladíš LinkedIn i profil na GitHubu.",
+              "minutes": 60
+            },
+            {
+              "id": "domaci-ukol",
+              "type": "lesson",
+              "title": "Domácí úkol",
+              "summary": "Odhadneš rozsah domácího úkolu a víš, co na něm hodnotitel skutečně čte.",
+              "minutes": 45
+            },
+            {
+              "id": "lab-domaci-ukol",
+              "type": "lab",
+              "title": "Typický domácí úkol",
+              "summary": "Sám vypracuješ typický domácí úkol: seznam s hledáním z API, stránkování, detail a stavy.",
+              "minutes": 240
+            },
+            {
+              "id": "technicky-pohovor",
+              "type": "lesson",
+              "title": "Technický pohovor",
+              "summary": "Vyprávíš o projektu, řešíš live coding nahlas a rozebereš frontend system design ve čtyřech krocích.",
+              "minutes": 70
+            },
+            {
+              "id": "behavioralni-a-anglictina",
+              "type": "lesson",
+              "title": "Behaviorální pohovor a angličtina",
+              "summary": "Odpovídáš metodou STAR a zvládneš pohovorové fráze i v angličtině.",
+              "minutes": 50
+            },
+            {
+              "id": "prvni-mesice",
+              "type": "lesson",
+              "title": "První měsíce v práci",
+              "summary": "Zvládneš onboarding, ptaní se a code review z přijímající strany podle plánu 30-60-90.",
+              "minutes": 45
+            },
+            {
+              "id": "kviz-mock-pohovor",
+              "type": "quiz",
+              "title": "Mock pohovor",
+              "summary": "Projdeš si pohovorové otázky s psanou odpovědí a porovnáš se s modelovou odpovědí.",
+              "minutes": 60
+            }
+          ]
+        }
       ]
     }
   ],
