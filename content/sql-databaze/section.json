@@ -13,5 +13,58 @@
     "lab-eshop-dotazy",
     "kviz",
     "projekt-api-receptu"
+  ],
+  "outcomes": [
+    {
+      "text": "Navrhnout schéma, ve kterém pravidla hlídá databáze: klíče, NOT NULL, UNIQUE, CHECK a cizí klíče s promyšleným ON DELETE.",
+      "links": [
+        "sql-databaze/relacni-databaze#omezeni-not-null-unique-check-default",
+        "sql-databaze/navrh-schematu#on-delete-co-se-stane-s-knihami"
+      ]
+    },
+    {
+      "text": "Zapsat vztahy 1:N i M:N a poznat, kdy se data mají rozdělit do víc tabulek.",
+      "links": [
+        "sql-databaze/navrh-schematu#vztah-1-n-cizi-klic",
+        "sql-databaze/navrh-schematu#vztah-m-n-spojovaci-tabulka"
+      ]
+    },
+    {
+      "text": "Napsat dotaz se spojením, agregací a stránkováním — a poznat, kdy spojení znásobí řádky.",
+      "links": [
+        "sql-databaze/navrh-schematu#normalizace-srozumitelne"
+      ]
+    },
+    {
+      "text": "Zabalit několik změn do transakce tak, aby proběhly celé, nebo vůbec.",
+      "links": [
+        "sql-databaze/transakce-a-indexy#transakce-begin-commit-a-rollback"
+      ]
+    },
+    {
+      "text": "Přečíst plán dotazu, přidat index tam, kde opravdu pomůže, a rozeznat problém N+1.",
+      "links": [
+        "sql-databaze/transakce-a-indexy#proc-je-dotaz-pomaly-plan-dotazu",
+        "sql-databaze/transakce-a-indexy#problem-n-1"
+      ]
+    },
+    {
+      "text": "Spočítat pořadí, podíl na celku nebo meziměsíční změnu okenní funkcí, aniž bys přišel o jednotlivé řádky.",
+      "links": [
+        "sql-databaze/okenni-funkce#over-agregace-ktera-nesbali-radky"
+      ]
+    },
+    {
+      "text": "Popsat schéma jako kód v ORM a vědět, kdy se vrátit k ručnímu SQL.",
+      "links": [
+        "sql-databaze/orm-drizzle#kdy-psat-sql-rucne"
+      ]
+    },
+    {
+      "text": "Spustit PostgreSQL v Dockeru a převést na něj aplikaci ze SQLite.",
+      "links": [
+        "sql-databaze/postgres-v-dockeru#co-se-v-sql-zmeni"
+      ]
+    }
   ]
 }

@@ -158,6 +158,10 @@ Pravidlo: když se ptáš „za **každého** zákazníka, i když nic nekoupil"
 podmínka na pravou tabulku napsaná ve `WHERE` z `LEFT JOIN` udělá zase vnitřní, protože
 `NULL` podmínkou neprojde. Patří do `ON`.
 
+### --see--
+
+sql-databaze/navrh-schematu#vztah-1-n-cizi-klic
+
 ## --card-- free
 
 K čemu je `GROUP BY` a co smí být ve `SELECT` vedle agregace?
@@ -170,6 +174,10 @@ podle kterých se seskupuje, a agregace — u ostatních by nebylo jasné, kter�
 skupiny vybrat.
 
 Filtr **před** seskupením je `WHERE`, filtr **nad výsledkem** agregace je `HAVING`.
+
+### --see--
+
+sql-databaze/okenni-funkce#over-agregace-ktera-nesbali-radky
 
 ## --card-- free
 

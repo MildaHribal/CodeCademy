@@ -110,7 +110,7 @@ v jazyce. Nástroje se liší v tom, jak daleko od SQL tě odvedou:
 | přístup | příklad | co z toho plyne |
 |---|---|---|
 | ruční SQL | `node:sqlite`, `pg` | plná moc, žádná kontrola |
-| dotazovací builder | **Drizzle**, Kysely | zápis blízký SQL, typy ze schématu |
+| [[dotazovací builder]] | **Drizzle**, Kysely | zápis blízký SQL, typy ze schématu |
 | plné ORM | Prisma, TypeORM | vlastní jazyk dotazů, dál od SQL |
 
 Drizzle je uprostřed a to je pro učení dobře: kdo umí SQL, píše v Drizzle hned, a kdo

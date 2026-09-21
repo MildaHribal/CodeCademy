@@ -166,7 +166,7 @@ v `.gitignore`, druhý dokumentuje, které proměnné jsou potřeba. Nový člov
 > (`password authentication failed`). Oprava: heslo zakóduj (`encodeURIComponent`),
 > nebo do něj takové znaky nedávej.
 
-Z aplikace se pak čte jediným řádkem a klient si sám udržuje **fond spojení**:
+Z aplikace se pak čte jediným řádkem a klient si sám udržuje [[fond spojení]]:
 
 ```js
 const connectionString = process.env.DATABASE_URL;

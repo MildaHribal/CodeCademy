@@ -169,6 +169,10 @@ Chybu, protože `orders.id` není v `GROUP BY`.
 
 Agregační funkce sloupec v `GROUP BY` mít nemusí.
 
+### --see--
+
+sql-databaze/navrh-schematu#vztah-1-n-cizi-klic
+
 ## --question--
 
 Chceš výpis **všech** zákazníků včetně těch bez objednávky. Jaké spojení použiješ?
@@ -185,6 +189,10 @@ LEFT OUTER JOIN
 ### --why--
 
 Vnitřní `JOIN` zákazníka bez protějšku zahodí. U `LEFT JOIN` nezapomeň na `COALESCE(…, 0)` u sečtených sloupců.
+
+### --see--
+
+sql-databaze/relacni-databaze#null-hodnota-chybi
 
 ## --question--
 
@@ -203,6 +211,10 @@ having
 ### --why--
 
 `WHERE` filtruje řádky před seskupením, `HAVING` až spočítané skupiny.
+
+### --see--
+
+sql-databaze/okenni-funkce#over-agregace-ktera-nesbali-radky
 
 ## --question--
 
@@ -252,6 +264,10 @@ db.exec('ROLLBACK')
 ### --why--
 
 `COMMIT` změny potvrdí, `ROLLBACK` je zahodí a databáze se vrátí do stavu před `BEGIN`.
+
+### --see--
+
+sql-databaze/transakce-a-indexy#transakce-begin-commit-a-rollback
 
 ## --question--
 
@@ -664,6 +680,10 @@ Historická cena se musí uložit k rezervaci, stejně jako `unit_price` u polo�
 #### --why--
 
 Seskupení podle primárního klíče je v pořádku, jméno je na něm závislé.
+
+### --see--
+
+sql-databaze/navrh-schematu#cas-a-datum
 
 ## --question--
 
